@@ -23,7 +23,7 @@ Three genets (a, c, d), 8 tanks (4 per treatment), wounded on Day 0 after 7 days
 ## Headline findings
 
 1. **Sustained heating to 31 °C compromises photochemistry, pigmentation, growth, and symbiont retention**, with the divergence between treatments growing across the 14-day experiment.
-2. **Heat impairs the regenerative-tip program** (new corallite formation, tip extension) **but NOT wound closure** (hole closure, polyp emergence, surface smoothing happen at the same rate in both treatments).
+2. **Heat impairs the regeneration phase** (new corallite / skeletal regrowth at the tip, tip extension) **but NOT the tissue-healing phase** (coenosarc coverage — hole closure, polyp emergence, surface smoothing happen at the same rate in both treatments).
 3. **Strong genet × treatment interactions across most responses**: genet C is consistently more thermally resilient than genets A and D. Composite thermal-resilience ranking (`figures/19b_genet_resilience_ranking.png`): A (most sensitive) > D >> C (most resilient). Multivariate PCA centroid displacement under heat: A = 3.74, D = 3.35, C = 1.03.
 4. **Wounding alone has minimal effect on colony-wide physiology** — the wound response is concentrated in localized morphological changes at the wound site. Heat affects wound site outcomes through the regeneration program rather than closure.
 
@@ -146,13 +146,13 @@ Genet C retains symbionts under heat almost as well as in ambient (≤30% loss),
 
 **Model per trait:** `expressed ~ treatment * day * thicket + (1|tank)`, binomial logit (`code/04_physio_morphology.R`). Restricted to wounded corals (n = 24 per treatment, ~8 per genet × treatment cell).
 
-The 9 binary traits separate cleanly into two functional categories:
+Recovery follows the **biphasic sequence** standard in the coral wound-healing literature — a **tissue-healing phase** (re-epithelialization / coenosarc coverage that seals the wound) followed by a **regeneration phase** (reappearance of polyps and skeletal calyx/corallite structure). The 9 binary traits index these two phases. (Note: LTH wounds are apical-**tip excisions**, so regeneration is scored as new skeleton at the branch tip, rather than polyp reappearance in a surface wound bed.)
 
-### 5a. Wound closure (uniform across genets)
-- **Hole in center, polyp in hole, wound smoothed**: ≥90% expression in both treatments by Day 5–7. No significant treatment effect, no genet × treatment interaction. Heat does not delay wound closure.
-- **Polyps out**: significant treatment × day interaction (Wald χ²₁ = 6.70, p = 0.0097) — heated wounded corals more likely to keep polyps retracted at later timepoints than ambient controls. The only wound-closure trait with a real heat response.
+### 5a. Tissue healing — coenosarc coverage (uniform across genets)
+- **Hole in center, polyp in hole, wound smoothed** index re-epithelialization / coenosarc coverage over the wound bed: ≥90% expression in both treatments by Day 5–7. No significant treatment effect, no genet × treatment interaction. **Heat does not delay tissue healing.**
+- **Polyps out**: significant treatment × day interaction (Wald χ²₁ = 6.70, p = 0.0097) — heated wounded corals more likely to keep polyps retracted at later timepoints than ambient controls. The only healing-phase trait with a real heat response.
 
-### 5b. Regenerative tip program (heat-impaired, genet-dependent)
+### 5b. Regeneration phase — skeletal regrowth at the tip (heat-impaired, genet-dependent)
 - **Tip extension**: by Day 15, ~92% of 28 °C corals show tip extension vs 83% of 31 °C. Modest overall heat effect (Cox HR = 0.80, p = 0.61).
 - **New corallites on tip**: 100% of 28 °C wounded corals form new corallites by Day 15 vs 33% of 31 °C. **Overall Cox HR = 0.22 (95% CI 0.07–0.69, p = 0.010).**
 - **Per-genet Cox HR for new corallites (31 °C vs 28 °C):**
@@ -169,9 +169,9 @@ A similar significant interaction holds for **pigment over wound** (Cox LRT χ²
 
 **Figures:** `figures/04_morphology_trajectories.{pdf,png}` (pooled by genet), `figures/04b_morphology_trajectories_by_genet.{pdf,png}` (split by genet), `figures/14_morphology_KM.{pdf,png}` (KM by treatment), `figures/14b_morphology_KM_by_genet.{pdf,png}` (KM by treatment × genet).
 
-### 5c. Closure → regeneration lag (per-coral event timing)
+### 5c. Healing-to-regeneration lag (per-coral event timing)
 
-The cleanest quantification of "heat impairs regeneration, not closure" is the **lag** between achieving wound closure (`wound_smoothed`) and forming new skeleton at the tip (`new_corallites_on_tip`), computed per coral (`code/14_morphology_kaplan.R`, `output/tables/14_milestone_lag_summary.csv`):
+The cleanest quantification of "heat impairs the regeneration phase, not the healing phase" is the **lag** between achieving coenosarc coverage / tissue healing (`wound_smoothed`) and forming new skeleton at the tip (`new_corallites_on_tip`), computed per coral (`code/14_morphology_kaplan.R`, `output/tables/14_milestone_lag_summary.csv`):
 
 | Treatment | n closed | reached both | **% closed but never regenerated** | median lag (days) |
 |---|---|---|---|---|

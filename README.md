@@ -34,6 +34,17 @@ Full numbers and prose: **`RESULTS.md`**. Every statistic (p-values, effect size
 
 The full README from Drive lives at `notes/project_README_from_drive.md`. Detailed protocols: `notes/Experimental_Plan_Gene_Expression.md`, `notes/Experimental_Plan_Microscope_photographs.md`. Plate layout / sequencing plan: `notes/sequencing-plan-keck-LTH.md`.
 
+## Google Drive project folder
+
+This repo is the **analysis layer**; the **project of record** (raw Sheets, field notes, manuscript Doc, slides) lives in Google Drive:
+
+- **Folder:** `17. LTH_expression_by_temperature_2025` · **Drive ID:** `1sXfnHN-vmSBuwMEfERiYOWDeKRmjFWJP`
+- **Path:** `…/My Drive/Stier Lab/People/Adrian Stier/Projects/In Progress/Coral-Regeneration/Projects/17. LTH_expression_by_temperature_2025/`
+- **Mapping:** Drive `data/` Sheets → `data/raw/` here; Drive `notes/` Docs → `notes/` here; Drive `Manuscript_LTH` Doc ↔ `manuscript/Manuscript_LTH.md`. Raw data is exported *from* Drive; the repo never writes back. When Drive data changes, re-export into `data/raw/` and re-run `code/_run_all.R`.
+- Access programmatically with the `gws` CLI (authenticated as astier@ucsb.edu). See `CLAUDE.md` for the exact query and the repo↔Drive details.
+
+Regeneration-staging terminology follows the lab's wound-type manuscript (biphasic: tissue healing / coenosarc coverage → regeneration / skeletal regrowth); see `CLAUDE.md`.
+
 ## Repository documents — where to find things
 
 | Document | What it is |
