@@ -50,7 +50,7 @@ The capacity
 
 1. Healing versus regeneration and how this applies to our coral  
    1. Coral must quickly perform healing to survive (step 1\)  
-      1. Worldwide, corals sustain tissue and skeletal injury through fish and invertebrate predation, algal competition, disease, and fragmentation or abrasion caused by human activity (CITE review, etc). The damaged coral tissue must quickly initiate a coordinated cellular response that leverages cell migration and proliferation pathways to quickly reestablish barrier function. Once the wound is effectively sealed, the secondary stage of regeneration can begin.  
+      1. Worldwide, corals sustain tissue and skeletal injury through fish and invertebrate predation, algal competition, disease, and fragmentation or abrasion caused by human activity (CITE review, etc). The damaged coral tissue must quickly initiate a coordinated cellular response that leverages cell migration and proliferation pathways to reestablish barrier function — re-epithelialization and coenosarc coverage of the wound bed (the tissue-healing phase; Table 1). Once the wound bed is effectively sealed, the regeneration phase — rebuilding polyps and skeletal calyx/corallite structure — can begin.  
    2. Regeneration of lost limb must occur for colony to regain complete function (step 2\)  
       1. Regeneration is broadly defined as the complete replacement of structure (CITE). In corals, this includes whole polyps with tentacles, and calyx/corallites skeletal structure. We expand this definition to include physical architecture and functional structure such as symbiont density, tentacle extension. Because corals are colonial and share resources acquired through symbiont metabolism and heterotrophic feeding, regeneration of polyps and pigmentation is a more functional metric to assess the outcome of wound-healing and implications on whole-colony affects. Regeneration is a complex process that requires precise cell-differentiation, rapid calcification, and the acquisition of symbionts in native coral tissue (do we have pathway info on this already?).  
    3. What is the microstructure of A. pulchra?  
@@ -159,7 +159,7 @@ A subset of fragments (n = 16) were used exclusively for microscopic morphologic
 | `tip_exist` | regeneration | A new apical tip is present at the wound. |
 | `tip_extension` | regeneration | The new apical tip has elongated/extended. |
 | `new_corallites_on_tip` | regeneration | New skeletal corallites (calyx cups) formed at the regenerating tip — the terminal regeneration milestone. |
-| `algae_on_wound` | incidental | Algal colonization of the wound bed (algal plug when dense). |
+| `algae_on_wound` | incidental | Algal colonization of the wound bed (algal plug when dense). **Scored but not observed in LTH** (all fragments negative); retained only for cross-study comparability. |
 
 *Statistical analysis*  
 All analyses ran in R 4.5.2 (R Core Team, 2025) and are fully reproducible from `code/_run_all.R`; every numerical claim in the Results section traces to a row in `output/tables/20_master_results.csv`. We treat genet (thicket) as a fixed effect throughout, because only three thickets were collected — too few to estimate a random-effect variance reliably (Bolker, 2008; Gelman, 2005) — and because the per-genet treatment effects are themselves a primary inferential target.
