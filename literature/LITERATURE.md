@@ -11,10 +11,10 @@ citation-chain audit (`CITATION_AUDIT.md`) added 37 more papers — the wound-he
 core (Traylor-Knowles, Bonesso, Burmester, Dias, Meesters 1993/94, Rinkevich…), energetics, the
 expression-by-temperature backbone (Barshis, Bay&Palumbi, Cornwell, Cunning 2021…), Mo'orea
 symbionts/reproduction (Carroll, Rouzé), and symbiont-shuffling (Berkelmans, Jones). See
-`CITATION_AUDIT.md` for the full audit + the 23 still-paywalled. Remaining unobtained papers are
-genuinely paywalled (Elsevier/Wiley/JSTOR) with no open-access route and an unauthenticated
-browser session — most are already in the notebook ([NB]) or have congener substitutes for
-their model parameter (see "Acquisition results" below). DOIs were tool-confirmed
+`CITATION_AUDIT.md` for the full audit. After a VPN-authenticated CDP round (in-page `fetch()`),
+only **4 audit papers remain unobtained** (Anthony 2009, Edmunds & Yarid 2017, Page 2018,
+Buddemeier 1993) — all with in-library substitutes; plus the original handful of A.-pulchra-index
+papers that are paywalled with no OA route (mostly [NB] in the notebook or congener-substitutable). DOIs were tool-confirmed
 (OpenAlex/Crossref); none guessed. PDFs are named `AuthorYear_ShortTitle.pdf`.
 
 **Acquisition routes that worked (2026-06-07):** Springer `link.springer.com/content/pdf/{DOI}.pdf`
