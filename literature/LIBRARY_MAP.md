@@ -8,7 +8,7 @@ most parameters are grounded on congeners/mechanism papers where *A. pulchra*-sp
 Machine-readable companion: [`library_map.csv`](library_map.csv). See also `CITATION_AUDIT.md`
 (how the grounding papers were found) and `LITERATURE.md` (the *A. pulchra* discovery index).
 
-**Composition of 92 PDFs:** 18 **Core** (*A. pulchra* is the subject) ·
+**Composition of 93 PDFs:** 19 **Core** (*A. pulchra* is the subject) ·
 7 **Includes *A. pulchra*** (multi-species) · 67 **Grounding** (genus / other-coral / mechanism).
 
 ---
@@ -32,7 +32,7 @@ Machine-readable companion: [`library_map.csv`](library_map.csv). See also `CITA
 
 ---
 
-## 1. Core — *A. pulchra* is the study subject (18)
+## 1. Core — *A. pulchra* is the study subject (19)
 | Paper | Theme | Connection — what it grounds |
 |---|---|---|
 | [Almeida et al. 2024](pdfs/Almeida_2024_IntertidalSubtidalRecovery.pdf) | Recovery | Intertidal vs subtidal recovery/growth/survival → recovery dynamics |
@@ -43,6 +43,7 @@ Machine-readable companion: [`library_map.csv`](library_map.csv). See also `CITA
 | [Ladd et al. 2025](pdfs/Ladd_2025_GrowthPredationTradeoffs.pdf) | Ecology | Growth–predation risk tradeoffs constrain A. pulchra distribution |
 | [Lock et al. 2025](pdfs/Lock_2025_SymbiontBacterialMicrobiome.pdf) | Microbiome | Symbiont + bacterial microbiome effects on host |
 | [Miller & Bentlage 2024](pdfs/Miller_2024_SeasonalMicrobiome.pdf) | Microbiome | Seasonal tissue/mucus microbiome baseline |
+| [Nuñez Lendo et al. 2023](pdfs/NunezLendo_2023_IntertidalMicrobialAbundance.pdf) | Microbiome | Low-tide exposure shifts microbial abundance in intertidal A. pulchra |
 | [Raymundo et al. 2025](pdfs/Raymundo_2025_RestorationGuam.pdf) | Restoration | A. pulchra restoration in a stressful (Guam) environment |
 | [Roche et al. 2010b](pdfs/Roche_2010b_SpatialPorosity.pdf) | Skeleton | Spatial skeletal porosity → D_E, resid (perforate translocation) |
 | [Rouzé et al. 2017](pdfs/Rouze_2017_SymbiodiniumMoorea.pdf) | Symbiont/Mo'orea | Symbiodiniaceae of Mo'orea corals incl. A. pulchra → iZ context |

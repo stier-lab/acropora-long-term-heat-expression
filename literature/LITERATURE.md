@@ -60,6 +60,7 @@ Acquisition legend: **[NB]** already in the A. pulchra notebook · **[LAB]** alr
 |---|---|---|---|---|
 | Lock et al. 2025 — Symbiodiniaceae + bacterial microbiome impacts on host | 10.1111/1462-2920.70175 | [OA] | 5 | |
 | Miller et al. 2024 — seasonal tissue/mucus microbiome baseline | 10.7717/peerj.17421 | [OA] | 5 | symbiont/microbiome baseline |
+| Nuñez Lendo et al. 2023 — low-tide exposure × microbial abundance (intertidal) | 10.1080/17451000.2023.2169464 | [PW→CDP] | 4 | intertidal microbiome; from completeness census |
 
 ### Growth / calcification / skeleton
 | Paper | DOI | Acq | Rel | Note |
@@ -126,6 +127,28 @@ threshold; least-grounded), `D_E`/`resid` (structure known, value reasoned), `B_
 - **A. pulchra reproduction / fecundity / size-at-maturity** — only Huang 2009 (histology); rely on congeners (Álvarez-Noriega, Hall & Hughes, Soong & Lang).
 - **A. pulchra wounding/regeneration rates** — only Munk 2024 (thesis); rely on Denis 2011/2013, Hall series, Lirman.
 - **Acropora symbiont repopulation RATE after bleaching** — none found (only density thresholds). Least-grounded param; borrow from Symbiodiniaceae division-rate lit or fit.
+
+## 4b. Completeness census vs OpenAlex (2026-06-08)
+
+Checked the library against the full published record (OpenAlex). **35 works have "Acropora
+pulchra" in the title.** We now hold or track **all relevant, accessible, English ones**; the
+remainder are out of scope or non-acquirable:
+
+- **Acquired this round:** Nuñez Lendo et al. 2023 (intertidal microbiome, Mar Biol Res) — the one
+  clear English gap the census found; published version pulled via authenticated CDP.
+- **Not chased — out of scope:** 3 natural-product **chemistry** papers (Chinese, 2001/2003); 2 **IUCN
+  Red List** dataset entries (not papers); duplicate **preprints** of papers already held (Miller 2024,
+  Conn 2025).
+- **Not chased — non-English / no DOI / low marginal value:** Japanese calcification & photosynthesis
+  papers (1995 ×2, 2002) + a 1997 Japanese growth thesis + an Indonesian 2003 growth note — all
+  duplicate topics already covered (Yap growth, Comeau calcification, Strømgren light); a 2020 "VOC
+  day/night cycling" note and a Tanaka-2008 DOM paper have **no resolvable DOI** in OpenAlex.
+
+**Caveat on "all A. pulchra papers":** title-search captures papers *about* A. pulchra. OpenAlex also
+shows **92 abstract-mentions** and **396 full-text mentions** — multi-species studies that merely
+include A. pulchra in a species list. The library holds a *curated* subset of those (the model-grounding
++ LTH papers), **not all 396**, which is intentional. So: complete on A.-pulchra-subject papers
+(accessible English), deliberately selective on multi-species mentions.
 
 ## 5. Acquisition results (2026-06-07)
 
