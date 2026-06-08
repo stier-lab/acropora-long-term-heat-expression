@@ -1,0 +1,93 @@
+file,citation,pulchra_category,theme,connection
+Almeida_2024_IntertidalSubtidalRecovery.pdf,Almeida et al. 2024,Core,Recovery,Intertidal vs subtidal recovery/growth/survival → recovery dynamics
+Anthony_2007_BleachingEnergeticsMortality.pdf,Anthony et al. 2007,Ground,Energetics,"Bleaching, energetics & mortality risk → energy-budget mortality"
+Anthony_2023_SymbiontPlasticity.pdf,Anthony et al. 2023,Core,Expression/Symbiont,Symbiodiniaceae cellular/phenotypic plasticity under stress
+Baird_2009_ReproductiveBiologyScleractinian.pdf,Baird et al. 2009,Ground,Reproduction,Reproductive biology of scleractinians (review) → B_mat framing
+Bak_1980_RegenSuperficialDamage.pdf,Bak & Steward-Van Es 1980,Ground,Wound healing,Regeneration of superficial damage → kc_mult (foundational)
+Bak_1983_NeoplasiaRegenGrowthApalmata.pdf,Bak 1983,Ground,Wound healing,Neoplasia/regeneration/growth in A. palmata → kc_mult (foundational)
+Baker_2003_CoralAlgalSymbiosisFlexibility.pdf,Baker 2003,Ground,Symbiont,Flexibility/specificity in coral–algal symbiosis (review) → iZ framing
+Barshis_2013_GenomicBasisResilience.pdf,Barshis et al. 2013,Ground,Expression,Genomic basis for coral resilience → expression of resilience
+BayPalumbi_2015_RapidAcclimTranscriptome.pdf,Bay & Palumbi 2015,Ground,Expression,Rapid acclimation via transcriptome change → expression plasticity
+Bay_2016_RecoveryThreshold.pdf,Bay et al. 2016,Ground,Symbiont,Symbiont-density recovery threshold → iZ
+Berkelmans_2006_ZooxanthellaeThermalTolerance.pdf,Berkelmans & van Oppen 2006,Ground,Symbiont,Zooxanthellae role in thermal tolerance → symbiont-mediated tolerance
+Bonesso_2017_SubBleachingImpairsRegen.pdf,Bonesso et al. 2017,Ground,Wound healing,Sub-bleaching heat impairs recovery/regeneration → kc_mult(temp)
+Buckingham_2022_NPEnrichment.pdf,Buckingham et al. 2022,Core,Nutrients,"N+P enrichment, skewed N:P"
+Burmester_2017_TempSymbiosisLesionRecovery.pdf,Burmester et al. 2017,Ground,Wound healing,Temperature & symbiosis affect lesion recovery → kc_mult
+Burmester_2018_AutoVsHeteroLesionRecovery.pdf,Burmester et al. 2018,Ground,Wound healing,"Autotrophy vs heterotrophy in lesion recovery → kc_mult, h"
+Carroll_2006_AcroporaReproductionMoorea.pdf,Carroll et al. 2006,Incl,Reproduction/Mo'orea,Sexual reproduction of Acropora at Mo'orea → B_mat (field site)
+Comeau_2016_CalcificationTempCO2.pdf,Comeau et al. 2016,Core,Calcification,Calcification vs temp & pCO2 → calcification parameterisation
+Conn_2025_GenomeAssembly.pdf,Conn et al. 2025,Core,Genomics,Reference genome assembly/annotation (Mo'orea) — underpins all expression work (LTH)
+Conti-Jerpe_2020_TrophicStrategyBleaching.pdf,Conti-Jerpe & Baker 2020,Ground,Energetics,Trophic strategy & bleaching resistance → h (autotroph-loser)
+Cornwell_2021_HeatToleranceSymbiontLoadTradeoff.pdf,Cornwell et al. 2021,Ground,Thermal tolerance,Heat tolerance × symbiont load → growth-tolerance tradeoff (A. hyacinthus)
+Counsell_2019_ColonySizeDepthWoundRepair.pdf,Counsell et al. 2019,Ground,Wound healing,Colony size & depth affect wound repair → size-dependent kc_mult
+Cunning_2021_HeatToleranceCensusStaghorn.pdf,Cunning et al. 2021,Ground,Thermal tolerance,Heat-tolerance census of Florida staghorn Acropora → acute-tolerance variation
+DeFilippo_2016_SurfaceLesionRecoveryAstrangia.pdf,DeFilippo et al. 2016,Ground,Wound healing,Surface lesion recovery in Astrangia poculata → kc_mult kinetics
+Death_2012_GBRCoralDecline.pdf,De'ath et al. 2012,Ground,Context,27-year decline of GBR coral cover → context
+Denis_2011_LesionRegenerationPopulations.pdf,Denis et al. 2011,Ground,Wound healing,Lesion regeneration in massive Porites populations → kc_mult
+Denis_2013_FastGrowthImpairRegen.pdf,Denis et al. 2013,Ground,Wound healing,"Fast growth impairs regeneration in A. muricata → fast-fragile axis, E_max"
+Denis_2024_IndividualThermalTolerance.pdf,Denis et al. 2024,Incl,Thermal tolerance,Individual thermal-tolerance traits (CBASS) — A. pulchra among species (LTH)
+Dias_2018_FragmentationRegenThermalStress.pdf,Dias et al. 2018,Ground,Wound healing,"Mortality/growth/regen after fragmentation under thermal stress → m_d, kc_mult"
+Dixon_2015_GenomicDeterminantsHeatTolerance.pdf,Dixon et al. 2015,Ground,Expression,Genomic determinants of heat tolerance across latitudes → heritable tolerance
+EdmundsLenihan_2010_SublethalDamageJuvenilePorites.pdf,Edmunds & Lenihan 2010,Ground,Wound healing,Sub-lethal damage to juvenile Porites under temp/flow → kc_mult (Porites)
+ElKhaled_2025_HeatColdBleaching.pdf,El-Khaled et al. 2025,Incl,Thermal tolerance,Heat & cold bleaching vulnerability incl. A. pulchra → bleaching sensitivity
+Evensen_2023_CBASSSystem.pdf,Evensen et al. 2023,Ground,Thermal/CBASS,CBASS low-cost portable system → LTH assay methods
+Fitt_2001_ThermalToleranceLimitsThresholds.pdf,Fitt et al. 2001,Ground,Thermal tolerance,Interpretation of thermal tolerance limits & thresholds → bleaching thresholds
+Grottoli_2006_HeterotrophicPlasticity.pdf,Grottoli et al. 2006,Ground,Energetics,Heterotrophic plasticity & resilience in bleached corals → h
+Grottoli_2014_CumulativeBleachingWinnersLosers.pdf,Grottoli et al. 2014,Ground,Energetics,Cumulative annual bleaching → reserve depletion (winners→losers)
+Grottoli_2020_BleachingComparability.pdf,Grottoli et al. 2020,Incl,Methods,Standardising bleaching experiments — LTH methods/comparability
+Hall_1997_InterspecificRegeneration.pdf,Hall 1997,Ground,Wound healing,Interspecific differences in injury regeneration → kc_mult
+Hall_1998_InjuryRegeneration.pdf,Hall 1998,Ground,Wound healing,Injury & regeneration of common reef corals → kc_mult
+Hall_2001_AcroporaHyacinthusResponse.pdf,Hall 2001,Ground,Wound healing,A. hyacinthus injury response → kc_mult
+Hall_2015_LesionRecovery.pdf,Hall 2015,Ground,Wound healing,Lesion recovery under low pH → kc_mult
+Henry_2005_RegenInjuryResourceAllocation.pdf,Henry & Hart 2005,Ground,Energy allocation,Regeneration & resource allocation (review) → energy-allocation framing
+Hoadley_2015_TempCO2Physiology.pdf,Hoadley et al. 2015,Incl,Thermal physiology,Temp × pCO2 physiology across genera incl. A. pulchra
+HoeghGuldberg_2007_CoralReefsClimateChange.pdf,Hoegh-Guldberg et al. 2007,Ground,Context,Coral reefs under rapid climate change & OA → intro/discussion framing
+Hughes_2017_CoralReefsAnthropocene.pdf,Hughes et al. 2017a,Ground,Context,Coral reefs in the Anthropocene → context
+Hughes_2017_GlobalWarmingMassBleaching.pdf,Hughes et al. 2017b,Ground,Context,Global warming & recurrent mass bleaching → context
+Jones_2008_EndosymbiontCommunityChange.pdf,Jones et al. 2008,Ground,Symbiont,Endosymbiont community change after bleaching → iZ shuffling
+LaJeunesse_2018_SymbiodiniaceaeRevision.pdf,LaJeunesse et al. 2018,Ground,Symbiont,Systematic revision of Symbiodiniaceae → symbiont taxonomy
+Ladd_2025_GrowthPredationTradeoffs.pdf,Ladd et al. 2025,Core,Ecology,Growth–predation risk tradeoffs constrain A. pulchra distribution
+Leinbach_2021_RecoveryCosts.pdf,Leinbach et al. 2021,Ground,Energetics,Recovery costs → E_max
+Levas_2013_BleachingRecoveryPoritesLobata.pdf,Levas et al. 2013,Ground,Energetics,Bleaching/recovery physiology in Porites lobata → energetics
+Lirman_2000a_AcroporaFragmentation.pdf,Lirman 2000a,Ground,Mechanical,Fragmentation in branching A. palmata → m_d
+Lirman_2000b_LesionRegenAcroporaPalmata.pdf,Lirman 2000b,Ground,Wound healing,Lesion regeneration in branching A. palmata → kc_mult
+Lirman_2014_AcerGrowth.pdf,Lirman et al. 2014,Ground,Growth,A. cervicornis growth dynamics → v_edge (congener)
+Lock_2022_CaHomeostasisMicrofragmentation.pdf,Lock et al. 2022,Ground,Microfragmentation,Ca-homeostasis drives rapid growth after microfragmentation (Porites lobata) → Tier-3 microfrag
+Lock_2025_SymbiontBacterialMicrobiome.pdf,Lock et al. 2025,Core,Microbiome,Symbiont + bacterial microbiome effects on host
+MadinConnolly_2006_HydrodynamicDisturbances.pdf,Madin & Connolly 2006,Ground,Mechanical,Ecological consequences of hydrodynamic disturbance → m_d
+Madin_2014_MechanicalVulnerability.pdf,Madin et al. 2014,Ground,Mechanical,Mechanical vulnerability → size-dependent mortality m_d
+Marshall_2000_SkeletalDamageColonyMorphology.pdf,Marshall 2000,Ground,Mechanical,Skeletal damage vs colony morphology → m_d
+Meesters_1993_BleachingTissueRegen.pdf,Meesters & Bak 1993,Ground,Wound healing,Bleaching reduces tissue-regeneration potential → kc_mult under bleaching
+Meesters_1994_DamageRegenGrowth.pdf,Meesters et al. 1994,Ground,Wound healing,Damage & regeneration ↔ growth → growth–regeneration tradeoff
+Meesters_1997_PredictingRegeneration.pdf,Meesters et al. 1997,Ground,Wound healing,"Partial mortality vs depth/area; lesion-area model → kc_mult, m_d"
+Miller_2024_SeasonalMicrobiome.pdf,Miller & Bentlage 2024,Core,Microbiome,Seasonal tissue/mucus microbiome baseline
+Omori_2001_AcroporaFertilizationDrop.pdf,Omori et al. 2001,Ground,Reproduction,Drop in Acropora fertilization after bleaching → repro×bleaching
+Palumbi_2014_MechanismsResistance.pdf,Palumbi et al. 2014,Ground,Expression,"Mechanisms of reef-coral resistance (A. hyacinthus, Ofu) → expression/acclimation"
+Parkinson_2018_TranscriptionalVariationBiomarker.pdf,Parkinson et al. 2018,Ground,Expression,Transcriptional variation challenges thermal biomarkers → expression variance
+Radice_2019_HeterotrophyFASIA.pdf,Radice et al. 2019,Ground,Energetics,Trophic strategy via FA+SIA → h
+Raymundo_2025_RestorationGuam.pdf,Raymundo et al. 2025,Core,Restoration,A. pulchra restoration in a stressful (Guam) environment
+Rice_2019_NitrogenCorallivoryRecovery.pdf,Rice et al. 2019,Ground,Wound healing,N sources speed recovery from corallivory → browsing-axis recovery
+Rinkevich_1996_ReproRegenEnergyAllocation.pdf,Rinkevich 1996,Ground,Energy allocation,Reproduction vs regeneration compete for energy → Tier-3 energy budget
+Roche_2010b_SpatialPorosity.pdf,Roche et al. 2010b,Core,Skeleton,"Spatial skeletal porosity → D_E, resid (perforate translocation)"
+RodriguesGrottoli_2007_EnergyReservesRecovery.pdf,Rodrigues & Grottoli 2007,Ground,Energetics,Energy reserves/metabolism as recovery indicators → E_max
+Roff_2014_PoritesPhoenixEffectRangiroa.pdf,Roff et al. 2014,Ground,Recovery,"Porites 'Phoenix effect' recovery, Rangiroa (FP) → recovery dynamics"
+Rouze_2017_SymbiodiniumMoorea.pdf,Rouzé et al. 2017,Core,Symbiont/Mo'orea,Symbiodiniaceae of Mo'orea corals incl. A. pulchra → iZ context
+Rouze_2019_SymbiodiniaceaeSignatureMoorea.pdf,Rouzé et al. 2019,Incl,Symbiont/Mo'orea,Quantitative Symbiodiniaceae signature of Mo'orea colonies → iZ
+Schoepf_2013_AcroporaReserves.pdf,Schoepf et al. 2013,Ground,Energetics,Acropora energy reserves & calcification → E_max
+SenecaPalumbi_2010_GeneExpressionNaturalBleaching.pdf,Seneca & Palumbi 2010,Ground,Expression,Gene expression in a coral undergoing natural bleaching → expression×bleaching
+Shaw_2016_IntraspecificVariability.pdf,Shaw et al. 2016,Core,Thermal tolerance,"Genotype variation under warming×acidification → bleaching sensitivity (bT_pulse, bleach_z)"
+SoongChen_2003_AcroporaFragmentNursery.pdf,Soong & Chen 2003,Incl,Wound/regen,Regeneration & growth of Acropora fragments (incl. pulchra) → kc_mult
+Soong_1992_ReproductiveIntegration.pdf,Soong & Lang 1992,Ground,Reproduction,Reproductive integration in reef corals → B_mat
+Stromgren_1987_LightGrowth.pdf,Strømgren 1987,Core,Growth,"Light × growth, intertidal → growth response"
+Thomas_2019_TranscriptomicResilienceShuffling.pdf,Thomas et al. 2019,Ground,Expression,Transcriptomic resilience + symbiont shuffling → expression + iZ
+Tian_2025_SkeletalHydrodynamics.pdf,Tian et al. 2025,Core,Skeleton,Internal skeletal hydrodynamics
+Traylor-Knowles_2016_WoundHealingTwoTempRegimes.pdf,Traylor-Knowles et al. 2016,Ground,Wound healing,Wound healing × temperature in Pocillopora damicornis & Acropora hyacinthus (model's 2 existing species) → kc_mult temp-coupling
+Tunnicliffe_1981_BreakagePropagationAcervicornis.pdf,Tunnicliffe 1981,Ground,Mechanical,"Breakage & propagation of A. cervicornis → m_d, fragmentation"
+VanDeWater_2015_ImmuneResponsePhysicalDamage.pdf,Van de Water et al. 2015,Ground,Mechanical/immune,Elevated temp & coral immune response after physical damage → healing immunity
+Voolstra_2020_CBASSAcuteHeatAssay.pdf,Voolstra et al. 2020,Ground,Thermal/CBASS,Standardised acute heat-stress assay (CBASS) → LTH assay backbone
+Wallace_1985_AcroporaReproductionRecruitment.pdf,Wallace 1985,Ground,Reproduction,Reproduction/recruitment/fragmentation in nine Acropora → B_mat
+Warner_1996_PhotosyntheticEfficiencyZooxanthellae.pdf,Warner et al. 1996,Ground,Thermal tolerance,Elevated temp & photosynthetic efficiency of zooxanthellae → photoinhibition
+YapGomez_1984_Growth.pdf,Yap & Gomez 1984,Core,Growth,"Growth 13.1–15.8 cm/yr; 36.4% branch mortality → v_edge, m_d"
+Yap_1985_GrowthII.pdf,Yap 1985,Core,Growth,Growth II (temp × daylength) → v_edge
+Zhang_2025_ProteinMetaboliteAcclim.pdf,Zhang et al. 2025,Core,Expression,Protein+metabolite acclimation to thermal variability — closest expression×temperature proteomics (LTH)
+delaVega_2023_EndozoicomonasGenome.pdf,de la Vega et al. 2023,Core,Microbiome,Endozoicomonas GU-1 genome from A. pulchra — microbiome resource

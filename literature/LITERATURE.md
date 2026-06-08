@@ -2,6 +2,9 @@
 
 Curated library for the LTH heat × wounding project and for parameterizing a third
 species (*A. pulchra*) in the coral wound-healing model (`~/coral-wound-healing-model`).
+**Every PDF is mapped to its *A. pulchra* relevance + model/project connection in
+[`LIBRARY_MAP.md`](LIBRARY_MAP.md)** (18 Core / 7 includes-pulchra / 67 grounding; sortable
+companion [`library_map.csv`](library_map.csv)).
 Companion to the **"Acropora pulchra" NotebookLM notebook** (`f9a97210-…`, query for full text)
 and the lab regeneration library `~/coral-regen-review/literature/` (191 PDFs).
 
