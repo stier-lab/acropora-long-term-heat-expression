@@ -5,8 +5,13 @@ species (*A. pulchra*) in the coral wound-healing model (`~/coral-wound-healing-
 Companion to the **"Acropora pulchra" NotebookLM notebook** (`f9a97210-…`, query for full text)
 and the lab regeneration library `~/coral-regen-review/literature/` (191 PDFs).
 
-**Status (2026-06-07):** discovery complete + **PDF acquisition done (37 PDFs in `pdfs/`)**
-+ **NotebookLM ingestion done (notebook now 26 sources)**. Remaining unobtained papers are
+**Status (2026-06-07):** discovery complete + **PDF acquisition done (now 74 PDFs in `pdfs/`)**
++ **NotebookLM ingestion done (notebook 26 sources; new round not yet ingested)**. A backward
+citation-chain audit (`CITATION_AUDIT.md`) added 37 more papers — the wound-healing×temperature
+core (Traylor-Knowles, Bonesso, Burmester, Dias, Meesters 1993/94, Rinkevich…), energetics, the
+expression-by-temperature backbone (Barshis, Bay&Palumbi, Cornwell, Cunning 2021…), Mo'orea
+symbionts/reproduction (Carroll, Rouzé), and symbiont-shuffling (Berkelmans, Jones). See
+`CITATION_AUDIT.md` for the full audit + the 23 still-paywalled. Remaining unobtained papers are
 genuinely paywalled (Elsevier/Wiley/JSTOR) with no open-access route and an unauthenticated
 browser session — most are already in the notebook ([NB]) or have congener substitutes for
 their model parameter (see "Acquisition results" below). DOIs were tool-confirmed
