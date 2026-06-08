@@ -1,15 +1,22 @@
 # Citation audit — *Acropora pulchra* library (backward snowball)
 
-> **ACQUISITION STATUS (2026-06-07):** Acted on this audit — **37 of the candidate papers acquired**
-> (library 37 → **74 PDFs**). All 16 Tier-A (lab-library copies) + 21 of 44 Tier-B/C (PMC/EuropePMC,
-> Springer `content/pdf`, green-OA repositories: JCU, ANU). **23 still missing** — genuinely paywalled
-> Wiley/Elsevier/Science/Nature/Annual-Reviews/Cell/JSTOR with no open-access route and an
-> unauthenticated browser. Of those, **6 are open-access but Cloudflare-blocks headless curl**
-> (Anthony 2007 & 2009, Omori 2001, Voolstra 2020, Evensen 2023, Thomas 2019) — retrievable with a
-> normal interactive browser download or an authenticated UCSB session. Highest-value still-missing:
-> Grottoli 2006 (`h`, Nature-closed), Voolstra 2020 (CBASS, OA-blocked), LaJeunesse 2018 (Cell),
-> Anthony 2009 (energetics, OA-blocked), Dixon 2015 & Palumbi 2014 (Science-closed). Yap 1981
-> (*A. pulchra* thesis) has no DOI/online copy — would need the U. Philippines library.
+> **ACQUISITION STATUS (2026-06-08):** Audit fully actioned — library **37 → 92 PDFs**.
+> Round 1 (37→74): 16 Tier-A lab copies + 21 Tier-B/C via PMC/EuropePMC/Springer/green-OA repos.
+> Round 2 (74→92): with UCSB VPN up + the CDP debug-profile Chrome, an **in-page authenticated
+> `fetch()`** (visit the publisher article page → fetch the real PDF bytes with `credentials:'include'`)
+> recovered **18 more** that `download-papers`' navigate-and-printToPDF could not — Voolstra 2020 &
+> Evensen 2023 (CBASS), Grottoli 2006 (`h`) & 2014, LaJeunesse 2018 (Cell), Dixon 2015 & Palumbi 2014
+> (Science), Baker 2003 (Annual Reviews), Thomas 2019, Parkinson 2018, Anthony 2007, Rodrigues &
+> Grottoli 2007, Omori 2001, Madin & Connolly 2006, Hughes 2017, Marshall 2000 (int-res), Warner 1996,
+> SoongChen 2003. *(Lesson: `download-papers`' printToPDF fallback silently saves the PDF-viewer
+> wrapper as junk; the in-page `fetch` of the real bytes is the correct CDP method — script at
+> `/tmp/cdp_fetch.js`.)*
+>
+> **4 still missing** (have substitutes/coverage in-library, so not chased further):
+> Anthony 2009 (Wiley Funct Ecol — fetch kept failing; **companion Anthony 2007 obtained**, same
+> energetics ground), Edmunds & Yarid 2017 + Page 2018 (Elsevier ScienceDirect — aggressively blocks
+> automation, no PDF link in DOM; covered by 14 wound papers + Lock 2022 microfrag), Buddemeier 1993
+> (JSTOR captcha — Tier-C context). Yap 1981 (*A. pulchra* thesis) has no online copy at all.
 
 
 
