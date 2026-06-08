@@ -113,15 +113,37 @@ Acquisition legend: **[NB]** already in the A. pulchra notebook · **[LAB]** alr
 | Mortality/breakage `m_d` | Highsmith 1982 (fragmentation) | 10.3354/meps007207 | [OA] | 4 |
 | Mortality/breakage `m_d` | Lirman 2000a (*Acropora* fragmentation; in lab) | (in lab) | [LAB] | 4 |
 
-## 3. Proposed *A. pulchra* model parameters (first-pass; see notebook homework)
+## 3. *A. pulchra* model parameters — **library-grounded (2026-06-08)**
 
-Fast–fragile–sensitive branching Acropora. Values to slot into `ext/species_presets.R` of the
-wound-healing model: `v_edge≈0.045` (fastest), `bT_pulse≈0.010` & `bleach_z≈0.15` (most sensitive),
-`h≈0.0002` (lowest heterotrophic buffer), `m_d≈0.0045` (fragile), `E_max≈0.9` (thin/low-reserve),
-`kc_mult≈1.1` (fast healer), `D_E≈0.012` & `resid≈0.05` (perforate but thin), `B_mat≈5`, `iZ≈0.004`.
-**Approximated/borrowed (flag):** `iZ` (no Acropora repop *rate* — Bay 2016 gives only a density
-threshold; least-grounded), `D_E`/`resid` (structure known, value reasoned), `B_mat` (from
-*A. cervicornis* 17 cm puberty), `E0`/`Z0` (model-assumption fractions).
+Fast–fragile–sensitive branching Acropora. Each value below was extracted from this library
+(5 parallel extraction passes) and positioned against the model's Porites/Pocillopora anchors.
+The cited, full registry rows (literature_value · units · citation · source PDF · verification)
+are in **`~/coral-wound-healing-model/data/phase2_parameters.csv`** (15 `Acropora pulchra` rows).
+
+| Param | Grounded value | vs first-pass | Anchor (Por / Poc) | Key evidence | Confidence |
+|---|---|---|---|---|---|
+| `v_edge` | **0.045** | = | 0.010 / 0.030 | A. pulchra 13.1–15.8 cm/yr [Yap & Gomez 1984] | **HIGH** ⭐sp. |
+| `m_d` | **0.0045** | = | 0.0010 / 0.0030 | A. pulchra 36.4% branch mortality/yr [Yap & Gomez 1984] | **HIGH** ⭐sp. |
+| `kc_mult` | **1.2** | ↑ 1.1 | 0.7 / 1.0 | Acropora>Poc>Por [Hall 1997/2001]; Munk ~92%/19d (upper bd) | MED |
+| `h` | **0.0002** | = | 0.0004 / 0.00025 | Acropora 94% host-symbiont overlap = top autotroph [Conti-Jerpe 2020] | MED-HIGH rank |
+| `E_max` | **0.85** | ↓ 0.9 | 2.0 / 1.0 | A. millepora 6.6 vs Poc 8.1 kJ/g (ratio 0.81) [Schoepf 2013] | HIGH rank |
+| `E0` | **0.77** | new | 1.5 / 0.9 | 0.90×E_max (Poc fill-fraction); deep depletion [Leinbach 2021, Mo'orea] | LOW-MED |
+| `bT_pulse` | **0.010** | = | 0.0017 / 0.0080 | ED50 ~34–37 °C below congeners [Denis 2024; Cunning 2021]; 58% mort d34 [Berg] | LOW-MED |
+| `bleach_z` | **0.15** | = | 0.55 / 0.20 | obligate autotroph; ~29% chl retained at +9 °C [Denis 2024] | LOW-MED |
+| `iZ` | **0.004** | = | 0.020 / 0.004 | Mo'orea Acropora rebuild ~4 mo [Thomas 2019, same site] | **MED (best)** |
+| `Z0` | **0.0** | new | 0.3 / 0.0 | bleaches white, S:H→0.003 [Bay 2016] | MED |
+| `KZ` | **1.0** | new | 1.0 / 1.0 | normalization; A. pulchra 1.345×10⁶ cells/cm² [Anthony 2023] | HIGH |
+| `D_E` | **0.014** | ↑ 0.012 | 0.02 / 0.002 | tip porosity 65–80%, connected interior [Roche 2010b] | HIGH porosity ⭐sp. |
+| `resid` | **0.07** | ↑ 0.05 | 0.50 / 0.05 | thin branches 0.8–1.8 cm but perforate deep tissue [Roche 2010b] | MED |
+| `maxpd` | **1.0** | new | 3.0 / 1.2 | 16 cm branches, 15–25 mm apical tips [Yap & Gomez; Strömgren] | LOW-MED |
+| `B_mat` | **4.5** | ↓ 5.0 | 8.0 / 4.0 | A. cervicornis puberty 17 cm branch [Soong 1992]; recruits 5 cm/2 yr [Wallace] | LOW-MED |
+
+⭐sp. = A.-pulchra-specific number; others congener-borrowed (flagged in the registry). **Five
+changed from first-pass:** `kc_mult` 1.1→1.2, `E_max` 0.9→0.85, `D_E` 0.012→0.014, `resid` 0.05→0.07,
+`B_mat` 5→4.5; plus four newly set (`E0`, `Z0`, `KZ`, `maxpd`). **Weakest-grounded (sweep these):**
+`E0`, `maxpd`, `bleach_z`/`bT_pulse` (no A. pulchra loss-rate or ED50 in local PDFs — inferred from
+congener thresholds + external Cunning 2024 / Berg 2020 [NB]). **Brainstorming gate:** present this
+table for Adrian's biology review before committing the `Apulchra` preset to `ext/species_presets.R`.
 
 ## 4. Gaps (genuinely thin in the literature)
 - **A. pulchra reproduction / fecundity / size-at-maturity** — only Huang 2009 (histology); rely on congeners (Álvarez-Noriega, Hall & Hughes, Soong & Lang).
