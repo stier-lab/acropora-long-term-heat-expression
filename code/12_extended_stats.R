@@ -99,7 +99,7 @@ pam <- readRDS(file.path(DATA_PROC, "pam_clean.rds")) |>
 # Note: with n=3 genets and 4 wounded + 4 unwounded fragments per genet × treatment
 # cell, the full 4-way interaction is supported but high-order terms will have
 # limited power. We report all terms transparently rather than stepwise-dropping.
-m_pam <- lme4::lmer(
+m_pam <- lmerTest::lmer(
   fv_fm ~ treatment * wound * day * thicket + (1 | tank) + (1 | id),
   data = pam, REML = TRUE,
   control = lme4::lmerControl(check.conv.singular = .makeCC("ignore", tol = 1e-4))
@@ -122,7 +122,7 @@ cat("\n=== 2. Color score ===\n")
 color <- readRDS(file.path(DATA_PROC, "color_clean.rds")) |>
   mutate(thicket = as.factor(thicket))
 
-m_color <- lme4::lmer(
+m_color <- lmerTest::lmer(
   color_num ~ treatment * wound * day * thicket + (1 | tank) + (1 | id),
   data = color, REML = TRUE,
   control = lme4::lmerControl(check.conv.singular = .makeCC("ignore", tol = 1e-4))
@@ -172,7 +172,7 @@ phys <- readRDS(file.path(DATA_PROC, "symbiont_chl_clean.rds")) |>
          biopsy_day_c = biopsy_day - 1)
 
 # Destructive sampling: 1 obs per coral. Drop (1|id).
-m_zoox <- lme4::lmer(
+m_zoox <- lmerTest::lmer(
   log(cells_per_cm2) ~ treatment * wound * biopsy_day_c * thicket +
     (1 | tank),
   data = phys, REML = TRUE,

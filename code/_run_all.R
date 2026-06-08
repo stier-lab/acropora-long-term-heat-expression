@@ -34,6 +34,9 @@ scripts <- c(
   "23_timeseries_diagnostics.R",
   "24_headline_model_comparison.R",
   "26_thermal_context.R",
+  "27_variance_partitioning.R",
+  "28_multiple_testing.R",
+  "29_morphology_prob_contrasts.R",
   "20_master_results_table.R",
   "25_model_diagnostic_coverage.R"
 )

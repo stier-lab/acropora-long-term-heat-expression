@@ -126,8 +126,8 @@ anova12 <- read_csv(file.path(TBL_DIR, "12_anova_summary.csv"),
     term            = term,
     test            = if_else(is.na(`F value`), "Wald chi-sq", "ANOVA F"),
     statistic       = coalesce(`F value`, Chisq),
-    df1             = coalesce(npar, Df),
-    df2             = NA_real_,
+    df1             = coalesce(NumDF, Df),   # numerator/test df (lmerTest NumDF; car Df)
+    df2             = DenDF,                 # denominator df (Satterthwaite) for F-tests
     n               = n_obs,
     estimate        = NA_real_,
     units           = NA_character_,
@@ -639,6 +639,96 @@ thermal_rows <- if (file.exists(file.path(TBL_DIR, "26_thermal_context.csv"))) {
 } else tibble()
 
 # ===========================================================================
+# Block 14 — Inter-milestone lag (script 14): closure -> regeneration
+# ===========================================================================
+lag_rows <- if (file.exists(file.path(TBL_DIR, "14_milestone_lag_summary.csv"))) {
+  read_csv(file.path(TBL_DIR, "14_milestone_lag_summary.csv"),
+           show_col_types = FALSE) |>
+    transmute(
+      domain = "Healing milestone lag",
+      response = pair, model_type = "event timing",
+      term = paste0(treatment, " (n closed=", n_closed,
+                    ", reached both=", n_reached_both, ")"),
+      test = "median lag (days)", statistic = median_lag,
+      df1 = NA_real_, df2 = NA_real_, n = n_reached_both,
+      estimate = median_lag, units = "days",
+      pct_change = pct_closed_no_regen, ci_low = iqr_low, ci_high = iqr_high,
+      p_value = NA_real_,
+      qualitative = sprintf("%s: %.0f%% closed but never regenerated; median lag %s d",
+                            treatment, pct_closed_no_regen,
+                            ifelse(is.na(median_lag), "NA", as.character(round(median_lag,1)))),
+      source_script = "code/14_morphology_kaplan.R",
+      source_artifact = "output/tables/14_milestone_lag_summary.csv"
+    )
+} else tibble()
+
+# ===========================================================================
+# Block 15 — Variance partitioning / ICC (script 27)
+# ===========================================================================
+icc_rows <- if (file.exists(file.path(TBL_DIR, "27_variance_partitioning.csv"))) {
+  read_csv(file.path(TBL_DIR, "27_variance_partitioning.csv"),
+           show_col_types = FALSE) |>
+    transmute(
+      domain = "Variance partitioning", response = model,
+      model_type = "ICC", term = paste0("ICC[", component, "]"),
+      test = "variance fraction", statistic = icc,
+      df1 = NA_real_, df2 = NA_real_, n = NA_real_,
+      estimate = icc, units = "fraction of variance",
+      pct_change = NA_real_, ci_low = NA_real_, ci_high = NA_real_,
+      p_value = NA_real_,
+      qualitative = sprintf("%s: %.1f%% of variance", component, 100 * icc),
+      source_script = "code/27_variance_partitioning.R",
+      source_artifact = "output/tables/27_variance_partitioning.csv"
+    )
+} else tibble()
+
+# ===========================================================================
+# Block 16 — Multiple-testing sensitivity (script 28)
+# ===========================================================================
+mt_rows <- if (file.exists(file.path(TBL_DIR, "28_multiple_testing.csv"))) {
+  read_csv(file.path(TBL_DIR, "28_multiple_testing.csv"),
+           show_col_types = FALSE) |>
+    transmute(
+      domain = "Multiple-testing sensitivity", response = family,
+      model_type = "FDR/Bonferroni", term = test,
+      test = "BH-adjusted p", statistic = p_BH,
+      df1 = NA_real_, df2 = NA_real_, n = NA_real_,
+      estimate = p_BH, units = "adjusted p",
+      pct_change = NA_real_, ci_low = NA_real_, ci_high = NA_real_,
+      p_value = p_value,
+      qualitative = sprintf("raw %s; BH %s; Bonferroni %s",
+                            ifelse(sig_raw, "sig", "n.s."),
+                            ifelse(sig_BH, "sig", "n.s."),
+                            ifelse(sig_bonferroni, "sig", "n.s.")),
+      source_script = "code/28_multiple_testing.R",
+      source_artifact = "output/tables/28_multiple_testing.csv"
+    )
+} else tibble()
+
+# ===========================================================================
+# Block 17 — Morphology probability-scale contrasts (script 29)
+# ===========================================================================
+probc_rows <- if (file.exists(file.path(TBL_DIR, "29_morphology_prob_contrasts.csv"))) {
+  read_csv(file.path(TBL_DIR, "29_morphology_prob_contrasts.csv"),
+           show_col_types = FALSE) |>
+    filter(is.finite(delta_prob)) |>
+    transmute(
+      domain = "Morphology", response = str_to_sentence(gsub("_", " ", trait)),
+      model_type = "GLMM contrast (prob scale)",
+      term = sprintf("28C - 31C at day %d", day),
+      test = "delta probability", statistic = delta_prob,
+      df1 = NA_real_, df2 = NA_real_, n = NA_real_,
+      estimate = delta_prob, units = "probability",
+      pct_change = 100 * delta_prob, ci_low = NA_real_, ci_high = NA_real_,
+      p_value = p_value,
+      qualitative = sprintf("P(28C)=%.2f vs P(31C)=%.2f; OR(31vs28)=%.2g",
+                            prob_28, prob_31, or_31_vs_28),
+      source_script = "code/29_morphology_prob_contrasts.R",
+      source_artifact = "output/tables/29_morphology_prob_contrasts.csv"
+    )
+} else tibble()
+
+# ===========================================================================
 # Combine and write
 # ===========================================================================
 master <- bind_rows(anova12, genet_rows, r2_rows,
@@ -646,7 +736,8 @@ master <- bind_rows(anova12, genet_rows, r2_rows,
                     cox_rows, cox_genet_rows, cox_tt,
                     lrt13, pca_load, pca_disp, bw_lm,
                     clmm_rows, bw_means_rows, bw_pct_drop, zoox_means_rows,
-                    ts_rows, coxph_rows, thermal_rows) |>
+                    ts_rows, coxph_rows, thermal_rows,
+                    lag_rows, icc_rows, mt_rows, probc_rows) |>
   mutate(across(c(statistic, estimate, pct_change, ci_low, ci_high, p_value),
                 \(x) round(x, 4))) |>
   arrange(domain, response, model_type, term)

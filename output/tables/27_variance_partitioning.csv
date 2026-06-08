@@ -1,0 +1,25 @@
+model,component,variance,icc
+PAM Fv/Fm (LMM),id,3.8e-5,0.0432
+PAM Fv/Fm (LMM),tank,1.92e-4,0.21560000000000001
+PAM Fv/Fm (LMM),Residual,6.6e-4,0.7413
+Color D-scale (LMM),id,0.024508,0.2306
+Color D-scale (LMM),tank,0.02391,0.225
+Color D-scale (LMM),Residual,0.057841,0.5443
+log symbionts (LMM),tank,0.03312,0.139
+log symbionts (LMM),Residual,0.205184,0.861
+morph: hole_in_center (GLMM),tank,2.155695,0.3959
+morph: hole_in_center (GLMM),Residual,3.289868,0.6041
+morph: new_corallites_on_tip (GLMM),tank,1.78717,0.352
+morph: new_corallites_on_tip (GLMM),Residual,3.289868,0.648
+morph: pigment_over_wound (GLMM),tank,0.516959,0.1358
+morph: pigment_over_wound (GLMM),Residual,3.289868,0.8642
+morph: polyp_in_hole (GLMM),tank,2.155695,0.3959
+morph: polyp_in_hole (GLMM),Residual,3.289868,0.6041
+morph: polyps_out (GLMM),tank,0.226448,0.0644
+morph: polyps_out (GLMM),Residual,3.289868,0.9356
+morph: tip_exist (GLMM),tank,3.670821,0.5274
+morph: tip_exist (GLMM),Residual,3.289868,0.4726
+morph: tip_extension (GLMM),tank,15.798122,0.8276
+morph: tip_extension (GLMM),Residual,3.289868,0.1724
+morph: wound_smoothed (GLMM),tank,0.498327,0.1315
+morph: wound_smoothed (GLMM),Residual,3.289868,0.8685

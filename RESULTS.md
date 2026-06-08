@@ -42,15 +42,16 @@ R² estimates (`output/tables/12_r2_summary.csv`) — note marginal R² jumped v
 
 **Model:** `fv_fm ~ treatment * wound * day * thicket + (1|tank) + (1|id)` — `output/models/12_pam_lmm.rds`. n = 336 observations (top/bottom averaged per coral × day).
 
-**Type-III ANOVA, key terms** (current values from `output/tables/20_master_results.csv`):
+**Type-III ANOVA, key terms** (Satterthwaite, `lmerTest`; from `output/tables/12_anova_summary.csv`). Note: with `day` uncentered, *main* effects are evaluated at day 0 (wounding), before heat has acted — so the treatment signal lives in the **treatment × day interaction**, not the (conditional) main effect.
 
-| Term | F | df | Direction |
+| Term | F | df | Reading |
 |---|---|---|---|
-| treatment | 15.83 | 1 | 31 °C lower |
-| thicket | 54.44 | 2 | a and d lower-baseline than c |
-| treatment × day | 112.68 | 1 | 31 °C declines linearly through experiment |
-| treatment × thicket | 9.66 | 2 | genets diverge in heat response |
-| treatment × day × thicket | 14.66 | 2 | each genet has a different decline rate |
+| treatment (at day 0) | 0.52 | 1, 7 | n.s. — no treatment difference at wounding |
+| thicket | 7.75 | 2, 102 | genets differ (p < 0.001) |
+| day | 156.0 | 1, 276 | overall change over time |
+| **treatment × day** | **106.57** | 1, 276 | **31 °C declines through the experiment (p < 0.001) — the heat signal** |
+| treatment × thicket | 0.55 | 2, 102 | n.s. — genets don't differ at day 0 |
+| **treatment × day × thicket** | **15.66** | 2, 276 | **genet-specific decline rates (p < 0.001) — the G × E** |
 
 **Per-genet end-of-experiment heat effect (Day 14 Fv/Fm, unwounded; from `output/tables/12_genet_treatment_effects.csv`):**
 
@@ -72,15 +73,15 @@ Genet C loses 2.7× less photochemical efficiency than genet A under sustained h
 
 **Model:** `color_num ~ treatment * wound * day * thicket + (1|tank) + (1|id)`. n = 336 obs.
 
-**Type-III ANOVA, key terms** (current values from `output/tables/20_master_results.csv`):
+**Type-III ANOVA, key terms** (Satterthwaite; main effects conditional at day 0):
 
-| Term | F | df |
-|---|---|---|
-| treatment | 20.37 | 1 |
-| thicket | 18.04 | 2 |
-| treatment × day | 240.67 | 1 (dominant signal — heated corals diverge) |
-| treatment × thicket | 18.04 | 2 |
-| treatment × day × thicket | 14.66 | 2 |
+| Term | F | df | Reading |
+|---|---|---|---|
+| treatment (at day 0) | 0.34 | 1, 7 | n.s. at wounding |
+| **treatment × day** | **239.34** | 1, 287 | **dominant signal — heated corals pale through time (p < 0.001)** |
+| treatment × wound | 3.03 | 1, 245 | trend only (p = 0.083) |
+| treatment × thicket | 0.77 | 2, 60 | n.s. |
+| **treatment × day × thicket** | **31.92** | 2, 287 | **genet-specific paling rates (p < 0.001) — the G × E** |
 
 **Per-genet end-of-experiment heat-induced paling (Day 14, unwounded):**
 
@@ -92,7 +93,7 @@ Genet C loses 2.7× less photochemical efficiency than genet A under sustained h
 
 Genet C pales 3.3× less than genet A. By Day 14, 0–8% of 28 °C corals had visibly paled vs 58% of 31 °C unwounded and 67% of 31 °C wounded (`output/tables/03_color_end_proportions.csv`).
 
-A significant treatment × wound interaction (F₁ = 16.90) indicates wounded heated corals paled slightly *less* than unwounded heated corals — consistent with symbiont redistribution toward the regeneration front. This is most pronounced in genet C: heated wounded genet C corals show only a 0.25 D-unit drop vs 28 °C controls (p = 0.27, n.s.), while unwounded heated genet C corals lose 0.63 units (p = 0.007). For genets A and D, wounding does not protect against heat-induced paling.
+A treatment × wound interaction is present as a **trend** under type-III SS (F₁,₂₄₅ = 3.03, p = 0.083; note: an earlier type-I computation overstated this as F = 16.9, p < 0.001 — see the type-III correction note below) — wounded heated corals tended to pale slightly *less* than unwounded heated corals, consistent with symbiont redistribution toward the regeneration front. Descriptively this is most pronounced in genet C: heated wounded genet C corals show only a 0.25 D-unit drop vs 28 °C controls (p = 0.27, n.s.), while unwounded heated genet C corals lose 0.63 units (p = 0.007). We report this as a suggestive pattern, not a significant interaction.
 
 **Figures:** `figures/03_color_trajectory.{pdf,png}`.
 
@@ -118,15 +119,14 @@ A significant treatment × wound interaction (F₁ = 16.90) indicates wounded he
 
 **Model:** `log(cells_per_cm²) ~ treatment * wound * biopsy_day * thicket + (1|tank)` (n = 192). `output/models/12_zoox_lmm.rds`.
 
-**Type-III ANOVA:**
+**Type-III ANOVA** (Satterthwaite; `biopsy_day_c` centered at day 1, so main effects are at day 1):
 
-| Term | F | df |
-|---|---|---|
-| treatment | 48.84 | 1 |
-| thicket | 20.68 | 2 |
-| treatment × biopsy_day | 94.67 | 1 |
-| treatment × thicket | 16.16 | 2 |
-| treatment × biopsy_day × thicket | 6.32 | 2 (significant — symbiont loss rate is genet-specific) |
+| Term | F | df | Reading |
+|---|---|---|---|
+| treatment (at day 1) | 3.35 | 1, 9 | marginal at day 1 (p = 0.099) |
+| **treatment × biopsy_day** | **93.97** | 1, 162 | **heated corals lose symbionts through time (p < 0.001) — the heat signal** |
+| treatment × thicket | 0.70 | 2, 162 | n.s. |
+| **treatment × biopsy_day × thicket** | **6.34** | 2, 162 | **genet-specific symbiont-loss rates (p = 0.002) — the G × E** |
 
 **Per-genet end-of-experiment heat effect (Day 15, unwounded; on log scale, so ~0.7 = halving):**
 
@@ -168,6 +168,17 @@ LRT for genet × treatment in Cox regression: χ² = 11.3, df = 2, **p = 0.0035*
 A similar significant interaction holds for **pigment over wound** (Cox LRT χ² = 13.3, p = 0.001).
 
 **Figures:** `figures/04_morphology_trajectories.{pdf,png}` (pooled by genet), `figures/04b_morphology_trajectories_by_genet.{pdf,png}` (split by genet), `figures/14_morphology_KM.{pdf,png}` (KM by treatment), `figures/14b_morphology_KM_by_genet.{pdf,png}` (KM by treatment × genet).
+
+### 5c. Closure → regeneration lag (per-coral event timing)
+
+The cleanest quantification of "heat impairs regeneration, not closure" is the **lag** between achieving wound closure (`wound_smoothed`) and forming new skeleton at the tip (`new_corallites_on_tip`), computed per coral (`code/14_morphology_kaplan.R`, `output/tables/14_milestone_lag_summary.csv`):
+
+| Treatment | n closed | reached both | **% closed but never regenerated** | median lag (days) |
+|---|---|---|---|---|
+| 28 °C | 12 | 12 | **0 %** | 8 |
+| 31 °C | 12 | 4 | **67 %** | 10 |
+
+At 28 °C every coral that closed its wound went on to regenerate (median 8 d later). At 31 °C **two-thirds of corals closed the wound but never rebuilt skeleton** within the experiment, and the few that did took ~2 d longer. Among corals reaching both milestones the lag difference is marginal (Wilcoxon W = 9, p = 0.061, n = 4 heated) — the dominant signal is the *censored fraction*, not the lag length. This converts the "regeneration vs closure" dichotomy into a single, falsifiable per-coral statistic. (Analysis pattern adapted from the coenosarc→polyp lag in the wound-type studies.)
 
 ---
 
@@ -264,6 +275,14 @@ A diagnostic swarm (`output/diagnostics/{A,B,C,D}_*.{csv,md}`) checked every pri
   - The quadratic-time + random-slope model with the full four-way interaction actually has **worse AIC** than the linear/intercept model (PAM −1199 → −1051; color 234 → 251): the extra interaction parameters are not justified by the fit. The AR(1) model for PAM does improve AIC (−1199 → −1226), confirming the autocorrelation is real, but its day-14 effect (0.083) is essentially identical to the current model (0.084).
 
   **Verdict: the parsimonious linear / random-intercept model is retained for the headline.** The richer model neither changes the conclusions nor improves the fit (except AR(1) for PAM, which leaves the estimates unchanged); the simplification is therefore justified rather than merely convenient. Residual ACF plots are in `figures/diagnostics/I_*_acf.png`.
+
+- **Type-III ANOVA correction.** The continuous mixed models are now fit with `lmerTest::lmer` and reported with Satterthwaite type-III ANOVA. An earlier version used `lme4::lmer`, whose `anova(type=3)` silently returns **type-I (sequential)** sums of squares — which inflated several main-effect and lower-order interaction F-values (e.g. PAM treatment main 15.8→0.52; color treatment×wound 16.9→3.03). All omnibus F/p in §1–4 are now correct type-III. The headline treatment×time interactions and per-genet `emmeans` contrasts are essentially unchanged; the main consequence is that genotype × heat variation is correctly attributed to the **rate** (treatment × day × thicket), and the color treatment×wound interaction is a non-significant trend rather than significant.
+
+- **Multiple-testing sensitivity.** Primary inference is unadjusted (a-priori directed hypotheses), but `code/28_multiple_testing.R` applies Benjamini-Hochberg (FDR) and Bonferroni within three outcome families (physiology treatment effects, morphology treatment effects, Cox HRs; `output/tables/28_multiple_testing.csv`). Of 19 primary tests, **5 survive raw α = 0.05, 4 survive BH-FDR, 3 survive Bonferroni** — the physiology treatment×time effects (PAM, color, symbionts) survive every correction; the new-corallite Cox HR survives raw only.
+
+- **Variance partitioning (ICC).** `code/27_variance_partitioning.R` reports latent-scale ICC for every mixed model (`output/tables/27_variance_partitioning.csv`). Tank explains a modest fraction of variance in the physiology models (PAM 22 %, color 23 %, symbionts 14 %); among the morphology traits, tip-extension has a high tank ICC (0.83) while most others are 0.06–0.40 — supporting the `(1|tank)` random effect.
+
+- **Probability-scale morphology contrasts.** In addition to log-odds, `code/29_morphology_prob_contrasts.R` reports treatment contrasts on the interpretable Δ-probability scale (plus odds ratios) at day 10 (`output/tables/29_morphology_prob_contrasts.csv`); late traits like new corallites have not yet diverged at day 10, so the Cox/KM framing (§5b–c) remains the primary tool for those.
 
 - **Diagnostic coverage (complete).** Every fitted model has both a result visualization and a residual/assumption diagnostic, audited by `code/25_model_diagnostic_coverage.R` (`output/tables/25_model_diagnostic_coverage.csv`, `output/diagnostics/K_model_coverage_report.md`): **34/34 models covered, 0 gaps.** Continuous LMMs and the OLS/GLMM models use DHARMa simulated-residual plots; the ordinal color model uses an observed-vs-fitted check; the penalized morphology GLMMs each have a DHARMa plot; and **all seven overall Cox models now have proportional-hazards (Schoenfeld) diagnostics** (`figures/diagnostics/14_cox_ph_*.png`, `output/tables/14_cox_ph_tests.csv`) — the PH assumption is met for every overall model (all cox.zph p ≥ 0.059). Every diagnostic test statistic is also recorded in the master results table (`output/tables/20_master_results.csv`, domains `Time-series diagnostic` and `Survival diagnostic`).
 

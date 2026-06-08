@@ -1,0 +1,2 @@
+pair,test,W,p_value,n_28,n_31
+wound_smoothed -> new_corallites_on_tip,Wilcoxon rank-sum (28C vs 31C lag),9,0.061214634954602026,12,4

@@ -65,6 +65,89 @@ km_summary <- events |>
   )
 write_csv(km_summary, file.path(TBL_DIR, "14_km_event_summary.csv"))
 
+# ---- Inter-milestone lag: wound closure -> regeneration -------------------
+# The headline result is "heat impairs regeneration, not closure." Quantify it
+# directly per coral: the LAG (days) from achieving wound closure
+# (`wound_smoothed`) to forming new skeleton at the tip
+# (`new_corallites_on_tip`). Corals that close but never regenerate within the
+# experiment are right-censored (no lag) and counted separately — heat is
+# expected to inflate that censored fraction. (Pattern adapted from the
+# coenosarc->polyp lag in the wound-type analyses.)
+ev_wide <- events |>
+  select(id, treatment, thicket, trait, event, event_day) |>
+  pivot_wider(names_from = trait, values_from = c(event, event_day))
+
+lag_pairs <- list(
+  c(from = "wound_smoothed", to = "new_corallites_on_tip"),  # closure -> regeneration (primary)
+  c(from = "wound_smoothed", to = "tip_extension"),          # closure -> tip extension
+  c(from = "hole_in_center", to = "new_corallites_on_tip")   # initial closure -> regeneration
+)
+
+lag_long <- map_dfr(lag_pairs, function(p) {
+  fe <- paste0("event_", p["from"]);  fd <- paste0("event_day_", p["from"])
+  te <- paste0("event_", p["to"]);    td <- paste0("event_day_", p["to"])
+  ev_wide |>
+    transmute(
+      id, treatment, thicket,
+      pair       = sprintf("%s -> %s", p["from"], p["to"]),
+      reached_from = .data[[fe]] == 1,
+      reached_both = .data[[fe]] == 1 & .data[[te]] == 1,
+      # lag only defined when both milestones reached and order is sensible
+      lag_days   = ifelse(.data[[fe]] == 1 & .data[[te]] == 1,
+                          .data[[td]] - .data[[fd]], NA_real_)
+    )
+})
+
+# Summary by pair × treatment: median/IQR lag among corals reaching both, plus
+# the fraction that closed but never regenerated (censored regeneration).
+lag_summary <- lag_long |>
+  group_by(pair, treatment) |>
+  summarise(
+    n_closed          = sum(reached_from, na.rm = TRUE),
+    n_reached_both    = sum(reached_both, na.rm = TRUE),
+    pct_closed_no_regen = round(100 * (sum(reached_from, na.rm = TRUE) -
+                                       sum(reached_both, na.rm = TRUE)) /
+                                pmax(sum(reached_from, na.rm = TRUE), 1), 1),
+    median_lag        = if (sum(reached_both, na.rm = TRUE) > 0)
+                          median(lag_days, na.rm = TRUE) else NA_real_,
+    iqr_low           = if (sum(reached_both, na.rm = TRUE) > 0)
+                          quantile(lag_days, 0.25, na.rm = TRUE) else NA_real_,
+    iqr_high          = if (sum(reached_both, na.rm = TRUE) > 0)
+                          quantile(lag_days, 0.75, na.rm = TRUE) else NA_real_,
+    mean_lag          = mean(lag_days, na.rm = TRUE),
+    sd_lag            = sd(lag_days, na.rm = TRUE),
+    .groups = "drop"
+  )
+write_csv(lag_summary, file.path(TBL_DIR, "14_milestone_lag_summary.csv"))
+
+# Wilcoxon test of the primary closure->regeneration lag (28 vs 31) among
+# corals that reached both, where estimable.
+prim <- lag_long |> filter(pair == "wound_smoothed -> new_corallites_on_tip",
+                           reached_both)
+lag_test <- if (length(unique(prim$treatment)) == 2 &&
+                all(table(prim$treatment) >= 2)) {
+  w <- suppressWarnings(wilcox.test(lag_days ~ treatment, data = prim))
+  tibble(pair = "wound_smoothed -> new_corallites_on_tip",
+         test = "Wilcoxon rank-sum (28C vs 31C lag)",
+         W = unname(w$statistic), p_value = w$p.value,
+         n_28 = sum(prim$treatment == "28C"),
+         n_31 = sum(prim$treatment == "31C"))
+} else {
+  tibble(pair = "wound_smoothed -> new_corallites_on_tip",
+         test = "Wilcoxon rank-sum (28C vs 31C lag)",
+         W = NA_real_, p_value = NA_real_,
+         n_28 = sum(prim$treatment == "28C"),
+         n_31 = sum(prim$treatment == "31C"),
+         note = "too few corals reached both milestones in one treatment")
+}
+write_csv(lag_test, file.path(TBL_DIR, "14_milestone_lag_test.csv"))
+
+cat("\n=== Inter-milestone lag (closure -> regeneration) ===\n")
+print(as.data.frame(lag_summary |>
+  mutate(across(where(is.numeric), \(x) round(x, 2)))))
+cat("\nPrimary lag test (closure -> new corallites, 28C vs 31C):\n")
+print(as.data.frame(lag_test))
+
 # ---- Cox PH per trait (overall + per genet) -------------------------------
 fit_cox_overall <- function(tr) {
   d <- events |> filter(trait == tr)

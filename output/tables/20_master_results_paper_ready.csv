@@ -1,4 +1,10 @@
 Domain,Response,Model,Term,Test,Statistic,df,N,Estimate,% change,95% CI,p,Interpretation,Source
+Healing milestone lag,hole_in_center -> new_corallites_on_tip,event timing,"28C (n closed=12, reached both=12)",median lag (days),9.00,NA,12,9.000 days,+0.0%,"[8.00, 9.00]",NA,28C: 0% closed but never regenerated; median lag 9 d,code/14_morphology_kaplan.R
+Healing milestone lag,hole_in_center -> new_corallites_on_tip,event timing,"31C (n closed=12, reached both=4)",median lag (days),11.00,NA,4,11.000 days,+66.7%,"[10.50, 11.00]",NA,31C: 67% closed but never regenerated; median lag 11 d,code/14_morphology_kaplan.R
+Healing milestone lag,wound_smoothed -> new_corallites_on_tip,event timing,"28C (n closed=12, reached both=12)",median lag (days),8.00,NA,12,8.000 days,+0.0%,"[7.50, 8.25]",NA,28C: 0% closed but never regenerated; median lag 8 d,code/14_morphology_kaplan.R
+Healing milestone lag,wound_smoothed -> new_corallites_on_tip,event timing,"31C (n closed=12, reached both=4)",median lag (days),10.00,NA,4,10.000 days,+66.7%,"[9.50, 10.00]",NA,31C: 67% closed but never regenerated; median lag 10 d,code/14_morphology_kaplan.R
+Healing milestone lag,wound_smoothed -> tip_extension,event timing,"28C (n closed=12, reached both=11)",median lag (days),4.00,NA,11,4.000 days,+8.3%,"[3.00, 4.00]",NA,28C: 8% closed but never regenerated; median lag 4 d,code/14_morphology_kaplan.R
+Healing milestone lag,wound_smoothed -> tip_extension,event timing,"31C (n closed=12, reached both=11)",median lag (days),4.00,NA,11,4.000 days,+8.3%,"[4.00, 5.00]",NA,31C: 8% closed but never regenerated; median lag 4 d,code/14_morphology_kaplan.R
 Morphology,Hole in center,GLMM (binomial),day,Wald chi-sq,36.96,3,NA,NA,NA,NA,<0.001,day effect on hole_in_center (significant),code/04_physio_morphology.R
 Morphology,Hole in center,GLMM (binomial),day:thicket,Wald chi-sq,2.30,2,NA,NA,NA,NA,0.317,day:thicket effect on hole_in_center (n.s.),code/04_physio_morphology.R
 Morphology,Hole in center,GLMM (binomial),thicket,Wald chi-sq,5.89,5,NA,NA,NA,NA,0.317,thicket effect on hole_in_center (n.s.),code/04_physio_morphology.R
@@ -17,6 +23,7 @@ Morphology,Hole in center,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: treatment
 Morphology,Hole in center,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: treatment31C:day:thicketd,Wald z,2306.28,NA,NA,NA log-odds [residual separation],NA,NA,NA,"fixed: treatment31C:day:thicketd: residual separation after Cauchy(0,2.5) prior — report omnibus chi-sq only",code/12c_morph_blme.R
 Morphology,Hole in center,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: treatment31C:thicketc,Wald z,81.78,NA,NA,0.631 log-odds,+88.0%,"[0.62, 0.65]",<0.001,"fixed: treatment31C:thicketc: OR=1.88 (sig, blme penalized)",code/12c_morph_blme.R
 Morphology,Hole in center,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: treatment31C:thicketd,Wald z,-6973.97,NA,NA,NA log-odds [residual separation],NA,NA,NA,"fixed: treatment31C:thicketd: residual separation after Cauchy(0,2.5) prior — report omnibus chi-sq only",code/12c_morph_blme.R
+Morphology,Hole in center,GLMM contrast (prob scale),28C - 31C at day 10,delta probability,0.00,NA,NA,0.000 probability,+0.0%,NA,<0.001,P(28C)=1.00 vs P(31C)=1.00; OR(31vs28)=3.1e+19,code/29_morphology_prob_contrasts.R
 Morphology,New corallites on tip,GLMM (binomial),day,Wald chi-sq,15.01,3,NA,NA,NA,NA,0.002,day effect on new_corallites_on_tip (significant),code/04_physio_morphology.R
 Morphology,New corallites on tip,GLMM (binomial),day:thicket,Wald chi-sq,2.25,2,NA,NA,NA,NA,0.324,day:thicket effect on new_corallites_on_tip (n.s.),code/04_physio_morphology.R
 Morphology,New corallites on tip,GLMM (binomial),thicket,Wald chi-sq,3.15,3,NA,NA,NA,NA,0.369,thicket effect on new_corallites_on_tip (n.s.),code/04_physio_morphology.R
@@ -35,6 +42,7 @@ Morphology,New corallites on tip,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: tr
 Morphology,New corallites on tip,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: treatment31C:day:thicketd,Wald z,118.92,NA,NA,0.633 log-odds,+88.3%,"[0.62, 0.64]",<0.001,"fixed: treatment31C:day:thicketd: OR=1.88 (sig, blme penalized)",code/12c_morph_blme.R
 Morphology,New corallites on tip,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: treatment31C:thicketc,Wald z,-81037.56,NA,NA,NA log-odds [residual separation],NA,NA,NA,"fixed: treatment31C:thicketc: residual separation after Cauchy(0,2.5) prior — report omnibus chi-sq only",code/12c_morph_blme.R
 Morphology,New corallites on tip,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: treatment31C:thicketd,Wald z,3032.27,NA,NA,NA log-odds [residual separation],NA,NA,NA,"fixed: treatment31C:thicketd: residual separation after Cauchy(0,2.5) prior — report omnibus chi-sq only",code/12c_morph_blme.R
+Morphology,New corallites on tip,GLMM contrast (prob scale),28C - 31C at day 10,delta probability,-0.00,NA,NA,-0.000 probability,-0.0%,NA,<0.001,P(28C)=0.00 vs P(31C)=0.00; OR(31vs28)=8.9e+12,code/29_morphology_prob_contrasts.R
 Morphology,Pigment over wound,GLMM (binomial),day,Wald chi-sq,7.69,3,NA,NA,NA,NA,0.053,day effect on pigment_over_wound (n.s.),code/04_physio_morphology.R
 Morphology,Pigment over wound,GLMM (binomial),day:thicket,Wald chi-sq,5.29,2,NA,NA,NA,NA,0.071,day:thicket effect on pigment_over_wound (n.s.),code/04_physio_morphology.R
 Morphology,Pigment over wound,GLMM (binomial),thicket,Wald chi-sq,6.25,3,NA,NA,NA,NA,0.100,thicket effect on pigment_over_wound (n.s.),code/04_physio_morphology.R
@@ -53,6 +61,7 @@ Morphology,Pigment over wound,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: treat
 Morphology,Pigment over wound,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: treatment31C:day:thicketd,Wald z,-0.08,NA,NA,-1.643 log-odds,-80.6%,"[-40.98, 37.69]",0.935,"fixed: treatment31C:day:thicketd: OR=0.19 (n.s., blme penalized)",code/12c_morph_blme.R
 Morphology,Pigment over wound,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: treatment31C:thicketc,Wald z,-1.59,NA,NA,NA log-odds [residual separation],NA,NA,NA,"fixed: treatment31C:thicketc: residual separation after Cauchy(0,2.5) prior — report omnibus chi-sq only",code/12c_morph_blme.R
 Morphology,Pigment over wound,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: treatment31C:thicketd,Wald z,-0.64,NA,NA,-8.440 log-odds,-100.0%,"[-34.10, 17.22]",0.519,"fixed: treatment31C:thicketd: OR=0.00 (n.s., blme penalized)",code/12c_morph_blme.R
+Morphology,Pigment over wound,GLMM contrast (prob scale),28C - 31C at day 10,delta probability,0.00,NA,NA,0.004 probability,+0.4%,NA,0.908,P(28C)=0.00 vs P(31C)=0.00; OR(31vs28)=0.0005,code/29_morphology_prob_contrasts.R
 Morphology,Polyp in hole,GLMM (binomial),day,Wald chi-sq,36.96,3,NA,NA,NA,NA,<0.001,day effect on polyp_in_hole (significant),code/04_physio_morphology.R
 Morphology,Polyp in hole,GLMM (binomial),day:thicket,Wald chi-sq,2.30,2,NA,NA,NA,NA,0.317,day:thicket effect on polyp_in_hole (n.s.),code/04_physio_morphology.R
 Morphology,Polyp in hole,GLMM (binomial),thicket,Wald chi-sq,5.89,5,NA,NA,NA,NA,0.317,thicket effect on polyp_in_hole (n.s.),code/04_physio_morphology.R
@@ -71,6 +80,7 @@ Morphology,Polyp in hole,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: treatment3
 Morphology,Polyp in hole,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: treatment31C:day:thicketd,Wald z,2306.28,NA,NA,NA log-odds [residual separation],NA,NA,NA,"fixed: treatment31C:day:thicketd: residual separation after Cauchy(0,2.5) prior — report omnibus chi-sq only",code/12c_morph_blme.R
 Morphology,Polyp in hole,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: treatment31C:thicketc,Wald z,81.78,NA,NA,0.631 log-odds,+88.0%,"[0.62, 0.65]",<0.001,"fixed: treatment31C:thicketc: OR=1.88 (sig, blme penalized)",code/12c_morph_blme.R
 Morphology,Polyp in hole,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: treatment31C:thicketd,Wald z,-6973.97,NA,NA,NA log-odds [residual separation],NA,NA,NA,"fixed: treatment31C:thicketd: residual separation after Cauchy(0,2.5) prior — report omnibus chi-sq only",code/12c_morph_blme.R
+Morphology,Polyp in hole,GLMM contrast (prob scale),28C - 31C at day 10,delta probability,0.00,NA,NA,0.000 probability,+0.0%,NA,<0.001,P(28C)=1.00 vs P(31C)=1.00; OR(31vs28)=3.1e+19,code/29_morphology_prob_contrasts.R
 Morphology,Polyps out,GLMM (binomial),day,Wald chi-sq,0.01,1,NA,NA,NA,NA,0.930,day effect on polyps_out (n.s.),code/04_physio_morphology.R
 Morphology,Polyps out,GLMM (binomial),day:thicket,Wald chi-sq,3.96,2,NA,NA,NA,NA,0.138,day:thicket effect on polyps_out (n.s.),code/04_physio_morphology.R
 Morphology,Polyps out,GLMM (binomial),thicket,Wald chi-sq,1.70,2,NA,NA,NA,NA,0.428,thicket effect on polyps_out (n.s.),code/04_physio_morphology.R
@@ -89,6 +99,7 @@ Morphology,Polyps out,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: treatment31C:
 Morphology,Polyps out,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: treatment31C:day:thicketd,Wald z,0.21,NA,NA,0.030 log-odds,+3.0%,"[-0.24, 0.30]",0.831,"fixed: treatment31C:day:thicketd: OR=1.03 (n.s., blme penalized)",code/12c_morph_blme.R
 Morphology,Polyps out,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: treatment31C:thicketc,Wald z,-0.16,NA,NA,-0.079 log-odds,-7.6%,"[-1.05, 0.90]",0.874,"fixed: treatment31C:thicketc: OR=0.92 (n.s., blme penalized)",code/12c_morph_blme.R
 Morphology,Polyps out,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: treatment31C:thicketd,Wald z,0.05,NA,NA,0.024 log-odds,+2.4%,"[-0.92, 0.97]",0.961,"fixed: treatment31C:thicketd: OR=1.02 (n.s., blme penalized)",code/12c_morph_blme.R
+Morphology,Polyps out,GLMM contrast (prob scale),28C - 31C at day 10,delta probability,0.13,NA,NA,0.135 probability,+13.4%,NA,0.007,P(28C)=0.97 vs P(31C)=0.84; OR(31vs28)=0.14,code/29_morphology_prob_contrasts.R
 Morphology,Tip exist,GLMM (binomial),day,Wald chi-sq,52.22,4,NA,NA,NA,NA,<0.001,day effect on tip_exist (significant),code/04_physio_morphology.R
 Morphology,Tip exist,GLMM (binomial),day:thicket,Wald chi-sq,9.27,2,NA,NA,NA,NA,0.010,day:thicket effect on tip_exist (significant),code/04_physio_morphology.R
 Morphology,Tip exist,GLMM (binomial),thicket,Wald chi-sq,10.10,4,NA,NA,NA,NA,0.039,thicket effect on tip_exist (significant),code/04_physio_morphology.R
@@ -107,6 +118,7 @@ Morphology,Tip exist,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: treatment31C:d
 Morphology,Tip exist,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: treatment31C:day:thicketd,Wald z,-276.68,NA,NA,-1.982 log-odds,-86.2%,"[-2.00, -1.97]",<0.001,"fixed: treatment31C:day:thicketd: OR=0.14 (sig, blme penalized)",code/12c_morph_blme.R
 Morphology,Tip exist,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: treatment31C:thicketc,Wald z,-74.64,NA,NA,NA log-odds [residual separation],NA,NA,NA,"fixed: treatment31C:thicketc: residual separation after Cauchy(0,2.5) prior — report omnibus chi-sq only",code/12c_morph_blme.R
 Morphology,Tip exist,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: treatment31C:thicketd,Wald z,0.13,NA,NA,NA log-odds [residual separation],NA,NA,NA,"fixed: treatment31C:thicketd: residual separation after Cauchy(0,2.5) prior — report omnibus chi-sq only",code/12c_morph_blme.R
+Morphology,Tip exist,GLMM contrast (prob scale),28C - 31C at day 10,delta probability,0.01,NA,NA,0.013 probability,+1.3%,NA,<0.001,P(28C)=1.00 vs P(31C)=0.99; OR(31vs28)=0,code/29_morphology_prob_contrasts.R
 Morphology,Tip extension,GLMM (binomial),day,Wald chi-sq,57.89,4,NA,NA,NA,NA,<0.001,day effect on tip_extension (significant),code/04_physio_morphology.R
 Morphology,Tip extension,GLMM (binomial),day:thicket,Wald chi-sq,2.57,2,NA,NA,NA,NA,0.277,day:thicket effect on tip_extension (n.s.),code/04_physio_morphology.R
 Morphology,Tip extension,GLMM (binomial),thicket,Wald chi-sq,7.22,4,NA,NA,NA,NA,0.125,thicket effect on tip_extension (n.s.),code/04_physio_morphology.R
@@ -125,6 +137,7 @@ Morphology,Tip extension,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: treatment3
 Morphology,Tip extension,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: treatment31C:day:thicketd,Wald z,0.00,NA,NA,NA log-odds [residual separation],NA,NA,NA,"fixed: treatment31C:day:thicketd: residual separation after Cauchy(0,2.5) prior — report omnibus chi-sq only",code/12c_morph_blme.R
 Morphology,Tip extension,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: treatment31C:thicketc,Wald z,-0.02,NA,NA,NA log-odds [residual separation],NA,NA,NA,"fixed: treatment31C:thicketc: residual separation after Cauchy(0,2.5) prior — report omnibus chi-sq only",code/12c_morph_blme.R
 Morphology,Tip extension,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: treatment31C:thicketd,Wald z,0.00,NA,NA,NA log-odds [residual separation],NA,NA,NA,"fixed: treatment31C:thicketd: residual separation after Cauchy(0,2.5) prior — report omnibus chi-sq only",code/12c_morph_blme.R
+Morphology,Tip extension,GLMM contrast (prob scale),28C - 31C at day 10,delta probability,0.61,NA,NA,0.606 probability,+60.6%,NA,0.971,P(28C)=1.00 vs P(31C)=0.39; OR(31vs28)=0,code/29_morphology_prob_contrasts.R
 Morphology,Wound smoothed,GLMM (binomial),day,Wald chi-sq,23.22,1,NA,NA,NA,NA,<0.001,day effect on wound_smoothed (significant),code/04_physio_morphology.R
 Morphology,Wound smoothed,GLMM (binomial),day:thicket,Wald chi-sq,0.11,2,NA,NA,NA,NA,0.945,day:thicket effect on wound_smoothed (n.s.),code/04_physio_morphology.R
 Morphology,Wound smoothed,GLMM (binomial),thicket,Wald chi-sq,1.44,2,NA,NA,NA,NA,0.487,thicket effect on wound_smoothed (n.s.),code/04_physio_morphology.R
@@ -143,6 +156,26 @@ Morphology,Wound smoothed,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: treatment
 Morphology,Wound smoothed,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: treatment31C:day:thicketd,Wald z,1.33,NA,NA,0.826 log-odds,+128.4%,"[-0.39, 2.04]",0.184,"fixed: treatment31C:day:thicketd: OR=2.28 (n.s., blme penalized)",code/12c_morph_blme.R
 Morphology,Wound smoothed,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: treatment31C:thicketc,Wald z,-0.48,NA,NA,-0.861 log-odds,-57.7%,"[-4.40, 2.68]",0.634,"fixed: treatment31C:thicketc: OR=0.42 (n.s., blme penalized)",code/12c_morph_blme.R
 Morphology,Wound smoothed,"GLMM (binomial, blme Cauchy(0,2.5))",fixed: treatment31C:thicketd,Wald z,-0.45,NA,NA,-0.814 log-odds,-55.7%,"[-4.35, 2.73]",0.652,"fixed: treatment31C:thicketd: OR=0.44 (n.s., blme penalized)",code/12c_morph_blme.R
+Morphology,Wound smoothed,GLMM contrast (prob scale),28C - 31C at day 10,delta probability,-0.00,NA,NA,-0.000 probability,-0.0%,NA,0.034,P(28C)=1.00 vs P(31C)=1.00; OR(31vs28)=2e+03,code/29_morphology_prob_contrasts.R
+Multiple-testing sensitivity,Morphology (treatment effect),FDR/Bonferroni,morph:hole_in_center : treatment,BH-adjusted p,1.00,NA,NA,0.999 adjusted p,NA,NA,0.944,raw n.s.; BH n.s.; Bonferroni n.s.,code/28_multiple_testing.R
+Multiple-testing sensitivity,Morphology (treatment effect),FDR/Bonferroni,morph:new_corallites_on_tip : treatment,BH-adjusted p,0.82,NA,NA,0.820 adjusted p,NA,NA,0.410,raw n.s.; BH n.s.; Bonferroni n.s.,code/28_multiple_testing.R
+Multiple-testing sensitivity,Morphology (treatment effect),FDR/Bonferroni,morph:pigment_over_wound : treatment,BH-adjusted p,1.00,NA,NA,0.999 adjusted p,NA,NA,0.998,raw n.s.; BH n.s.; Bonferroni n.s.,code/28_multiple_testing.R
+Multiple-testing sensitivity,Morphology (treatment effect),FDR/Bonferroni,morph:polyp_in_hole : treatment,BH-adjusted p,1.00,NA,NA,0.999 adjusted p,NA,NA,0.944,raw n.s.; BH n.s.; Bonferroni n.s.,code/28_multiple_testing.R
+Multiple-testing sensitivity,Morphology (treatment effect),FDR/Bonferroni,morph:polyps_out : treatment,BH-adjusted p,0.51,NA,NA,0.509 adjusted p,NA,NA,0.087,raw n.s.; BH n.s.; Bonferroni n.s.,code/28_multiple_testing.R
+Multiple-testing sensitivity,Morphology (treatment effect),FDR/Bonferroni,morph:tip_exist : treatment,BH-adjusted p,0.51,NA,NA,0.509 adjusted p,NA,NA,0.127,raw n.s.; BH n.s.; Bonferroni n.s.,code/28_multiple_testing.R
+Multiple-testing sensitivity,Morphology (treatment effect),FDR/Bonferroni,morph:tip_extension : treatment,BH-adjusted p,0.82,NA,NA,0.820 adjusted p,NA,NA,0.347,raw n.s.; BH n.s.; Bonferroni n.s.,code/28_multiple_testing.R
+Multiple-testing sensitivity,Morphology (treatment effect),FDR/Bonferroni,morph:wound_smoothed : treatment,BH-adjusted p,1.00,NA,NA,0.999 adjusted p,NA,NA,0.999,raw n.s.; BH n.s.; Bonferroni n.s.,code/28_multiple_testing.R
+Multiple-testing sensitivity,Physiology (treatment effect),FDR/Bonferroni,color_dscale : treatment:day,BH-adjusted p,0.00,NA,NA,0.000 adjusted p,NA,NA,<0.001,raw sig; BH sig; Bonferroni sig,code/28_multiple_testing.R
+Multiple-testing sensitivity,Physiology (treatment effect),FDR/Bonferroni,growth_areal : treatment,BH-adjusted p,0.02,NA,NA,0.021 adjusted p,NA,NA,0.021,raw sig; BH sig; Bonferroni n.s.,code/28_multiple_testing.R
+Multiple-testing sensitivity,Physiology (treatment effect),FDR/Bonferroni,log_zoox_density : treatment:biopsy_day_c,BH-adjusted p,0.00,NA,NA,0.000 adjusted p,NA,NA,<0.001,raw sig; BH sig; Bonferroni sig,code/28_multiple_testing.R
+Multiple-testing sensitivity,Physiology (treatment effect),FDR/Bonferroni,pam_fvfm : treatment:day,BH-adjusted p,0.00,NA,NA,0.000 adjusted p,NA,NA,<0.001,raw sig; BH sig; Bonferroni sig,code/28_multiple_testing.R
+Multiple-testing sensitivity,Survival (Cox HR),FDR/Bonferroni,cox:hole_in_center : 31C vs 28C,BH-adjusted p,0.55,NA,NA,0.554 adjusted p,NA,NA,0.447,raw n.s.; BH n.s.; Bonferroni n.s.,code/28_multiple_testing.R
+Multiple-testing sensitivity,Survival (Cox HR),FDR/Bonferroni,cox:new_corallites_on_tip : 31C vs 28C,BH-adjusted p,0.07,NA,NA,0.067 adjusted p,NA,NA,0.009,raw sig; BH n.s.; Bonferroni n.s.,code/28_multiple_testing.R
+Multiple-testing sensitivity,Survival (Cox HR),FDR/Bonferroni,cox:pigment_over_wound : 31C vs 28C,BH-adjusted p,0.55,NA,NA,0.554 adjusted p,NA,NA,0.475,raw n.s.; BH n.s.; Bonferroni n.s.,code/28_multiple_testing.R
+Multiple-testing sensitivity,Survival (Cox HR),FDR/Bonferroni,cox:polyp_in_hole : 31C vs 28C,BH-adjusted p,0.55,NA,NA,0.554 adjusted p,NA,NA,0.447,raw n.s.; BH n.s.; Bonferroni n.s.,code/28_multiple_testing.R
+Multiple-testing sensitivity,Survival (Cox HR),FDR/Bonferroni,cox:tip_exist : 31C vs 28C,BH-adjusted p,0.55,NA,NA,0.554 adjusted p,NA,NA,0.368,raw n.s.; BH n.s.; Bonferroni n.s.,code/28_multiple_testing.R
+Multiple-testing sensitivity,Survival (Cox HR),FDR/Bonferroni,cox:tip_extension : 31C vs 28C,BH-adjusted p,0.61,NA,NA,0.613 adjusted p,NA,NA,0.613,raw n.s.; BH n.s.; Bonferroni n.s.,code/28_multiple_testing.R
+Multiple-testing sensitivity,Survival (Cox HR),FDR/Bonferroni,cox:wound_smoothed : 31C vs 28C,BH-adjusted p,0.55,NA,NA,0.554 adjusted p,NA,NA,0.252,raw n.s.; BH n.s.; Bonferroni n.s.,code/28_multiple_testing.R
 Multivariate,End-of-experiment physiology PCA,PCA,loading[color_end] -> PC1,PCA loading,0.53,NA,NA,0.526 loading,NA,NA,NA,color_end loads 0.53 on PC1,code/15_multivariate.R
 Multivariate,End-of-experiment physiology PCA,PCA,loading[color_end] -> PC2,PCA loading,-0.27,NA,NA,-0.273 loading,NA,NA,NA,color_end loads -0.27 on PC2,code/15_multivariate.R
 Multivariate,End-of-experiment physiology PCA,PCA,loading[color_end] -> PC3,PCA loading,0.30,NA,NA,0.300 loading,NA,NA,NA,color_end loads 0.30 on PC3,code/15_multivariate.R
@@ -207,21 +240,21 @@ Physiology,Color (Siebeck D),LMM,contrast: 28C - 31C | genet=c | wound=no,Satter
 Physiology,Color (Siebeck D),LMM,contrast: 28C - 31C | genet=c | wound=yes,Satterthwaite t,0.59,33,NA,0.112 ,-2.8%,"[-0.26, 0.48]",0.560,"Genet c, wounded: no change under 31C (-2.8%)",code/12_extended_stats.R
 Physiology,Color (Siebeck D),LMM,contrast: 28C - 31C | genet=d | wound=no,Satterthwaite t,6.80,31,NA,1.286 ,-35.5%,"[0.92, 1.66]",<0.001,"Genet d, unwounded: lower under 31C (-35.5%)",code/12_extended_stats.R
 Physiology,Color (Siebeck D),LMM,contrast: 28C - 31C | genet=d | wound=yes,Satterthwaite t,8.33,33,NA,1.581 ,-39.5%,"[1.21, 1.95]",<0.001,"Genet d, wounded: lower under 31C (-39.5%)",code/12_extended_stats.R
-Physiology,Color (Siebeck D),LMM,day,ANOVA F,361.40,1,NA,NA,NA,NA,NA,day effect on Color (Siebeck D)NA,code/12_extended_stats.R
-Physiology,Color (Siebeck D),LMM,day:thicket,ANOVA F,43.24,2,NA,NA,NA,NA,NA,day:thicket effect on Color (Siebeck D)NA,code/12_extended_stats.R
-Physiology,Color (Siebeck D),LMM,thicket,ANOVA F,20.70,2,NA,NA,NA,NA,NA,thicket effect on Color (Siebeck D)NA,code/12_extended_stats.R
-Physiology,Color (Siebeck D),LMM,treatment,ANOVA F,19.11,1,NA,NA,NA,NA,NA,treatment effect on Color (Siebeck D)NA,code/12_extended_stats.R
-Physiology,Color (Siebeck D),LMM,treatment:day,ANOVA F,258.96,1,NA,NA,NA,NA,NA,treatment:day effect on Color (Siebeck D)NA,code/12_extended_stats.R
-Physiology,Color (Siebeck D),LMM,treatment:day:thicket,ANOVA F,29.80,2,NA,NA,NA,NA,NA,treatment:day:thicket effect on Color (Siebeck D)NA,code/12_extended_stats.R
-Physiology,Color (Siebeck D),LMM,treatment:thicket,ANOVA F,16.95,2,NA,NA,NA,NA,NA,treatment:thicket effect on Color (Siebeck D)NA,code/12_extended_stats.R
-Physiology,Color (Siebeck D),LMM,treatment:wound,ANOVA F,21.58,1,NA,NA,NA,NA,NA,treatment:wound effect on Color (Siebeck D)NA,code/12_extended_stats.R
-Physiology,Color (Siebeck D),LMM,treatment:wound:day,ANOVA F,1.43,1,NA,NA,NA,NA,NA,treatment:wound:day effect on Color (Siebeck D)NA,code/12_extended_stats.R
-Physiology,Color (Siebeck D),LMM,treatment:wound:day:thicket,ANOVA F,2.59,2,NA,NA,NA,NA,NA,treatment:wound:day:thicket effect on Color (Siebeck D)NA,code/12_extended_stats.R
-Physiology,Color (Siebeck D),LMM,treatment:wound:thicket,ANOVA F,6.31,2,NA,NA,NA,NA,NA,treatment:wound:thicket effect on Color (Siebeck D)NA,code/12_extended_stats.R
-Physiology,Color (Siebeck D),LMM,wound,ANOVA F,15.38,1,NA,NA,NA,NA,NA,wound effect on Color (Siebeck D)NA,code/12_extended_stats.R
-Physiology,Color (Siebeck D),LMM,wound:day,ANOVA F,0.17,1,NA,NA,NA,NA,NA,wound:day effect on Color (Siebeck D)NA,code/12_extended_stats.R
-Physiology,Color (Siebeck D),LMM,wound:day:thicket,ANOVA F,0.40,2,NA,NA,NA,NA,NA,wound:day:thicket effect on Color (Siebeck D)NA,code/12_extended_stats.R
-Physiology,Color (Siebeck D),LMM,wound:thicket,ANOVA F,4.02,2,NA,NA,NA,NA,NA,wound:thicket effect on Color (Siebeck D)NA,code/12_extended_stats.R
+Physiology,Color (Siebeck D),LMM,day,ANOVA F,310.73,"1, 286.8",NA,NA,NA,NA,<0.001,day effect on Color (Siebeck D) (significant),code/12_extended_stats.R
+Physiology,Color (Siebeck D),LMM,day:thicket,ANOVA F,39.40,"2, 286.8",NA,NA,NA,NA,<0.001,day:thicket effect on Color (Siebeck D) (significant),code/12_extended_stats.R
+Physiology,Color (Siebeck D),LMM,thicket,ANOVA F,0.80,"2, 59.8",NA,NA,NA,NA,0.453,thicket effect on Color (Siebeck D) (n.s.),code/12_extended_stats.R
+Physiology,Color (Siebeck D),LMM,treatment,ANOVA F,0.34,"1, 7.0",NA,NA,NA,NA,0.578,treatment effect on Color (Siebeck D) (n.s.),code/12_extended_stats.R
+Physiology,Color (Siebeck D),LMM,treatment:day,ANOVA F,239.34,"1, 286.8",NA,NA,NA,NA,<0.001,treatment:day effect on Color (Siebeck D) (significant),code/12_extended_stats.R
+Physiology,Color (Siebeck D),LMM,treatment:day:thicket,ANOVA F,31.92,"2, 286.8",NA,NA,NA,NA,<0.001,treatment:day:thicket effect on Color (Siebeck D) (significant),code/12_extended_stats.R
+Physiology,Color (Siebeck D),LMM,treatment:thicket,ANOVA F,0.77,"2, 59.8",NA,NA,NA,NA,0.469,treatment:thicket effect on Color (Siebeck D) (n.s.),code/12_extended_stats.R
+Physiology,Color (Siebeck D),LMM,treatment:wound,ANOVA F,3.03,"1, 244.7",NA,NA,NA,NA,0.083,treatment:wound effect on Color (Siebeck D) (n.s.),code/12_extended_stats.R
+Physiology,Color (Siebeck D),LMM,treatment:wound:day,ANOVA F,1.43,"1, 286.8",NA,NA,NA,NA,0.233,treatment:wound:day effect on Color (Siebeck D) (n.s.),code/12_extended_stats.R
+Physiology,Color (Siebeck D),LMM,treatment:wound:day:thicket,ANOVA F,2.59,"2, 286.8",NA,NA,NA,NA,0.077,treatment:wound:day:thicket effect on Color (Siebeck D) (n.s.),code/12_extended_stats.R
+Physiology,Color (Siebeck D),LMM,treatment:wound:thicket,ANOVA F,0.34,"2, 244.7",NA,NA,NA,NA,0.709,treatment:wound:thicket effect on Color (Siebeck D) (n.s.),code/12_extended_stats.R
+Physiology,Color (Siebeck D),LMM,wound,ANOVA F,5.54,"1, 244.7",NA,NA,NA,NA,0.019,wound effect on Color (Siebeck D) (significant),code/12_extended_stats.R
+Physiology,Color (Siebeck D),LMM,wound:day,ANOVA F,0.17,"1, 286.8",NA,NA,NA,NA,0.678,wound:day effect on Color (Siebeck D) (n.s.),code/12_extended_stats.R
+Physiology,Color (Siebeck D),LMM,wound:day:thicket,ANOVA F,0.40,"2, 286.8",NA,NA,NA,NA,0.674,wound:day:thicket effect on Color (Siebeck D) (n.s.),code/12_extended_stats.R
+Physiology,Color (Siebeck D),LMM,wound:thicket,ANOVA F,0.61,"2, 244.7",NA,NA,NA,NA,0.547,wound:thicket effect on Color (Siebeck D) (n.s.),code/12_extended_stats.R
 Physiology,Color (Siebeck D),LRT (null vs genet x trt),LRT: adding genet x treatment x wound x day,LRT chi-sq,177.72,15,336,-147.720 delta AIC,NA,NA,<0.001,Adding genet x trt improves fit by dAIC=-147.7 (sig),code/13_genet_interaction.R
 Physiology,Color (Siebeck D) — ordinal robustness,CLMM (cumulative-link mixed),day:thicket,LRT chi-sq,0.20,2,NA,NA,NA,NA,0.904,day:thicket (ordinal CLMM): n.s.,code/12b_color_clmm_robustness.R
 Physiology,Color (Siebeck D) — ordinal robustness,CLMM (cumulative-link mixed),treatment:wound:day,LRT chi-sq,0.00,1,NA,NA,NA,NA,0.963,treatment:wound:day (ordinal CLMM): n.s.,code/12b_color_clmm_robustness.R
@@ -234,21 +267,21 @@ Physiology,PAM Fv/Fm,LMM,contrast: 28C - 31C | genet=c | wound=no,Satterthwaite 
 Physiology,PAM Fv/Fm,LMM,contrast: 28C - 31C | genet=c | wound=yes,Satterthwaite t,0.96,40,NA,0.016 ,-2.4%,"[-0.02, 0.05]",0.343,"Genet c, wounded: no change under 31C (-2.4%)",code/12_extended_stats.R
 Physiology,PAM Fv/Fm,LMM,contrast: 28C - 31C | genet=d | wound=no,Satterthwaite t,6.58,34,NA,0.107 ,-15.9%,"[0.07, 0.14]",<0.001,"Genet d, unwounded: lower under 31C (-15.9%)",code/12_extended_stats.R
 Physiology,PAM Fv/Fm,LMM,contrast: 28C - 31C | genet=d | wound=yes,Satterthwaite t,6.52,34,NA,0.106 ,-15.9%,"[0.07, 0.14]",<0.001,"Genet d, wounded: lower under 31C (-15.9%)",code/12_extended_stats.R
-Physiology,PAM Fv/Fm,LMM,day,ANOVA F,163.68,1,NA,NA,NA,NA,NA,day effect on PAM Fv/FmNA,code/12_extended_stats.R
-Physiology,PAM Fv/Fm,LMM,day:thicket,ANOVA F,13.08,2,NA,NA,NA,NA,NA,day:thicket effect on PAM Fv/FmNA,code/12_extended_stats.R
-Physiology,PAM Fv/Fm,LMM,thicket,ANOVA F,54.44,2,NA,NA,NA,NA,NA,thicket effect on PAM Fv/FmNA,code/12_extended_stats.R
-Physiology,PAM Fv/Fm,LMM,treatment,ANOVA F,15.83,1,NA,NA,NA,NA,NA,treatment effect on PAM Fv/FmNA,code/12_extended_stats.R
-Physiology,PAM Fv/Fm,LMM,treatment:day,ANOVA F,112.68,1,NA,NA,NA,NA,NA,treatment:day effect on PAM Fv/FmNA,code/12_extended_stats.R
-Physiology,PAM Fv/Fm,LMM,treatment:day:thicket,ANOVA F,14.66,2,NA,NA,NA,NA,NA,treatment:day:thicket effect on PAM Fv/FmNA,code/12_extended_stats.R
-Physiology,PAM Fv/Fm,LMM,treatment:thicket,ANOVA F,9.66,2,NA,NA,NA,NA,NA,treatment:thicket effect on PAM Fv/FmNA,code/12_extended_stats.R
-Physiology,PAM Fv/Fm,LMM,treatment:wound,ANOVA F,3.90,1,NA,NA,NA,NA,NA,treatment:wound effect on PAM Fv/FmNA,code/12_extended_stats.R
-Physiology,PAM Fv/Fm,LMM,treatment:wound:day,ANOVA F,0.01,1,NA,NA,NA,NA,NA,treatment:wound:day effect on PAM Fv/FmNA,code/12_extended_stats.R
-Physiology,PAM Fv/Fm,LMM,treatment:wound:day:thicket,ANOVA F,2.39,2,NA,NA,NA,NA,NA,treatment:wound:day:thicket effect on PAM Fv/FmNA,code/12_extended_stats.R
-Physiology,PAM Fv/Fm,LMM,treatment:wound:thicket,ANOVA F,0.39,2,NA,NA,NA,NA,NA,treatment:wound:thicket effect on PAM Fv/FmNA,code/12_extended_stats.R
-Physiology,PAM Fv/Fm,LMM,wound,ANOVA F,0.09,1,NA,NA,NA,NA,NA,wound effect on PAM Fv/FmNA,code/12_extended_stats.R
-Physiology,PAM Fv/Fm,LMM,wound:day,ANOVA F,0.57,1,NA,NA,NA,NA,NA,wound:day effect on PAM Fv/FmNA,code/12_extended_stats.R
-Physiology,PAM Fv/Fm,LMM,wound:day:thicket,ANOVA F,0.81,2,NA,NA,NA,NA,NA,wound:day:thicket effect on PAM Fv/FmNA,code/12_extended_stats.R
-Physiology,PAM Fv/Fm,LMM,wound:thicket,ANOVA F,0.20,2,NA,NA,NA,NA,NA,wound:thicket effect on PAM Fv/FmNA,code/12_extended_stats.R
+Physiology,PAM Fv/Fm,LMM,day,ANOVA F,156.00,"1, 276.0",NA,NA,NA,NA,<0.001,day effect on PAM Fv/Fm (significant),code/12_extended_stats.R
+Physiology,PAM Fv/Fm,LMM,day:thicket,ANOVA F,14.20,"2, 276.0",NA,NA,NA,NA,<0.001,day:thicket effect on PAM Fv/Fm (significant),code/12_extended_stats.R
+Physiology,PAM Fv/Fm,LMM,thicket,ANOVA F,7.75,"2, 101.7",NA,NA,NA,NA,<0.001,thicket effect on PAM Fv/Fm (significant),code/12_extended_stats.R
+Physiology,PAM Fv/Fm,LMM,treatment,ANOVA F,0.52,"1, 7.2",NA,NA,NA,NA,0.492,treatment effect on PAM Fv/Fm (n.s.),code/12_extended_stats.R
+Physiology,PAM Fv/Fm,LMM,treatment:day,ANOVA F,106.57,"1, 276.0",NA,NA,NA,NA,<0.001,treatment:day effect on PAM Fv/Fm (significant),code/12_extended_stats.R
+Physiology,PAM Fv/Fm,LMM,treatment:day:thicket,ANOVA F,15.66,"2, 276.0",NA,NA,NA,NA,<0.001,treatment:day:thicket effect on PAM Fv/Fm (significant),code/12_extended_stats.R
+Physiology,PAM Fv/Fm,LMM,treatment:thicket,ANOVA F,0.55,"2, 101.7",NA,NA,NA,NA,0.578,treatment:thicket effect on PAM Fv/Fm (n.s.),code/12_extended_stats.R
+Physiology,PAM Fv/Fm,LMM,treatment:wound,ANOVA F,1.59,"1, 101.1",NA,NA,NA,NA,0.210,treatment:wound effect on PAM Fv/Fm (n.s.),code/12_extended_stats.R
+Physiology,PAM Fv/Fm,LMM,treatment:wound:day,ANOVA F,0.22,"1, 276.0",NA,NA,NA,NA,0.640,treatment:wound:day effect on PAM Fv/Fm (n.s.),code/12_extended_stats.R
+Physiology,PAM Fv/Fm,LMM,treatment:wound:day:thicket,ANOVA F,2.39,"2, 276.0",NA,NA,NA,NA,0.093,treatment:wound:day:thicket effect on PAM Fv/Fm (n.s.),code/12_extended_stats.R
+Physiology,PAM Fv/Fm,LMM,treatment:wound:thicket,ANOVA F,2.25,"2, 101.1",NA,NA,NA,NA,0.111,treatment:wound:thicket effect on PAM Fv/Fm (n.s.),code/12_extended_stats.R
+Physiology,PAM Fv/Fm,LMM,wound,ANOVA F,0.31,"1, 101.1",NA,NA,NA,NA,0.578,wound effect on PAM Fv/Fm (n.s.),code/12_extended_stats.R
+Physiology,PAM Fv/Fm,LMM,wound:day,ANOVA F,1.98,"1, 276.0",NA,NA,NA,NA,0.161,wound:day effect on PAM Fv/Fm (n.s.),code/12_extended_stats.R
+Physiology,PAM Fv/Fm,LMM,wound:day:thicket,ANOVA F,0.85,"2, 276.0",NA,NA,NA,NA,0.430,wound:day:thicket effect on PAM Fv/Fm (n.s.),code/12_extended_stats.R
+Physiology,PAM Fv/Fm,LMM,wound:thicket,ANOVA F,0.95,"2, 101.1",NA,NA,NA,NA,0.391,wound:thicket effect on PAM Fv/Fm (n.s.),code/12_extended_stats.R
 Physiology,PAM Fv/Fm,LRT (null vs genet x trt),LRT: adding genet x treatment x wound x day,LRT chi-sq,90.49,15,336,-60.495 delta AIC,NA,NA,<0.001,Adding genet x trt improves fit by dAIC=-60.5 (sig),code/13_genet_interaction.R
 Physiology,Symbiont density (cells cm-2),raw summary,"mean(28C, day 1)",mean,1165429.22,NA,24,1165429.220 cells cm-2,NA,NA,NA,"28C, biopsy day 1: 1.17e+06 cells cm-2 (n=24)",code/06_symbiont_chl.R (raw)
 Physiology,Symbiont density (cells cm-2),raw summary,"mean(28C, day 15)",mean,967415.21,NA,24,967415.211 cells cm-2,NA,NA,NA,"28C, biopsy day 15: 9.67e+05 cells cm-2 (n=24)",code/06_symbiont_chl.R (raw)
@@ -256,27 +289,27 @@ Physiology,Symbiont density (cells cm-2),raw summary,"mean(31C, day 1)",mean,750
 Physiology,Symbiont density (cells cm-2),raw summary,"mean(31C, day 15)",mean,208909.48,NA,24,208909.480 cells cm-2,NA,NA,NA,"31C, biopsy day 15: 2.09e+05 cells cm-2 (n=24)",code/06_symbiont_chl.R (raw)
 Physiology,log10 symbionts cm-2,LMM,R2_conditional,R-squared,0.76,NA,NA,0.758 proportion,NA,NA,NA,R2_conditional = 0.758,code/12_extended_stats.R
 Physiology,log10 symbionts cm-2,LMM,R2_marginal,R-squared,0.72,NA,NA,0.719 proportion,NA,NA,NA,R2_marginal = 0.719,code/12_extended_stats.R
-Physiology,log10 symbionts cm-2,LMM,biopsy_day_c,ANOVA F,123.69,1,NA,NA,NA,NA,NA,biopsy_day_c effect on log10 symbionts cm-2NA,code/12_extended_stats.R
-Physiology,log10 symbionts cm-2,LMM,biopsy_day_c:thicket,ANOVA F,8.74,2,NA,NA,NA,NA,NA,biopsy_day_c:thicket effect on log10 symbionts cm-2NA,code/12_extended_stats.R
+Physiology,log10 symbionts cm-2,LMM,biopsy_day_c,ANOVA F,122.66,"1, 162.0",NA,NA,NA,NA,<0.001,biopsy_day_c effect on log10 symbionts cm-2 (significant),code/12_extended_stats.R
+Physiology,log10 symbionts cm-2,LMM,biopsy_day_c:thicket,ANOVA F,8.86,"2, 162.0",NA,NA,NA,NA,<0.001,biopsy_day_c:thicket effect on log10 symbionts cm-2 (significant),code/12_extended_stats.R
 Physiology,log10 symbionts cm-2,LMM,contrast: 28C - 31C | genet=a | wound=no,Satterthwaite t,8.71,81,NA,2.636 ,-43.8%,"[2.04, 3.23]",<0.001,"Genet a, unwounded: lower under 31C (-43.8%)",code/12_extended_stats.R
 Physiology,log10 symbionts cm-2,LMM,contrast: 28C - 31C | genet=a | wound=yes,Satterthwaite t,7.63,81,NA,2.309 ,-38.6%,"[1.72, 2.90]",<0.001,"Genet a, wounded: lower under 31C (-38.6%)",code/12_extended_stats.R
 Physiology,log10 symbionts cm-2,LMM,contrast: 28C - 31C | genet=c | wound=no,Satterthwaite t,3.49,75,NA,1.023 ,-17.0%,"[0.45, 1.60]",<0.001,"Genet c, unwounded: lower under 31C (-17.0%)",code/12_extended_stats.R
 Physiology,log10 symbionts cm-2,LMM,contrast: 28C - 31C | genet=c | wound=yes,Satterthwaite t,2.52,90,NA,0.798 ,-13.3%,"[0.18, 1.42]",0.013,"Genet c, wounded: lower under 31C (-13.3%)",code/12_extended_stats.R
 Physiology,log10 symbionts cm-2,LMM,contrast: 28C - 31C | genet=d | wound=no,Satterthwaite t,8.45,81,NA,2.558 ,-43.1%,"[1.96, 3.15]",<0.001,"Genet d, unwounded: lower under 31C (-43.1%)",code/12_extended_stats.R
 Physiology,log10 symbionts cm-2,LMM,contrast: 28C - 31C | genet=d | wound=yes,Satterthwaite t,6.62,81,NA,2.005 ,-33.6%,"[1.41, 2.60]",<0.001,"Genet d, wounded: lower under 31C (-33.6%)",code/12_extended_stats.R
-Physiology,log10 symbionts cm-2,LMM,thicket,ANOVA F,20.68,2,NA,NA,NA,NA,NA,thicket effect on log10 symbionts cm-2NA,code/12_extended_stats.R
-Physiology,log10 symbionts cm-2,LMM,treatment,ANOVA F,48.83,1,NA,NA,NA,NA,NA,treatment effect on log10 symbionts cm-2NA,code/12_extended_stats.R
-Physiology,log10 symbionts cm-2,LMM,treatment:biopsy_day_c,ANOVA F,94.67,1,NA,NA,NA,NA,NA,treatment:biopsy_day_c effect on log10 symbionts cm-2NA,code/12_extended_stats.R
-Physiology,log10 symbionts cm-2,LMM,treatment:biopsy_day_c:thicket,ANOVA F,6.32,2,NA,NA,NA,NA,NA,treatment:biopsy_day_c:thicket effect on log10 symbionts cm-2NA,code/12_extended_stats.R
-Physiology,log10 symbionts cm-2,LMM,treatment:thicket,ANOVA F,16.16,2,NA,NA,NA,NA,NA,treatment:thicket effect on log10 symbionts cm-2NA,code/12_extended_stats.R
-Physiology,log10 symbionts cm-2,LMM,treatment:wound,ANOVA F,0.44,1,NA,NA,NA,NA,NA,treatment:wound effect on log10 symbionts cm-2NA,code/12_extended_stats.R
-Physiology,log10 symbionts cm-2,LMM,treatment:wound:biopsy_day_c,ANOVA F,1.89,1,NA,NA,NA,NA,NA,treatment:wound:biopsy_day_c effect on log10 symbionts cm-2NA,code/12_extended_stats.R
-Physiology,log10 symbionts cm-2,LMM,treatment:wound:biopsy_day_c:thicket,ANOVA F,0.21,2,NA,NA,NA,NA,NA,treatment:wound:biopsy_day_c:thicket effect on log10 symbionts cm-2NA,code/12_extended_stats.R
-Physiology,log10 symbionts cm-2,LMM,treatment:wound:thicket,ANOVA F,0.51,2,NA,NA,NA,NA,NA,treatment:wound:thicket effect on log10 symbionts cm-2NA,code/12_extended_stats.R
-Physiology,log10 symbionts cm-2,LMM,wound,ANOVA F,0.63,1,NA,NA,NA,NA,NA,wound effect on log10 symbionts cm-2NA,code/12_extended_stats.R
-Physiology,log10 symbionts cm-2,LMM,wound:biopsy_day_c,ANOVA F,0.15,1,NA,NA,NA,NA,NA,wound:biopsy_day_c effect on log10 symbionts cm-2NA,code/12_extended_stats.R
-Physiology,log10 symbionts cm-2,LMM,wound:biopsy_day_c:thicket,ANOVA F,0.14,2,NA,NA,NA,NA,NA,wound:biopsy_day_c:thicket effect on log10 symbionts cm-2NA,code/12_extended_stats.R
-Physiology,log10 symbionts cm-2,LMM,wound:thicket,ANOVA F,1.52,2,NA,NA,NA,NA,NA,wound:thicket effect on log10 symbionts cm-2NA,code/12_extended_stats.R
+Physiology,log10 symbionts cm-2,LMM,thicket,ANOVA F,0.71,"2, 162.0",NA,NA,NA,NA,0.494,thicket effect on log10 symbionts cm-2 (n.s.),code/12_extended_stats.R
+Physiology,log10 symbionts cm-2,LMM,treatment,ANOVA F,3.35,"1, 9.5",NA,NA,NA,NA,0.099,treatment effect on log10 symbionts cm-2 (n.s.),code/12_extended_stats.R
+Physiology,log10 symbionts cm-2,LMM,treatment:biopsy_day_c,ANOVA F,93.97,"1, 162.0",NA,NA,NA,NA,<0.001,treatment:biopsy_day_c effect on log10 symbionts cm-2 (significant),code/12_extended_stats.R
+Physiology,log10 symbionts cm-2,LMM,treatment:biopsy_day_c:thicket,ANOVA F,6.34,"2, 162.0",NA,NA,NA,NA,0.002,treatment:biopsy_day_c:thicket effect on log10 symbionts cm-2 (significant),code/12_extended_stats.R
+Physiology,log10 symbionts cm-2,LMM,treatment:thicket,ANOVA F,0.70,"2, 162.0",NA,NA,NA,NA,0.497,treatment:thicket effect on log10 symbionts cm-2 (n.s.),code/12_extended_stats.R
+Physiology,log10 symbionts cm-2,LMM,treatment:wound,ANOVA F,0.35,"1, 162.0",NA,NA,NA,NA,0.556,treatment:wound effect on log10 symbionts cm-2 (n.s.),code/12_extended_stats.R
+Physiology,log10 symbionts cm-2,LMM,treatment:wound:biopsy_day_c,ANOVA F,2.17,"1, 162.1",NA,NA,NA,NA,0.142,treatment:wound:biopsy_day_c effect on log10 symbionts cm-2 (n.s.),code/12_extended_stats.R
+Physiology,log10 symbionts cm-2,LMM,treatment:wound:biopsy_day_c:thicket,ANOVA F,0.21,"2, 162.1",NA,NA,NA,NA,0.811,treatment:wound:biopsy_day_c:thicket effect on log10 symbionts cm-2 (n.s.),code/12_extended_stats.R
+Physiology,log10 symbionts cm-2,LMM,treatment:wound:thicket,ANOVA F,0.40,"2, 162.0",NA,NA,NA,NA,0.673,treatment:wound:thicket effect on log10 symbionts cm-2 (n.s.),code/12_extended_stats.R
+Physiology,log10 symbionts cm-2,LMM,wound,ANOVA F,0.00,"1, 162.0",NA,NA,NA,NA,0.988,wound effect on log10 symbionts cm-2 (n.s.),code/12_extended_stats.R
+Physiology,log10 symbionts cm-2,LMM,wound:biopsy_day_c,ANOVA F,0.52,"1, 162.1",NA,NA,NA,NA,0.471,wound:biopsy_day_c effect on log10 symbionts cm-2 (n.s.),code/12_extended_stats.R
+Physiology,log10 symbionts cm-2,LMM,wound:biopsy_day_c:thicket,ANOVA F,0.14,"2, 162.1",NA,NA,NA,NA,0.873,wound:biopsy_day_c:thicket effect on log10 symbionts cm-2 (n.s.),code/12_extended_stats.R
+Physiology,log10 symbionts cm-2,LMM,wound:thicket,ANOVA F,0.50,"2, 162.0",NA,NA,NA,NA,0.605,wound:thicket effect on log10 symbionts cm-2 (n.s.),code/12_extended_stats.R
 Physiology,log_zoox,LRT (null vs genet x trt),LRT: adding genet x treatment x wound x day,LRT chi-sq,73.57,15,192,-43.570 delta AIC,NA,NA,<0.001,Adding genet x trt improves fit by dAIC=-43.6 (sig),code/13_genet_interaction.R
 Survival,Hole in center,Cox PH,HR 31C/28C [genet=a],Wald z,0.51,1,8,1.440 hazard ratio,+44.0%,"[0.36, 5.83]",0.610,"hole_in_center: no detectable change under 31C (HR=1.44, n.s.)",code/14_morphology_kaplan.R
 Survival,Hole in center,Cox PH,HR 31C/28C [genet=c],Wald z,0.27,1,8,1.209 hazard ratio,+20.9%,"[0.30, 4.88]",0.789,"hole_in_center: no detectable change under 31C (HR=1.21, n.s.)",code/14_morphology_kaplan.R
@@ -344,3 +377,27 @@ Time-series diagnostic,PAM Fv/Fm,diagnostic,"nonlinearity of time (quadratic vs 
 Time-series diagnostic,PAM Fv/Fm,diagnostic,random slope of time by coral (LRT vs intercept-only),LRT / Wald,23.07,2,NA,NA,NA,NA,<0.001,random slope improves fit (individual trajectories differ),code/23_timeseries_diagnostics.R
 Time-series diagnostic,PAM Fv/Fm,diagnostic,treatment×time robustness to AR(1),LRT / Wald,-6.93,NA,NA,NA,NA,NA,<0.001,"treatment×time p: base=1.37e-10, AR(1)=3.04e-11 — conclusion unchanged",code/23_timeseries_diagnostics.R
 Time-series diagnostic,log symbionts (cross-sectional),diagnostic,"nonlinearity of time (quadratic vs linear, LRT)",LRT / Wald,8.70,2,NA,NA,NA,NA,0.013,trajectory is NONLINEAR — linear slope is an approximation,code/23_timeseries_diagnostics.R
+Variance partitioning,Color D-scale (LMM),ICC,ICC[Residual],variance fraction,0.54,NA,NA,0.544 fraction of variance,NA,NA,NA,Residual: 54.4% of variance,code/27_variance_partitioning.R
+Variance partitioning,Color D-scale (LMM),ICC,ICC[id],variance fraction,0.23,NA,NA,0.231 fraction of variance,NA,NA,NA,id: 23.1% of variance,code/27_variance_partitioning.R
+Variance partitioning,Color D-scale (LMM),ICC,ICC[tank],variance fraction,0.23,NA,NA,0.225 fraction of variance,NA,NA,NA,tank: 22.5% of variance,code/27_variance_partitioning.R
+Variance partitioning,PAM Fv/Fm (LMM),ICC,ICC[Residual],variance fraction,0.74,NA,NA,0.741 fraction of variance,NA,NA,NA,Residual: 74.1% of variance,code/27_variance_partitioning.R
+Variance partitioning,PAM Fv/Fm (LMM),ICC,ICC[id],variance fraction,0.04,NA,NA,0.043 fraction of variance,NA,NA,NA,id: 4.3% of variance,code/27_variance_partitioning.R
+Variance partitioning,PAM Fv/Fm (LMM),ICC,ICC[tank],variance fraction,0.22,NA,NA,0.216 fraction of variance,NA,NA,NA,tank: 21.6% of variance,code/27_variance_partitioning.R
+Variance partitioning,log symbionts (LMM),ICC,ICC[Residual],variance fraction,0.86,NA,NA,0.861 fraction of variance,NA,NA,NA,Residual: 86.1% of variance,code/27_variance_partitioning.R
+Variance partitioning,log symbionts (LMM),ICC,ICC[tank],variance fraction,0.14,NA,NA,0.139 fraction of variance,NA,NA,NA,tank: 13.9% of variance,code/27_variance_partitioning.R
+Variance partitioning,morph: hole_in_center (GLMM),ICC,ICC[Residual],variance fraction,0.60,NA,NA,0.604 fraction of variance,NA,NA,NA,Residual: 60.4% of variance,code/27_variance_partitioning.R
+Variance partitioning,morph: hole_in_center (GLMM),ICC,ICC[tank],variance fraction,0.40,NA,NA,0.396 fraction of variance,NA,NA,NA,tank: 39.6% of variance,code/27_variance_partitioning.R
+Variance partitioning,morph: new_corallites_on_tip (GLMM),ICC,ICC[Residual],variance fraction,0.65,NA,NA,0.648 fraction of variance,NA,NA,NA,Residual: 64.8% of variance,code/27_variance_partitioning.R
+Variance partitioning,morph: new_corallites_on_tip (GLMM),ICC,ICC[tank],variance fraction,0.35,NA,NA,0.352 fraction of variance,NA,NA,NA,tank: 35.2% of variance,code/27_variance_partitioning.R
+Variance partitioning,morph: pigment_over_wound (GLMM),ICC,ICC[Residual],variance fraction,0.86,NA,NA,0.864 fraction of variance,NA,NA,NA,Residual: 86.4% of variance,code/27_variance_partitioning.R
+Variance partitioning,morph: pigment_over_wound (GLMM),ICC,ICC[tank],variance fraction,0.14,NA,NA,0.136 fraction of variance,NA,NA,NA,tank: 13.6% of variance,code/27_variance_partitioning.R
+Variance partitioning,morph: polyp_in_hole (GLMM),ICC,ICC[Residual],variance fraction,0.60,NA,NA,0.604 fraction of variance,NA,NA,NA,Residual: 60.4% of variance,code/27_variance_partitioning.R
+Variance partitioning,morph: polyp_in_hole (GLMM),ICC,ICC[tank],variance fraction,0.40,NA,NA,0.396 fraction of variance,NA,NA,NA,tank: 39.6% of variance,code/27_variance_partitioning.R
+Variance partitioning,morph: polyps_out (GLMM),ICC,ICC[Residual],variance fraction,0.94,NA,NA,0.936 fraction of variance,NA,NA,NA,Residual: 93.6% of variance,code/27_variance_partitioning.R
+Variance partitioning,morph: polyps_out (GLMM),ICC,ICC[tank],variance fraction,0.06,NA,NA,0.064 fraction of variance,NA,NA,NA,tank: 6.4% of variance,code/27_variance_partitioning.R
+Variance partitioning,morph: tip_exist (GLMM),ICC,ICC[Residual],variance fraction,0.47,NA,NA,0.473 fraction of variance,NA,NA,NA,Residual: 47.3% of variance,code/27_variance_partitioning.R
+Variance partitioning,morph: tip_exist (GLMM),ICC,ICC[tank],variance fraction,0.53,NA,NA,0.527 fraction of variance,NA,NA,NA,tank: 52.7% of variance,code/27_variance_partitioning.R
+Variance partitioning,morph: tip_extension (GLMM),ICC,ICC[Residual],variance fraction,0.17,NA,NA,0.172 fraction of variance,NA,NA,NA,Residual: 17.2% of variance,code/27_variance_partitioning.R
+Variance partitioning,morph: tip_extension (GLMM),ICC,ICC[tank],variance fraction,0.83,NA,NA,0.828 fraction of variance,NA,NA,NA,tank: 82.8% of variance,code/27_variance_partitioning.R
+Variance partitioning,morph: wound_smoothed (GLMM),ICC,ICC[Residual],variance fraction,0.87,NA,NA,0.869 fraction of variance,NA,NA,NA,Residual: 86.9% of variance,code/27_variance_partitioning.R
+Variance partitioning,morph: wound_smoothed (GLMM),ICC,ICC[tank],variance fraction,0.13,NA,NA,0.132 fraction of variance,NA,NA,NA,tank: 13.2% of variance,code/27_variance_partitioning.R
