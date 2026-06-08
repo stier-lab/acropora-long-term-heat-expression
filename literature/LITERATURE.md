@@ -5,10 +5,18 @@ species (*A. pulchra*) in the coral wound-healing model (`~/coral-wound-healing-
 Companion to the **"Acropora pulchra" NotebookLM notebook** (`f9a97210-…`, query for full text)
 and the lab regeneration library `~/coral-regen-review/literature/` (191 PDFs).
 
-**Status (2026-06-07):** discovery complete (2 lit-search agents + local audit). PDF
-acquisition + NotebookLM ingestion are the next step — Chrome CDP authorized for paywalled
-(`download-papers` via port 9222). PDFs land in `literature/pdfs/AuthorYear_ShortTitle.pdf`.
-DOIs below were tool-confirmed (OpenAlex/Crossref); none guessed.
+**Status (2026-06-07):** discovery complete + **PDF acquisition done (37 PDFs in `pdfs/`)**
++ **NotebookLM ingestion done (notebook now 26 sources)**. Remaining unobtained papers are
+genuinely paywalled (Elsevier/Wiley/JSTOR) with no open-access route and an unauthenticated
+browser session — most are already in the notebook ([NB]) or have congener substitutes for
+their model parameter (see "Acquisition results" below). DOIs were tool-confirmed
+(OpenAlex/Crossref); none guessed. PDFs are named `AuthorYear_ShortTitle.pdf`.
+
+**Acquisition routes that worked (2026-06-07):** Springer `link.springer.com/content/pdf/{DOI}.pdf`
+via plain curl (even for "paywalled" Mar Biol / Coral Reefs); Nature/PLOS/Frontiers/RSOS direct
+PDF URLs; **EuropePMC `?pdf=render`** for OA papers that Cloudflare-blocked bare curl (PeerJ, ASM,
+iScience, Wiley-with-PMC-deposit). int-res.com (MEPS), bepress theses, and `download-papers` CDP
+all failed (JS anti-bot / unauthenticated session) — EuropePMC recovered every OA one of those.
 
 Acquisition legend: **[NB]** already in the A. pulchra notebook · **[LAB]** already in
 `~/coral-regen-review/literature/pdfs` (copy in) · **[OA]** open-access (curl) ·
@@ -111,9 +119,63 @@ threshold; least-grounded), `D_E`/`resid` (structure known, value reasoned), `B_
 - **A. pulchra wounding/regeneration rates** — only Munk 2024 (thesis); rely on Denis 2011/2013, Hall series, Lirman.
 - **Acropora symbiont repopulation RATE after bleaching** — none found (only density thresholds). Least-grounded param; borrow from Symbiodiniaceae division-rate lit or fit.
 
-## 5. Acquisition plan (next step)
-1. Copy [LAB] PDFs from `~/coral-regen-review/literature/pdfs/` into `literature/pdfs/` (Conti-Jerpe 2020, Denis 2011/2013, Hall 1997/1998/2001/2015, Lirman 2000a, Soong 1992, Meesters 1997 if present).
-2. `curl` all [OA] papers (PLOS, MEPS/Inter-Research, Sci Adv, Frontiers, Sci Rep/Commun Biol, PeerJ, R Soc Open Sci, bioRxiv, Gigabyte, Springer-OA) → verify `head -c5`==`%PDF-`.
-3. Chrome CDP (`download-papers`, port 9222 — authorized) for [PW] papers (Springer Mar Biol/Coral Reefs, Elsevier JEMBE/iScience-closed, Wiley, Ecology/JSTOR, Taylor&Francis).
-4. Ingest all NEW (non-[NB]) papers into the A. pulchra NotebookLM notebook (`source_add`).
-5. Add 1–4 sentence summaries per paper here once PDFs are in; commit to the LTH repo.
+## 5. Acquisition results (2026-06-07)
+
+**37 PDFs in `literature/pdfs/`.** 10 copied from the lab library, 20 via curl (Springer
+content/pdf, Nature, PLOS, Frontiers, RSOS, Gigabyte), 7 via EuropePMC render.
+
+**NotebookLM "Acropora pulchra" notebook → 26 sources** (10 prior + 16 new *A. pulchra*-specific
+papers ingested). Genus-grounding papers (Section 2, about other corals) were kept local-only to
+keep the notebook focused on *A. pulchra*; they belong in the regen notebook if needed there.
+
+### Not obtained (paywalled, no OA route; browser unauthenticated)
+| Paper | Why missing | Mitigation |
+|---|---|---|
+| Cunning 2024, Berg 2020, Comeau 2014, Conetta 2021, Munk 2024 | already **[NB]** (in notebook) | content queryable; local PDF not essential |
+| Houlbrèque & Ferrier-Pagès 2009 (Wiley, `h`) | paywall, review article | use Conti-Jerpe 2020 + Radice 2019 (primary, `h`) |
+| Álvarez-Noriega 2016 (Wiley) & Hall & Hughes 1996 (JSTOR), `B_mat` | paywall | use Soong 1992 (LAB) for size-at-repro |
+| Fitt 2000 (Wiley L&O, `iZ`) | paywall | use Bay 2016 (OA) for symbiont threshold |
+| Puisay 2018, Roche 2010a, Tanaka 2006/2009 (Elsevier) | paywall, no PMC | Roche 2010b (OA) covers porosity; lower-rel |
+| Huang 2009 (no DOI), Babka 2017 (Bremen thesis) | not locatable / bot-blocked | — |
+
+### Per-paper one-line summaries (acquired PDFs)
+
+**A. pulchra-specific — expression / genomics / microbiome**
+- **Conn 2025** — reference genome assembly & annotation for Mo'orea *A. pulchra* (anchors all expression work).
+- **Zhang 2025** — protein + metabolite acclimation to thermal variability; closest "expression × temperature" proteomics.
+- **Anthony 2023** — Symbiodiniaceae cellular/phenotypic plasticity under stress.
+- **de la Vega 2023** — genome of an *Endozoicomonas* strain isolated from *A. pulchra* (microbiome resource).
+- **Lock 2025** — combined Symbiodiniaceae + bacterial microbiome effects on host performance.
+- **Miller 2024** — seasonal tissue/mucus microbiome baseline.
+
+**A. pulchra-specific — thermal tolerance / bleaching**
+- **Berg 2020** — persistent photosystem damage; 58% mortality by day 34, recovery needs ~3× stress duration ([NB], no local PDF).
+- **Shaw 2016** — intraspecific (genotype) variability under warming × acidification.
+- **Denis 2024** — individual thermal-tolerance traits (CBASS framing); published RSPB version acquired.
+- **El-Khaled 2025** — heat *and* cold bleaching vulnerability, incl. *A. pulchra*.
+- **Hoadley 2015** — temperature × pCO₂ physiology across genera.
+- **Grottoli 2020** — methods/standardization for cross-experiment bleaching comparability.
+
+**A. pulchra-specific — growth / calcification / skeleton**
+- **Yap & Gomez 1984** — growth 13.1–15.8 cm/yr; 36.4% branch mortality → `v_edge`, `m_d`.
+- **Yap 1985** — growth II, temperature × daylength.
+- **Strømgren 1987** — light × growth in intertidal *A. pulchra*.
+- **Comeau 2016** — calcification response parameterized vs temp & pCO₂.
+- **Roche 2010b** — spatial variation in skeletal porosity → `D_E`, `resid`.
+- **Tian 2025** — internal skeletal hydrodynamics.
+
+**A. pulchra-specific — physiology / nutrients / ecology / recovery**
+- **Buckingham 2022** — N+P enrichment with skewed N:P stoichiometry.
+- **Almeida 2024** — intertidal vs subtidal recovery, growth, survival.
+- **Ladd 2025** — growth–predation tradeoffs shaping distribution.
+- **Raymundo 2025** — restoration outcomes in a stressful (Guam) environment.
+
+**Acropora-genus grounding (local PDFs only; for params lacking *A. pulchra* data)**
+- **Conti-Jerpe 2020** & **Radice 2019** — heterotrophic vs autotrophic strategy → `h` (low plasticity).
+- **Denis 2013** — fast growth trades off against regeneration in *A. muricata* → fast-fragile axis.
+- **Schoepf 2013** & **Leinbach 2021** — *Acropora* energy reserves / recovery costs → `E_max`.
+- **Denis 2011**, **Hall 1997/1998/2001/2015**, **Meesters 1997**, **Lirman 2014** — lesion/regeneration rates → `kc_mult`.
+- **Bay 2016** — symbiont-density recovery threshold → `iZ`.
+- **Soong 1992** — reproductive integration / size effects → `B_mat`.
+- **Madin 2014** — mechanical vulnerability / colony breakage → `m_d`.
+- **Lirman 2000a** — branching-*Acropora* fragmentation dynamics → `m_d`.
