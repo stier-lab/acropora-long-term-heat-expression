@@ -3,7 +3,6 @@
 #          mixed model — how much variance sits in tank vs colony (id) vs
 #          residual. Complements the marginal/conditional R² already reported
 #          (script 12) by attributing the random-effect variance explicitly.
-#          (Parallels the latent-scale ICC reporting in the wound-type repos.)
 #
 #          Gaussian LMMs: ICC_grp = var_grp / (sum of all variances).
 #          Binomial GLMMs: LATENT-scale ICC with residual variance = pi^2/3

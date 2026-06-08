@@ -71,8 +71,7 @@ write_csv(km_summary, file.path(TBL_DIR, "14_km_event_summary.csv"))
 # (`wound_smoothed`) to forming new skeleton at the tip
 # (`new_corallites_on_tip`). Corals that close but never regenerate within the
 # experiment are right-censored (no lag) and counted separately — heat is
-# expected to inflate that censored fraction. (Pattern adapted from the
-# coenosarc->polyp lag in the wound-type analyses.)
+# expected to inflate that censored fraction.
 ev_wide <- events |>
   select(id, treatment, thicket, trait, event, event_day) |>
   pivot_wider(names_from = trait, values_from = c(event, event_day))

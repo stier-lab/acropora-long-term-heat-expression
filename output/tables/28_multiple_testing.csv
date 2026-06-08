@@ -1,20 +1,20 @@
-family,test,p_value,p_BH,p_bonferroni,sig_raw,sig_BH,sig_bonferroni
-Physiology (treatment effect),pam_fvfm : treatment:day,0,0,0,TRUE,TRUE,TRUE
-Physiology (treatment effect),color_dscale : treatment:day,0,0,0,TRUE,TRUE,TRUE
-Physiology (treatment effect),log_zoox_density : treatment:biopsy_day_c,0,0,0,TRUE,TRUE,TRUE
-Physiology (treatment effect),growth_areal : treatment,0.02102,0.02102,0.08408,TRUE,TRUE,FALSE
-Morphology (treatment effect),morph:polyps_out : treatment,0.08656,0.5088,0.6925,FALSE,FALSE,FALSE
-Morphology (treatment effect),morph:hole_in_center : treatment,0.9435,0.9994,1,FALSE,FALSE,FALSE
-Morphology (treatment effect),morph:polyp_in_hole : treatment,0.9435,0.9994,1,FALSE,FALSE,FALSE
-Morphology (treatment effect),morph:wound_smoothed : treatment,0.9994,0.9994,1,FALSE,FALSE,FALSE
-Morphology (treatment effect),morph:pigment_over_wound : treatment,0.9977,0.9994,1,FALSE,FALSE,FALSE
-Morphology (treatment effect),morph:tip_exist : treatment,0.1272,0.5088,1,FALSE,FALSE,FALSE
-Morphology (treatment effect),morph:tip_extension : treatment,0.3474,0.8198,1,FALSE,FALSE,FALSE
-Morphology (treatment effect),morph:new_corallites_on_tip : treatment,0.4099,0.8198,1,FALSE,FALSE,FALSE
-Survival (Cox HR),cox:hole_in_center : 31C vs 28C,0.4468,0.5542,1,FALSE,FALSE,FALSE
-Survival (Cox HR),cox:polyp_in_hole : 31C vs 28C,0.4468,0.5542,1,FALSE,FALSE,FALSE
-Survival (Cox HR),cox:wound_smoothed : 31C vs 28C,0.2517,0.5542,1,FALSE,FALSE,FALSE
-Survival (Cox HR),cox:pigment_over_wound : 31C vs 28C,0.4751,0.5542,1,FALSE,FALSE,FALSE
-Survival (Cox HR),cox:tip_exist : 31C vs 28C,0.3683,0.5542,1,FALSE,FALSE,FALSE
-Survival (Cox HR),cox:tip_extension : 31C vs 28C,0.6131,0.6131,1,FALSE,FALSE,FALSE
-Survival (Cox HR),cox:new_corallites_on_tip : 31C vs 28C,0.009537,0.06676,0.06676,TRUE,FALSE,FALSE
+hypothesis,test,rationale,p_value,p_BH,p_reported,significant
+a priori (confirmatory),pam_fvfm : treatment:day,Warner et al. 1999 (heat lowers Fv/Fm),0,NA,0,TRUE
+a priori (confirmatory),color_dscale : treatment:day,Hoegh-Guldberg 1999 (heat-driven paling),0,NA,0,TRUE
+a priori (confirmatory),log_zoox_density : treatment:biopsy_day_c,Hoegh-Guldberg 1999; Jokiel & Coles 1990 (symbiont loss),0,NA,0,TRUE
+a priori (confirmatory),growth_areal : treatment,Jokiel & Coles 1977 (heat reduces calcification),0.02102,NA,0.02102,TRUE
+exploratory,morph:polyps_out : treatment,no a-priori prediction for this closure/incidental trait,0.08656,0.7791,0.7791,FALSE
+exploratory,morph:hole_in_center : treatment,no a-priori prediction for this closure/incidental trait,0.9435,0.9994,0.9994,FALSE
+exploratory,morph:polyp_in_hole : treatment,no a-priori prediction for this closure/incidental trait,0.9435,0.9994,0.9994,FALSE
+exploratory,morph:wound_smoothed : treatment,no a-priori prediction for this closure/incidental trait,0.9994,0.9994,0.9994,FALSE
+exploratory,morph:pigment_over_wound : treatment,no a-priori prediction for this closure/incidental trait,0.9977,0.9994,0.9994,FALSE
+a priori (confirmatory),morph:tip_exist : treatment,central hypothesis: heat impairs tip regeneration,0.1272,NA,0.1272,FALSE
+a priori (confirmatory),morph:tip_extension : treatment,central hypothesis: heat impairs tip regeneration,0.3474,NA,0.3474,FALSE
+a priori (confirmatory),morph:new_corallites_on_tip : treatment,central hypothesis: heat impairs tip regeneration,0.4099,NA,0.4099,FALSE
+exploratory,cox:hole_in_center : 31C vs 28C,no a-priori prediction for this closure milestone,0.4468,0.8551,0.8551,FALSE
+exploratory,cox:polyp_in_hole : 31C vs 28C,no a-priori prediction for this closure milestone,0.4468,0.8551,0.8551,FALSE
+exploratory,cox:wound_smoothed : 31C vs 28C,no a-priori prediction for this closure milestone,0.2517,0.8551,0.8551,FALSE
+exploratory,cox:pigment_over_wound : 31C vs 28C,no a-priori prediction for this closure milestone,0.4751,0.8551,0.8551,FALSE
+a priori (confirmatory),cox:tip_exist : 31C vs 28C,central hypothesis: heat delays/prevents tip regeneration,0.3683,NA,0.3683,FALSE
+a priori (confirmatory),cox:tip_extension : 31C vs 28C,central hypothesis: heat delays/prevents tip regeneration,0.6131,NA,0.6131,FALSE
+a priori (confirmatory),cox:new_corallites_on_tip : 31C vs 28C,central hypothesis: heat delays/prevents tip regeneration,0.009537,NA,0.009537,TRUE

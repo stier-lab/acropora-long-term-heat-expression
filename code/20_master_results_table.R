@@ -689,17 +689,17 @@ mt_rows <- if (file.exists(file.path(TBL_DIR, "28_multiple_testing.csv"))) {
   read_csv(file.path(TBL_DIR, "28_multiple_testing.csv"),
            show_col_types = FALSE) |>
     transmute(
-      domain = "Multiple-testing sensitivity", response = family,
-      model_type = "FDR/Bonferroni", term = test,
-      test = "BH-adjusted p", statistic = p_BH,
+      domain = "Confirmatory / exploratory testing", response = hypothesis,
+      model_type = "a priori (raw) / exploratory (BH)", term = test,
+      test = "reported p", statistic = p_reported,
       df1 = NA_real_, df2 = NA_real_, n = NA_real_,
-      estimate = p_BH, units = "adjusted p",
+      estimate = p_reported, units = "p (raw if a priori, BH if exploratory)",
       pct_change = NA_real_, ci_low = NA_real_, ci_high = NA_real_,
       p_value = p_value,
-      qualitative = sprintf("raw %s; BH %s; Bonferroni %s",
-                            ifelse(sig_raw, "sig", "n.s."),
-                            ifelse(sig_BH, "sig", "n.s."),
-                            ifelse(sig_bonferroni, "sig", "n.s.")),
+      qualitative = sprintf("%s; %s (rationale: %s)",
+                            hypothesis,
+                            ifelse(significant, "significant", "n.s."),
+                            rationale),
       source_script = "code/28_multiple_testing.R",
       source_artifact = "output/tables/28_multiple_testing.csv"
     )

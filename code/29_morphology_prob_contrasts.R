@@ -4,7 +4,6 @@
 #          addition to the odds-ratio scale, at a representative timepoint.
 #          The primary morphology models report log-odds coefficients; readers
 #          want "how much lower is the probability of regeneration under heat."
-#          (Dual-scale contrast reporting parallels the wound-type analyses.)
 # Input:   output/models/12c_morph_*_blme.rds  (penalized binomial GLMMs)
 # Output:  output/tables/29_morphology_prob_contrasts.csv
 # =============================================================================
