@@ -140,8 +140,26 @@ Pigmentation was estimated with the Coral Watch Color Card (Siebeck et al., 2006
    
 Surface area of the remaining disk was estimated using the wax-dipping method and capping the top and bottom of disk with aluminum foil to exclude this surface from the final measurement. 
 
-*Morphological Characterization*  
-A subset of fragments (n=16) were used exclusively for microscopic morphological characterization. These fragments were collected, wounded, and housed according to the same schedule as those used for physiological and transcriptomic studies. Daily photographs were taken at 1.25x and 3.2x zoom under brightfield light. Samples were scored positively or negatively for nine key healing and regeneration attributes: polyps out, hole in center of wound, polyp in axial hole, wound smoothed over, obvious pigment over wound, tip exists, tip extension, new corallites on tip, and algae on wound. These characteristics were used to assess both tissue healing and skeletal growth.
+*Morphological characterization of wound recovery*
+A subset of fragments (n = 16) were used exclusively for microscopic morphological characterization. These fragments were collected, wounded, and housed on the same schedule as those used for physiological and transcriptomic studies. Daily photographs were taken at 1.25× and 3.2× zoom under brightfield light. Following the biphasic framework used across our coral wound-recovery studies, we treat recovery as a **tissue-healing phase** — re-epithelialization and coenosarc coverage that seals the wound — followed by a **regeneration phase** — reappearance of polyps and rebuilding of skeletal (calyx/corallite) structure. Because LTH wounds are apical-**tip excisions**, regeneration is scored as new skeletal growth at the branch tip rather than as polyp reappearance in a surface wound bed. Each fragment was scored daily (yes/no) for nine morphological attributes indexing these two phases (Table 1). To make the staging unambiguous for cross-study comparison, all terms are defined in Table 1.
+
+**Table 1. Definitions of wound-recovery staging terms and the nine scored morphological attributes.** Phase assignment follows the biphasic healing → regeneration framework; data-column names (in `code` font) are fixed identifiers in the analysis repository.
+
+| Term | Phase | Definition |
+|---|---|---|
+| **Tissue-healing phase** | — | Re-establishment of the epithelial/tissue barrier over the wound via coenosarc coverage (re-epithelialization); seals the wound, skeleton-independent. |
+| **Coenosarc** | healing | The interstitial soft tissue connecting polyps; its advance over the wound bed ("coenosarc coverage/closure") is the healing-phase endpoint. |
+| **Regeneration phase** | — | Reappearance of fully formed polyps and rebuilding of skeletal structure (calyx cups / corallites) after the wound is sealed. |
+| **Wound bed** | — | The denuded region of the wound being recovered (here, the excised apical tip). |
+| `polyps_out` | healing | Polyps extended (vs retracted) on the fragment. |
+| `hole_in_center` | healing | A hole present at the center of the wounded (axial) region. |
+| `polyp_in_hole` | healing | A polyp has formed in the central axial hole. |
+| `wound_smoothed` | healing | Wound surface smoothed by coenosarc coverage (re-epithelialization complete). |
+| `pigment_over_wound` | healing→regen | Pigmented (symbiont-bearing) tissue established over the wound. |
+| `tip_exist` | regeneration | A new apical tip is present at the wound. |
+| `tip_extension` | regeneration | The new apical tip has elongated/extended. |
+| `new_corallites_on_tip` | regeneration | New skeletal corallites (calyx cups) formed at the regenerating tip — the terminal regeneration milestone. |
+| `algae_on_wound` | incidental | Algal colonization of the wound bed (algal plug when dense). |
 
 *Statistical analysis*  
 All analyses ran in R 4.5.2 (R Core Team, 2025) and are fully reproducible from `code/_run_all.R`; every numerical claim in the Results section traces to a row in `output/tables/20_master_results.csv`. We treat genet (thicket) as a fixed effect throughout, because only three thickets were collected — too few to estimate a random-effect variance reliably (Bolker, 2008; Gelman, 2005) — and because the per-genet treatment effects are themselves a primary inferential target.
@@ -176,11 +194,11 @@ Areal calcification rate (buoyant-weight mass gain normalized to the coral's cal
 
 A principal-components analysis of end-of-experiment physiology (PAM Fv/Fm, color, growth, log-symbionts) collapsed 81% of among-coral variance onto a single thermal-stress axis (PC1) on which all four variables loaded positively (~0.5 each; Fig. 3A). The 31 °C cloud was more dispersed along PC1 than the 28 °C cloud, indicating that individual-level variance in physiological response increases under thermal stress.
 
-*Heating impairs the regenerative-tip program, not wound closure*
+*Heating impairs the regeneration phase, not the tissue-healing phase*
 
-Wounded corals were tracked daily for nine binary morphological characteristics of healing. Wound closure proceeded at essentially identical rates in both treatments. By Day 5, ≥90% of corals in both treatments had a hole filled by a polyp (Cox HR = 1.38, 95% CI 0.60–3.15, p = 0.45) and a smooth wound surface (HR = 1.67, 95% CI 0.70–4.01, p = 0.25; Fig. 1, Fig. 3B). The one wound-closure trait with a detectable heat effect was *polyps out*: heated wounded corals were more likely to retain retracted polyps at later timepoints (Wald χ²₁ = 6.70, p = 0.010), but the overall hazard of any polyp emergence did not differ between treatments.
+Wounded corals were tracked daily for the nine morphological attributes defined in Table 1. The **tissue-healing phase** (coenosarc coverage; Table 1) proceeded at essentially identical rates in both treatments. By Day 5, ≥90% of corals in both treatments had a polyp formed in the central hole (Cox HR = 1.38, 95% CI 0.60–3.15, p = 0.45) and a coenosarc-smoothed wound surface (HR = 1.67, 95% CI 0.70–4.01, p = 0.25; Fig. 1, Fig. 3B). The one healing-phase trait with a detectable heat effect was polyp extension (`polyps_out`): heated wounded corals were more likely to retain retracted polyps at later timepoints (Wald χ²₁ = 6.70, p = 0.010), but the overall hazard of any polyp emergence did not differ between treatments.
 
-By contrast, the regenerative-tip program was severely impaired by heating. By Day 15, all 28 °C wounded corals had developed new corallites at the tip; only 33% of 31 °C wounded corals had done so. The instantaneous hazard of new-corallite formation was 78% lower in 31 °C corals (Cox HR = 0.22, 95% CI 0.07–0.69, p = 0.010, stratified by thicket; Fig. 3B). Tip extension showed a similar but weaker pattern (HR = 0.80, 95% CI 0.34–1.87, p = 0.61), and pigment-over-wound was a late and rare event under both temperatures. A time-varying-coefficient refit confirmed that the per-genet pigment-over-wound effect for genet c, which violated the proportional-hazards assumption, was non-significant under PH-correction (coef = 0.65, p = 0.13).
+By contrast, the **regeneration phase** — skeletal regrowth at the tip — was severely impaired by heating. By Day 15, all 28 °C wounded corals had developed new corallites at the tip; only 33% of 31 °C wounded corals had done so. The instantaneous hazard of new-corallite formation was 78% lower in 31 °C corals (Cox HR = 0.22, 95% CI 0.07–0.69, p = 0.010, stratified by thicket; Fig. 3B). Tip extension showed a similar but weaker pattern (HR = 0.80, 95% CI 0.34–1.87, p = 0.61), and pigment-over-wound was a late and rare event under both temperatures. A time-varying-coefficient refit confirmed that the per-genet pigment-over-wound effect for genet c, which violated the proportional-hazards assumption, was non-significant under PH-correction (coef = 0.65, p = 0.13).
 
 *Heritable variation in thermal tolerance among genets*
 
