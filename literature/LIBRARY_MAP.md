@@ -8,8 +8,16 @@ most parameters are grounded on congeners/mechanism papers where *A. pulchra*-sp
 Machine-readable companion: [`library_map.csv`](library_map.csv). See also `CITATION_AUDIT.md`
 (how the grounding papers were found) and `LITERATURE.md` (the *A. pulchra* discovery index).
 
-**Composition of 93 PDFs:** 19 **Core** (*A. pulchra* is the subject) ·
-7 **Includes *A. pulchra*** (multi-species) · 67 **Grounding** (genus / other-coral / mechanism).
+**Composition of 98 PDFs:** 16 **Core** (*A. pulchra* is the subject) ·
+6 **Includes *A. pulchra*** (multi-species) · 76 **Grounding** (genus / other-coral / mechanism).
+(The 5 most recently acquired — Jokiel & Coles 1977/1990, Cunning 2024, Davies 1989, Siebeck 2006 —
+are methods/grounding citations; see `CITATIONS_INDEX.md`.)
+
+> ⚠ **Species-attribution corrections (2026-06-08).** Four papers were verified against their PDFs
+> and reclassified out of the *A. pulchra* groups (rows below flagged `⚠`): **Zhang 2025** =
+> macroalga *Halimeda macroloba*; **Almeida 2024** = *Pocillopora* cf. *damicornis*; **Raymundo
+> 2025** = *A. aspera*; **Denis 2024** = *A. spathulata*. They stay in the library as grounding/
+> framing but are no longer counted as *A. pulchra*-subject. (Counts above already updated.)
 
 ---
 
@@ -35,7 +43,7 @@ Machine-readable companion: [`library_map.csv`](library_map.csv). See also `CITA
 ## 1. Core — *A. pulchra* is the study subject (19)
 | Paper | Theme | Connection — what it grounds |
 |---|---|---|
-| [Almeida et al. 2024](pdfs/Almeida_2024_IntertidalSubtidalRecovery.pdf) | Recovery | Intertidal vs subtidal recovery/growth/survival → recovery dynamics |
+| ⚠ [Almeida et al. 2024](pdfs/Almeida_2024_IntertidalSubtidalRecovery.pdf) | Recovery | **Pocillopora cf. damicornis, Kenya (NOT A. pulchra)** — intertidal/subtidal recovery-dynamics framing |
 | [Anthony et al. 2023](pdfs/Anthony_2023_SymbiontPlasticity.pdf) | Expression/Symbiont | Symbiodiniaceae cellular/phenotypic plasticity under stress |
 | [Buckingham et al. 2022](pdfs/Buckingham_2022_NPEnrichment.pdf) | Nutrients | N+P enrichment, skewed N:P |
 | [Comeau et al. 2016](pdfs/Comeau_2016_CalcificationTempCO2.pdf) | Calcification | Calcification vs temp & pCO2 → calcification parameterisation |
@@ -44,7 +52,7 @@ Machine-readable companion: [`library_map.csv`](library_map.csv). See also `CITA
 | [Lock et al. 2025](pdfs/Lock_2025_SymbiontBacterialMicrobiome.pdf) | Microbiome | Symbiont + bacterial microbiome effects on host |
 | [Miller & Bentlage 2024](pdfs/Miller_2024_SeasonalMicrobiome.pdf) | Microbiome | Seasonal tissue/mucus microbiome baseline |
 | [Nuñez Lendo et al. 2023](pdfs/NunezLendo_2023_IntertidalMicrobialAbundance.pdf) | Microbiome | Low-tide exposure shifts microbial abundance in intertidal A. pulchra |
-| [Raymundo et al. 2025](pdfs/Raymundo_2025_RestorationGuam.pdf) | Restoration | A. pulchra restoration in a stressful (Guam) environment |
+| ⚠ [Raymundo et al. 2025](pdfs/Raymundo_2025_RestorationGuam.pdf) | Restoration | **A. aspera outplants, Guam (NOT A. pulchra)** — A. pulchra is the background congener at the site |
 | [Roche et al. 2010b](pdfs/Roche_2010b_SpatialPorosity.pdf) | Skeleton | Spatial skeletal porosity → D_E, resid (perforate translocation) |
 | [Rouzé et al. 2017](pdfs/Rouze_2017_SymbiodiniumMoorea.pdf) | Symbiont/Mo'orea | Symbiodiniaceae of Mo'orea corals incl. A. pulchra → iZ context |
 | [Shaw et al. 2016](pdfs/Shaw_2016_IntraspecificVariability.pdf) | Thermal tolerance | Genotype variation under warming×acidification → bleaching sensitivity (bT_pulse, bleach_z) |
@@ -52,14 +60,14 @@ Machine-readable companion: [`library_map.csv`](library_map.csv). See also `CITA
 | [Tian et al. 2025](pdfs/Tian_2025_SkeletalHydrodynamics.pdf) | Skeleton | Internal skeletal hydrodynamics |
 | [Yap & Gomez 1984](pdfs/YapGomez_1984_Growth.pdf) | Growth | Growth 13.1–15.8 cm/yr; 36.4% branch mortality → v_edge, m_d |
 | [Yap 1985](pdfs/Yap_1985_GrowthII.pdf) | Growth | Growth II (temp × daylength) → v_edge |
-| [Zhang et al. 2025](pdfs/Zhang_2025_ProteinMetaboliteAcclim.pdf) | Expression | Protein+metabolite acclimation to thermal variability — closest expression×temperature proteomics (LTH) |
+| ⚠ [Zhang et al. 2025](pdfs/Zhang_2025_ProteinMetaboliteAcclim.pdf) | Expression | **Macroalga *Halimeda macroloba* (NOT A. pulchra, not a coral)** — calcifier thermal-acclimation framing only |
 | [de la Vega et al. 2023](pdfs/delaVega_2023_EndozoicomonasGenome.pdf) | Microbiome | Endozoicomonas GU-1 genome from A. pulchra — microbiome resource |
 
 ## 2. Includes *A. pulchra* among multiple species (7)
 | Paper | Theme | Connection — what it grounds |
 |---|---|---|
 | [Carroll et al. 2006](pdfs/Carroll_2006_AcroporaReproductionMoorea.pdf) | Reproduction/Mo'orea | Sexual reproduction of Acropora at Mo'orea → B_mat (field site) |
-| [Denis et al. 2024](pdfs/Denis_2024_IndividualThermalTolerance.pdf) | Thermal tolerance | Individual thermal-tolerance traits (CBASS) — A. pulchra among species (LTH) |
+| ⚠ [Denis et al. 2024](pdfs/Denis_2024_IndividualThermalTolerance.pdf) | Thermal tolerance | **A. spathulata, GBR (NOT A. pulchra)** — CBASS intraspecific-variation framing |
 | [El-Khaled et al. 2025](pdfs/ElKhaled_2025_HeatColdBleaching.pdf) | Thermal tolerance | Heat & cold bleaching vulnerability incl. A. pulchra → bleaching sensitivity |
 | [Grottoli et al. 2020](pdfs/Grottoli_2020_BleachingComparability.pdf) | Methods | Standardising bleaching experiments — LTH methods/comparability |
 | [Hoadley et al. 2015](pdfs/Hoadley_2015_TempCO2Physiology.pdf) | Thermal physiology | Temp × pCO2 physiology across genera incl. A. pulchra |

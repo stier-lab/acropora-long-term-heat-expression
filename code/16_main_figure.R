@@ -37,7 +37,7 @@ temp_pa <- apex |>
   filter(!is.na(treatment), value_c > 15, value_c < 40,
          between(date, as_date("2025-05-25"), as_date("2025-06-22")))
 
-# Direct labels for the two-group temperature treatment (per Codex critique)
+# Direct labels for the two-group temperature treatment
 last_28 <- temp_pa |> filter(treatment == "28C") |>
   group_by(tank) |> slice_max(date, n = 1) |> ungroup() |>
   slice(1)
@@ -60,7 +60,7 @@ pA <- ggplot(temp_pa, aes(date, value_c, group = tank, colour = treatment)) +
                       name = NULL, guide = "none") +  # direct-labeled
   scale_x_date(date_breaks = "1 week", date_labels = "%b %d") +
   labs(x = NULL, y = "Tank T (°C)",
-       tag = "A", subtitle = "Apex tank temperatures (n = 8 tanks)") +
+       tag = "A") +   # panel descriptions belong in the figure caption, not subtitles
   theme_pub(9)
 
 # ---- Panel B: PAM trajectory ----------------------------------------------
@@ -95,8 +95,7 @@ pB <- ggplot(pam_df, aes(day, m, colour = treatment,
   scale_shape_manual(values = c(no = 16, yes = 17), name = "Wound",
                      guide = "none") +  # collected from panel D
   labs(x = "Days post-wounding", y = expression(F[v]/F[m]),
-       tag = "B",
-       subtitle = "Photochemical efficiency") +
+       tag = "B") +
   theme_pub(9)
 
 # ---- Panel C: KM curves for the two diagnostic traits --------------------
@@ -142,8 +141,7 @@ pC <- ggplot(km_curves, aes(day, cum_event,
                      limits = c(0, 1)) +
   labs(x = "Days post-wounding",
        y = "Corals expressing trait",
-       tag = "C",
-       subtitle = "Heat impairs the regenerative tip program") +
+       tag = "C") +
   theme_pub(9)
 
 # ---- Panel D: PCA biplot -------------------------------------------------
@@ -193,13 +191,12 @@ pD <- ggplot(scores, aes(PC1, PC2, colour = treatment, shape = wound)) +
   scale_shape_manual(values = c(no = 16, yes = 17), guide = "none") +
   labs(x = sprintf("PC1 (%.0f%%)", var_e[1]),
        y = sprintf("PC2 (%.0f%%)", var_e[2]),
-       tag = "D",
-       subtitle = "Multivariate physiology") +
+       tag = "D") +
   theme_pub(9)
 
 # ---- Compose ---------------------------------------------------------------
-# Per multi-model critique (Codex + Gemini): consolidate legends; add top
-# margin so title doesn't kiss panel letters; use patchwork to align axes.
+# Consolidate legends; add top margin so the title doesn't kiss the panel
+# letters; use patchwork to align axes.
 top_row <- pA + pB + patchwork::plot_layout(widths = c(1, 1))
 bot_row <- pC + pD + patchwork::plot_layout(widths = c(1.4, 1))
 fig1    <- (top_row / bot_row) +

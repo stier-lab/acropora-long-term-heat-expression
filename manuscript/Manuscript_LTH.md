@@ -1,6 +1,8 @@
 **Something Flashy about Temperature and Wound Healing in Acropora Pulchra**
 
-Molly Brzezinski1,2, Shreya Banerjee3, Michelle Diminuco4, Ashley W. Seifert5, Craig W. Osenberg4, Adrian C. Stier1,2 Rachael A. Bay3,
+Shreya Banerjee3, Molly Brzezinski1,2, Michelle Diminuco4, Ashley W. Seifert5, Craig W. Osenberg4, Rachael A. Bay3,†, Adrian C. Stier1,2,†
+
+† Co-senior authors.
 
 1Department of Ecology, Evolution, and Marine Biology, University of California Santa Barbara, Santa Barbara, California 93106, USA
 
@@ -12,7 +14,7 @@ Molly Brzezinski1,2, Shreya Banerjee3, Michelle Diminuco4, Ashley W. Seifert5, C
 
 5Department of Biology University of Kentucky, Lexington, KY 40508
 
-**Correspondence:** Ashley W. Seifert, University of Kentucky, Department of Biology, Lexington KY, 40502, USA. Email: [awseifert@uky.edu](mailto:awseifert@uky.edu) and Adrian Stier, University of California Santa Barbara, Department of Ecology, Evolution, and Marine Biology, Santa Barbara, CA, 93106 USA. Email: [astier@ucsb.edu](mailto:astier@ucsb.edu) 
+**Correspondence:** Shreya Banerjee, University of California Davis, [department + address — confirm]. Email: [email — confirm]
 
 Author emails AND ORCID: 
 
@@ -32,96 +34,15 @@ Rachael Bay:
 
 **Abstract**
 
+> _[Abstract — led by S. Banerjee; written last, once the gene-expression results are in. The text below is an early rough draft from the project notes, to revise or replace entirely.]_
+
 Corals show a remarkable capacity to regenerate tissue and skeleton after physical abrasion, and heat stress can affect growth BUT we don’t understand how heat stress impacts the regenerative capacity of corals. In this experiment, we cross wounding treatment with heat stress to understand the mechanisms of tissue regeneration under heat-stress.
 
 Acropora pulchra, like other branching corals, has a distinct physiology that supports rapid growth at the apical ends of branches. The growing tip includes an axial polyp, reduced symbiont densities, and diminished oocytes. This microstructure supports rapid growth that compounds over time to construct the long appendages of a mature colony. These corals frequently experience local stressors that cause physical damage to the growing tip, and global stressors like climate change. However, little is known how these two factors interact to affect healing and tissue regeneration. Therefore, in this experiment, we cross wounding status with heat stress and to understand the mechanisms of tissue regeneration under heat-stress in a common branching coral. (results) (implications)
 
 **Introduction**
 
-AND: Branching corals face multiple stressors including heat-stress and physical abrasions that can fragment colonies
-
-BUT we don’t understand how injury to the growing tip impacts gene expression in the basal tissue of the fragments
-
-BUT we don’t understand how heat-stress and injury interact on wound healing and tissue regeneration
-
-THEREFORE: In this experiment, we cross wounding with heat stress and to understand   
-the mechanisms of tissue regeneration under heat-stress.  
-The capacity 
-
-1. Healing versus regeneration and how this applies to our coral  
-   1. Coral must quickly perform healing to survive (step 1\)  
-      1. Worldwide, corals sustain tissue and skeletal injury through fish and invertebrate predation, algal competition, disease, and fragmentation or abrasion caused by human activity (CITE review, etc). The damaged coral tissue must quickly initiate a coordinated cellular response that leverages cell migration and proliferation pathways to reestablish barrier function — re-epithelialization and coenosarc coverage of the wound bed (the tissue-healing phase; Table 1). Once the wound bed is effectively sealed, the regeneration phase — rebuilding polyps and skeletal calyx/corallite structure — can begin.  
-   2. Regeneration of lost limb must occur for colony to regain complete function (step 2\)  
-      1. Regeneration is broadly defined as the complete replacement of structure (CITE). In corals, this includes whole polyps with tentacles, and calyx/corallites skeletal structure. We expand this definition to include physical architecture and functional structure such as symbiont density, tentacle extension. Because corals are colonial and share resources acquired through symbiont metabolism and heterotrophic feeding, regeneration of polyps and pigmentation is a more functional metric to assess the outcome of wound-healing and implications on whole-colony affects. Regeneration is a complex process that requires precise cell-differentiation, rapid calcification, and the acquisition of symbionts in native coral tissue (do we have pathway info on this already?).  
-   3. What is the microstructure of A. pulchra?  
-      1. The growing tip includes a non-reproductive axial polyp and reduced symbiont density  
-      2. 
-
-      3. The mature branch is made up of smaller polyps with higher symbiont density and reproductively mature polyps
-
-2. Healing rates, heat stress, interaction/resilience in Acropora \- what do we know  
-   1. Healing/regenerating tissue genes and process \- What are the mechanisms? What do we know about healing and regenerating? What genes are important?  
-      1. There are differences in genes for growth vs. maintenance tissue in corals  
-         1. Hemond et al., 2014 looked at different regions of a single branch of *Acropora palmata*, and *Acropora cervicornis* and found that there were differences in “developmental signaling pathways, such as Wnt, Notch, and BMP, as well as pH regulation, ion transport, extracellular matrix production and other processes” between branch tips and growing bases. Their work provides transcriptional evidence for the morphological differences between growing tips compared to base tissue.  
-      2. Genes for “healing”: How might these be impacted by heat stress  
-         1. In contrast to genes associated with growth, ”Healing” genes are likely short lived (\<24 hours) since this is when we see the most rapid movement of tissue across open wound  
-            1. Since healing requires migration and proliferation of cells across a surface, we expect to see genes involved in ECM remodeling, cell migration and proliferation, cytoskeletal remodeling **but need to find papers that support this statement. Or papers with interesting metabolomic/proteomic cues**  
-      3. Genes for “regeneration” \- ie normal growth of an extending branch. Genes associated with regeneration should be closely related to that of “growth” since they are functionally the same process at the growing end. The axial polyp continues to extend indefinitely away from the base of the branch until some unknown signal initiates splitting (can we get any info from trees?)  
-   2. Heat-stress and associated genes \- How is growth affected (short-term, long-term)? What genes govern heat-stress and how long does the response last?  
-      1. In general, temperature affects growth in corals as defined as changes in buoyant weight or lateral extension  
-         1. *Pocillopora damicornis* (L.), *Montipora verrucosa* (Lamarck) and *Fungia scutaria* had decreased buoyant weight at both high and low temperatures (Jokiel and Coles, 1977\)  
-         2. Elevated temperatures increase metabolism in sub-bleached corals and produce higher levels of calcification. However, this effect is reversed at temperatures that cause bleaching and subsequent depletion of photosynthetically-derived carbohydrates from symbiotic algae (Kornder. et al., 2018).  
-         3. Acropora’s ability to biomineralize (ie grow) may be particularly sensitive to heat-stress due to changes in calcifying fluid carbonate chemistry (Schoepf et al., 2021\)  
-      2. Genes for heat-stress  
-         1. In general, temperature stress in cnidarians induces a cascade of cellular responses which include HSP and antioxidant production, decreased Ca2+ homeostasis consistent with ICM restructuring and apoptotic pathways, and altered decreased ribosomal protein expression (Cziesielski et al., 2019\)  
-         2. However, it might be worth differentiating between transcriptional plasticity (acute response) versus altered constitutive expression (chronic upregulation that appears to bolster resilience, the trade-off being energetic/reproductive/growth costs) since in this study, we follow heat-stressed corals over 2 weeks  
-            1. Also, we wounded corals after 7 days of holding at heat stress… so maybe we expect to miss the acute heating response and only witness the constituative  
-            2. Transcriptional plasticity \- oxidative stress, homeostasis, ECM remodeling, apoptosis  
-            3. Constitutive Expression \- “stress tolerance” and “frontloaded transcripts”  that are expressed to a higher degree under control conditions \- HSP and antioxidant enzymes, apoptotic pathway regulation, tumor suppression, innate immune response, and cell adhesion (Barshis et al., 2013\)  
-         3. With “acute” stress (3 hour ramp, then 3 hour heating hold, call it 6 hour heat-stress) for sub-bleaching and bleaching DEGS: unfolded protein binding, phosphoserine phosphatase activity, and protein refolding are DEGS in bleaching. After heat stress, (16 hours post-ramp down to ambient) shows 97% of DEGS in sub-bleaching have returned to that of ambient controls, but bleached corals had new DEGS in the GFP, and HSP category (in addition to the already DEG “nucleosome, extracellular space/region, DNA binding, calcium ion binding, and protein heterodimerisation activity”) \*\*HSP110\*\* Protein refolding and unfolded-protein binding GO terms were differentially expressed between bleached and sub-bleached at T1, authors claim that unfolded-protein response (UPR) is able to restore ER homeostasis in sub-bleached but past this temperature, cells turn to bleaching as a response. Genes unique to bleaching and separate from general coral stress response are listed as:immune response, ion transport and homeostasis, structural and cellular components, protein modification and localisation, metabolism, cellular stress, and development and differentiation (Stick et al., 2025).  
-   3. Interaction of heat-stress on healing and regeneration \- How do these pathways affect ECM remodeling? Calcification?  
-      1. What can we reasonably expect at early (24 hours), mid (3 days), and late (10-15 days) timepoints for our gene expression patterns?  
-      2. How are “healing” or “regeneration” gene patterns affected by chronic heat-stress?  
-3. A. pulchra in Moorea; What do we know about:  
-   1. Bleaching threshold (Ross/Trinity)  
-      1. Did we technically test sub-bleaching threshold, or bleaching?  
-         1. Sub-bleaching technically. Their CBASS used 500umol PAR, and found *Fv/Fm* ED50 ranging from 34.3 to 36.6 °C. We exposed corals to 31C (which is… where in terms of what they experience in the wild?) (Cunning et. al., 2024\)  
-      2. What do we know about our genets from their work? Why is it advantageous to have used what we did (even if we didn’t know it at the time…)  
-      3. Possibly use this for transcriptomics work: “Genome assembly and annotation of *Acropora pulchra* from Mo’orea French Polynesia” Conn et al. 2025  
-      4. LTER Thermistor data for average temp at our site: [https://mcr.lternet.edu/data/datasets/mcr-lter-coral-reef-island-wide-lagoon-benthic-water-temperature-ongoing-2021](https://mcr.lternet.edu/data/datasets/mcr-lter-coral-reef-island-wide-lagoon-benthic-water-temperature-ongoing-2021)  
-   2. Ecology/life history (stegastes? cyclones?)  
-      1. This may or may not be useful in the introduction. Include info here if we can relate it to our discussion maybe on the effects of multiple stressors on the ecology of A. pulchra  
-         1. Potential conclusions may be that slower growth of corals under heat-stress is deleterious, or that because wounded and unwounded corals grow at the same rate, A pulchra is uniquely resilient to wounding but heating reduces this fitness. Follow-up studies could include following how wounds heal in the field (ie with algal farmers in close proximity), or tie this to cyclones maybe since these are large destructive events.   
-            1. Differentiate between large destructive events (cyclones), and small recurring events (predation and algal farming) that impact A. pulchra wounding, and the more consistent pressure of heating. Maybe we can predict that A. pulchra are “able to” or resilient to the pressures they already experience, but the heat-stress could reduce fitness in the long-term.  
-4. So, what is the purpose of our study and what do we expect to find?  
-   1. Purpose: This project investigates the spatiotemporal transcriptomic changes in regenerating wounds under heat stress. Specifically, we compare a typical microfragmentation wound (ie cutting the tip off) on A. pulchra at ambient (28C) and elevated (31C) temperature over 2 weeks. The study aims to:  
-      1. Assess differences in gene expression during critical wound healing and tissue regeneration stages along a single coral fragment  
-      2. Determine the effect of wounding x heat on physiological parameters (chlorophyll, zooxanthellae, buoyant weight, PAM, color)  
-      3. Characterize the gross and microscopic morphological stages of healing  
-   2. Hypothesis: We predict that heat stress will reduce healing and regeneration rates in fragmented corals, and that patterns of typical tissue repair and growth will be negatively influenced by inflammatory factors brought on by heat-stress.  
-      1. What do we think might happen when the growing tip of A. pulchra is chopped off (ambient temp)? (0, 1, 3, 10, 15\)  
-         1. Initially, the tissue adjacent to the open wound would be “mature” since the growing tip is removed, and transcripts may show acute stress-related genes (apoptotic pathways, oxidative stress), but also genes that denote mature tissue (cell-adhesion, reproductive potential)  
-         2. Over 24 hours, we expect naive tissue to overgrow the wound margin, and transcripts may show high growth-related genes like Wnt signaling, ECM remodeling, possibly still oxidative stress because of high metabolic activity required to mobilize so many cells so quickly  
-         3. After 3 days, We may see some calcification/ECM related to calcification, Wnt, Electron TC, upregulated compared to initial wound, hopefully reduced expression of acute stress genes (Hemond et al., 2014\)  
-         4. After 10 and 15 days, expect that mostly growth is seen, higher calcification than ever because of adjacent axial polyps
-
-Language from the original grant that may be useful:
-
-“Regardless, in a future dominated by the need for regeneration under increasing temperatures, it is critical to understand regeneration, especially in the context of thermal stress and tolerance.”
-
-**The objective of this proposal is to construct an empirical model linking coral tissue damage and regeneration with colony growth, reproduction, survival, and response to thermal** stress.
-
-Our central hypothesis is that local tissue damage elicits multiple colony-level responses that vary spatially across the colony to affect gene expression, polyp regeneration, and colony energetics, growth, and survival. Additionally, we hypothesize that wound healing and thermal stress share molecular pathways, leading to the potential co-tolerance of both stressors in some individuals.
-
-Lastly, thermal stress can increase energy expenditure (via stress responses and increased metabolic costs) that further divert energy from healing processes (even without any effect on the Symbiodiniaceae). For example, warming generally increases metabolism, which can then exceed production of energy through photosynthesis36Existing studies linking temperature to wound healing have yielded divergent results: one showed no effect of temperature on growth or healing rates9, while the other showed that wound healing rates declined11,33,37 . Importantly, the mechanistic basis for these Divergent Observations Remains unclear as does the link between temperature and tissue repair
-
-1.Kaufman, M.L., Watkins, E., van Hooidonk, R., Baker, A.C., and Lirman, D. (2021). Thermal history influences lesion recovery of the threatened Caribbean staghorn coral Acropora cervicornis under heat stress. Coral Reefs
-
-40, 289–293. 10.1007/s00338-020-02025-2.
-
-Lenihan, H., and Edmunds, P. (2010). Response of Pocillopora verrucosa to corallivory varies with environmental conditions. Mar. Ecol. Prog. Ser. 409, 51–63. 10.3354/meps08595
-
-THEREFORE: In this experiment, we cross wounding status with heat stress and to understand the mechanisms of tissue regeneration under heat-stress.
+> **[Introduction — led by S. Banerjee.]** This section is the lead author's to write, framed around the gene-expression contribution; the Stier-lab phenotype experiment supplies the organismal context only (see **Methods** and **Results** below). Optional phenotype-side framing angles (deliberately left in tension) and a verified citation bank are at `docs/for_shreya/optional_intro_discussion_notes.md` — material to mine, not a recommended spine; the "energetic-triage" angle is one candidate label among them, not a default. Verified references for any reused citation are in `manuscript/references.bib` (index: `literature/CITATIONS_INDEX.md`); phenotype → expression hypotheses to anchor the framing are in `docs/for_shreya/gene_expression_integration_map.md`.
 
 **Methods**
 
@@ -188,56 +109,42 @@ Eight independent tanks were held at 28 °C or 31 °C (four per treatment) for t
 
 Whole-colony photochemical efficiency (Fv/Fm) declined linearly through the experiment in 31 °C tanks (~5 × 10⁻³ d⁻¹) while remaining stable at ~0.68 in 28 °C tanks (treatment × day F₁,₂₇₆ = 106.6, p < 0.001, type-III; marginal R² = 0.62, conditional R² = 0.72; Fig. 2B). The decline was largest in genets a and d (Day-14 unwounded ΔFv/Fm = 0.126 and 0.107, respectively; both p < 0.001) and 2.7× smaller in the most resilient genet c (Δ = 0.046, p = 0.007). For wounded corals the genet contrast was sharper still: genet c showed no detectable Fv/Fm change under heat (Δ = 0.016, p = 0.34), while wounded genets a and d each lost 0.10 Fv/Fm units (both p < 0.001).
 
-Pigmentation diverged more dramatically. Color score (Siebeck D-scale) was essentially flat in 28 °C controls (~D4) and dropped to ~D2 in 31 °C tanks by Day 14 (treatment × day F₁,₂₈₇ = 239.3, p < 0.001, type-III; Fig. 2C). By Day 14, 67% of heated wounded corals and 58% of heated unwounded corals had visibly paled, against 0–8% in ambient. A treatment × wound interaction trend (F₁,₂₄₅ = 3.03, p = 0.083) suggested wounded heated corals paled slightly less than unwounded heated corals — consistent with symbiont redistribution toward the regeneration front, and descriptively driven by genet c (wounded heated genet c corals lost only 0.25 D-units relative to 28 °C controls, p = 0.27, n.s., while unwounded heated genet c corals lost 0.63 D-units, p = 0.007).
+Pigmentation diverged more dramatically. Color score (Siebeck D-scale) was essentially flat in 28 °C controls (~D4) and dropped to ~D2 in 31 °C tanks by Day 14 (treatment × day F₁,₂₈₇ = 239.3, p < 0.001, type-III; Fig. 2C). By Day 14, 67% of heated wounded corals and 58% of heated unwounded corals had visibly paled, against 0–8% in ambient. A treatment × wound interaction trend (F₁,₂₄₅ = 3.03, p = 0.083) suggested wounded heated corals paled slightly less than unwounded heated corals; descriptively this trend was driven by genet c (wounded heated genet c corals lost only 0.25 D-units relative to 28 °C controls, p = 0.27, n.s., while unwounded heated genet c corals lost 0.63 D-units, p = 0.007).
 
 Areal calcification rate (buoyant-weight mass gain normalized to the coral's calcifying surface area; mg CaCO₃ cm⁻² d⁻¹) was 38% lower in heated tanks (means 4.75 vs 7.62 mg cm⁻² d⁻¹; treatment F₁ = 25.5, p = 9.0×10⁻⁶; Fig. 2D). The reduction is robust to the growth metric — % mass change and specific growth rate give the same treatment effect (all p ≈ 1×10⁻⁵; % mass change 34% lower, 4.26% vs 6.45% over 14 d). Symbiont density dropped sharply in heated tanks across the four destructive biopsy timepoints, with a significant treatment × biopsy-day interaction (F₁,₁₆₂ = 93.97, p < 0.001, type-III; marginal R² = 0.72, conditional R² = 0.76; Fig. 2E) and a significant three-way genet × treatment × biopsy-day interaction (F₂,₁₆₂ = 6.34, p = 0.002) — symbiont-loss rates were ~3.5× steeper in genets a and d than in the resilient genet c.
 
-A principal-components analysis of end-of-experiment physiology (PAM Fv/Fm, color, growth, log-symbionts) collapsed 81% of among-coral variance onto a single thermal-stress axis (PC1) on which all four variables loaded positively (~0.5 each; Fig. 3A). The 31 °C cloud was more dispersed along PC1 than the 28 °C cloud, indicating that individual-level variance in physiological response increases under thermal stress.
+A principal-components analysis of end-of-experiment physiology (PAM Fv/Fm, color, growth, log-symbionts) collapsed 83% of among-coral variance onto a single thermal-stress axis (PC1) on which all four variables loaded positively (~0.5 each; Fig. 3A). The 31 °C cloud was more dispersed along PC1 than the 28 °C cloud, indicating that individual-level variance in physiological response increases under thermal stress.
 
 *Heating impairs the regeneration phase, not the tissue-healing phase*
 
 Wounded corals were tracked daily for the nine morphological attributes defined in Table 1. The **tissue-healing phase** (coenosarc coverage; Table 1) proceeded at essentially identical rates in both treatments. By Day 5, ≥90% of corals in both treatments had a polyp formed in the central hole (Cox HR = 1.38, 95% CI 0.60–3.15, p = 0.45) and a coenosarc-smoothed wound surface (HR = 1.67, 95% CI 0.70–4.01, p = 0.25; Fig. 1, Fig. 3B). The one healing-phase trait with a detectable heat effect was polyp extension (`polyps_out`): heated wounded corals were more likely to retain retracted polyps at later timepoints (Wald χ²₁ = 6.70, p = 0.010), but the overall hazard of any polyp emergence did not differ between treatments.
 
-By contrast, the **regeneration phase** — skeletal regrowth at the tip — was severely impaired by heating. By Day 15, all 28 °C wounded corals had developed new corallites at the tip; only 33% of 31 °C wounded corals had done so. The instantaneous hazard of new-corallite formation was 78% lower in 31 °C corals (Cox HR = 0.22, 95% CI 0.07–0.69, p = 0.010, stratified by thicket; Fig. 3B). Tip extension showed a similar but weaker pattern (HR = 0.80, 95% CI 0.34–1.87, p = 0.61), and pigment-over-wound was a late and rare event under both temperatures. A time-varying-coefficient refit confirmed that the per-genet pigment-over-wound effect for genet c, which violated the proportional-hazards assumption, was non-significant under PH-correction (coef = 0.65, p = 0.13).
+By contrast, the **regeneration phase** — skeletal regrowth at the tip — was severely impaired by heating. By Day 15, all 28 °C wounded corals had developed new corallites at the tip; only 33% of 31 °C wounded corals had done so. The instantaneous hazard of new-corallite formation was 78% lower in 31 °C corals (Cox HR = 0.22, 95% CI 0.07–0.69, p = 0.010, stratified by thicket; Fig. 3B). Tip extension showed a similar but weaker pattern (HR = 0.80, 95% CI 0.34–1.87, p = 0.61), and pigment-over-wound was a late and rare event under both temperatures. A time-varying-coefficient refit confirmed that the per-genet pigment-over-wound effect for genet c, which violated the proportional-hazards assumption, was non-significant under PH-correction (coef = 0.65, p = 0.13). The clearest per-coral expression of this decoupling is the fate of corals that healed: at 28 °C every coral that closed its wound went on to regenerate, whereas at 31 °C 67% closed the wound but never rebuilt skeleton within the experiment (0% vs 67% closed-but-never-regenerated; median healing-to-regeneration lag 8 vs 10 d).
 
 *Heritable variation in thermal tolerance among genets*
 
-The three field-collected genets (a, c, d) showed significant genet × treatment interactions for photochemistry (LRT χ²₁₅ = 90.5, p < 0.001), pigmentation (χ²₁₅ = 148.1, p < 0.001), and symbiont density (χ²₁₅ = 73.6, p < 0.001), but not for growth (χ²₆ = 5.3, p = 0.51). Genet c was consistently more thermally resilient than genets a and d across all three physiological dimensions (Fig. 3C), retaining higher Fv/Fm, more symbionts, and less paling under heating. A composite resilience ranking integrating standardized heat sensitivities across 11 response dimensions placed genet c (mean standardized sensitivity = −0.03) well clear of genets a (+0.42, most sensitive) and d (+0.29). In multivariate physiology space, genet c's centroid shifted only 1.03 PC-units under heat while genet a's shifted 3.74 and genet d's shifted 3.35 (Euclidean distance between 28 °C and 31 °C centroids in the PCA from Fig. 3A).
+The three field-collected genets (a, c, d) showed significant genet × treatment interactions for photochemistry (LRT χ²₁₅ = 90.5, p < 0.001), pigmentation (χ²₁₅ = 177.7, p < 0.001), and symbiont density (χ²₁₅ = 73.6, p < 0.001), but not for growth (χ²₆ = 3.7, p = 0.72). Genet c was consistently more thermally resilient than genets a and d across all three physiological dimensions (Fig. 3C), retaining higher Fv/Fm, more symbionts, and less paling under heating. A composite resilience ranking integrating standardized heat sensitivities across 11 response dimensions placed genet c (mean standardized sensitivity = −0.03) well clear of genets a (+0.43, most sensitive) and d (+0.29). In multivariate physiology space, genet c's centroid shifted only 1.06 PC-units under heat while genet a's shifted 3.72 and genet d's shifted 3.34 (Euclidean distance between 28 °C and 31 °C centroids in the PCA from Fig. 3A).
 
-Decomposing the standardized heat sensitivities by wound state clarified where the genet differences live. In unwounded corals, the genet spread was large (mean standardized sensitivity: a = 0.99, d = 0.87, c = 0.44), but in wounded corals the spread compressed to near-uniformity (a = 0.36, d = 0.26, c = 0.28). Wound healing appears to impose a metabolic load that homogenizes the genet-level heat response, while the unwounded homeostatic state best resolves the heritable variation.
+Decomposing the standardized heat sensitivities by wound state clarified where the genet differences live. In unwounded corals, the genet spread was large (mean standardized sensitivity: a = 0.99, d = 0.87, c = 0.44), but in wounded corals the spread compressed to near-uniformity (a = 0.36, d = 0.26, c = 0.28). The genet differences in heat sensitivity were thus sharpest in the unwounded state and compressed under wounding.
 
-This heritable variation in thermal tolerance among only three genets indicates that *A. pulchra* on Mo'orea's fringing reef harbors substantial genotype-level diversity in heat response — a substrate for selection under continued ocean warming. This conclusion is concordant with an independent acute-stress assay of the same species and island: Cunning et al. (2024) resolved a 2.2 °C range in CBASS Fv/Fm ED50 across 20 *A. pulchra* genets from Mahana, Mo'orea, with ED50 predicting classic bleaching (R = 0.74). Both the acute (CBASS) and our chronic (multi-week) methods therefore detect ecologically meaningful, genotype-level thermal-tolerance variation in this population.
+This heritable variation in thermal tolerance among only three genets indicates that *A. pulchra* on Mo'orea's fringing reef harbors substantial genotype-level diversity in heat response. This conclusion is concordant with an independent acute-stress assay of the same species and island: Cunning et al. (2024) resolved a 2.2 °C range in CBASS Fv/Fm ED50 across 20 *A. pulchra* genets from Mahana, Mo'orea, with ED50 predicting classic bleaching (R = 0.74). Both the acute (CBASS) and our chronic (multi-week) methods therefore detect ecologically meaningful, genotype-level thermal-tolerance variation in this population.
 
-Placing our design on that calibrated thermal axis also clarifies the nature of the stress imposed. The mean acute ED50 for Mahana *A. pulchra* is 35.4 °C (Cunning et al. 2024), so our 31 °C heated treatment sits ~4.4 °C below the acute photochemical threshold (and 3.4 °C below even the most sensitive genet; Fig. [thermal context]). The progressive declines in photochemistry, pigmentation, symbiont density, and calcification we observe at 31 °C are thus a *chronic, sublethal* response accumulated over weeks well below the acute bleaching threshold, rather than acute photoinhibition — the regime most relevant to the recurrent, moderate warming events that branching *Acropora* increasingly experience. Because the Cunning genets are genotyped, calling SNPs from the forthcoming RNA-seq libraries and matching them to that reference would enable a direct test of whether acute CBASS ED50 predicts chronic, wound-context resilience at the individual-genet level.
+Placing our design on that calibrated thermal axis also clarifies the nature of the stress imposed. The mean acute ED50 for Mahana *A. pulchra* is 35.4 °C (Cunning et al. 2024), so our 31 °C heated treatment sits ~4.4 °C below the acute photochemical threshold (and 3.4 °C below even the most sensitive genet; Fig. [thermal context]). The progressive declines in photochemistry, pigmentation, symbiont density, and calcification we observe at 31 °C are thus a *chronic, sublethal* response accumulated over weeks well below the acute bleaching threshold, rather than acute photoinhibition.
 
 *Transcriptomics*
 
-[RNA-seq data pending from UC Davis Bay lab; placeholder for differential-expression results once 144 libraries return.]
+> **[Transcriptomics — led by S. Banerjee; the paper's lead result.]** Differential-expression
+> results pending from the UC Davis Bay lab (144 libraries: 4 tanks × 3 genets × 2 wound × 3
+> timepoints × 2 temperatures). Suggested phenotype → expression contrasts are in
+> `docs/for_shreya/gene_expression_integration_map.md`. ⟶ **Integration points to the phenotype
+> results above:** (i) the healing→regeneration decoupling maps to a temperature × timepoint
+> contrast at the wound tip; (ii) the genet-c resilience axis maps to a genet-c vs genets-a/d
+> expression contrast (candidate thermal-tolerance genes); (iii) SNPs called from these libraries
+> enable matching thickets A/C/D to Cunning et al. (2024)'s genotyped CBASS genets.
 
 **Discussion**
 
-1. Impact of wound on whole colony response  
-   1. Do we see changes between top and bottom PAM for heated wound yes/no?  
-   2. We see a whole colony response for temperature treatments, but NOT wounding status over 15 days  
-      1. What does this really mean to us. It means that the transcriptomic changes at the wound edge do not influence the physiology of the fragment, or that heating is a bigger stimulus. There is a difference between heated and unheated, but NO difference between wound status  
-2. Mechanism of wound-healing under heat-stress  
-   1. Do we see gene-expression changes that are consistent with healing and then growth (Notch, Wnt, etc), or are these otherwise affected by heat?  
-      1. Compare these gene expression changes to our morphological observations  
-      2. How do these changes vary over time (0, 1, 3, 10, 15 days)  
-      3. What did we expect to see?  
-      4. What did we actually see?  
-      5. What accounts for the differences?  
-   2. Do we see gene expression changes that are consistent with heat-stress (oxidative stress, antioxidant activity, changes in protein folding/ER), or are these otherwise affected by the growth part?  
-      1. Compare these gene expression changes to our morphological, physiological (zoox, color, PAM, buoyant weight) observations  
-      2. What did we expect to see?  
-      3. What did we actually see?  
-      4. What accounts for the differences?  
-3. Implications for A. pulchra fitness in Mo’orea (significance of results, or application to other reef systems)  
-   1. Repeated from into: “Ecology/life history (stegastes? cyclones?)  
-      1. This may or may not be useful in the introduction. Include info here if we can relate it to our discussion maybe on the effects of multiple stressors on the ecology of A. pulchra  
-         1. Potential conclusions may be that slower growth of corals under heat-stress is deleterious, or that because wounded and unwounded corals grow at the same rate, A pulchra is uniquely resilient to wounding but heating reduces this fitness. Follow-up studies could include following how wounds heal in the field (ie with algal farmers in close proximity), or tie this to cyclones maybe since these are large destructive events.   
-            1. Differentiate between large destructive events (cyclones), and small recurring events (predation and algal farming) that impact A. pulchra wounding, and the more consistent pressure of heating. Maybe we can predict that A. pulchra are “able to” or resilient to the pressures they already experience, but the heat-stress could reduce fitness in the long-term.”  
-4. Future studies
+> **[Discussion — led by S. Banerjee.]** The lead author's to write, with the transcriptomic result as the spine and the phenotype findings (above) as organismal context. Optional phenotype-side framing angles (energetic-triage is one candidate among them, not a recommendation) and a citation bank are at `docs/for_shreya/optional_intro_discussion_notes.md`. The genet-C resilience axis and the healing→regeneration transition are the natural bridges to the gene-expression results — see `docs/for_shreya/gene_expression_integration_map.md` for suggested contrasts, and `RESULTS.md` §10 for the limitations worth carrying forward.
 
 **Acknowledgements**  
 Permits: DIREN 01319, CITES Permit FR2598700116-E  

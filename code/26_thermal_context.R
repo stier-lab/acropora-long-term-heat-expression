@@ -57,7 +57,8 @@ chronic_range <- diff(range(res$mean_sensitivity))
 concordance <- tibble(
   method   = c("Acute CBASS (Cunning 2024)", "Chronic LTH (this study)"),
   n_genotypes = c(nrow(ed50), nrow(res)),
-  variation_metric = c("ED50 range = 2.20 °C (SD 0.58)",
+  variation_metric = c(sprintf("ED50 range = %.2f °C (SD %.2f)",
+                               ed50_max - ed50_min, ed50_sd),
                        sprintf("resilience-score range = %.2f (std units)",
                                chronic_range)),
   detects_genotype_variation = c("yes (R=0.74 predicts bleaching)", "yes (C > D > A)")

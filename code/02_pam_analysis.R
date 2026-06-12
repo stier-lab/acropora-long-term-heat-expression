@@ -124,9 +124,9 @@ p_pam <- ggplot(plot_df, aes(day, mean,
   geom_point(size = 1.8) +
   geom_vline(xintercept = 0, linetype = "dotted", colour = "grey50") +
   facet_wrap(~ treatment, ncol = 2) +
-  scale_colour_manual(values = c(no = "#0072B2", yes = "#D55E00"),
+  scale_colour_manual(values = PAL_WOUND,
                       name = "Wound") +
-  scale_fill_manual(values   = c(no = "#0072B2", yes = "#D55E00"),
+  scale_fill_manual(values   = PAL_WOUND,
                     guide = "none") +
   labs(x = "Day relative to wounding (D0)",
        y = expression(F[v]/F[m]),

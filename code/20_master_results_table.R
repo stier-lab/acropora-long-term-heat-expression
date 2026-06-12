@@ -498,7 +498,7 @@ clmm_rows <- if (file.exists(file.path(TBL_DIR, "12b_color_clmm.csv"))) {
 
 # ===========================================================================
 # Block 10 — Raw summary stats for the manuscript narrative
-#            (cells / growth means, replaces ad-hoc numbers in Results_draft.md)
+#            (cells / growth means, so the prose cites the table, not ad-hoc numbers)
 # ===========================================================================
 bw_raw <- readRDS(file.path(DATA_PROC, "buoyant_weight_clean.rds")) |>
   group_by(treatment) |>
@@ -740,13 +740,19 @@ master <- bind_rows(anova12, genet_rows, r2_rows,
                     lag_rows, icc_rows, mt_rows, probc_rows) |>
   mutate(across(c(statistic, estimate, pct_change, ci_low, ci_high, p_value),
                 \(x) round(x, 4))) |>
-  arrange(domain, response, model_type, term)
+  arrange(domain, response, model_type, term) |>
+  # Single human-readable description of WHAT each analysis is — the "what was
+  # tested" sentence — so the table reads as: [description] | stat | df | est | p | ...
+  mutate(description = sprintf("%s: %s — %s [%s, %s]",
+                              domain, response, term, model_type, test)) |>
+  relocate(description)
 
 write_csv(master, file.path(TBL_DIR, "20_master_results.csv"))
 
 # ---- Paper-ready formatted version ---------------------------------------
 paper_ready <- master |>
   transmute(
+    Description   = description,
     Domain        = domain,
     Response      = response,
     Model         = model_type,

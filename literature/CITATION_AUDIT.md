@@ -1,5 +1,25 @@
 # Citation audit — *Acropora pulchra* library (backward snowball)
 
+> **A-PRIORI HYPOTHESIS CITATIONS VERIFIED (2026-06-08).** The four confirmatory a-priori
+> citations hard-coded in `code/28_multiple_testing.R` (and echoed in `RESULTS.md` §10 and the
+> manuscript Introduction) were checked against the *Acropora pulchra* NotebookLM notebook
+> (`f9a97210-…`), which returned the exact reference-list entries from multiple in-notebook sources.
+> **All four ground their claims and all metadata is correct — no citation string needed fixing:**
+>
+> | Claim (code/28) | Citation | Verified metadata | Status |
+> |---|---|---|---|
+> | Heat lowers Fv/Fm over time | Warner, Fitt & Schmidt **1999** | PNAS 96:8007–8012, doi:10.1073/pnas.96.14.8007 ("Damage to photosystem II…a determinant of coral bleaching") | ✅ grounds |
+> | Heat drives paling | Hoegh-Guldberg **1999** | Mar Freshw Res 50(8):839–866 | ✅ grounds |
+> | Heat drives symbiont loss | Hoegh-Guldberg 1999; Jokiel & Coles **1990** | Coral Reefs 8:155–162 | ✅ grounds |
+> | Heat reduces calcification | Jokiel & Coles **1977** | Mar Biol 43:201–208 | ✅ grounds |
+>
+> **Self-containment gap (not a grounding error):** the local PDF library holds Warner **1996**
+> (Plant Cell Environ, a *different* but topically-equivalent zooxanthellae-photoinhibition paper)
+> and Hoegh-Guldberg **2007** (Science), **not** the exact 1999/1977/1990 papers cited. Citations are
+> correct as written; acquiring the four cited PDFs (Warner 1999 PNAS is open-access; the two Jokiel &
+> Coles Springer papers and Hoegh-Guldberg 1999 CSIRO are paywalled) would make the project fully
+> self-contained. Verified via NotebookLM (Zotero local API was offline at verification time).
+
 > **ACQUISITION STATUS (2026-06-08):** Audit fully actioned — library **37 → 92 PDFs**.
 > Round 1 (37→74): 16 Tier-A lab copies + 21 Tier-B/C via PMC/EuropePMC/Springer/green-OA repos.
 > Round 2 (74→92): with UCSB VPN up + the CDP debug-profile Chrome, an **in-page authenticated
@@ -47,7 +67,7 @@ and the energy-allocation tier.
 
 | Paper | DOI | Why it matters → model link |
 |---|---|---|
-| **Traylor-Knowles 2016** — distinctive wound-healing in *Pocillopora damicornis* & *Acropora hyacinthus* in two temperature regimes | 10.1186/s12862-016-0791-0 | ⭐ wound healing × temperature × the model's two *existing* species |
+| **Traylor-Knowles 2016** — distinctive wound-healing in *Pocillopora damicornis* & *Acropora hyacinthus* in two temperature regimes | 10.1007/s00227-016-3011-y | ⭐ wound healing × temperature × the model's two *existing* species (DOI corrected 2026-06-09; the earlier 10.1186/s12862-016-0791-0 was a wrong-paper typo) |
 | **Bonesso 2017** — elevated SST below bleaching threshold impairs recovery/regeneration after injury | 10.7717/peerj.3719 | sub-bleaching heat slows healing → temp-coupling of `kc_mult` |
 | **Burmester 2017** — temperature & symbiosis affect lesion recovery | 10.3354/meps12114 | symbiotic state × temp × healing |
 | **Dias 2018** — mortality, growth, regeneration after fragmentation under thermal stress | 10.1016/j.seares.2018.08.008 | fragmentation × heat → `m_d`, healing |

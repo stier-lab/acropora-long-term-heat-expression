@@ -1,4 +1,17 @@
-# ---- Figure B: Batch-robust plating & controls (ggplot2) ----
+# =============================================================================
+# Purpose: RNA-seq 96-well plate-layout figure (Figure B) — a batch-robust
+#          plating design balancing treatment, wound, genet, and day across
+#          plates, with extraction/PCR controls and anchor samples marked.
+#          Molly's original layout script, ported into the repo for provenance.
+# Input:   none (layout is defined inline)
+# Output:  figures/Fig_B_balanced_plates.{pdf,png}  (if `fig_dir` is set,
+#          else written to the working directory)
+#          figures/Fig_B_plate_layouts.csv          — the well-by-well layout
+# Note:    STANDALONE — not sourced by code/_run_all.R (run directly when the
+#          sequencing plate map is needed). Uses its own palette, independent
+#          of 00_setup.R, to match the wet-lab plate-map conventions.
+# =============================================================================
+
 # Requires: tidyverse, patchwork
 library(tidyverse)
 library(patchwork)

@@ -47,7 +47,18 @@ contrast_one <- function(f) {
   }, error = function(e) tibble(or_31_vs_28 = NA, or_lo = NA, or_hi = NA,
                                 p_value = NA))
 
-  bind_cols(prob, orr)
+  bind_cols(prob, orr) |>
+    # Separation guard: when either probability sits at the {0,1} boundary, the
+    # log-odds contrast (and therefore the odds ratio and its CI) is undefined
+    # and explodes to ~1e19. Keep the bounded Δ-probability; null out the
+    # meaningless OR/CI/p so these artifacts never reach a table or the paper.
+    mutate(
+      separated = coalesce(prob_28 <= 1e-6 | prob_28 >= 1 - 1e-6 |
+                           prob_31 <= 1e-6 | prob_31 >= 1 - 1e-6, FALSE),
+      across(c(or_31_vs_28, or_lo, or_hi, p_value),
+             \(x) if_else(separated, NA_real_, x))
+    ) |>
+    select(-separated)
 }
 
 out <- map_dfr(morph_files, contrast_one) |>

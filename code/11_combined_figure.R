@@ -25,8 +25,8 @@ pA <- ggplot(A_df, aes(day, m, colour = wound, fill = wound)) +
   geom_line(linewidth = 0.7) + geom_point(size = 1.4) +
   geom_vline(xintercept = 0, linetype = "dotted", colour = "grey50") +
   facet_wrap(~ treatment, ncol = 2) +
-  scale_colour_manual(values = c(no = "#0072B2", yes = "#D55E00"), name = "Wound") +
-  scale_fill_manual(values   = c(no = "#0072B2", yes = "#D55E00"), guide = "none") +
+  scale_colour_manual(values = PAL_WOUND, name = "Wound") +
+  scale_fill_manual(values   = PAL_WOUND, guide = "none") +
   labs(x = "Day", y = expression(F[v]/F[m]), tag = "A") +
   theme_pub(9)
 
@@ -42,8 +42,8 @@ pB <- ggplot(B_df, aes(day, m, colour = wound, fill = wound)) +
   geom_vline(xintercept = 0, linetype = "dotted", colour = "grey50") +
   facet_wrap(~ treatment, ncol = 2) +
   scale_y_reverse(breaks = 1:6) +
-  scale_colour_manual(values = c(no = "#0072B2", yes = "#D55E00"), name = "Wound") +
-  scale_fill_manual(values   = c(no = "#0072B2", yes = "#D55E00"), guide = "none") +
+  scale_colour_manual(values = PAL_WOUND, name = "Wound") +
+  scale_fill_manual(values   = PAL_WOUND, guide = "none") +
   labs(x = "Day", y = "Color (D)", tag = "B") +
   theme_pub(9)
 
@@ -55,8 +55,8 @@ pC <- ggplot(filter(bw, is.finite(areal_calc)),
   geom_point(aes(colour = wound),
              position = position_jitterdodge(jitter.width = 0.15, dodge.width = 0.7),
              size = 1.1, alpha = 0.7) +
-  scale_fill_manual(values   = c(no = "#0072B2", yes = "#D55E00"), name = "Wound") +
-  scale_colour_manual(values = c(no = "#0072B2", yes = "#D55E00"), guide = "none") +
+  scale_fill_manual(values   = PAL_WOUND, name = "Wound") +
+  scale_colour_manual(values = PAL_WOUND, guide = "none") +
   labs(x = NULL, y = expression(Calcification~(mg~cm^{-2}~d^{-1})), tag = "C") +
   theme_pub(9)
 

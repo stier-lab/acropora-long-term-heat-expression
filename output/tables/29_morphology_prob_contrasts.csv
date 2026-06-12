@@ -1,9 +1,9 @@
 trait,day,prob_28,prob_31,delta_prob,or_31_vs_28,or_lo,or_hi,p_value
-hole_in_center,10,1,1,0,31066677472263934e3,26260111238241186e3,36753022118207644e3,0
-new_corallites_on_tip,10,0,0,-0,8885963031970.908,7917154550780.536,9973322927966.47,0
+hole_in_center,10,1,1,0,NA,NA,NA,NA
+new_corallites_on_tip,10,0,0,-0,NA,NA,NA,NA
 pigment_over_wound,10,0.0041,0,0.0041,5e-4,0,2244660268178294e37,0.9084
-polyp_in_hole,10,1,1,0,31066677472263934e3,26260111238241186e3,36753022118207644e3,0
+polyp_in_hole,10,1,1,0,NA,NA,NA,NA
 polyps_out,10,0.9733,0.8388,0.1345,0.1428,0.0348,0.5854,0.0069
-tip_exist,10,1,0.9867,0.0133,0,0,0,0
-tip_extension,10,1,0.3939,0.6061,0,0,Inf,0.9708
-wound_smoothed,10,1,1,-0,1971.5099,1.7562,2213247.9557,0.0342
+tip_exist,10,1,0.9867,0.0133,NA,NA,NA,NA
+tip_extension,10,1,0.3939,0.6061,NA,NA,NA,NA
+wound_smoothed,10,1,1,-0,NA,NA,NA,NA

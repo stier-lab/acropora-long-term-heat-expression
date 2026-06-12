@@ -37,16 +37,21 @@ MOD_DIR   <- here("output", "models")
 PAL_OKABE <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442",
                "#0072B2", "#D55E00", "#CC79A7", "#000000")
 
-# Treatment palette: ambient (28C) → mild (30C) → moderate (32C) → severe (34C)
-# Use a perceptually-uniform sequential ramp anchored to Okabe blue/red
-PAL_TEMP <- c("28" = "#56B4E9",   # blue — ambient
-              "30" = "#F0E442",   # yellow — mild
-              "31" = "#E69F00",   # orange — moderate
-              "32" = "#D55E00",   # red — severe-mod
-              "34" = "#B40000")   # dark red — severe (placeholder; check actual treatments)
+# Treatment palette: ambient (28C) vs heated (31C) — the actual 2-level design.
+# These exact hex codes are what every figure already draws, so this is the
+# single source of truth: prefer `scale_*_manual(values = PAL_TEMP)` over
+# re-typing the hexes in each script.
+PAL_TEMP <- c(`28C` = "#56B4E9",   # blue — ambient (28 °C)
+              `31C` = "#D55E00")   # red  — heated  (31 °C)
 
-# Genotype/thicket palette: lowercase a, c, d (matches raw data convention)
+# Wound palette: unwounded vs wounded. Deliberately neutral grey/black — NOT
+# blue/red — so wound is never visually confused with the temperature axis
+# (28C blue / 31C red), which previously shared #D55E00 with "wounded".
+PAL_WOUND <- c(no = "#9E9E9E", yes = "#000000")
+
+# Genotype/thicket palette + point shapes: lowercase a, c, d (raw-data convention).
 PAL_GENO <- c(a = "#E69F00", c = "#009E73", d = "#0072B2")
+SHP_GENO <- c(a = 16, c = 17, d = 15)
 
 # ---- Theme -----------------------------------------------------------------
 # theme_pub(): single source of truth for figure text sizing.

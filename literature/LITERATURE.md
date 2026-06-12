@@ -3,12 +3,18 @@
 Curated library for the LTH heat × wounding project and for parameterizing a third
 species (*A. pulchra*) in the coral wound-healing model (`~/coral-wound-healing-model`).
 **Every PDF is mapped to its *A. pulchra* relevance + model/project connection in
-[`LIBRARY_MAP.md`](LIBRARY_MAP.md)** (18 Core / 7 includes-pulchra / 67 grounding; sortable
-companion [`library_map.csv`](library_map.csv)).
+[`LIBRARY_MAP.md`](LIBRARY_MAP.md)** (98 PDFs total — see `LIBRARY_MAP.md` for the Core /
+includes-pulchra / grounding breakdown; sortable companion [`library_map.csv`](library_map.csv)).
 Companion to the **"Acropora pulchra" NotebookLM notebook** (`f9a97210-…`, query for full text)
 and the lab regeneration library `~/coral-regen-review/literature/` (191 PDFs).
 
-**Status (2026-06-07):** discovery complete + **PDF acquisition done (now 92 PDFs in `pdfs/`)**
+> **Manuscript citations** are tracked separately: every work cited in `manuscript/Manuscript_LTH.md`
+> has a Crossref-verified entry in **`manuscript/references.bib`** and a cite→DOI→PDF mapping in
+> **[`CITATIONS_INDEX.md`](CITATIONS_INDEX.md)** (2026-06-09: +5 PDFs acquired — Jokiel & Coles
+> 1977/1990, Cunning 2024, Davies 1989, Siebeck 2006; now **98 PDFs**). Six cited papers remain
+> paywalled and are listed there for acquisition via authenticated Chrome.
+
+**Status (2026-06-09):** discovery complete + **PDF acquisition done (now 98 PDFs in `pdfs/`)**
 + **NotebookLM ingestion done (notebook 26 sources; new round not yet ingested)**. A backward
 citation-chain audit (`CITATION_AUDIT.md`) added 37 more papers — the wound-healing×temperature
 core (Traylor-Knowles, Bonesso, Burmester, Dias, Meesters 1993/94, Rinkevich…), energetics, the
@@ -30,6 +36,14 @@ Acquisition legend: **[NB]** already in the A. pulchra notebook · **[LAB]** alr
 `~/coral-regen-review/literature/pdfs` (copy in) · **[OA]** open-access (curl) ·
 **[PW]** paywalled (Chrome CDP) · relevance 1–5 (5 = core).
 
+> ⚠ **Species-attribution corrections (2026-06-08).** A read-through against the source PDFs found
+> four papers over-attributed to *A. pulchra*; rows below are corrected and flagged `⚠`:
+> **Zhang 2025** = the macroalga *Halimeda macroloba* (NOT a coral) — so *A. pulchra* proteomic/
+> metabolomic thermal acclimation is actually unstudied; **Almeida 2024** = *Pocillopora* cf.
+> *damicornis* (Kenya); **Denis 2024** = *A. spathulata* (GBR, *A. pulchra* not in the study);
+> **Raymundo 2025** = *A. aspera* outplants (Guam, *A. pulchra* only the background congener).
+> These remain useful *grounding/framing* sources but are not *A. pulchra*-subject papers.
+
 ---
 
 ## 1. *A. pulchra*-specific papers
@@ -38,7 +52,7 @@ Acquisition legend: **[NB]** already in the A. pulchra notebook · **[LAB]** alr
 | Paper | DOI | Acq | Rel | Note |
 |---|---|---|---|---|
 | Conn et al. 2025 — genome assembly & annotation (Mo'orea) | 10.46471/gigabyte.153 | [NB][OA] | 5 | reference genome |
-| Zhang et al. 2025 — protein & metabolite acclimation to temp variability | 10.3389/fmars.2025.1543591 | [OA] | 5 | closest "expression × temperature" proteomics |
+| ⚠ Zhang et al. 2025 — protein & metabolite acclimation to temp variability | 10.3389/fmars.2025.1543591 | [OA] | 2 | **NOT A. pulchra — macroalga *Halimeda macroloba***; calcifier thermal-acclimation framing only |
 | Anthony et al. 2023 — Symbiodiniaceae cellular plasticity / phenotypic change | 10.3389/fevo.2023.1288596 | [OA] | 5 | symbiont expression plasticity |
 | de la Vega et al. 2023 — *Endozoicomonas* GU-1 genome from *A. pulchra* | 10.1128/mra.01355-22 | [OA] | 4 | microbiome resource |
 
@@ -49,7 +63,7 @@ Acquisition legend: **[NB]** already in the A. pulchra notebook · **[LAB]** alr
 | Berg et al. 2020 — persistent photosystem damage fluorescence (A. cf. pulchra) | 10.1080/17451000.2021.1875245 | [NB][PW] | 5 | 58% mortality d34; recovery 3× stress |
 | Shaw et al. 2016 — intraspecific variability, warming × acidification | 10.1007/s00227-016-2986-8 | [NB][PW] | 5 | genotype variation |
 | Grottoli et al. 2020 — comparability among bleaching experiments | 10.1002/eap.2262 | [NB] | 4 | methods (="2021" in NB) |
-| Denis et al. 2024 — individual thermal-tolerance traits | 10.1098/rspb.2024.0587 (preprint 10.1101/2024.01.28.576773) | [OA preprint] | 5 | CBASS framing |
+| ⚠ Denis et al. 2024 — individual thermal-tolerance traits across the GBR | 10.1098/rspb.2024.0587 (preprint 10.1101/2024.01.28.576773) | [OA preprint] | 4 | **A. spathulata, GBR (not A. pulchra)**; CBASS intraspecific-variation framing |
 | El-Khaled et al. 2025 — heat & cold bleaching vulnerability | 10.1038/s42003-025-09329-5 | [OA] | 5 | incl. *A. pulchra* |
 | Hoadley et al. 2015 — temp × pCO2 physiology across genera | 10.1038/srep18371 | [OA] | 3 | |
 | Puisay et al. 2018 — larval thermal resistance/acclimation | 10.1016/j.marenvres.2018.01.005 | [PW] | 4 | larvae |
@@ -82,7 +96,7 @@ Acquisition legend: **[NB]** already in the A. pulchra notebook · **[LAB]** alr
 | Tanaka et al. 2009 — net DOM release | 10.1016/j.jembe.2009.06.023 | [PW] | 3 | |
 | Buckingham et al. 2022 — N+P enrichment, skewed N:P | 10.1007/s00338-022-02223-0 | [OA] | 3 | |
 | Huang 2009 — oocyte development histology (Sanya) | (no DOI) | [PW] | 4 | only A. pulchra reproduction source found |
-| Almeida et al. 2024 — intertidal vs subtidal recovery/growth/survival | 10.1007/s00227-024-04546-8 | [OA] | 5 | recovery dynamics |
+| ⚠ Almeida et al. 2024 — intertidal vs subtidal recovery/growth/survival | 10.1007/s00227-024-04546-8 | [OA] | 3 | **Pocillopora cf. damicornis, Kenya (not A. pulchra)**; recovery-dynamics framing |
 | Ladd et al. 2025 — growth–predation tradeoffs, distribution | 10.1038/s41598-025-21028-z | [OA] | 4 | |
 | Raymundo et al. 2025 — restoration in stressful environment (Guam) | 10.1016/j.isci.2025.112244 | [OA] | 4 | |
 | Munk 2024 — host & symbiont physiology during wound regeneration (thesis) | (no DOI) | [NB] | 5 | **KEY**: abrasion vs fragmentation × 27.9/29.5 °C, Mo'orea → maps to model excav × bleaching |
@@ -195,7 +209,7 @@ keep the notebook focused on *A. pulchra*; they belong in the regen notebook if 
 
 **A. pulchra-specific — expression / genomics / microbiome**
 - **Conn 2025** — reference genome assembly & annotation for Mo'orea *A. pulchra* (anchors all expression work).
-- **Zhang 2025** — protein + metabolite acclimation to thermal variability; closest "expression × temperature" proteomics.
+- **⚠ Zhang 2025** — protein + metabolite acclimation to thermal variability in the **macroalga *Halimeda macroloba*** (NOT *A. pulchra*; not a coral). Calcifier thermal-acclimation framing only — *A. pulchra* proteomics remains unstudied.
 - **Anthony 2023** — Symbiodiniaceae cellular/phenotypic plasticity under stress.
 - **de la Vega 2023** — genome of an *Endozoicomonas* strain isolated from *A. pulchra* (microbiome resource).
 - **Lock 2025** — combined Symbiodiniaceae + bacterial microbiome effects on host performance.
@@ -204,7 +218,7 @@ keep the notebook focused on *A. pulchra*; they belong in the regen notebook if 
 **A. pulchra-specific — thermal tolerance / bleaching**
 - **Berg 2020** — persistent photosystem damage; 58% mortality by day 34, recovery needs ~3× stress duration ([NB], no local PDF).
 - **Shaw 2016** — intraspecific (genotype) variability under warming × acidification.
-- **Denis 2024** — individual thermal-tolerance traits (CBASS framing); published RSPB version acquired.
+- **⚠ Denis 2024** — individual thermal-tolerance traits across the GBR in ***A. spathulata*** (NOT *A. pulchra*); CBASS intraspecific-variation framing. Published RSPB version acquired.
 - **El-Khaled 2025** — heat *and* cold bleaching vulnerability, incl. *A. pulchra*.
 - **Hoadley 2015** — temperature × pCO₂ physiology across genera.
 - **Grottoli 2020** — methods/standardization for cross-experiment bleaching comparability.
@@ -219,9 +233,9 @@ keep the notebook focused on *A. pulchra*; they belong in the regen notebook if 
 
 **A. pulchra-specific — physiology / nutrients / ecology / recovery**
 - **Buckingham 2022** — N+P enrichment with skewed N:P stoichiometry.
-- **Almeida 2024** — intertidal vs subtidal recovery, growth, survival.
+- **⚠ Almeida 2024** — intertidal vs subtidal recovery, growth, survival in ***Pocillopora* cf. *damicornis*** (Kenya; NOT *A. pulchra*).
 - **Ladd 2025** — growth–predation tradeoffs shaping distribution.
-- **Raymundo 2025** — restoration outcomes in a stressful (Guam) environment.
+- **⚠ Raymundo 2025** — restoration outcomes in a stressful (Guam) environment for ***A. aspera*** outplants (*A. pulchra* is only the background congener at the recipient site).
 
 **Acropora-genus grounding (local PDFs only; for params lacking *A. pulchra* data)**
 - **Conti-Jerpe 2020** & **Radice 2019** — heterotrophic vs autotrophic strategy → `h` (low plasticity).

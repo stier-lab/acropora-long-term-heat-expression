@@ -1,5 +1,9 @@
 # Session Summary — 2026-05-23
 
+> **Internal/historical build log — not a guide for using the repo.** This records how the repo was
+> first assembled (2026-05-23); some details are from that initial build and have since evolved. To
+> *use* the repo, start at **`START_HERE.md`** → `README.md` → `RESULTS.md`. Kept for provenance.
+
 Built end-to-end from the Google Drive folder over a single session.
 
 ## What got done
@@ -11,7 +15,10 @@ Built end-to-end from the Google Drive folder over a single session.
 - Pulled 6 Apex XML datalogs (38 MB raw).
 - Found Molly's existing `plate_fig.R` and ported it into the repo.
 
-### Reproducible analysis pipeline (18 scripts)
+### Reproducible analysis pipeline (35 scripts)
+
+> Note: this table lists the original build-out. The pipeline has since grown to **35 scripts in `code/`** (01–30 plus `00_setup`, `12b`, `12c`, `_run_all`, `plate_fig`); see `README.md` / `START_HERE.md` for the current run order.
+
 | File | What it does |
 |---|---|
 | `00_setup.R` | Packages, paths, theme_pub(), Okabe-Ito palettes |
@@ -40,18 +47,14 @@ Built end-to-end from the Google Drive folder over a single session.
 All key effects (treatment × day for PAM, color, growth, symbionts) are highly significant (F = 16–168, all p < 0.001). The single strongest mechanistic result is **HR = 0.22 for new corallite formation in heated corals (p = 0.010, Cox PH stratified by genet)** — heat impairs regeneration but NOT wound closure. PC1 explains 81% of multivariate physiology and cleanly separates 28 vs 31 °C. G × E significant for PAM, color, symbionts — genet C consistently more thermally resilient. See `RESULTS.md` for the full breakdown.
 
 ### Outputs
-- 16 figures (8 PDF + 8 PNG each = 32 files), all pass cross-figure audit
-- 18 CSV tables (ANOVA summaries, emmeans contrasts, R² values, KM survival, PCA loadings, validation results)
+- 23 figures (each as PDF + PNG), all pass cross-figure audit
+- 47 CSV tables (ANOVA summaries, emmeans contrasts, R² values, KM survival, PCA loadings, validation results)
 - 12 saved model objects (`.rds`) for downstream reanalysis
-- `RESULTS.md` — comprehensive results breakdown
-- `manuscript/Results_draft.md` — prose Results section + figure captions + statistical methods paragraph
+- `RESULTS.md` — comprehensive results breakdown (the authoritative phenotype narrative)
 - `NEXT_STEPS.md` — what's pending and what to do when it arrives
 
 ### Validation surfaced one important finding
 21 unique corals had AEFW worms detected on 06/07 (3 days post-wounding), with 17/22 worm-positive observations concentrated in 31 °C tanks. All treated with Worm Exit and cleared by 06/12. Worth a methods-section sentence + sensitivity-analysis (re-fit primary models with worm presence as a covariate) before submission.
-
-### Multi-model figure critique
-Ran 4 rounds of Codex (GPT-4o) critique on Figure 1 with iterative improvements. Final score 28/40; remaining concerns are minor layout polish (axis alignment, PCA arrow density) that don't affect scientific communication. All critique reports preserved in `figures/critiques/`.
 
 ### Repo polish
 - `renv.lock` captures R 4.5.2 + dependencies
@@ -84,8 +87,8 @@ Ran 4 rounds of Codex (GPT-4o) critique on Figure 1 with iterative improvements.
 If you want to dig in further when you're back:
 ```bash
 cd ~/Stier-LTH-expression-by-temperature-2025
-Rscript code/_run_all.R                          # ~2 min, regenerates everything
-open figures/16_manuscript_fig1.png              # main figure
-open RESULTS.md NEXT_STEPS.md manuscript/Results_draft.md
+Rscript code/_run_all.R                          # regenerates everything
+open figures/16_manuscript_fig1.png              # phenotype summary figure
+open START_HERE.md RESULTS.md NEXT_STEPS.md
 ```
 Or just `gh pr create` on a feature branch to propose specific edits.

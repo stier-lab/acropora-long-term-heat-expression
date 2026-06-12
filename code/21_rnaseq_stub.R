@@ -1,9 +1,11 @@
 # =============================================================================
-# Purpose: PLACEHOLDER for the RNA-seq pipeline that will run once the Bay lab
-#          returns count matrices for the 144 LTH libraries.
+# Purpose: OPTIONAL starting scaffold for importing the RNA-seq counts — NOT a
+#          prescribed pipeline. The gene-expression analysis is Shreya's (Bay
+#          lab) to design and lead; this just shows one way to read counts +
+#          sample metadata into the repo conventions, if useful. Replace freely.
 #
-#          This file is intentionally not in code/_run_all.R until data lands.
-#          See NEXT_STEPS.md for the full plan.
+#          Not in code/_run_all.R. Optional suggestions live in
+#          docs/for_shreya/ (analysis_proposal, gene_expression_integration_map).
 # =============================================================================
 
 source(here::here("code", "00_setup.R"))
@@ -20,57 +22,29 @@ if (!file.exists(file.path(DATA_RAW, "sequencing", "counts.csv"))) {
   quit(save = "no", status = 0)
 }
 
-suppressPackageStartupMessages({
-  library(DESeq2)
-  library(limma)
-  library(edgeR)
-})
+# ---- Import example only: read counts + sample metadata into the repo ------
+# NOTE: this is deliberately just an *import* example. We do NOT fit a DE model
+# here — the differential-expression design (factors, normalization, fixed/
+# random structure, tool) is Shreya's (Bay lab) to specify. There is no single
+# pre-decided model in this repo; the open design *questions* (not a formula)
+# are written out in docs/for_shreya/analysis_proposal.md §3. Picking the model
+# here would just hard-code one of those choices, so we don't.
 
 counts   <- read_csv(file.path(DATA_RAW, "sequencing", "counts.csv"),
                      show_col_types = FALSE)
 sample_md <- read_csv(file.path(DATA_RAW, "sequencing", "sample_metadata.csv"),
                       show_col_types = FALSE) |>
-  janitor::clean_names() |>
-  mutate(
-    treatment = factor(treatment, levels = c("28C", "31C")),
-    wound     = factor(wound, levels = c("U", "W")),
-    day       = factor(day, levels = c(1, 3, 10)),
-    plate     = factor(plate)
-  )
+  janitor::clean_names()
+
+# A per-library phenotype covariate table, already harmonized to the phenotype
+# coding, is at output/tables/31_rnaseq_phenotype_covariates.csv (built by
+# code/31). A RAW, un-recoded design lookup is alongside it
+# (31_rnaseq_library_lookup_raw.csv) so factor levels / reference are yours to set.
+
+# Basic sanity check that libraries line up between the two files.
 stopifnot(all(sample_md$library_id %in% colnames(counts)))
 
-# ---- DESeq2: per-timepoint contrasts of treatment × wound ----------------
-run_day <- function(d) {
-  ids <- sample_md$library_id[sample_md$day == d]
-  cm  <- as.matrix(counts[, c("gene", ids), drop = FALSE]) |>
-    {(\(x) { rownames(x) <- x[, 1]; x[, -1] |> apply(2, as.integer) })()}
-  md  <- sample_md |> filter(day == d) |> arrange(library_id)
-  dds <- DESeq2::DESeqDataSetFromMatrix(
-    countData = cm[, md$library_id],
-    colData   = md,
-    design    = ~ plate + treatment * wound
-  )
-  dds <- DESeq2::DESeq(dds)
-  list(
-    day = d,
-    main_effect_temp = DESeq2::results(dds, contrast = c("treatment", "31C", "28C")),
-    main_effect_wound = DESeq2::results(dds, contrast = c("wound", "W", "U")),
-    interaction = DESeq2::results(dds, name = "treatment31C.woundW")
-  )
-}
-
-de_results <- list(
-  day1 = run_day(1),
-  day3 = run_day(3),
-  day10 = run_day(10)
-)
-saveRDS(de_results, file.path(MOD_DIR, "20_deseq2_results.rds"))
-
-# ---- Cross-timepoint summary ----------------------------------------------
-# Q1: How many genes change with temperature within each timepoint?
-# Q2: Do the same genes drive the morphological tip-regeneration effect
-#     (HR = 0.22 for new_corallites in the physiology analysis)?
-# Q3: Are wound-responsive genes themselves heat-sensitive (interaction term)?
-
-cat("DESeq2 stub: results saved to output/models/20_deseq2_results.rds\n")
-cat("Next: write 21_wgcna_modules.R, 22_go_enrichment.R, 23_expression_x_phenotype.R\n")
+cat(sprintf("Imported %d genes x %d libraries; %d sample-metadata rows.\n",
+            nrow(counts), ncol(counts) - 1L, nrow(sample_md)))
+cat("Next (yours to design): differential expression, module analysis, GO,\n")
+cat("expression x phenotype, SNP calling — see docs/for_shreya/.\n")

@@ -49,7 +49,8 @@ saveRDS(wide, file.path(DATA_PROC, "coral_physio_wide.rds"))
 cat("PCA-eligible corals:", nrow(wide),
     "(with all 4 responses:", sum(complete.cases(wide)), ")\n")
 
-# PCA on the 3 universal vars (Apply zoox if available)
+# PCA on the always-present trio (PAM, color, growth) plus symbiont density when
+# available — so 4 responses here, since zoox_end is populated in this dataset.
 pca_vars <- c("pam_end", "color_end", "growth_areal")
 if (any(!is.na(wide$zoox_end))) pca_vars <- c(pca_vars, "zoox_end")
 

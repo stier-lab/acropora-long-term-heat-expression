@@ -3,6 +3,7 @@
 .Rdata
 .RData
 .Ruserdata
+.Rproj.user/
 *.Rproj.user/
 
 # renv

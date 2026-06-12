@@ -7,6 +7,13 @@ LTH thickets (A, C, D) to Ross Cunning's genotyped *A. pulchra* CBASS genets.
 **Status:** phenotype analysis complete; this is the open genomics piece.
 **Last updated:** 2026-06-07.
 
+> **You own the gene-expression analysis — this is a resource, not a plan you have to follow.**
+> Everything below is the Stier lab's *suggestion* given the phenotype results. The model, the
+> contrasts, and the genet-matching strategy are yours to adopt, change, or discard; we wrote it down
+> so the two halves of the paper connect and so you have a starting point if it's useful, not to
+> prescribe your pipeline. Section 5's "next steps" is one possible division of labor — please
+> rewrite it however fits how you want to work.
+
 ---
 
 ## 1. One-paragraph context
@@ -45,27 +52,41 @@ source of truth). Sampling design: `notes/sequencing-plan-keck-LTH.md`.
 This balance means the design cleanly supports the contrasts below without
 batch confounding.
 
-## 3. Proposed differential-expression analysis (phenotype-anchored)
+## 3. Questions the differential-expression analysis could address (phenotype-anchored)
 
-Suggested model (DESeq2 / limma-voom), host reads:
+These are **goals/questions**, not a prescribed model or pipeline — the design (factors, normalization,
+fixed/random structure, tool) is yours to specify. The phenotype results raise the questions below; the
+expression data can **test, extend, or revise** each one. Predicted *processes* are listed as
+hypotheses to confirm or overturn — we deliberately do **not** name candidate gene symbols, so the gene
+sets you interrogate are your call.
 
-```
-~ treatment * wound * day + genotype   (+ tank as a covariate/random term)
-```
+- **Does heat suppress the regeneration program while sparing the healing program?** Phenotype: wounds
+  seal at the same rate in both temperatures, but new-corallite formation collapses under heat
+  (Cox HR = 0.22, p = 0.010). The expression data can ask whether, at the wound margin, the
+  early-healing processes (re-epithelialization, immune, ECM remodeling, proliferation) are induced
+  similarly in both temperatures while skeletal/biomineralization and corallite-patterning processes
+  are specifically suppressed under heat — **or** whether heat suppresses healing too, which would
+  *revise* the phase-decoupling story. This is the crux and could go either way.
+- **What distinguishes the resilient genet (C) from the sensitive ones (A, D)?** Phenotype: genet C
+  defends photochemistry, pigmentation, and symbiont retention far better than A/D, with the spread
+  sharpest in unwounded corals. The expression data can ask whether genet C shows a smaller heat-induced
+  transcriptional shift and/or a constitutively frontloaded stress-tolerance signature (proteostasis,
+  antioxidant/ROS handling, symbiosis) — and may identify, extend, or contradict candidate
+  thermal-tolerance processes underlying that heritable variation.
+- **Is the chronic 31 °C signature sustained/constitutive rather than an acute heat-shock spike?**
+  Phenotype/design: 31 °C sits ~4.4 °C below the acute ED50 and wounding came after 7 days at
+  temperature, so a transient heat-shock response has likely subsided. The expression data can test
+  whether the signature is accumulating sublethal stress vs acute photoinhibition.
+- **Does the wound response narrow the genet differences (matching the physiology)?** Phenotype: the
+  genet spread in heat sensitivity is large when unwounded and compresses when wounded. The expression
+  data can test whether the genet (and genet × temperature) effect is correspondingly smaller in
+  wounded than unwounded margins.
 
-Priority contrasts, each tied to a phenotypic result:
+Tie-in: the **Day 10** tip biopsies are where new-corallite divergence is sharpest in the phenotype
+data, so they are likely the highest-yield timepoint for the first question — but that is a phenotype
+expectation the expression data can confirm or move.
 
-| # | Contrast | Phenotype it explains | What to look for |
-|---|----------|----------------------|------------------|
-| A | **wound × temperature at the tip** (W vs U, 31 vs 28) | heat blocks regeneration not closure (result 1) | biomineralization / SCRiP / carbonic anhydrase / galaxin / skeletal-matrix genes **down** in wounded-heated; re-epithelialization/immune genes intact |
-| B | **genotype main + genotype × temperature** | C > D > A resilience (result 2) | constitutive vs heat-inducible thermal-tolerance genes (HSPs, antioxidants, symbiosis/ROS handling) distinguishing C from A/D |
-| C | **temperature × day** (chronic trajectory) | progressive sublethal decline (result 3) | accumulating stress signature (proteostasis, apoptosis, symbiont-nutrient) rather than acute photoinhibition spike |
-| D | **wound × day** (healing time-course) | trait-onset timing in the morphology data | early (D1) wound-response vs later (D10) regrowth modules |
-
-Tie-in: the **Day 10** tip biopsies are where new-corallite divergence is
-sharpest in the phenotype data — the highest-yield timepoint for contrast A.
-
-Symbiont (*Symbiodiniaceae*) reads, if retained, can corroborate the measured
+Symbiont (*Symbiodiniaceae*) reads, if retained, could corroborate (or qualify) the measured
 symbiont-density loss and genet C's retention.
 
 ---
@@ -105,40 +126,25 @@ a priori link to Cunning's numbered genets.
   the CBASS data in `github.com/jrcunning/CBASS_methods`; per-genet ED50 is
   cached for us at `data/external/cunning2024_apulchra_ed50.csv`.
 
-### Proposed matching strategy (primary: genotype; supporting: space)
+### The goal, and the one external ask that unlocks it
 
-**Step 1 — call genotypes for A/C/D from the LTH host reads.**
-Map host reads to an *Acropora* reference (e.g. *A. millepora* / *A. pulchra*
-assembly), call SNPs (GATK or bcftools), and build a per-thicket genotype
-profile. Because each thicket is one parent colony, all fragments of a thicket
-should be (near-)clonal — a useful internal QC: confirm within-thicket identity
-and between-thicket distinctness first.
+**Goal.** Link thickets A/C/D to Cunning's genotyped genets well enough to ask whether **acute CBASS
+ED50 predicts our chronic, wound-context resilience ranking (C > D > A)** — and, if matched, to relate
+that to the genet × temperature expression signal. The *how* (reference genome, variant caller, the
+relatedness/identity metric, how much to lean on the spatial check) is yours to decide; we have no
+prescription here.
 
-**Step 2 — obtain Cunning's host genotype data.** This is the pivotal ask. We
-need their per-genet **SNP genotypes** (not just ED50 + genet number). Likely
-held by Cunning / Putnam; check the CBASS_methods repo / associated genomic
-archive, or request directly (co-authors Detmer & Moeller are in the UCSB/Mo'orea
-network — easy intro). Confirm reference genome / SNP panel so calls are
-comparable.
+**The one thing that actually requires us / an external request.** The pivotal, repo-external dependency
+is **Cunning's per-genet host SNP genotypes** (not just ED50 + genet number). Likely held by
+Cunning / Putnam — the CBASS_methods repo / associated genomic archive, or a direct request (co-authors
+Detmer & Moeller are in the UCSB/Mo'orea network — an easy intro). We can chase this for you. Everything
+downstream of obtaining comparable genotype data is analysis you own.
 
-**Step 3 — match.** Compute pairwise identity/relatedness between each LTH thicket
-genotype and the 20 Cunning genets (identity-by-state, or a relatedness metric
-robust to different SNP panels). A clonal match → direct genet assignment; a
-high-relatedness near-match → same lineage / clonemate. Report match confidence.
-
-**Step 4 — supporting spatial check.** Compare LTH thicket GPS to Cunning's genet
-collection waypoints (his metadata lists handheld GPS IDs "Shedd1/Shedd3"; exact
-coords may need to be requested). Spatial proximity is **suggestive, not
-conclusive** — *A. pulchra* forms clonal thickets, so adjacent colonies can be
-the same genet, and distant ones can be clonemates via fragmentation. Use space
-only to corroborate the genotype match.
-
-**Step 5 — the payoff analysis.** If matched, correlate Cunning's **acute ED50**
-against our **chronic resilience** (per-thicket scores in
-`output/tables/19_genet_resilience_summary.csv`; ranking C > D > A) and against
-the genet × temperature DE signal (contrast B). Even a 3-point match is a
-meaningful qualitative test (does the chronically-resilient genet have the
-highest acute ED50?); a clonemate-level match strengthens it.
+**Supporting data already in hand.** The GPS table above places all three thickets in the same named
+Mahana/Tiahura stand Cunning sampled; spatial proximity is **suggestive, not conclusive** (*A. pulchra*
+forms clonal thickets, so adjacent colonies can be the same genet and distant ones clonemates). The
+cached per-genet ED50 is at `data/external/cunning2024_apulchra_ed50.csv`; our per-thicket chronic
+resilience scores are in `output/tables/19_genet_resilience_summary.csv`.
 
 ### Honest fallback
 
@@ -150,17 +156,19 @@ is the upside if matching succeeds.
 
 ---
 
-## 5. Concrete next steps / asks
+## 5. A possible division of labor (yours to redraw)
 
-- [ ] **Shreya:** SNP-calling pipeline on LTH host reads → per-thicket genotypes
-      + within/between-thicket identity QC (Step 1).
-- [ ] **Shreya + Adrian:** request Cunning/Putnam host genotype data + exact genet
-      collection coords; confirm reference genome (Step 2).
-- [ ] **Shreya:** relatedness/identity matching A/C/D ↔ 20 genets (Step 3).
-- [ ] **Adrian:** confirm the LTH collection site name with Gump/field team
-      (coords say Mahana/Tiahura; lock the site label).
-- [ ] **Joint:** DE analysis contrasts A–D (Section 3); then the acute-vs-chronic
-      correlation (Step 5) once matching resolves.
+This is just a sketch of how the pieces *could* split — please adjust to match how you want to run
+the analysis. The only items that are genuinely ours to chase are the data requests and the site
+label.
 
-Questions → Adrian. Phenotype data, code, and the cached Cunning ED50 table are
+- The **gene-expression analysis** (DE design, SNP-calling, matching) is yours to lead and structure
+  however you see fit — Sections 3–4 are suggestions, not a checklist.
+- **We can help with:** requesting Cunning/Putnam host genotype data + exact genet collection coords
+  and confirming the reference genome (the pivotal external ask); and confirming the LTH collection
+  site label with the Gump/field team (coords say Mahana/Tiahura).
+- **Anything you need from us** to make your side easier — a per-library phenotype covariate table,
+  the cached Cunning ED50 data, clarification on the design — just ask.
+
+Questions or data requests → Adrian. Phenotype data, code, and the cached Cunning ED50 table are
 all in this repo.

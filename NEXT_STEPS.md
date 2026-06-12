@@ -22,13 +22,11 @@ Rscript code/15_multivariate.R     # PCA already includes chl placeholder
 - `data/raw/sequencing/counts.csv` (or .rds)
 - `data/raw/sequencing/sample_metadata.csv` — match against `data/raw/plate_layout/Plate_{1,2}.csv`
 - Add `data/raw/sequencing/` to `.gitignore` for the FASTQ-stage; commit only the count matrix
-**Pipeline additions needed:**
-- `code/20_deseq2_pipeline.R` — DESeq2 with the same `~ treatment * wound * day + (1|tank) + (1|thicket)` structure (use `~ treatment * wound + day` as fixed, fit per timepoint)
-- `code/21_wgcna_modules.R` — co-expression network modules
-- `code/22_go_enrichment.R` — top genes per contrast → GO term enrichment
-- `code/23_expression_x_phenotype.R` — link gene-level fold changes to the physiological response axis from `code/15_multivariate.R` (PC1)
-
-**Collaborator brief:** a full RNA-seq analysis proposal + phenotype-anchored DE contrasts for Shreya (Bay lab) is in **`docs/for_shreya/analysis_proposal.md`**.
+**The gene-expression analysis is Shreya's to design and lead** (Bay lab) — we are not prescribing
+her pipeline here. What's ours to do is the data plumbing above (where counts land, how to match the
+sample metadata to the plate layout). When she wants them, the suggested phenotype → expression
+contrasts and the genet-matching ideas are in **`docs/for_shreya/analysis_proposal.md`** and
+**`docs/for_shreya/gene_expression_integration_map.md`** — offered as resources, her call.
 
 ### Genet matching: link thickets A/C/D to Cunning et al. 2024 CBASS genets
 **Why:** Cunning measured acute Fv/Fm ED50 for 20 genotyped *A. pulchra* genets from **Mahana, Mo'orea** (same site as LTH; `data/external/cunning2024_apulchra_ed50.csv`). Matching A/C/D to those genets would let us test whether acute ED50 predicts our chronic resilience ranking (C > D > A).
@@ -36,7 +34,7 @@ Rscript code/15_multivariate.R     # PCA already includes chl placeholder
 - Thicket **A**: 17.49735 °S, 149.91557 °W
 - Thicket **C**: 17.49808 °S, 149.91595 °W
 - Thicket **D**: 17.49726 °S, 149.91581 °W
-**Plan:** call SNPs from LTH host RNA-seq → per-thicket genotypes → match to Cunning's genotyped genets (`genet_map` in github.com/jrcunning/CBASS_methods). Full step-by-step in `docs/for_shreya/analysis_proposal.md` §4. Open ask: obtain Cunning/Putnam host genotype data + reference genome.
+**Approach (Shreya's to design, not prescribed here):** call SNPs from LTH host RNA-seq → per-thicket genotypes → match to Cunning's genotyped genets (`genet_map` in github.com/jrcunning/CBASS_methods). The *goal* + the one external data ask are in `docs/for_shreya/analysis_proposal.md` §4. **Open ask we can chase:** obtain Cunning/Putnam host genotype data + reference genome.
 
 ### Microscope photo series (Molly's n=16 photo subset)
 **Status:** Photos on Stier-NAS at `smb://stier-nas1.eemb.ucsb.edu`. Index documents extracted to `notes/LTH_Microscope_Characterization_Photos.md` and `notes/LTH_Color_Card_Photos.md`.
@@ -48,7 +46,7 @@ Rscript code/15_multivariate.R     # PCA already includes chl placeholder
 
 1. **Day-1 symbiont gap.** 31°C corals already had ~28% fewer symbionts than 28°C at Day 1 (the first biopsy, 8 days into heat treatment, 1 day after wounding). Molly should confirm this is the expected progression and not a confounder.
 
-2. **Wound × treatment color interaction.** Wounded 31°C corals paled slightly *less* than unwounded 31°C corals (treatment × wound F = 13.0, p < 0.001). Possible mechanisms: (a) wound-driven symbiont redistribution to apical front; (b) photograph-timing artifact; (c) algae overgrowth. Worth a sentence in the Discussion either way.
+2. **Wound × treatment color interaction.** Wounded 31°C corals paled slightly *less* than unwounded 31°C corals — a **non-significant trend** under the corrected type-III SS (F₁,₂₄₅ = 3.03, p = 0.083; an earlier type-I run overstated this as F = 13.0, p < 0.001). Possible mechanisms (all speculative): (a) wound-driven symbiont redistribution to apical front; (b) photograph-timing artifact; (c) algae overgrowth. This is the lead author's to interpret if it earns a place in the Discussion.
 
 3. **Genet C resilience.** Significant G × E in PAM, color, and symbionts with genet C consistently most resilient. With only n=3 genets this is suggestive, not conclusive. RNA-seq across genets will be the formal test.
 
@@ -76,9 +74,11 @@ Rscript code/15_multivariate.R     # PCA already includes chl placeholder
 
 ## Manuscript
 
-`manuscript/Manuscript_LTH.md` is the working draft from Drive (exported as markdown — large because it includes inlined images). The Results section to merge in is at `manuscript/Results_draft.md`. Figure captions to merge are in the same file.
+`manuscript/Manuscript_LTH.md` is the working draft (exported from the Drive Doc as markdown — large because it includes inlined images). The Stier-lab phenotype **Methods + Results are already written into it**; `RESULTS.md` is the authoritative results narrative and every number traces to `output/tables/20_master_results.csv`. The Introduction, Discussion, and Abstract are the lead author's (S. Banerjee) to write.
 
-Suggested next moves for the manuscript:
-- Run the `/critique-manuscript` workflow once Results is merged
-- Run `/multi-model-manuscript-critique` for an external second-pass before submission
-- Tap `stier-writing-voice` skill for Introduction and Discussion rewrites
+Next moves for the manuscript (the Introduction, Discussion, and Abstract are the lead author's —
+S. Banerjee — to write):
+- Draft the narrative sections around the transcriptomic result, with the phenotype Methods + Results
+  as organismal context
+- Circulate to co-authors for review before submission
+- Confirm target journal and formatting

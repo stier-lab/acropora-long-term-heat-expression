@@ -87,9 +87,9 @@ p_color <- ggplot(traj, aes(day, mean_color,
   geom_vline(xintercept = 0, linetype = "dotted", colour = "grey50") +
   facet_wrap(~ treatment, ncol = 2) +
   scale_y_reverse(breaks = 1:6, limits = c(6.2, 0.8)) +  # darker = higher D, plot 1 on top
-  scale_colour_manual(values = c(no = "#0072B2", yes = "#D55E00"),
+  scale_colour_manual(values = PAL_WOUND,
                       name = "Wound") +
-  scale_fill_manual(values   = c(no = "#0072B2", yes = "#D55E00"),
+  scale_fill_manual(values   = PAL_WOUND,
                     guide = "none") +
   labs(x = "Day relative to wounding (D0)",
        y = "Color score (Siebeck D-scale; lower = paler)",

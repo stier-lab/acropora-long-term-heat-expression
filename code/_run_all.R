@@ -13,9 +13,9 @@ scripts <- c(
   "02_pam_analysis.R",
   "03_color_card_analysis.R",
   "04_physio_morphology.R",
+  "07_wax_dipping.R",          # must run before 05 — 05 reads wax_clean.rds (surface areas)
   "05_buoyant_weight.R",
   "06_symbiont_chl.R",
-  "07_wax_dipping.R",
   "08_apex_temperature.R",
   "09_ysi_water_chem.R",
   "10_worms.R",
@@ -38,7 +38,9 @@ scripts <- c(
   "28_multiple_testing.R",
   "29_morphology_prob_contrasts.R",
   "20_master_results_table.R",
-  "25_model_diagnostic_coverage.R"
+  "31_rnaseq_covariate_table.R",    # handoff: per-library phenotype covariates for the RNA-seq
+  "25_model_diagnostic_coverage.R",
+  "30_manuscript_audit.R"          # advisory phenotype reproducibility check — warns (never fails) if phenotype numbers drift
 )
 
 t0 <- Sys.time()
