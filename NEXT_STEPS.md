@@ -1,5 +1,7 @@
 # Next Steps for LTH Analysis
 
+> 🗂️ **Pending-work checklist** · Updated 2026-06-12 · Index: [`DOCS_INDEX.md`](DOCS_INDEX.md) · connects to `code/06` (chl-a), `docs/for_shreya/` (RNA-seq), `data/raw/`.
+
 A living checklist of what's pending and what to do when each blocker resolves.
 
 ## Awaiting data

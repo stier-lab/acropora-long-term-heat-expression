@@ -1,5 +1,7 @@
 # For Shreya — collaboration brief
 
+> 🗂️ **Lead-author landing page** · Updated 2026-06-12 · Index: [`DOCS_INDEX.md`](../../DOCS_INDEX.md) · front door to everything in `docs/for_shreya/`.
+
 Welcome, and thanks for leading this one. This folder is your front door to everything the Stier lab
 has built on the LTH project (#17: heat × wound × *A. pulchra*, Mo'orea 2025). The short version:
 

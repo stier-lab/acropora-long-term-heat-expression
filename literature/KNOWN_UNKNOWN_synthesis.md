@@ -1,5 +1,7 @@
 # What we know and don't know — *A. pulchra* wounding, healing, regeneration & thermal tolerance
 
+> 🗂️ **Knowledge-gap synthesis (Intro framing)** · Updated 2026-06-12 · Index: [`DOCS_INDEX.md`](../DOCS_INDEX.md) · grounded in `literature/pdfs/`.
+
 A reading synthesis across **this LTH library** (`literature/`, 98 PDFs), the **wound-healing-model
 library** (`~/coral-wound-healing-model/literature/`), and the curated NotebookLM corpora
 ("Acropora pulchra" notebook `f9a97210`; "Coral regeneration all sources" notebook `bb37eb1a`).

@@ -3,6 +3,7 @@
 > **Internal/historical build log — not a guide for using the repo.** This records how the repo was
 > first assembled (2026-05-23); some details are from that initial build and have since evolved. To
 > *use* the repo, start at **`START_HERE.md`** → `README.md` → `RESULTS.md`. Kept for provenance.
+> Listed in the document index: [`DOCS_INDEX.md`](DOCS_INDEX.md). (Last touched 2026-06-12.)
 
 Built end-to-end from the Google Drive folder over a single session.
 

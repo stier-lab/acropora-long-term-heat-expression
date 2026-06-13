@@ -1,5 +1,7 @@
 # Gene-expression ↔ phenotype integration map (suggestions)
 
+> 🗂️ **Phenotype → expression hypotheses (bidirectional)** · Updated 2026-06-12 · Index: [`DOCS_INDEX.md`](../../DOCS_INDEX.md) · covariates → `output/tables/31_rnaseq_phenotype_covariates.csv`.
+
 **Shreya — these are suggestions, not a plan you have to follow.** You own the gene-expression
 analysis and the paper's framing. This file just lays out where the phenotype results we've finished
 *set up* questions your RNA-seq can answer, so the two halves of the paper reinforce each other. Pick

@@ -1,5 +1,7 @@
 # START HERE 👋
 
+> 🗂️ **Front door / onboarding tour** · Updated 2026-06-12 · Full document list: [`DOCS_INDEX.md`](DOCS_INDEX.md) · next stops: `README.md`, `RESULTS.md`.
+
 **New to this repo? Read this page first — it's a 5-minute guided tour.**
 For the full scientific detail, `README.md` is the next stop.
 
@@ -53,6 +55,9 @@ Everything is reproducible from `code/_run_all.R`. **Never hand-edit numbers** �
 lives in `output/tables/20_master_results.csv` and regenerates with the pipeline.
 
 ## Read the docs in this order
+
+*(For the complete catalog of every document — with timestamps and how each connects to the code and
+data — see **[`DOCS_INDEX.md`](DOCS_INDEX.md)**. This list is just the main reading path.)*
 
 1. **`START_HERE.md`** ← you are here
 2. **`docs/ANALYSIS_SUMMARY.md`** — a visual, first-time-reader walkthrough of the analysis (what was measured, how, and what it found)

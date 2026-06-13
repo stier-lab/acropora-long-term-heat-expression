@@ -5,7 +5,7 @@
 **Re:** what the 144 RNA-seq libraries should test, and how to link the three
 LTH thickets (A, C, D) to Ross Cunning's genotyped *A. pulchra* CBASS genets.
 **Status:** phenotype analysis complete; this is the open genomics piece.
-**Last updated:** 2026-06-07.
+**Last updated:** 2026-06-12 · **Document index:** [`DOCS_INDEX.md`](../../DOCS_INDEX.md)
 
 > **You own the gene-expression analysis — this is a resource, not a plan you have to follow.**
 > Everything below is the Stier lab's *suggestion* given the phenotype results. The model, the

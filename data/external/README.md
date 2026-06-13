@@ -1,5 +1,7 @@
 # External reference data
 
+> 🗂️ **Provenance for the Cunning 2024 CBASS ED50 data** · Updated 2026-06-07 · Index: [`DOCS_INDEX.md`](../../DOCS_INDEX.md) · used by `code/26_thermal_context.R`.
+
 ## `cunning2024_apulchra_ed50.csv`
 
 Per-genet acute thermal-tolerance thresholds (Fv/Fm **ED50**, °C) for *Acropora

@@ -1,5 +1,7 @@
 # LTH Results Summary
 
+> 🗂️ **Authoritative phenotype results narrative** · Updated 2026-06-12 · Index: [`DOCS_INDEX.md`](DOCS_INDEX.md) · every number traces to `output/tables/20_master_results.csv` (built by `code/20`).
+
 Auto-generated from the analysis pipeline (`code/01–19_*.R`). Numbers come straight from `output/tables/*.csv` and the fitted models in `output/models/*.rds`. Use this as the starting point for the manuscript Results section.
 
 ## Experimental snapshot

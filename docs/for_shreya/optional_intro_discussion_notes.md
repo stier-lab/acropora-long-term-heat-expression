@@ -1,5 +1,7 @@
 # Stier-lab phenotype framing angles — Intro/Discussion (optional, not the spine)
 
+> 🗂️ **Optional framing angles + citation bank** · Updated 2026-06-12 · Index: [`DOCS_INDEX.md`](../../DOCS_INDEX.md) · references → `manuscript/references.bib`, `literature/CITATIONS_INDEX.md`.
+
 **Shreya — you lead this paper. The recommended spine is yours and should lead with the
 transcriptomics.** This file is *not* the manuscript text and *not* a recommendation about how to
 frame the paper. It is the Stier lab's phenotype-side thinking: candidate framings (deliberately left

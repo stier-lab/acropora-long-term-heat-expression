@@ -1,5 +1,7 @@
 # Citations index — LTH manuscript
 
+> 🗂️ **Citation → PDF index** · Updated 2026-06-12 · Index: [`DOCS_INDEX.md`](../DOCS_INDEX.md) · pairs with `manuscript/references.bib` and `manuscript/Manuscript_LTH.md`.
+
 Maps every work cited in `manuscript/Manuscript_LTH.md` to its BibTeX key
 (`manuscript/references.bib`), verified DOI, and local PDF (or acquisition status).
 **All 20 DOI-bearing references were verified against Crossref on 2026-06-09** and their

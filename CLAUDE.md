@@ -1,5 +1,7 @@
 # CLAUDE.md — LTH (project #17) repo guide
 
+> 🗂️ **Repo guide + authorship/scope rules** · Updated 2026-06-12 · Full document list: [`DOCS_INDEX.md`](DOCS_INDEX.md).
+
 Heat × wound × gene expression in *Acropora pulchra*, Mahana/Tiahura, Mo'orea (2025).
 Repo: `stier-lab/17.-LTH_expression_by_temperature_2025`. Local: `~/Stier-LTH-expression-by-temperature-2025/`.
 

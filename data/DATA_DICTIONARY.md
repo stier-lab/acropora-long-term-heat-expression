@@ -1,5 +1,7 @@
 # Data Dictionary — LTH Expression by Temperature (Project #17, 2025)
 
+> 🗂️ **Variable definitions for all raw streams** · Updated 2026-06-12 · Index: [`DOCS_INDEX.md`](../DOCS_INDEX.md) · decodes `data/raw/`; per-stream codebooks in `data/metadata/`; loaded by `code/01`.
+
 **Experiment:** Heat (28 °C vs 31 °C) × wounding (unwounded vs wounded) factorial on the
 coral *Acropora pulchra*, Mo'orea (Gump Station), 2025. Three genets/thickets (a, c, d),
 8 experimental tanks, ~208 individually tracked fragments. Each fragment carries a unique

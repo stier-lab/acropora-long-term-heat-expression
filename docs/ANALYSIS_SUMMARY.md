@@ -1,5 +1,7 @@
 # LTH phenotype analysis — visual summary
 
+> 🗂️ **Plain-language analysis walkthrough** · Updated 2026-06-12 · Index: [`DOCS_INDEX.md`](../DOCS_INDEX.md) · figures from `figures/`; numbers → `output/tables/20_master_results.csv`.
+
 *A first-read overview of what we found and how we asked each question. Plain-language stats
 included — no prior knowledge of this project assumed. Every number here traces to
 `output/tables/20_master_results.csv`; the full narrative is in `RESULTS.md`.*
