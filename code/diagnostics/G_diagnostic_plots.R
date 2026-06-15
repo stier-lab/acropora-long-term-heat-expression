@@ -1,5 +1,5 @@
 # =============================================================================
-# Agent G — diagnostic plot inventory + fill-in for new fits.
+# Diagnostic plot inventory + fill-in for new fits.
 #
 # A-D already covered:
 #   - unpenalized glmer morphology (B_*)
@@ -31,6 +31,15 @@ all_plots <- c(all_plots, extra_plots)
 # Map model basename → expected diagnostic plot
 plot_for <- function(mdl_path) {
   base <- tools::file_path_sans_ext(basename(mdl_path))
+  explicit <- c(
+    "02_pam_lmer" = "K_02_pam_lmer_dharma.png",
+    "12_bw_pct_lm" = "growth_pct.png"
+  )
+  if (base %in% names(explicit)) {
+    hits <- all_plots[basename(all_plots) == explicit[[base]]]
+    return(list(pattern = explicit[[base]], hits = hits))
+  }
+
   # Look for any plot whose name contains the model basename or its trait token
   pattern <- gsub("^(02|12|12b|12c|13|14|15|19)_", "", base)
   pattern <- gsub("_lmm|_lm|_glmm|_blme|_clmm", "", pattern)

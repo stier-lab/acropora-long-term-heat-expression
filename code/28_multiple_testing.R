@@ -22,7 +22,7 @@
 # pigment_over_wound, algae_on_wound) — no strong a-priori prediction.
 #
 # Input:   output/tables/12_anova_summary.csv,
-#          output/tables/04_morphology_trait_anova_genet.csv,
+#          output/tables/12c_morph_blme_anova.csv,
 #          output/tables/14_cox_hazard_ratios.csv
 # Output:  output/tables/28_multiple_testing.csv
 # =============================================================================
@@ -60,7 +60,7 @@ for (h in phys) {
 }
 
 # ---- Morphology trait treatment effects -----------------------------------
-morph <- read_csv(file.path(TBL_DIR, "04_morphology_trait_anova_genet.csv"),
+morph <- read_csv(file.path(TBL_DIR, "12c_morph_blme_anova.csv"),
                   show_col_types = FALSE) |>
   filter(term == "treatment")
 for (i in seq_len(nrow(morph))) {

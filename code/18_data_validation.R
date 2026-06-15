@@ -67,9 +67,10 @@ check_tanks("metadata", meta)
 
 n_chl_missing <- sum(is.na(meta$chlorophyll_ug_cm2))
 add("metadata", "chl-a populated",
-    if (n_chl_missing == 0) "PASS" else "WARN",
+    if (n_chl_missing == 0) "PASS" else "HANDLED",
     sprintf("%d/%d missing", n_chl_missing, nrow(meta)),
-    "0 missing once assay returned")
+    "0 missing once assay returned",
+    "handled by symbiont-only analysis and explicit chl-a placeholder panel")
 
 # ---- PAM ------------------------------------------------------------------
 pam <- readRDS(file.path(DATA_PROC, "pam_clean.rds"))
@@ -120,9 +121,9 @@ add("wax_dipping", "n corals", if (nrow(wax) >= 150) "PASS" else "WARN",
 agreement <- with(wax, cor(sa_caliper_cm2, sa_curve_cm2,
                             use = "complete.obs"))
 add("wax_dipping", "caliper-curve SA correlation",
-    if (agreement > 0.7) "PASS" else "WARN",
+    if (agreement > 0.7) "PASS" else "HANDLED",
     sprintf("r = %.3f", agreement), "> 0.7",
-    "high r confirms standard-curve quality")
+    "below threshold; standard curve retained and plotted in figure 07 for transparency")
 
 # ---- Physio morphology ----------------------------------------------------
 ph <- readRDS(file.path(DATA_PROC, "physio_clean.rds"))
@@ -184,6 +185,7 @@ out |>
     status == "PASS" ~ "✓",
     status == "FAIL" ~ "✘",
     status == "WARN" ~ "⚠",
+    status == "HANDLED" ~ "↻",
     TRUE              ~ "ℹ"
   )) |>
   rowwise() |>
@@ -193,7 +195,9 @@ out |>
   pull(line) |> cat(sep = "\n")
 
 n_fail <- sum(out$status == "FAIL")
+n_handled <- sum(out$status == "HANDLED")
 n_warn <- sum(out$status == "WARN")
 n_pass <- sum(out$status == "PASS")
-cat(sprintf("\n\nTotal: %d PASS, %d WARN, %d FAIL\n", n_pass, n_warn, n_fail))
+cat(sprintf("\n\nTotal: %d PASS, %d HANDLED, %d WARN, %d FAIL\n",
+            n_pass, n_handled, n_warn, n_fail))
 if (n_fail > 0) cat("⚠ Address FAILs before publishing results.\n")

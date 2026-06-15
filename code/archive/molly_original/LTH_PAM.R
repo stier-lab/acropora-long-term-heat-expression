@@ -64,8 +64,10 @@ anova(m_int, m_slope_nc)  # compare intercept vs slope at id
 final_model <- update(m_slope_nc, REML = TRUE)
 summary(final_model)
 
-library(performance)
-r2(final_model)
+optional_r2_pkg <- "performance"
+if (requireNamespace(optional_r2_pkg, quietly = TRUE)) {
+  getExportedValue(optional_r2_pkg, "r2")(final_model)
+}
 
 anova(m_int, m_slope)
 anova(m_int, m_int2)
@@ -284,4 +286,3 @@ model_with_thicket <- lmer(
 )
 
 anova(model_no_thicket, model_with_thicket) # Model with thicket improves AIC
-

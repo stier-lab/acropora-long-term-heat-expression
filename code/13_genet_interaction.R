@@ -132,7 +132,7 @@ emm_long <- bind_rows(
               se   = sd(log10_cells, na.rm = TRUE) / sqrt(n()),
               n    = n(),
               .groups = "drop") |>
-    mutate(response = "log10 symbionts cm⁻²")
+    mutate(response = "log10 symbionts cm⁻² (raw summary)")
 )
 write_csv(emm_long, file.path(TBL_DIR, "13_genet_emmeans.csv"))
 

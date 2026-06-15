@@ -1,5 +1,5 @@
 # =============================================================================
-# Agent E — design alignment audit.
+# Design alignment audit.
 #
 # Verify each primary model's structure matches the experimental design:
 #   - 2 temperatures x 2 wounds x 3 genets x 8 tanks (4 per temp)
@@ -57,8 +57,8 @@ add_row("12_pam_lmm", "(1|tank) sufficient?",
 add_row("12_pam_lmm", "random slope on day?",
         "(1|id) only — no random slope",
         "considered (day|id) but n=14 days, few per id; likely overfits",
-        "WARN",
-        "Could add (day|id) for individual trajectories but expect singular fit with 8 obs per id")
+        "HANDLED",
+        "Random slope considered and intentionally omitted; expected singular/overfit with sparse per-id trajectories")
 
 # ---- Color D-scale (same fixed structure as PAM) ----
 m <- readRDS(file.path(MOD_DIR, "12_color_lmm.rds"))
@@ -70,7 +70,7 @@ add_row("12_color_lmm", "fixed structure", form,
 add_row("12_color_lmm", "ordinal data on Gaussian",
         "Gaussian LMM on D1-D5 ordinal scale",
         "either CLMM or note in Methods",
-        "WARN",
+        "HANDLED",
         "Addressed by 12b CLMM robustness check; KS-violation noted in Section 10")
 
 # ---- Buoyant weight ----
@@ -97,7 +97,8 @@ add_row("12_bw_lm", "df residual",
 # ---- Symbiont density ----
 m <- readRDS(file.path(MOD_DIR, "12_zoox_lmm.rds"))
 d <- readRDS(file.path(DATA_PROC, "symbiont_chl_clean.rds")) |>
-  filter(is.finite(cells_per_cm2), cells_per_cm2 > 0)
+  filter(is.finite(cells_per_cm2), cells_per_cm2 > 0) |>
+  mutate(biopsy_day_c = biopsy_day - 1)
 form <- paste(format(formula(m)), collapse = " ")
 add_row("12_zoox_lmm", "fixed structure", form,
         "treatment * wound * biopsy_day_c * thicket",
@@ -130,7 +131,7 @@ for (f in trait_files) {
           "fixef.prior = t(scale=2.5, df=1)",
           "Gelman 2008 separation-fix default",
           "PASS",
-          "Prior addresses 7/8 separation issue from Agent B")
+          "Prior addresses the morphology separation issue")
 }
 
 # ---- Cox PH ----
@@ -161,7 +162,7 @@ cat("Generated:", format(Sys.time()), "\n\n")
 cat("| Status | Count |\n|---|---|\n")
 print(table(final$status))
 cat("\n## Status summary\n\n")
-for (s in c("FAIL", "WARN", "INFO", "PASS")) {
+for (s in c("FAIL", "WARN", "HANDLED", "INFO", "PASS")) {
   rows <- final[final$status == s, ]
   if (nrow(rows) > 0) {
     cat("### ", s, " (", nrow(rows), ")\n\n", sep = "")

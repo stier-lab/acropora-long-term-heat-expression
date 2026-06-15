@@ -1,3 +1,3 @@
 method,n_genotypes,variation_metric,detects_genotype_variation
 Acute CBASS (Cunning 2024),20,ED50 range = 2.20 °C (SD 0.59),yes (R=0.74 predicts bleaching)
-Chronic LTH (this study),3,resilience-score range = 0.46 (std units),yes (C > D > A)
+Chronic LTH (this study),3,resilience-score range = 0.13 (std units),yes (C > D > A)

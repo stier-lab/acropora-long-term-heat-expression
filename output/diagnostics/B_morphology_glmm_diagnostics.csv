@@ -1,82 +1,82 @@
 trait,check,statistic,p_value,status,notes
-hole_in_center,convergence,0,NA,WARN,"unable to evaluate scaled gradient; Model failed to converge: degenerate  Hessian with 1 negative eigenvalues
-  See ?lme4::convergence and ?lme4::troubleshooting."
+hole_in_center,convergence,0,NA,HANDLED,"handled by penalized blme refit in script 12c: Model is nearly unidentifiable: large eigenvalue ratio
+ - Rescale variables?"
 hole_in_center,singular_fit,0,NA,PASS,non-singular
-hole_in_center,re_var_tank,1.239723305632396,NA,PASS,variance > 1e-4
-hole_in_center,max_fixed_effect_SE,33853.41592916092,NA,FAIL,Likely separation (SE >50 or non-finite)
+hole_in_center,re_var_tank,1.2397188497934966,NA,PASS,variance > 1e-4
+hole_in_center,max_fixed_effect_SE,343.24329783366994,NA,HANDLED,Likely separation; handled by penalized blme refit in script 12c
 hole_in_center,DHARMa_uniformity_KS,0.061103390374531365,0.11366951880048254,PASS,KS test on scaled residuals
-hole_in_center,DHARMa_dispersion,1.0212121274196022,0.828,PASS,ratio=1.02
+hole_in_center,DHARMa_dispersion,1.0212120060470717,0.828,PASS,ratio=1.02
 hole_in_center,DHARMa_outliers,2,0.6687289679144193,PASS,binomial outlier test
-hole_in_center,pred_p_ambient_end,0.9999535850945783,NA,PASS,"predicted at day 15, 28C"
-hole_in_center,pred_p_hot_end,0.9999463618594786,NA,PASS,"predicted at day 15, 31C"
-new_corallites_on_tip,convergence,0,NA,WARN,"unable to evaluate scaled gradient; Model failed to converge: degenerate  Hessian with 1 negative eigenvalues
+hole_in_center,pred_p_ambient_end,0.9999535850563008,NA,PASS,"predicted at day 15, 28C"
+hole_in_center,pred_p_hot_end,0.9999463611805101,NA,PASS,"predicted at day 15, 31C"
+new_corallites_on_tip,convergence,0,NA,HANDLED,"handled by penalized blme refit in script 12c: unable to evaluate scaled gradient; Model failed to converge: degenerate  Hessian with 1 negative eigenvalues
   See ?lme4::convergence and ?lme4::troubleshooting."
 new_corallites_on_tip,singular_fit,0,NA,PASS,non-singular
-new_corallites_on_tip,re_var_tank,0.15795412011945498,NA,PASS,variance > 1e-4
-new_corallites_on_tip,max_fixed_effect_SE,373707.9588687669,NA,FAIL,Likely separation (SE >50 or non-finite)
+new_corallites_on_tip,re_var_tank,0.15795048111262985,NA,PASS,variance > 1e-4
+new_corallites_on_tip,max_fixed_effect_SE,105478.1709321415,NA,HANDLED,Likely separation; handled by penalized blme refit in script 12c
 new_corallites_on_tip,DHARMa_uniformity_KS,0.05081834915714959,0.27452871788326183,PASS,KS test on scaled residuals
-new_corallites_on_tip,DHARMa_dispersion,1.0539509370848128,0.756,PASS,ratio=1.05
+new_corallites_on_tip,DHARMa_dispersion,1.0539507736754514,0.756,PASS,ratio=1.05
 new_corallites_on_tip,DHARMa_outliers,4,0.06946322261108695,PASS,binomial outlier test
 new_corallites_on_tip,DHARMa_zero_inflation,0.9995497523638002,1,PASS,tested because mean p extreme
-new_corallites_on_tip,pred_p_ambient_end,0.9839240447012765,NA,PASS,"predicted at day 15, 28C"
-new_corallites_on_tip,pred_p_hot_end,0.42084751151569366,NA,PASS,"predicted at day 15, 31C"
-pigment_over_wound,convergence,0,NA,WARN,"unable to evaluate scaled gradient; Model failed to converge: degenerate  Hessian with 3 negative eigenvalues
+new_corallites_on_tip,pred_p_ambient_end,0.983924163691939,NA,PASS,"predicted at day 15, 28C"
+new_corallites_on_tip,pred_p_hot_end,0.4208464308212032,NA,PASS,"predicted at day 15, 31C"
+pigment_over_wound,convergence,0,NA,HANDLED,"handled by penalized blme refit in script 12c: unable to evaluate scaled gradient; Model failed to converge: degenerate  Hessian with 2 negative eigenvalues
   See ?lme4::convergence and ?lme4::troubleshooting."
 pigment_over_wound,singular_fit,0,NA,PASS,non-singular
-pigment_over_wound,re_var_tank,0.1498082871425183,NA,PASS,variance > 1e-4
-pigment_over_wound,max_fixed_effect_SE,204094.68263965877,NA,FAIL,Likely separation (SE >50 or non-finite)
+pigment_over_wound,re_var_tank,0.14980971811830904,NA,PASS,variance > 1e-4
+pigment_over_wound,max_fixed_effect_SE,62702.04407664164,NA,HANDLED,Likely separation; handled by penalized blme refit in script 12c
 pigment_over_wound,DHARMa_uniformity_KS,0.06936912773821347,0.061964022207457364,PASS,KS test on scaled residuals
-pigment_over_wound,DHARMa_dispersion,1.0328734243873727,0.876,PASS,ratio=1.03
+pigment_over_wound,DHARMa_dispersion,1.0328735508981497,0.876,PASS,ratio=1.03
 pigment_over_wound,DHARMa_outliers,0,0.4122302891217412,PASS,binomial outlier test
 pigment_over_wound,DHARMa_zero_inflation,1.000430417737864,1,PASS,tested because mean p extreme
-pigment_over_wound,pred_p_ambient_end,0.12412100202088966,NA,PASS,"predicted at day 15, 28C"
-pigment_over_wound,pred_p_hot_end,0.33866427928627685,NA,PASS,"predicted at day 15, 31C"
-polyp_in_hole,convergence,0,NA,WARN,"unable to evaluate scaled gradient; Model failed to converge: degenerate  Hessian with 1 negative eigenvalues
-  See ?lme4::convergence and ?lme4::troubleshooting."
+pigment_over_wound,pred_p_ambient_end,0.12412124374076852,NA,PASS,"predicted at day 15, 28C"
+pigment_over_wound,pred_p_hot_end,0.33866428287249534,NA,PASS,"predicted at day 15, 31C"
+polyp_in_hole,convergence,0,NA,HANDLED,"handled by penalized blme refit in script 12c: Model is nearly unidentifiable: large eigenvalue ratio
+ - Rescale variables?"
 polyp_in_hole,singular_fit,0,NA,PASS,non-singular
-polyp_in_hole,re_var_tank,1.239723305632396,NA,PASS,variance > 1e-4
-polyp_in_hole,max_fixed_effect_SE,33853.41592916092,NA,FAIL,Likely separation (SE >50 or non-finite)
+polyp_in_hole,re_var_tank,1.2397188497934966,NA,PASS,variance > 1e-4
+polyp_in_hole,max_fixed_effect_SE,343.24329783366994,NA,HANDLED,Likely separation; handled by penalized blme refit in script 12c
 polyp_in_hole,DHARMa_uniformity_KS,0.061103390374531365,0.11366951880048254,PASS,KS test on scaled residuals
-polyp_in_hole,DHARMa_dispersion,1.0212121274196022,0.828,PASS,ratio=1.02
+polyp_in_hole,DHARMa_dispersion,1.0212120060470717,0.828,PASS,ratio=1.02
 polyp_in_hole,DHARMa_outliers,2,0.6687289679144193,PASS,binomial outlier test
-polyp_in_hole,pred_p_ambient_end,0.9999535850945783,NA,PASS,"predicted at day 15, 28C"
-polyp_in_hole,pred_p_hot_end,0.9999463618594786,NA,PASS,"predicted at day 15, 31C"
+polyp_in_hole,pred_p_ambient_end,0.9999535850563008,NA,PASS,"predicted at day 15, 28C"
+polyp_in_hole,pred_p_hot_end,0.9999463611805101,NA,PASS,"predicted at day 15, 31C"
 polyps_out,convergence,0,NA,PASS,no warnings
 polyps_out,singular_fit,0,NA,PASS,non-singular
-polyps_out,re_var_tank,0.08396301733159175,NA,PASS,variance > 1e-4
-polyps_out,max_fixed_effect_SE,1.5245196964637435,NA,PASS,SE in plausible range
+polyps_out,re_var_tank,0.08395867950183744,NA,PASS,variance > 1e-4
+polyps_out,max_fixed_effect_SE,0.4374963752504056,NA,PASS,SE in plausible range
 polyps_out,DHARMa_uniformity_KS,0.0490680972564345,0.3135475390569077,PASS,KS test on scaled residuals
-polyps_out,DHARMa_dispersion,1.0120413804538546,0.972,PASS,ratio=1.01
+polyps_out,DHARMa_dispersion,1.0120410807454088,0.972,PASS,ratio=1.01
 polyps_out,DHARMa_outliers,1,1,PASS,binomial outlier test
 polyps_out,DHARMa_zero_inflation,0.9948957522277014,1,PASS,tested because mean p extreme
-polyps_out,pred_p_ambient_end,0.9902786171765533,NA,PASS,"predicted at day 15, 28C"
-polyps_out,pred_p_hot_end,0.7332121841060804,NA,PASS,"predicted at day 15, 31C"
-tip_exist,convergence,0,NA,WARN,"unable to evaluate scaled gradient; Model failed to converge: degenerate  Hessian with 2 negative eigenvalues
-  See ?lme4::convergence and ?lme4::troubleshooting."
+polyps_out,pred_p_ambient_end,0.9902784448584723,NA,PASS,"predicted at day 15, 28C"
+polyps_out,pred_p_hot_end,0.7332138539127249,NA,PASS,"predicted at day 15, 31C"
+tip_exist,convergence,0,NA,HANDLED,"handled by penalized blme refit in script 12c: Model is nearly unidentifiable: large eigenvalue ratio
+ - Rescale variables?"
 tip_exist,singular_fit,0,NA,PASS,non-singular
-tip_exist,re_var_tank,2.220189555342702,NA,PASS,variance > 1e-4
-tip_exist,max_fixed_effect_SE,69749.12036941032,NA,FAIL,Likely separation (SE >50 or non-finite)
+tip_exist,re_var_tank,2.2201965235976786,NA,PASS,variance > 1e-4
+tip_exist,max_fixed_effect_SE,186.42733973271478,NA,HANDLED,Likely separation; handled by penalized blme refit in script 12c
 tip_exist,DHARMa_uniformity_KS,0.04351209010928873,0.461288795875189,PASS,KS test on scaled residuals
-tip_exist,DHARMa_dispersion,0.9730604166989197,0.852,PASS,ratio=0.973
+tip_exist,DHARMa_dispersion,0.9730604940558752,0.852,PASS,ratio=0.973
 tip_exist,DHARMa_outliers,4,0.06946322261108695,PASS,binomial outlier test
-tip_exist,pred_p_ambient_end,0.9930163165637594,NA,PASS,"predicted at day 15, 28C"
-tip_exist,pred_p_hot_end,0.9837851541533511,NA,PASS,"predicted at day 15, 31C"
-tip_extension,convergence,0,NA,WARN,"unable to evaluate scaled gradient; Model failed to converge: degenerate  Hessian with 2 negative eigenvalues
+tip_exist,pred_p_ambient_end,0.9930163326228769,NA,PASS,"predicted at day 15, 28C"
+tip_exist,pred_p_hot_end,0.9837851634721324,NA,PASS,"predicted at day 15, 31C"
+tip_extension,convergence,0,NA,HANDLED,"handled by penalized blme refit in script 12c: unable to evaluate scaled gradient; Model failed to converge: degenerate  Hessian with 1 negative eigenvalues
   See ?lme4::convergence and ?lme4::troubleshooting."
 tip_extension,singular_fit,0,NA,PASS,non-singular
-tip_extension,re_var_tank,6.574820894781866,NA,PASS,variance > 1e-4
-tip_extension,max_fixed_effect_SE,163359.26477892703,NA,FAIL,Likely separation (SE >50 or non-finite)
-tip_extension,DHARMa_uniformity_KS,0.0561090745031834,0.1781017903900288,PASS,KS test on scaled residuals
-tip_extension,DHARMa_dispersion,0.8501968066990843,0.504,PASS,ratio=0.85
+tip_extension,re_var_tank,5.791077421987344,NA,PASS,variance > 1e-4
+tip_extension,max_fixed_effect_SE,44217.83159088434,NA,HANDLED,Likely separation; handled by penalized blme refit in script 12c
+tip_extension,DHARMa_uniformity_KS,0.05787228359840816,0.15266873490308633,PASS,KS test on scaled residuals
+tip_extension,DHARMa_dispersion,0.8550268093654569,0.488,PASS,ratio=0.855
 tip_extension,DHARMa_outliers,3,0.19922693070948244,PASS,binomial outlier test
-tip_extension,pred_p_ambient_end,0.9987582085524414,NA,PASS,"predicted at day 15, 28C"
-tip_extension,pred_p_hot_end,0.8572520916650309,NA,PASS,"predicted at day 15, 31C"
-wound_smoothed,convergence,0,NA,WARN,unable to evaluate scaled gradient;  Hessian is numerically singular: parameters are not uniquely determined
+tip_extension,pred_p_ambient_end,0.9984420086339604,NA,PASS,"predicted at day 15, 28C"
+tip_extension,pred_p_hot_end,0.8642977527446712,NA,PASS,"predicted at day 15, 31C"
+wound_smoothed,convergence,0,NA,HANDLED,handled by penalized blme refit in script 12c:  Hessian is numerically singular: parameters are not uniquely determined
 wound_smoothed,singular_fit,0,NA,PASS,non-singular
-wound_smoothed,re_var_tank,0.7015413615540066,NA,PASS,variance > 1e-4
-wound_smoothed,max_fixed_effect_SE,53884.85710566466,NA,FAIL,Likely separation (SE >50 or non-finite)
+wound_smoothed,re_var_tank,0.7015378098292364,NA,PASS,variance > 1e-4
+wound_smoothed,max_fixed_effect_SE,733.6377422227607,NA,HANDLED,Likely separation; handled by penalized blme refit in script 12c
 wound_smoothed,DHARMa_uniformity_KS,0.058184686698950806,0.14848161054406017,PASS,KS test on scaled residuals
-wound_smoothed,DHARMa_dispersion,1.0765278873194066,0.684,PASS,ratio=1.08
+wound_smoothed,DHARMa_dispersion,1.076527920031634,0.684,PASS,ratio=1.08
 wound_smoothed,DHARMa_outliers,1,1,PASS,binomial outlier test
-wound_smoothed,pred_p_ambient_end,0.9999999998754951,NA,PASS,"predicted at day 15, 28C"
+wound_smoothed,pred_p_ambient_end,0.9999999998754986,NA,PASS,"predicted at day 15, 28C"
 wound_smoothed,pred_p_hot_end,0.9999999999994463,NA,PASS,"predicted at day 15, 31C"

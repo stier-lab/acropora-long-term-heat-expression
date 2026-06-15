@@ -1,7 +1,7 @@
 # =============================================================================
 # Purpose: Robustness check — refit the color D-scale response as an ordinal
 #          cumulative-link mixed model (`ordinal::clmm`) instead of Gaussian
-#          LMM. Agent A flagged the Gaussian LMM as KS-non-uniform (D-scale
+#          LMM. Residual diagnostics flagged the Gaussian LMM as KS-non-uniform (D-scale
 #          is a 5-level ordinal scale). We keep the Gaussian model for
 #          presentation (matches the other physiology metrics) but confirm
 #          here that every qualitative inference holds under the correct

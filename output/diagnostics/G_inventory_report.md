@@ -1,12 +1,10 @@
 # G. Diagnostic plot inventory
 
-**Generated:** 2026-05-25 13:01:33
+**Generated:** 2026-06-13 07:09:15
 
 | Status | Count |
 |---|---|
-| CURRENT | 20 |
-| MISSING | 5 |
-| STALE | 2 |
+| CURRENT | 27 |
 
 ## Newly built plots (9)
 
@@ -22,8 +20,4 @@
 
 ## Models still missing a plot
 
-- `02_pam_lmer.rds` (mtime 2026-05-24 16:41:58)
-- `13_color_dscale_genet_lmm.rds` (mtime 2026-05-24 16:44:09)
-- `13_growth_genet_lm.rds` (mtime 2026-05-24 16:44:10)
-- `13_log_zoox_genet_lmm.rds` (mtime 2026-05-24 16:44:09)
-- `13_pam_fvfm_genet_lmm.rds` (mtime 2026-05-24 16:44:09)
+None — full coverage.

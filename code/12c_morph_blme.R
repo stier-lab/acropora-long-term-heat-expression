@@ -1,6 +1,6 @@
 # =============================================================================
 # Purpose: Penalized refit of the morphology GLMMs to handle complete /
-#          quasi-complete separation flagged by Agent B.
+#          quasi-complete separation flagged by the morphology diagnostics.
 #
 #          The raw `glmer(... family = binomial)` fits in script 12 produce
 #          finite predictions (because the random-effect penalty already
@@ -27,7 +27,10 @@ suppressPackageStartupMessages({ library(blme) })
 
 ph <- readRDS(file.path(DATA_PROC, "physio_clean.rds")) |>
   filter(wound == "yes", !is.na(day), day >= 0) |>
-  mutate(thicket = factor(thicket))
+  mutate(
+    treatment = factor(treatment),
+    thicket = factor(thicket)
+  )
 
 traits <- c("polyps_out", "hole_in_center", "polyp_in_hole",
             "wound_smoothed", "pigment_over_wound", "tip_exist",
@@ -36,6 +39,8 @@ traits <- c("polyps_out", "hole_in_center", "polyp_in_hole",
 fit_blme <- function(tr) {
   d <- ph |> mutate(y = .data[[tr]]) |> filter(!is.na(y))
   if (length(unique(d$y)) < 2 || nrow(d) < 30) return(NULL)
+  contrasts(d$treatment) <- contr.treatment(nlevels(d$treatment))
+  contrasts(d$thicket) <- contr.treatment(nlevels(d$thicket))
   # Cauchy(0, 2.5) prior on all fixed effects — Gelman 2008 default for
   # logistic regression with separation. Same structure as script 12.
   m <- tryCatch(

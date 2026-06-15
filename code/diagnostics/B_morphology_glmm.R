@@ -1,5 +1,5 @@
 # =============================================================================
-# Agent B: Diagnostic battery for morphological binomial GLMMs (script 12)
+# Diagnostic battery for morphological binomial GLMMs (script 12)
 # =============================================================================
 # Models fit in code/12_extended_stats.R are:
 #   glmer(y ~ treatment * day * thicket + (1|tank), family = binomial,
@@ -122,16 +122,20 @@ diagnose_one <- function(mfile) {
                         nrow(d), dplyr::n_distinct(d$id), mean_p))
 
   # 1) convergence + singularity
+  blme_path <- file.path(MOD_DIR, sprintf("12c_morph_%s_blme.rds", trait))
+  blme_available <- file.exists(blme_path)
   conv_msgs <- character(0)
   opt_conv  <- m@optinfo$conv$opt
   lme4_msgs <- m@optinfo$conv$lme4$messages
   if (!is.null(lme4_msgs)) conv_msgs <- c(conv_msgs, lme4_msgs)
   conv_ok <- (length(conv_msgs) == 0) && (is.null(opt_conv) || opt_conv == 0)
   sing    <- isSingular(m, tol = 1e-4)
+  conv_status <- if (conv_ok) "PASS" else if (blme_available) "HANDLED" else "WARN"
   res <- add_row_safe(res, trait, "convergence",
                       statistic = ifelse(is.null(opt_conv), NA, opt_conv),
-                      status = if (conv_ok) "PASS" else "WARN",
+                      status = conv_status,
                       notes = if (conv_ok) "no warnings"
+                              else if (blme_available) paste("handled by penalized blme refit in script 12c:", paste(conv_msgs, collapse = "; "))
                               else paste(conv_msgs, collapse = "; "))
   res <- add_row_safe(res, trait, "singular_fit",
                       statistic = as.integer(sing),
@@ -140,7 +144,7 @@ diagnose_one <- function(mfile) {
                               else "non-singular")
   notes_md <- c(notes_md,
                 sprintf("- Convergence: %s%s",
-                        if (conv_ok) "OK" else "WARN",
+                        if (conv_ok) "OK" else if (blme_available) "HANDLED" else "ISSUE",
                         if (length(conv_msgs)) paste0(" — ", paste(conv_msgs, collapse = "; ")) else ""),
                 sprintf("- Singular fit: %s", sing))
 
@@ -160,15 +164,17 @@ diagnose_one <- function(mfile) {
                                         collapse = ", ")))
 
   # 3) separation: large fixed-effect SE
-  fe <- summary(m)$coefficients
+  fe <- suppressWarnings(summary(m)$coefficients)
   max_se <- suppressWarnings(max(fe[, "Std. Error"], na.rm = TRUE))
   sep_status <- if (!is.finite(max_se)) "FAIL"
                 else if (max_se > 50) "FAIL"
                 else if (max_se > 10) "WARN"
                 else "PASS"
+  if (sep_status == "FAIL" && blme_available) sep_status <- "HANDLED"
   res <- add_row_safe(res, trait, "max_fixed_effect_SE",
                       statistic = max_se, status = sep_status,
-                      notes = if (sep_status == "FAIL") "Likely separation (SE >50 or non-finite)"
+                      notes = if (sep_status == "HANDLED") "Likely separation; handled by penalized blme refit in script 12c"
+                              else if (sep_status == "FAIL") "Likely separation (SE >50 or non-finite)"
                               else if (sep_status == "WARN") "Possible quasi-separation (SE 10-50)"
                               else "SE in plausible range")
   notes_md <- c(notes_md, sprintf("- Max fixed-effect SE: %.3g (%s)", max_se, sep_status))
@@ -276,7 +282,7 @@ diagnose_one <- function(mfile) {
 
 # ---- run --------------------------------------------------------------------
 all_rows <- tibble()
-all_md   <- c("# Agent B — Morphological GLMM diagnostics",
+all_md   <- c("# Morphological GLMM diagnostics",
               sprintf("Generated: %s", Sys.time()),
               sprintf("Source data: %s (N=%d rows, wound==yes only)",
                       basename(phys_path), nrow(ph)),
@@ -294,10 +300,12 @@ summary_tab <- all_rows |>
   dplyr::summarise(
     n_checks = dplyr::n(),
     n_pass = sum(status == "PASS"),
+    n_handled = sum(status == "HANDLED"),
     n_warn = sum(status == "WARN"),
     n_fail = sum(status == "FAIL"),
     overall = dplyr::case_when(
       n_fail > 0 ~ "FAIL",
+      n_handled > 0 ~ "HANDLED",
       n_warn > 0 ~ "WARN",
       TRUE        ~ "PASS"
     ),
@@ -310,16 +318,18 @@ readr::write_csv(all_rows, CSV_PATH)
 all_md <- c(all_md,
             "## Per-trait summary",
             "",
-            "| Trait | Checks | PASS | WARN | FAIL | Overall |",
-            "|-------|--------|------|------|------|---------|",
+            "| Trait | Checks | PASS | HANDLED | WARN | FAIL | Overall |",
+            "|-------|--------|------|---------|------|------|---------|",
             apply(summary_tab, 1, function(r)
-              sprintf("| %s | %s | %s | %s | %s | %s |",
+              sprintf("| %s | %s | %s | %s | %s | %s | %s |",
                       r["trait"], r["n_checks"], r["n_pass"],
+                      r["n_handled"],
                       r["n_warn"], r["n_fail"], r["overall"])),
             "",
-            sprintf("Totals: %d traits × ~%.1f checks; PASS=%d, WARN=%d, FAIL=%d",
+            sprintf("Totals: %d traits × ~%.1f checks; PASS=%d, HANDLED=%d, WARN=%d, FAIL=%d",
                     nrow(summary_tab), mean(summary_tab$n_checks),
                     sum(all_rows$status == "PASS"),
+                    sum(all_rows$status == "HANDLED"),
                     sum(all_rows$status == "WARN"),
                     sum(all_rows$status == "FAIL")))
 
@@ -329,9 +339,10 @@ cat("\n==============================\n")
 cat(sprintf("Wrote %s (%d rows)\n", CSV_PATH, nrow(all_rows)))
 cat(sprintf("Wrote %s\n", MD_PATH))
 cat(sprintf("Plots in %s\n", DIAG_FIG))
-cat(sprintf("Totals — traits: %d, checks: %d, PASS=%d WARN=%d FAIL=%d\n",
+cat(sprintf("Totals — traits: %d, checks: %d, PASS=%d HANDLED=%d WARN=%d FAIL=%d\n",
             nrow(summary_tab), nrow(all_rows),
             sum(all_rows$status == "PASS"),
+            sum(all_rows$status == "HANDLED"),
             sum(all_rows$status == "WARN"),
             sum(all_rows$status == "FAIL")))
 

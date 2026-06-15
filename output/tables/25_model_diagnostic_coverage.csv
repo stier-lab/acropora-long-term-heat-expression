@@ -26,7 +26,7 @@ cox_overall_wound_smoothed,coxph,14_cox_ph_wound_smoothed.png,figures/14_morphol
 12_bw_lm,lm,A_bw_dharma.png,figures/05_buoyant_weight_growth.pdf,covered (existing)
 12_bw_pct_lm,lm,growth_pct.png,figures/05_buoyant_weight_growth.pdf,covered (existing)
 13_growth_genet_lm,lm,K_13_growth_genet_lm_dharma.png,figures/05_buoyant_weight_growth.pdf,covered (built K_)
-02_pam_lmer,lmerMod,K_02_pam_lmer_dharma.png,figures/02_pam_fvfm_trajectory.pdf,covered (built K_)
+02_pam_lmer,lmerMod,K_02_pam_lmer_dharma.png,figures/02_pam_fvfm_trajectory.pdf,covered (existing)
 13_color_dscale_genet_lmm,lmerMod,K_13_color_dscale_genet_lmm_dharma.png,figures/03_color_trajectory.pdf,covered (built K_)
 13_log_zoox_genet_lmm,lmerMod,K_13_log_zoox_genet_lmm_dharma.png,figures/06_symbiont_chl_by_day.pdf,covered (built K_)
 13_pam_fvfm_genet_lmm,lmerMod,K_13_pam_fvfm_genet_lmm_dharma.png,figures/02_pam_fvfm_trajectory.pdf,covered (built K_)

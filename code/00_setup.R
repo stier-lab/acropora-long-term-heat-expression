@@ -23,6 +23,9 @@ suppressPackageStartupMessages({
 
 set.seed(42)
 
+# Sum-to-zero contrasts keep Type-III tests independent of reference levels.
+options(contrasts = c("contr.sum", "contr.poly"))
+
 # ---- Paths -----------------------------------------------------------------
 DATA_RAW  <- here("data", "raw")
 DATA_PROC <- here("data", "processed")

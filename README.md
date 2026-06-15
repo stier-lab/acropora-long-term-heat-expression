@@ -50,9 +50,9 @@ This repo is the **analysis layer**; the **project of record** (raw Sheets, fiel
 - **Folder:** `17. LTH_expression_by_temperature_2025` · **Drive ID:** `1sXfnHN-vmSBuwMEfERiYOWDeKRmjFWJP`
 - **Path:** `…/My Drive/Stier Lab/People/Adrian Stier/Projects/In Progress/Coral-Regeneration/Projects/17. LTH_expression_by_temperature_2025/`
 - **Mapping:** Drive `data/` Sheets → `data/raw/` here; Drive `notes/` Docs → `notes/` here; Drive `Manuscript_LTH` Doc ↔ `manuscript/Manuscript_LTH.md`. Raw data is exported *from* Drive; the repo never writes back. When Drive data changes, re-export into `data/raw/` and re-run `code/_run_all.R`.
-- Access programmatically with the `gws` CLI (authenticated as astier@ucsb.edu). See `CLAUDE.md` for the exact query and the repo↔Drive details.
+- Access programmatically with the `gws` CLI (authenticated as astier@ucsb.edu). See `PROJECT_GUIDE.md` for the exact query and the repo↔Drive details.
 
-Regeneration-staging terminology uses the lab's biphasic vocabulary (tissue healing / coenosarc coverage → regeneration / skeletal regrowth) as a working default — a convention for the phenotype descriptors, not a mandate on the paper's framing, which the lead author sets; see `CLAUDE.md`.
+Regeneration-staging terminology uses the lab's biphasic vocabulary (tissue healing / coenosarc coverage → regeneration / skeletal regrowth) as a working default — a convention for the phenotype descriptors, not a mandate on the paper's framing, which the lead author sets; see `PROJECT_GUIDE.md`.
 
 ## Repository documents — where to find things
 

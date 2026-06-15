@@ -33,9 +33,10 @@ result_fig <- function(m) {
   )
 }
 
-# Explicit crosswalk: model stem -> existing diagnostic figure (the agent-era
-# A_/B_/G_/12_diagnostics plots). Anything not mapped gets a K_ plot built.
+# Explicit crosswalk: model stem -> existing diagnostic figure. Anything not
+# mapped gets a K_ plot built.
 diag_map <- c(
+  "02_pam_lmer"     = "K_02_pam_lmer_dharma.png",
   "12_pam_lmm"      = "A_pam_dharma.png",
   "12_color_lmm"    = "A_color_dharma.png",
   "12_zoox_lmm"     = "A_zoox_dharma.png",

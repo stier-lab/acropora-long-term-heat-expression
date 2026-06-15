@@ -1,5 +1,5 @@
 # =============================================================================
-# Agent D diagnostic — verifies:
+# PCA and genet-LRT diagnostic — verifies:
 #   1. PCA from 15_multivariate.R (n, variance explained, Kaiser, loadings,
 #      centering/scaling).
 #   2. Genet LRTs from 13_genet_interaction.R (REML status, df, convergence,
@@ -29,7 +29,7 @@ add_check <- function(analysis, check, statistic, status, notes = "") {
   )
 }
 
-report_lines <- c("# Agent D — PCA + Genet LRT Diagnostics",
+report_lines <- c("# PCA + Genet LRT Diagnostics",
                   sprintf("_Run: %s_\n", format(Sys.time())))
 
 # ----------------------------------------------------------------------------
@@ -153,7 +153,7 @@ p_scree <- ggplot(scree_df, aes(PC, variance)) +
   geom_hline(yintercept = 100 / length(var_exp), linetype = "dashed",
              colour = "grey50") +
   labs(x = "Component", y = "Variance explained (%)",
-       title = "PCA scree — Agent D diagnostic",
+       title = "PCA scree diagnostic",
        subtitle = sprintf("PC1+PC2 = %.1f%% | Kaiser PCs = %d",
                           pc12, n_kaiser)) +
   theme_pub(10)
@@ -170,7 +170,7 @@ p_load <- ggplot(load_long, aes(variable, loading, fill = loading > 0)) +
                     guide = "none") +
   geom_hline(yintercept = 0, colour = "black", linewidth = 0.3) +
   labs(x = NULL, y = "Loading",
-       title = "PCA loadings — Agent D diagnostic") +
+       title = "PCA loadings diagnostic") +
   theme_pub(9) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ggsave(file.path(DIAG_FIG, "D_pca_loadings.png"), p_load,
@@ -285,22 +285,22 @@ lmer_checks <- list(
 )
 
 # Growth LM
-m_bw_null  <- lm(pct_growth ~ treatment * wound + thicket, data = bw_d)
-m_bw_genet <- lm(pct_growth ~ treatment * wound * thicket, data = bw_d)
+m_bw_null  <- lm(areal_calc ~ treatment * wound + thicket, data = bw_d)
+m_bw_genet <- lm(areal_calc ~ treatment * wound * thicket, data = bw_d)
 bw_anova <- anova(m_bw_null, m_bw_genet)
 p_bw0 <- length(coef(m_bw_null)); p_bw1 <- length(coef(m_bw_genet))
 ddf_bw <- p_bw1 - p_bw0
-reported_df_bw <- anova_tab$lrt_df[anova_tab$response == "growth_pct"]
-add_check("growth_pct", "Model type", "lm + F-test", "INFO",
+reported_df_bw <- anova_tab$lrt_df[anova_tab$response == "growth_areal"]
+add_check("growth_areal", "Model type", "lm + F-test", "INFO",
           "Growth has no time dim — F-test not LRT")
-add_check("growth_pct", "df = diff in fixed-effect parameters",
+add_check("growth_areal", "df = diff in fixed-effect parameters",
           sprintf("computed=%d, reported=%d", ddf_bw, reported_df_bw),
           if (ddf_bw == reported_df_bw) "PASS" else "FAIL", "")
-add_check("growth_pct", "F-test p-value",
+add_check("growth_areal", "F-test p-value",
           sprintf("p=%.3g", bw_anova$`Pr(>F)`[2]),
           if (bw_anova$`Pr(>F)`[2] < 0.05) "SIG" else "NS", "")
 report_lines <- c(report_lines, "",
-  "### growth_pct",
+  "### growth_areal",
   sprintf("- lm-based F-test (no time dim); F(%d, %d) = %.2f, p = %.3g",
           bw_anova$Df[2], bw_anova$Res.Df[2], bw_anova$F[2],
           bw_anova$`Pr(>F)`[2]),
@@ -352,11 +352,11 @@ report_lines <- c(report_lines, "", "## Summary verdicts\n",
   sprintf("- pam_fvfm LRT: **%s**", lrt_verdict("pam_fvfm")),
   sprintf("- color_dscale LRT: **%s**", lrt_verdict("color_dscale")),
   sprintf("- log_zoox LRT: **%s**", lrt_verdict("log_zoox")),
-  sprintf("- growth_pct F-test: **%s**", lrt_verdict("growth_pct")))
+  sprintf("- growth_areal F-test: **%s**", lrt_verdict("growth_areal")))
 
 writeLines(report_lines, file.path(DIAG_OUT, "D_pca_lrt_report.md"))
 
-cat("\n=== Agent D diagnostics complete ===\n")
+cat("\n=== PCA and genet-LRT diagnostics complete ===\n")
 cat("CSV: ", file.path(DIAG_OUT, "D_pca_lrt_diagnostics.csv"), "\n")
 cat("MD:  ", file.path(DIAG_OUT, "D_pca_lrt_report.md"), "\n")
 cat("Variance explained:",
@@ -366,4 +366,4 @@ cat("PCA verdict:", pca_status_overall, "\n")
 cat("pam_fvfm:", lrt_verdict("pam_fvfm"),
     "| color_dscale:", lrt_verdict("color_dscale"),
     "| log_zoox:", lrt_verdict("log_zoox"),
-    "| growth_pct:", lrt_verdict("growth_pct"), "\n")
+    "| growth_areal:", lrt_verdict("growth_areal"), "\n")

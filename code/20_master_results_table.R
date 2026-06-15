@@ -18,7 +18,7 @@
 #            n                 sample size used for the test
 #            estimate          model-scale estimate (effect, mean diff, log HR)
 #            units             units / scale ("Fv/Fm units", "D-scale", "%",
-#                                "log10 cells cm-2", "log HR", etc.)
+#                                "ln cells cm-2", "log HR", etc.)
 #            pct_change        signed % change of 31C relative to 28C
 #                                (where computable on natural scale)
 #            ci_low, ci_high   95% CI for the estimate
@@ -57,7 +57,7 @@ response_label_map <- c(
   color_dscale     = "Color (Siebeck D)",
   growth_areal     = "Areal calcification (mg cm-2 d-1)",
   growth_pct       = "Buoyant weight growth (%)",
-  log_zoox_density = "log10 symbionts cm-2",
+  log_zoox_density = "ln symbionts cm-2",
   pct_growth       = "Buoyant weight growth (%)"
 )
 
@@ -66,7 +66,7 @@ natural_units <- c(
   color_dscale     = "D-scale units",
   growth_areal     = "mg cm-2 d-1",
   growth_pct       = "%",
-  log_zoox_density = "log10 cells cm-2",
+  log_zoox_density = "ln cells cm-2",
   pct_growth       = "%"
 )
 
@@ -95,13 +95,11 @@ baseline_means <- function() {
       filter(treatment == "28C") |>
       group_by(thicket, wound) |>
       summarise(baseline = mean(pct_growth, na.rm = TRUE), .groups = "drop"),
-    log_zoox_density = zx |>
-      filter(is.finite(cells_per_cm2), cells_per_cm2 > 0) |>
-      filter(biopsy_day == max(biopsy_day, na.rm = TRUE),
-             treatment == "28C") |>
-      group_by(thicket, wound) |>
-      summarise(baseline = log10(mean(cells_per_cm2, na.rm = TRUE)),
-                .groups = "drop")
+    log_zoox_density = tibble(
+      thicket = character(),
+      wound = factor(levels = c("no", "yes")),
+      baseline = numeric()
+    )
   )
 }
 
@@ -158,10 +156,12 @@ attach_pct <- function(df, response_key) {
   df |>
     left_join(base_df, by = c("thicket", "wound")) |>
     mutate(pct_change = if (response_key == "growth_pct") {
-                          -estimate
-                        } else {
-                          -estimate / baseline * 100
-                        })
+      -estimate
+    } else if (response_key == "log_zoox_density") {
+      (exp(-estimate) - 1) * 100
+    } else {
+      -estimate / baseline * 100
+    })
 }
 
 genet_eff_pct <- bind_rows(
@@ -226,14 +226,14 @@ r2_rows <- read_csv(file.path(TBL_DIR, "12_r2_summary.csv"),
   )
 
 # ===========================================================================
-# Block 4 — Morphology GLMM ANOVA (script 04, integrated with genet)
+# Block 4 — Morphology GLMM ANOVA (penalized fits)
 # ===========================================================================
-morph_anova <- read_csv(file.path(TBL_DIR, "04_morphology_trait_anova_genet.csv"),
+morph_anova <- read_csv(file.path(TBL_DIR, "12c_morph_blme_anova.csv"),
                         show_col_types = FALSE) |>
   transmute(
     domain          = "Morphology",
     response        = str_to_sentence(gsub("_", " ", trait)),
-    model_type      = "GLMM (binomial)",
+    model_type      = "GLMM (binomial, blme Cauchy(0,2.5))",
     term            = term,
     test            = "Wald chi-sq",
     statistic       = Chisq,
@@ -245,14 +245,12 @@ morph_anova <- read_csv(file.path(TBL_DIR, "04_morphology_trait_anova_genet.csv"
     qualitative     = paste0(term, " effect on ", trait,
                              if_else(`Pr(>Chisq)` < 0.05,
                                      " (significant)", " (n.s.)")),
-    source_script   = "code/04_physio_morphology.R",
-    source_artifact = "output/tables/04_morphology_trait_anova_genet.csv"
+    source_script   = "code/12c_morph_blme.R",
+    source_artifact = "output/tables/12c_morph_blme_anova.csv"
   )
 
 # Primary morphology fixed-effects: pull from the blme (Cauchy-penalized)
-# refit so that Wald tests are interpretable under separation. The original
-# unpenalized glmer rows are preserved as a separate block flagged
-# `model_type = "GLMM (binomial, unpenalized)"`.
+# refit so that Wald tests are interpretable under separation.
 morph_fixed <- read_csv(
   file.path(TBL_DIR, "12c_morph_blme_fixed_effects.csv"),
   show_col_types = FALSE
@@ -729,6 +727,58 @@ probc_rows <- if (file.exists(file.path(TBL_DIR, "29_morphology_prob_contrasts.c
 } else tibble()
 
 # ===========================================================================
+# Block 18 — Composite genet resilience scores (script 19)
+# ===========================================================================
+resilience_rows <- if (file.exists(file.path(TBL_DIR, "19_genet_resilience_summary.csv"))) {
+  read_csv(file.path(TBL_DIR, "19_genet_resilience_summary.csv"),
+           show_col_types = FALSE) |>
+    transmute(
+      domain = "Genet resilience",
+      response = "Composite heat sensitivity across responses",
+      model_type = "row-max standardized composite",
+      term = sprintf("genet=%s", thicket),
+      test = "mean standardized sensitivity",
+      statistic = mean_sensitivity,
+      df1 = NA_real_, df2 = NA_real_, n = n_responses,
+      estimate = mean_sensitivity,
+      units = "standardized sensitivity",
+      pct_change = NA_real_,
+      ci_low = median_sensitivity,
+      ci_high = pca_displacement,
+      p_value = NA_real_,
+      qualitative = sprintf(
+        "Genet %s: mean sensitivity %.2f, median %.2f, PCA displacement %.2f, rank %.0f",
+        thicket, mean_sensitivity, median_sensitivity, pca_displacement,
+        rank_overall
+      ),
+      source_script = "code/19_genet_dashboard.R",
+      source_artifact = "output/tables/19_genet_resilience_summary.csv"
+    )
+} else tibble()
+
+resilience_scope_rows <- if (file.exists(file.path(TBL_DIR, "19c_resilience_decomp_by_scope.csv"))) {
+  read_csv(file.path(TBL_DIR, "19c_resilience_decomp_by_scope.csv"),
+           show_col_types = FALSE) |>
+    transmute(
+      domain = "Genet resilience",
+      response = "Composite heat sensitivity by scope",
+      model_type = "row-max standardized composite",
+      term = sprintf("genet=%s; %s", thicket, scope),
+      test = "mean standardized sensitivity",
+      statistic = mean_sensitivity,
+      df1 = NA_real_, df2 = NA_real_, n = n_responses,
+      estimate = mean_sensitivity,
+      units = "standardized sensitivity",
+      pct_change = NA_real_, ci_low = NA_real_, ci_high = NA_real_,
+      p_value = NA_real_,
+      qualitative = sprintf("Genet %s, %s: mean sensitivity %.2f across %d responses",
+                            thicket, scope, mean_sensitivity, n_responses),
+      source_script = "code/19_genet_dashboard.R",
+      source_artifact = "output/tables/19c_resilience_decomp_by_scope.csv"
+    )
+} else tibble()
+
+# ===========================================================================
 # Combine and write
 # ===========================================================================
 master <- bind_rows(anova12, genet_rows, r2_rows,
@@ -737,7 +787,8 @@ master <- bind_rows(anova12, genet_rows, r2_rows,
                     lrt13, pca_load, pca_disp, bw_lm,
                     clmm_rows, bw_means_rows, bw_pct_drop, zoox_means_rows,
                     ts_rows, coxph_rows, thermal_rows,
-                    lag_rows, icc_rows, mt_rows, probc_rows) |>
+                    lag_rows, icc_rows, mt_rows, probc_rows,
+                    resilience_rows, resilience_scope_rows) |>
   mutate(across(c(statistic, estimate, pct_change, ci_low, ci_high, p_value),
                 \(x) round(x, 4))) |>
   arrange(domain, response, model_type, term) |>

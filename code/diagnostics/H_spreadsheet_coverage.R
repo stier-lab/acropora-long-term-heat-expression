@@ -1,5 +1,5 @@
 # =============================================================================
-# Agent H — master spreadsheet coverage check.
+# Master spreadsheet coverage check.
 #
 # Verifies that every numeric finding in the per-script CSVs has a matching
 # row in output/tables/20_master_results.csv, with no duplicates or
@@ -19,19 +19,17 @@ src_tables <- c(
   "12_anova_summary.csv",
   "12_genet_treatment_effects.csv",
   "12_r2_summary.csv",
-  "12_morph_fixed_effects.csv",
   "13_genet_anova.csv",
   "14_cox_hazard_ratios.csv",
   "14_cox_genet_LRT.csv",
-  "04_morphology_trait_anova_genet.csv",
-  "04_morphology_trait_glmm_summaries.csv",
   "05_buoyant_weight_lm.csv",
   "12b_color_clmm.csv",
   "12c_morph_blme_fixed_effects.csv",
   "12c_morph_blme_anova.csv",
   "15_pca_loadings.csv",
   "15_genet_pca_displacement.csv",
-  "19_genet_resilience_summary.csv"
+  "19_genet_resilience_summary.csv",
+  "19c_resilience_decomp_by_scope.csv"
 )
 
 findings <- list()
@@ -67,9 +65,9 @@ domain_audit <- master |>
   filter(grepl("^morph_", response, ignore.case = FALSE) &
          domain != "Morphology")
 
-# 04_morph_anova rows: these should be tagged Morphology
+# Penalized morphology ANOVA rows should be tagged Morphology
 miscat <- master |>
-  filter(source_artifact == "output/tables/04_morphology_trait_anova_genet.csv" &
+  filter(source_artifact == "output/tables/12c_morph_blme_anova.csv" &
          domain != "Morphology")
 
 # 12_anova_summary morph_* rows: these are GLMM, but if labeled LMM that's wrong
@@ -107,7 +105,7 @@ cat("\n## Mis-categorized morph rows (tagged Physiology):", nrow(domain_audit), 
 if (nrow(domain_audit) > 0)
   print(domain_audit |> select(domain, response, term, source_artifact))
 
-cat("\n## Rows from 04_morphology that aren't Morphology:", nrow(miscat), "\n")
+cat("\n## Rows from 12c morphology that aren't Morphology:", nrow(miscat), "\n")
 if (nrow(miscat) > 0)
   print(miscat |> select(domain, response, term))
 

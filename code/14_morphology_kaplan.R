@@ -25,7 +25,13 @@ suppressPackageStartupMessages({
   library(survminer)
 })
 
-ph <- readRDS(file.path(DATA_PROC, "physio_clean.rds"))
+ph <- readRDS(file.path(DATA_PROC, "physio_clean.rds")) |>
+  mutate(
+    treatment = factor(treatment, levels = c("28C", "31C")),
+    wound = factor(wound, levels = c("no", "yes")),
+    thicket = factor(thicket)
+  )
+contrasts(ph$treatment) <- contr.treatment(nlevels(ph$treatment))
 
 traits <- c("hole_in_center", "polyp_in_hole", "wound_smoothed",
             "pigment_over_wound", "tip_exist", "tip_extension",
@@ -50,6 +56,12 @@ compute_events <- function(d, trait) {
     mutate(trait = trait)
 }
 events <- map_dfr(traits, ~ compute_events(ph, .x))
+events <- events |>
+  mutate(
+    treatment = factor(treatment, levels = c("28C", "31C")),
+    thicket = factor(thicket)
+  )
+contrasts(events$treatment) <- contr.treatment(nlevels(events$treatment))
 
 # ---- KM summary tables ----------------------------------------------------
 # Per trait × genet × treatment median time-to-event
@@ -363,7 +375,7 @@ p_km_genet <- ggplot(km_curves_genet,
 save_fig(p_km_genet, "14b_morphology_KM_by_genet", width = 210, height = 135)
 
 # ---- Time-varying-coefficient refit for the one PH violation -------------
-# Agent C flagged pigment_over_wound in genet c (cox.zph chisq = 6.59,
+# Cox diagnostics flagged pigment_over_wound in genet c (cox.zph chisq = 6.59,
 # p = 0.0103, n_event = 5) as violating PH. Refit with a log(t+1)
 # time-varying coefficient on treatment so the HR is allowed to evolve.
 pig_c <- events |>

@@ -41,7 +41,7 @@ hits one phase of recovery, not the other.
 
 This repo is the **analysis layer**. Raw data is exported *from* Drive into `data/raw/`. When Drive
 data changes, re-export and re-run the pipeline. Details + the Drive folder ID are in `README.md`
-and `CLAUDE.md`.
+and `PROJECT_GUIDE.md`.
 
 ## Run it in 3 commands
 
@@ -85,7 +85,7 @@ to navigate. The numbering is the run order:
 | `20` | **Master results table** — aggregates every statistic into one CSV |
 | `21` | RNA-seq stub (placeholder — not run until count data lands) |
 | `22`–`29` | Sensitivity & diagnostic suite (flagged samples, time-series, model coverage, thermal context, variance partitioning, multiple-testing, probability-scale contrasts) |
-| `diagnostics/A–H` | Model-diagnostic agents (DHARMa residuals, design alignment, reproducibility) |
+| `diagnostics/A–H` | Model-diagnostic suites (DHARMa residuals, design alignment, reproducibility) |
 
 ## Where everything lives
 
@@ -131,4 +131,4 @@ The lab uses a **biphasic** framework (see Methods **Table 1** in the manuscript
 
 - Questions on the analysis pipeline or a specific script → read its header, then `RESULTS.md`.
 - Questions on a citation → `literature/LIBRARY_MAP.md` (every PDF mapped to its relevance).
-- Anything about Drive ↔ repo, permits, or terminology conventions → `CLAUDE.md`.
+- Anything about Drive ↔ repo, permits, or terminology conventions → `PROJECT_GUIDE.md`.

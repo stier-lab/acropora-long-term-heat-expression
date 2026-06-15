@@ -1,4 +1,4 @@
-# CLAUDE.md — LTH (project #17) repo guide
+# PROJECT_GUIDE.md — LTH (project #17) repo guide
 
 > 🗂️ **Repo guide + authorship/scope rules** · Updated 2026-06-12 · Full document list: [`DOCS_INDEX.md`](DOCS_INDEX.md).
 
@@ -28,7 +28,7 @@ When working in this repo, **do not over-reach into the lead author's domain**:
   fails the build) and scoped to the Stier-lab phenotype Methods/Results only — it does not police her
   narrative.
 
-Still open (PI/institutional, not for Claude to decide unilaterally): target journal & review process;
+Still open for PI/institutional decision: target journal & review process;
 Banerjee's correspondence department/address/email (still `[to confirm]` in the masthead); and
 rehoming/renaming the repo to a neutral or co-owned home.
 
@@ -73,5 +73,5 @@ lead author chooses it. In prose (not data/column names, which stay fixed):
 ## Conventions
 
 - R ≥ 4.3 (dev 4.5.2); packages pinned in `renv.lock`; `code/00_setup.R` defines `theme_pub()`, Okabe-Ito palettes, paths.
-- Cite the lab figure/writing standards in `~/.claude/CLAUDE.md`. Citation grounding: verify any new citation via NotebookLM/Zotero before it enters the manuscript.
+- Citation grounding: verify any new citation via NotebookLM/Zotero before it enters the manuscript.
 - Related: wound-type repos (`stier-wound-type-*`) and the wound-healing model (`coral-wound-healing-model`) are conceptual siblings, not formal comparators in this analysis.

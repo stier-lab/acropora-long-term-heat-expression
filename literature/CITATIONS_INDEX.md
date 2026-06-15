@@ -63,7 +63,7 @@ The earlier inline cites I drafted had several mismatches against the library; a
 
 ---
 
-## Still to acquire (need UCSB-authenticated Chrome CDP — see `CLAUDE.md` "Chrome CDP Setup")
+## Still to acquire (need UCSB-authenticated browser session; see local setup notes)
 
 These six are DOI-verified and fully cited in `references.bib`; only the local PDF is missing
 (each has a close in-library relative or a NotebookLM copy, so the manuscript is not blocked):

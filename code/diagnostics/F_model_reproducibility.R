@@ -1,5 +1,5 @@
 # =============================================================================
-# Agent F — model reproducibility.
+# Model reproducibility.
 #
 # For each saved RDS in output/models/, re-source the model from script 12 /
 # 12b / 12c / 14 and verify coefficients reproduce within 1e-3.
@@ -92,7 +92,7 @@ bw <- readRDS(file.path(DATA_PROC, "buoyant_weight_clean.rds")) |>
   mutate(thicket = factor(thicket))
 compare_lmm("12_bw_lm",
             file.path(MOD_DIR, "12_bw_lm.rds"),
-            pct_growth ~ treatment * wound * thicket,
+            areal_calc ~ treatment * wound * thicket,
             bw)
 
 # Symbionts
@@ -115,6 +115,8 @@ traits <- c("polyps_out", "hole_in_center", "polyp_in_hole",
 for (tr in traits) {
   d <- ph |> mutate(y = .data[[tr]]) |> filter(!is.na(y))
   if (length(unique(d$y)) < 2 || nrow(d) < 30) next
+  contrasts(d$treatment) <- contr.treatment(nlevels(d$treatment))
+  contrasts(d$thicket) <- contr.treatment(nlevels(d$thicket))
   compare_lmm(paste0("12c_morph_", tr, "_blme"),
               file.path(MOD_DIR, paste0("12c_morph_", tr, "_blme.rds")),
               y ~ treatment * day * thicket + (1|tank),

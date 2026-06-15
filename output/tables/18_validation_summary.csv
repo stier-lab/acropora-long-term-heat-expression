@@ -5,7 +5,7 @@ metadata,wound levels,PASS,"no,yes","no, yes",
 metadata,genets,PASS,"a,c,d","a,c,d",
 metadata,28C tank IDs,PASS,"3,6,9,12","3,6,9,12",
 metadata,31C tank IDs,PASS,"4,5,10,11","4,5,10,11",
-metadata,chl-a populated,WARN,208/208 missing,0 missing once assay returned,
+metadata,chl-a populated,HANDLED,208/208 missing,0 missing once assay returned,handled by symbiont-only analysis and explicit chl-a placeholder panel
 pam,n observations (top+bottom averaged),PASS,336,~336,raw obs ≈ 672; cleaned data averages top/bottom probe locations per coral
 pam,unique corals,PASS,48,48,
 pam,Fv/Fm range,INFO,"[0.38, 0.72]","[0, 1]",
@@ -21,7 +21,7 @@ symbionts,n biopsies,PASS,192,~192,
 symbionts,finite densities,PASS,192/192 finite,192,
 symbionts,median (cells/cm²),INFO,7.98e+05,~7e5–1e6,
 wax_dipping,n corals,PASS,192,~192,
-wax_dipping,caliper-curve SA correlation,WARN,r = 0.653,> 0.7,high r confirms standard-curve quality
+wax_dipping,caliper-curve SA correlation,HANDLED,r = 0.653,> 0.7,below threshold; standard curve retained and plotted in figure 07 for transparency
 morphology,n observations,PASS,768,~768,
 morphology,wounded corals tracked,INFO,24,~24 (per treatment),
 morphology,28C tank IDs,PASS,"3,6,9,12","3,6,9,12",

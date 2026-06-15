@@ -25,7 +25,7 @@
 | [`README.md`](README.md) | 📘 | Full reference: question, design, findings, repo map, how to reproduce | 2026-06-12 | → all code/data/docs; links this index |
 | [`RESULTS.md`](RESULTS.md) | 📘 | Authoritative phenotype results narrative (all responses, genet effects, thermal context, caveats) | 2026-06-12 | ← `code/01–29`; every number → `output/tables/20_master_results.csv` |
 | [`NEXT_STEPS.md`](NEXT_STEPS.md) | 📘 | Pending work: chl-a, RNA-seq, genet matching, validations | 2026-06-12 | → `code/06`, `docs/for_shreya/`, `data/raw/` |
-| [`CLAUDE.md`](CLAUDE.md) | 📘 | Repo guide + **Authorship & scope** (who leads, do-not-overreach rules), Drive↔repo mapping, conventions | 2026-06-12 | → README, `docs/for_shreya/`, Drive |
+| [`PROJECT_GUIDE.md`](PROJECT_GUIDE.md) | 📘 | Repo guide + **Authorship & scope** (who leads, do-not-overreach rules), Drive↔repo mapping, conventions | 2026-06-12 | → README, `docs/for_shreya/`, Drive |
 | [`SESSION_SUMMARY.md`](SESSION_SUMMARY.md) | 🗄️ | Internal/historical build log (2026-05-23) — provenance only, not a usage guide | 2026-06-12 | → `START_HERE.md` to actually use the repo |
 
 ## 2. Analysis walkthrough (`docs/`)

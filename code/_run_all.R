@@ -37,7 +37,15 @@ scripts <- c(
   "27_variance_partitioning.R",
   "28_multiple_testing.R",
   "29_morphology_prob_contrasts.R",
+  "diagnostics/A_continuous_lmm.R",
+  "diagnostics/B_morphology_glmm.R",
+  "diagnostics/C_cox_diagnostics.R",
+  "diagnostics/D_pca_lrt.R",
+  "diagnostics/E_design_alignment.R",
+  "diagnostics/F_model_reproducibility.R",
+  "diagnostics/G_diagnostic_plots.R",
   "20_master_results_table.R",
+  "diagnostics/H_spreadsheet_coverage.R",
   "31_rnaseq_covariate_table.R",    # handoff: per-library phenotype covariates for the RNA-seq
   "25_model_diagnostic_coverage.R",
   "30_manuscript_audit.R"          # advisory phenotype reproducibility check — warns (never fails) if phenotype numbers drift
