@@ -64,7 +64,7 @@ Acquisition legend: **[NB]** already in the A. pulchra notebook · **[LAB]** alr
 | Cunning et al. 2024 — rapid acute heat-tolerance (CBASS), *A. pulchra* | (DOI unconfirmed) | [NB] | 5 | Fv/Fm ED50 34.3–36.6 °C; Mo'orea; used in Pfab 2024 |
 | Berg et al. 2020 — persistent photosystem damage fluorescence (A. cf. pulchra) | 10.1080/17451000.2021.1875245 | [NB][PW] | 5 | 58% mortality d34; recovery 3× stress |
 | Shaw et al. 2016 — intraspecific variability, warming × acidification | 10.1007/s00227-016-2986-8 | [NB][PW] | 5 | genotype variation |
-| Grottoli et al. 2020 — comparability among bleaching experiments | 10.1002/eap.2262 | [NB] | 4 | methods (="2021" in NB) |
+| Grottoli et al. 2021 — comparability among bleaching experiments | 10.1002/eap.2262 | [NB] | 4 | methods (Ecol. Appl. 31:e02262, 2021) |
 | ⚠ Denis et al. 2024 — individual thermal-tolerance traits across the GBR | 10.1098/rspb.2024.0587 (preprint 10.1101/2024.01.28.576773) | [OA preprint] | 4 | **A. spathulata, GBR (not A. pulchra)**; CBASS intraspecific-variation framing |
 | El-Khaled et al. 2025 — heat & cold bleaching vulnerability | 10.1038/s42003-025-09329-5 | [OA] | 5 | incl. *A. pulchra* |
 | Hoadley et al. 2015 — temp × pCO2 physiology across genera | 10.1038/srep18371 | [OA] | 3 | |
@@ -76,7 +76,7 @@ Acquisition legend: **[NB]** already in the A. pulchra notebook · **[LAB]** alr
 |---|---|---|---|---|
 | Lock et al. 2025 — Symbiodiniaceae + bacterial microbiome impacts on host | 10.1111/1462-2920.70175 | [OA] | 5 | |
 | Miller et al. 2024 — seasonal tissue/mucus microbiome baseline | 10.7717/peerj.17421 | [OA] | 5 | symbiont/microbiome baseline |
-| Nuñez Lendo et al. 2023 — low-tide exposure × microbial abundance (intertidal) | 10.1080/17451000.2023.2169464 | [PW→CDP] | 4 | intertidal microbiome; from completeness census |
+| Alina et al. 2023 — low-tide exposure × microbial abundance (intertidal) | 10.1080/17451000.2023.2169464 | [PW→CDP] | 4 | intertidal microbiome; first author Dining Nika Alina (was misfiled as Nuñez Lendo); from completeness census |
 
 ### Growth / calcification / skeleton
 | Paper | DOI | Acq | Rel | Note |
@@ -172,7 +172,7 @@ Checked the library against the full published record (OpenAlex). **35 works hav
 pulchra" in the title.** We now hold or track **all relevant, accessible, English ones**; the
 remainder are out of scope or non-acquirable:
 
-- **Acquired this round:** Nuñez Lendo et al. 2023 (intertidal microbiome, Mar Biol Res) — the one
+- **Acquired this round:** Alina et al. 2023 (intertidal microbiome, Mar Biol Res) — the one
   clear English gap the census found; published version pulled via authenticated CDP.
 - **Not chased — out of scope:** 3 natural-product **chemistry** papers (Chinese, 2001/2003); 2 **IUCN
   Red List** dataset entries (not papers); duplicate **preprints** of papers already held (Miller 2024,
@@ -223,7 +223,7 @@ keep the notebook focused on *A. pulchra*; they belong in the regen notebook if 
 - **⚠ Denis 2024** — individual thermal-tolerance traits across the GBR in ***A. spathulata*** (NOT *A. pulchra*); CBASS intraspecific-variation framing. Published RSPB version acquired.
 - **El-Khaled 2025** — heat *and* cold bleaching vulnerability, incl. *A. pulchra*.
 - **Hoadley 2015** — temperature × pCO₂ physiology across genera.
-- **Grottoli 2020** — methods/standardization for cross-experiment bleaching comparability.
+- **Grottoli 2021** — methods/standardization for cross-experiment bleaching comparability.
 
 **A. pulchra-specific — growth / calcification / skeleton**
 - **Yap & Gomez 1984** — growth 13.1–15.8 cm/yr; 36.4% branch mortality → `v_edge`, `m_d`.

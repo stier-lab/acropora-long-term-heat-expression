@@ -42,7 +42,7 @@ are methods/grounding citations; see `CITATIONS_INDEX.md`.)
 
 ---
 
-## 1. Core — *A. pulchra* is the study subject (19)
+## 1. Core — *A. pulchra* is the study subject (16)
 | Paper | Theme | Connection — what it grounds |
 |---|---|---|
 | ⚠ [Almeida et al. 2024](pdfs/Almeida_2024_IntertidalSubtidalRecovery.pdf) | Recovery | **Pocillopora cf. damicornis, Kenya (NOT A. pulchra)** — intertidal/subtidal recovery-dynamics framing |
@@ -53,30 +53,30 @@ are methods/grounding citations; see `CITATIONS_INDEX.md`.)
 | [Ladd et al. 2025](pdfs/Ladd_2025_GrowthPredationTradeoffs.pdf) | Ecology | Growth–predation risk tradeoffs constrain A. pulchra distribution |
 | [Lock et al. 2025](pdfs/Lock_2025_SymbiontBacterialMicrobiome.pdf) | Microbiome | Symbiont + bacterial microbiome effects on host |
 | [Miller & Bentlage 2024](pdfs/Miller_2024_SeasonalMicrobiome.pdf) | Microbiome | Seasonal tissue/mucus microbiome baseline |
-| [Nuñez Lendo et al. 2023](pdfs/NunezLendo_2023_IntertidalMicrobialAbundance.pdf) | Microbiome | Low-tide exposure shifts microbial abundance in intertidal A. pulchra |
+| [Alina et al. 2023](pdfs/Alina_2023_IntertidalMicrobialAbundance.pdf) | Microbiome | Low-tide exposure shifts microbial abundance in intertidal A. pulchra (first author Dining Nika Alina; was misfiled as Nuñez Lendo) |
 | ⚠ [Raymundo et al. 2025](pdfs/Raymundo_2025_RestorationGuam.pdf) | Restoration | **A. aspera outplants, Guam (NOT A. pulchra)** — A. pulchra is the background congener at the site |
 | [Roche et al. 2010b](pdfs/Roche_2010b_SpatialPorosity.pdf) | Skeleton | Spatial skeletal porosity → D_E, resid (perforate translocation) |
 | [Rouzé et al. 2017](pdfs/Rouze_2017_SymbiodiniumMoorea.pdf) | Symbiont/Mo'orea | Symbiodiniaceae of Mo'orea corals incl. A. pulchra → iZ context |
 | [Shaw et al. 2016](pdfs/Shaw_2016_IntraspecificVariability.pdf) | Thermal tolerance | Genotype variation under warming×acidification → bleaching sensitivity (bT_pulse, bleach_z) |
 | [Strømgren 1987](pdfs/Stromgren_1987_LightGrowth.pdf) | Growth | Light × growth, intertidal → growth response |
 | [Tian et al. 2025](pdfs/Tian_2025_SkeletalHydrodynamics.pdf) | Skeleton | Internal skeletal hydrodynamics |
-| [Yap & Gomez 1984](pdfs/YapGomez_1984_Growth.pdf) | Growth | Growth 13.1–15.8 cm/yr; 36.4% branch mortality → v_edge, m_d |
-| [Yap 1985](pdfs/Yap_1985_GrowthII.pdf) | Growth | Growth II (temp × daylength) → v_edge |
+| [Yap & Gomez 1984](pdfs/Yap_1984_Growth.pdf) | Growth | Growth 13.1–15.8 cm/yr; 36.4% branch mortality → v_edge, m_d |
+| [Yap 1985](pdfs/Yap_1985_GrowthIII.pdf) | Growth | Growth III (transplantation observations) → v_edge |
 | ⚠ [Zhang et al. 2025](pdfs/Zhang_2025_ProteinMetaboliteAcclim.pdf) | Expression | **Macroalga *Halimeda macroloba* (NOT A. pulchra, not a coral)** — calcifier thermal-acclimation framing only |
 | [de la Vega et al. 2023](pdfs/delaVega_2023_EndozoicomonasGenome.pdf) | Microbiome | Endozoicomonas GU-1 genome from A. pulchra — microbiome resource |
 
-## 2. Includes *A. pulchra* among multiple species (7)
+## 2. Includes *A. pulchra* among multiple species (6)
 | Paper | Theme | Connection — what it grounds |
 |---|---|---|
 | [Carroll et al. 2006](pdfs/Carroll_2006_AcroporaReproductionMoorea.pdf) | Reproduction/Mo'orea | Sexual reproduction of Acropora at Mo'orea → B_mat (field site) |
 | ⚠ [Denis et al. 2024](pdfs/Denis_2024_IndividualThermalTolerance.pdf) | Thermal tolerance | **A. spathulata, GBR (NOT A. pulchra)** — CBASS intraspecific-variation framing |
 | [El-Khaled et al. 2025](pdfs/ElKhaled_2025_HeatColdBleaching.pdf) | Thermal tolerance | Heat & cold bleaching vulnerability incl. A. pulchra → bleaching sensitivity |
-| [Grottoli et al. 2020](pdfs/Grottoli_2020_BleachingComparability.pdf) | Methods | Standardising bleaching experiments — LTH methods/comparability |
+| [Grottoli et al. 2021](pdfs/Grottoli_2021_BleachingComparability.pdf) | Methods | Standardising bleaching experiments — LTH methods/comparability |
 | [Hoadley et al. 2015](pdfs/Hoadley_2015_TempCO2Physiology.pdf) | Thermal physiology | Temp × pCO2 physiology across genera incl. A. pulchra |
 | [Rouzé et al. 2019](pdfs/Rouze_2019_SymbiodiniaceaeSignatureMoorea.pdf) | Symbiont/Mo'orea | Quantitative Symbiodiniaceae signature of Mo'orea colonies → iZ |
-| [Soong & Chen 2003](pdfs/SoongChen_2003_AcroporaFragmentNursery.pdf) | Wound/regen | Regeneration & growth of Acropora fragments (incl. pulchra) → kc_mult |
+| [Soong & Chen 2003](pdfs/Soong_2003_AcroporaFragmentNursery.pdf) | Wound/regen | Regeneration & growth of Acropora fragments (incl. pulchra) → kc_mult |
 
-## 3. Grounding — genus / other-coral / mechanism papers (67)
+## 3. Grounding — genus / other-coral / mechanism papers (76)
 *Why they're here: the wound-healing model and LTH thermal-tolerance work need broader coral
 literature for parameters and framing that lack A. pulchra-specific data.*
 
@@ -110,7 +110,7 @@ literature for parameters and framing that lack A. pulchra-specific data.*
 |---|---|---|
 | [Lirman 2000a](pdfs/Lirman_2000a_AcroporaFragmentation.pdf) | Mechanical | Fragmentation in branching A. palmata → m_d |
 | [Lock et al. 2022](pdfs/Lock_2022_CaHomeostasisMicrofragmentation.pdf) | Microfragmentation | Ca-homeostasis drives rapid growth after microfragmentation (Porites lobata) → Tier-3 microfrag |
-| [Madin & Connolly 2006](pdfs/MadinConnolly_2006_HydrodynamicDisturbances.pdf) | Mechanical | Ecological consequences of hydrodynamic disturbance → m_d |
+| [Madin & Connolly 2006](pdfs/Madin_2006_HydrodynamicDisturbances.pdf) | Mechanical | Ecological consequences of hydrodynamic disturbance → m_d |
 | [Madin et al. 2014](pdfs/Madin_2014_MechanicalVulnerability.pdf) | Mechanical | Mechanical vulnerability → size-dependent mortality m_d |
 | [Marshall 2000](pdfs/Marshall_2000_SkeletalDamageColonyMorphology.pdf) | Mechanical | Skeletal damage vs colony morphology → m_d |
 | [Tunnicliffe 1981](pdfs/Tunnicliffe_1981_BreakagePropagationAcervicornis.pdf) | Mechanical | Breakage & propagation of A. cervicornis → m_d, fragmentation |
@@ -126,7 +126,7 @@ literature for parameters and framing that lack A. pulchra-specific data.*
 | [Leinbach et al. 2021](pdfs/Leinbach_2021_RecoveryCosts.pdf) | Energetics | Recovery costs → E_max |
 | [Levas et al. 2013](pdfs/Levas_2013_BleachingRecoveryPoritesLobata.pdf) | Energetics | Bleaching/recovery physiology in Porites lobata → energetics |
 | [Radice et al. 2019](pdfs/Radice_2019_HeterotrophyFASIA.pdf) | Energetics | Trophic strategy via FA+SIA → h |
-| [Rodrigues & Grottoli 2007](pdfs/RodriguesGrottoli_2007_EnergyReservesRecovery.pdf) | Energetics | Energy reserves/metabolism as recovery indicators → E_max |
+| [Rodrigues & Grottoli 2007](pdfs/Rodrigues_2007_EnergyReservesRecovery.pdf) | Energetics | Energy reserves/metabolism as recovery indicators → E_max |
 | [Schoepf et al. 2013](pdfs/Schoepf_2013_AcroporaReserves.pdf) | Energetics | Acropora energy reserves & calcification → E_max |
 
 ### Energy allocation → Tier-3 budget
@@ -156,7 +156,7 @@ literature for parameters and framing that lack A. pulchra-specific data.*
 | Paper | Theme | Connection — what it grounds |
 |---|---|---|
 | [Barshis et al. 2013](pdfs/Barshis_2013_GenomicBasisResilience.pdf) | Expression | Genomic basis for coral resilience → expression of resilience |
-| [Bay & Palumbi 2015](pdfs/BayPalumbi_2015_RapidAcclimTranscriptome.pdf) | Expression | Rapid acclimation via transcriptome change → expression plasticity |
+| [Bay & Palumbi 2015](pdfs/Bay_2015_RapidAcclimTranscriptome.pdf) | Expression | Rapid acclimation via transcriptome change → expression plasticity |
 | [Cornwell et al. 2021](pdfs/Cornwell_2021_HeatToleranceSymbiontLoadTradeoff.pdf) | Thermal tolerance | Heat tolerance × symbiont load → growth-tolerance tradeoff (A. hyacinthus) |
 | [Cunning et al. 2021](pdfs/Cunning_2021_HeatToleranceCensusStaghorn.pdf) | Thermal tolerance | Heat-tolerance census of Florida staghorn Acropora → acute-tolerance variation |
 | [Dixon et al. 2015](pdfs/Dixon_2015_GenomicDeterminantsHeatTolerance.pdf) | Expression | Genomic determinants of heat tolerance across latitudes → heritable tolerance |
@@ -164,7 +164,7 @@ literature for parameters and framing that lack A. pulchra-specific data.*
 | [Fitt et al. 2001](pdfs/Fitt_2001_ThermalToleranceLimitsThresholds.pdf) | Thermal tolerance | Interpretation of thermal tolerance limits & thresholds → bleaching thresholds |
 | [Palumbi et al. 2014](pdfs/Palumbi_2014_MechanismsResistance.pdf) | Expression | Mechanisms of reef-coral resistance (A. hyacinthus, Ofu) → expression/acclimation |
 | [Parkinson et al. 2018](pdfs/Parkinson_2018_TranscriptionalVariationBiomarker.pdf) | Expression | Transcriptional variation challenges thermal biomarkers → expression variance |
-| [Seneca & Palumbi 2010](pdfs/SenecaPalumbi_2010_GeneExpressionNaturalBleaching.pdf) | Expression | Gene expression in a coral undergoing natural bleaching → expression×bleaching |
+| [Seneca & Palumbi 2010](pdfs/Seneca_2010_GeneExpressionNaturalBleaching.pdf) | Expression | Gene expression in a coral undergoing natural bleaching → expression×bleaching |
 | [Thomas et al. 2019](pdfs/Thomas_2019_TranscriptomicResilienceShuffling.pdf) | Expression | Transcriptomic resilience + symbiont shuffling → expression + iZ |
 | [Voolstra et al. 2020](pdfs/Voolstra_2020_CBASSAcuteHeatAssay.pdf) | Thermal/CBASS | Standardised acute heat-stress assay (CBASS) → LTH assay backbone |
 | [Warner et al. 1996](pdfs/Warner_1996_PhotosyntheticEfficiencyZooxanthellae.pdf) | Thermal tolerance | Elevated temp & photosynthetic efficiency of zooxanthellae → photoinhibition |
@@ -182,7 +182,7 @@ literature for parameters and framing that lack A. pulchra-specific data.*
 ### Climate / bleaching context
 | Paper | Theme | Connection — what it grounds |
 |---|---|---|
-| [De'ath et al. 2012](pdfs/Death_2012_GBRCoralDecline.pdf) | Context | 27-year decline of GBR coral cover → context |
+| [De'ath et al. 2012](pdfs/DeAth_2012_GBRCoralDecline.pdf) | Context | 27-year decline of GBR coral cover → context |
 | [Hoegh-Guldberg et al. 2007](pdfs/HoeghGuldberg_2007_CoralReefsClimateChange.pdf) | Context | Coral reefs under rapid climate change & OA → intro/discussion framing |
 | [Hughes et al. 2017a](pdfs/Hughes_2017_CoralReefsAnthropocene.pdf) | Context | Coral reefs in the Anthropocene → context |
 | [Hughes et al. 2017b](pdfs/Hughes_2017_GlobalWarmingMassBleaching.pdf) | Context | Global warming & recurrent mass bleaching → context |

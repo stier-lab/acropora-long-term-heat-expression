@@ -48,15 +48,15 @@ The earlier inline cites I drafted had several mismatches against the library; a
 | Highsmith 1982 | `Highsmith_1982` | 10.3354/meps007207 | ⬇ int-res blocks automation |
 | Hoegh-Guldberg 1999 | `Hoegh_Guldberg_1999` | 10.1071/MF99078 | ⬇ CSIRO paywall (lib has HoeghGuldberg_2007) |
 | Hughes et al. 2017 | `Hughes_2017` | 10.1038/nature21707 | ✅ Hughes_2017_GlobalWarmingMassBleaching.pdf |
-| Jokiel & Coles 1977 | `Jokiel_1977` | 10.1007/BF00402312 | ✅ JokielColes_1977_TemperatureMortalityGrowthHawaiianCorals.pdf ★new |
-| Jokiel & Coles 1990 | `Jokiel_1990` | 10.1007/BF00265006 | ✅ JokielColes_1990_ResponseIndoPacificElevatedTemperature.pdf ★new |
+| Jokiel & Coles 1977 | `Jokiel_1977` | 10.1007/BF00402312 | ✅ Jokiel_1977_TemperatureMortalityGrowthHawaiianCorals.pdf ★new |
+| Jokiel & Coles 1990 | `Jokiel_1990` | 10.1007/BF00265006 | ✅ Jokiel_1990_ResponseIndoPacificElevatedTemperature.pdf ★new |
 | Madin et al. 2014 | `Madin_2014` | 10.1111/ele.12306 | ✅ Madin_2014_MechanicalVulnerability.pdf |
 | Meesters & Bak 1993 | `Meesters_1993` | 10.3354/meps096189 | ✅ Meesters_1993_BleachingTissueRegen.pdf |
 | Shaw et al. 2016 | `Shaw_2016` | 10.1007/s00227-016-2986-8 | ✅ Shaw_2016_IntraspecificVariability.pdf |
 | Siebeck et al. 2006 | `Siebeck_2006` | 10.1007/s00338-006-0123-8 | ✅ Siebeck_2006_ColourReferenceCard.pdf ★new |
 | Traylor-Knowles et al. 2016 | `Traylor_Knowles_2016` | 10.1007/s00227-016-3011-y | ✅ Traylor-Knowles_2016_WoundHealingTwoTempRegimes.pdf |
 | Warner et al. 1999 | `Warner_1999` | 10.1073/pnas.96.14.8007 | ⬇ PNAS needs auth (lib has Warner_1996) |
-| Yap & Gomez 1984 | `Yap_1984` | 10.1007/BF00393119 | ✅ YapGomez_1984_Growth.pdf |
+| Yap & Gomez 1984 | `Yap_1984` | 10.1007/BF00393119 | ✅ Yap_1984_Growth.pdf |
 | Munk 2024 | `Munk_2024` | — (M.Sc. thesis) | 📓 NotebookLM only; **confirm exact title/institution with author** |
 | Jokiel et al. 1978 | `Jokiel_1978` | — (book chapter, UNESCO) | 📄 method (buoyant-weight technique) |
 | R Core Team 2025 | `RCoreTeam_2025` | — (software) | 📄 software |
