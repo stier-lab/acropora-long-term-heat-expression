@@ -19,10 +19,11 @@ source(here::here("code", "00_setup.R"))
 
 color <- readRDS(file.path(DATA_PROC, "color_clean.rds")) |>
   mutate(thicket = factor(thicket),
-         # Round split scores (e.g. 3.5) to the nearest integer so the ordinal
-         # factor stays a clean D1-D5 scale. The continuous color_num (with .5
-         # precision) is used by the primary Gaussian LMM in script 12.
-         color_ord = factor(round(color_num), ordered = TRUE))
+         # Convert split scores (e.g. 3.5) to the next-higher D category.
+         # base::round() uses bankers rounding, so 2.5 would become 2 while
+         # 3.5 becomes 4; floor(x + 0.5) is deterministic half-up rounding.
+         color_ord = factor(pmin(pmax(as.integer(floor(color_num + 0.5)), 1), 5),
+                            ordered = TRUE))
 
 # The 4-way fixed × random structure is too rich for clmm (Hessian singular).
 # Robustness check: same data, ordinal likelihood, slightly reduced structure

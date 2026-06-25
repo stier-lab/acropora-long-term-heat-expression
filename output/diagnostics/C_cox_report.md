@@ -2,7 +2,7 @@
 
 Source script: `code/14_morphology_kaplan.R`  
 Data: `data/processed/physio_clean.rds`  
-Generated: 2026-06-14 09:29:35
+Generated: 2026-06-25 09:05:14
 
 Checks per fitted model:
 - **PH_*** — `survival::cox.zph()` per covariate and GLOBAL. p < 0.05 = PH violated.

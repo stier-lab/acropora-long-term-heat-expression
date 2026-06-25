@@ -1,6 +1,6 @@
 response,R2_marginal,R2_conditional
 pam_fvfm,0.622,0.719
 color_dscale,0.717,0.846
-growth_areal,0.398,0.398
-growth_pct,0.386,0.386
+growth_areal,0.398,0.59
+growth_pct,0.385,0.705
 log_zoox_density,0.719,0.758

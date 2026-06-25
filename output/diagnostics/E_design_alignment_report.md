@@ -1,6 +1,6 @@
 # E. Design alignment audit
 
-Generated: 2026-06-14 09:29:35 
+Generated: 2026-06-25 09:05:14 
 
 | Status | Count |
 |---|---|
@@ -26,10 +26,10 @@ HANDLED    INFO    PASS
 - **12_pam_lmm / balance (tank x treatment)**: 8 unique tank x treatment cells expected (4 tanks per temp, fully nested)
 - **12_pam_lmm / (1|tank) sufficient?**: tanks are uniquely IDed; no need for tank:treatment crossed term
 - **12_color_lmm / fixed structure**: same 4-way as PAM
-- **12_bw_lm / fixed structure**: no day term — single endpoint measurement
-- **12_bw_lm / no random effects?**: tank (n=8) and id (n=48) would be singular with 1 obs/coral
+- **12_bw_lm / fixed structure**: no day term; tank retained as treatment-assignment block
+- **12_bw_lm / random effects**: coral ID omitted because each coral has one endpoint growth observation
 - **12_bw_lm / n**: Cells in design: 12 (2 trt x 2 wound x 3 genet = 12)
-- **12_bw_lm / df residual**: Adequate residual df for 3-way model
+- **12_bw_lm / df residual**: Adequate residual df for 3-way fixed structure
 - **12_zoox_lmm / fixed structure**: biopsy_day_c is centered at Day 1; 4-way as for PAM
 - **12_zoox_lmm / drop (1|id) — destructive**: Correct — destructive sampling means each id has 1 obs
 - **12_zoox_lmm / biopsy_day_c centering**: Centered correctly at Day 1 baseline

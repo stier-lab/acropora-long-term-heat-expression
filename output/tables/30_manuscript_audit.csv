@@ -1,4 +1,5 @@
 check,expected,found,missing,source
+Interval AFT new corallites (time ratio + 95% CI bounds),1.32 | 1.19 | 1.47,TRUE,,14_interval_survreg.csv
 Cox HR new corallites (HR + 95% CI bounds),0.22 | 0.07 | 0.69,TRUE,,14_cox_hazard_ratios.csv
 Cox p new corallites,0.010,TRUE,,14_cox_hazard_ratios.csv
 Areal calcification reduction % and means,38 | 7.62 | 4.75,TRUE,,buoyant_weight_clean.rds
@@ -10,6 +11,6 @@ PCA variance PC1 (%),83,TRUE,,coral_physio_wide.rds (prcomp)
 Acute ED50 mean (°C),35.4,TRUE,,26_thermal_context.csv
 31 °C below mean ED50 (°C),4.4,TRUE,,26_thermal_context.csv
 Closed-but-never-regenerated % (31C / 28C),67 | 0,TRUE,,14_milestone_lag_summary.csv
-Genet x treatment LRT chi-sq (PAM / color / symbionts),90.5 | 177.7 | 73.6,TRUE,,13_genet_anova.csv
+Genet x treatment LRT chi-sq (PAM / color / symbionts),79.0 | 169.3 | 64.3,TRUE,,13_genet_anova.csv
 Color % paled (31C wounded / 31C unwounded / 28C unwounded),67 | 58 | 8,TRUE,,03_color_end_proportions.csv
 Per-genet composite heat sensitivity (a / c / d),0.43 | -0.03 | 0.29,TRUE,,19_genet_resilience_summary.csv

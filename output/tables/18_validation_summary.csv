@@ -5,7 +5,7 @@ metadata,wound levels,PASS,"no,yes","no, yes",
 metadata,genets,PASS,"a,c,d","a,c,d",
 metadata,28C tank IDs,PASS,"3,6,9,12","3,6,9,12",
 metadata,31C tank IDs,PASS,"4,5,10,11","4,5,10,11",
-metadata,chl-a populated,HANDLED,208/208 missing,0 missing once assay returned,handled by symbiont-only analysis and explicit chl-a placeholder panel
+metadata,chl-a populated,HANDLED,208/208 missing,all missing because assay was not run,"confirmed by Molly; analysis uses PAM, color, and symbiont density"
 pam,n observations (top+bottom averaged),PASS,336,~336,raw obs ≈ 672; cleaned data averages top/bottom probe locations per coral
 pam,unique corals,PASS,48,48,
 pam,Fv/Fm range,INFO,"[0.38, 0.72]","[0, 1]",

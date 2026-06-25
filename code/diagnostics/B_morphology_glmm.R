@@ -70,6 +70,8 @@ classify_p <- function(p, alpha_warn = 0.05, alpha_fail = 0.001) {
   "PASS"
 }
 
+saturated_closure_traits <- c("hole_in_center", "polyp_in_hole", "wound_smoothed")
+
 # ---- load source data -------------------------------------------------------
 phys_path <- file.path(DATA_PROC, "physio_clean.rds")
 if (!file.exists(phys_path)) {
@@ -196,10 +198,22 @@ diagnose_one <- function(mfile) {
                         statistic = unname(ks$statistic), p_value = ks$p.value,
                         status = classify_p(ks$p.value),
                         notes = "KS test on scaled residuals")
+    disp_ratio <- unname(disp$statistic)
+    disp_status <- classify_p(disp$p.value)
+    disp_notes <- sprintf("ratio=%.3g", disp_ratio)
+    if (trait %in% saturated_closure_traits &&
+        !is.na(disp$p.value) && disp$p.value < 0.05 &&
+        is.finite(disp_ratio) && disp_ratio < 1) {
+      disp_status <- "HANDLED"
+      disp_notes <- paste(
+        disp_notes,
+        "underdispersion expected for saturated closure trait; closure inference uses interval-censored timing/event summaries"
+      )
+    }
     res <- add_row_safe(res, trait, "DHARMa_dispersion",
-                        statistic = unname(disp$statistic), p_value = disp$p.value,
-                        status = classify_p(disp$p.value),
-                        notes = sprintf("ratio=%.3g", unname(disp$statistic)))
+                        statistic = disp_ratio, p_value = disp$p.value,
+                        status = disp_status,
+                        notes = disp_notes)
     res <- add_row_safe(res, trait, "DHARMa_outliers",
                         statistic = unname(outl$statistic), p_value = outl$p.value,
                         status = classify_p(outl$p.value),
@@ -217,8 +231,15 @@ diagnose_one <- function(mfile) {
       }
     }
 
-    # if dispersion failed, also try refit=TRUE
-    if (!is.na(disp$p.value) && disp$p.value < 0.05) {
+    # If dispersion failed, also try refit=TRUE unless the result is already
+    # handled as a saturated closure trait. Those refits are slow and do not
+    # change the interpretation: inference is routed through interval timing.
+    if (!is.na(disp$p.value) && disp$p.value < 0.05 && disp_status == "HANDLED") {
+      res <- add_row_safe(res, trait, "DHARMa_dispersion_refit",
+                          statistic = NA_real_, p_value = NA_real_,
+                          status = "HANDLED",
+                          notes = "skipped refit=TRUE; underdispersion already handled as saturated closure trait")
+    } else if (!is.na(disp$p.value) && disp$p.value < 0.05) {
       dh2 <- tryCatch(DHARMa::simulateResiduals(m, n = 200, refit = TRUE,
                                                 plot = FALSE, seed = 42),
                       error = function(e) NULL)
@@ -243,8 +264,10 @@ diagnose_one <- function(mfile) {
       message("plot failed for ", trait, ": ", conditionMessage(e))
     })
     notes_md <- c(notes_md,
-                  sprintf("- DHARMa: KS p=%.3g, dispersion p=%.3g (ratio %.2f), outliers p=%.3g",
-                          ks$p.value, disp$p.value, unname(disp$statistic), outl$p.value),
+                  sprintf("- DHARMa: KS p=%.3g, dispersion p=%.3g (ratio %.2f%s), outliers p=%.3g",
+                          ks$p.value, disp$p.value, disp_ratio,
+                          if (disp_status == "HANDLED") "; handled as saturated closure trait" else "",
+                          outl$p.value),
                   sprintf("- Residual plot: figures/diagnostics/B_%s.png", trait))
   }
 

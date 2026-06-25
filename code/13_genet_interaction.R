@@ -11,12 +11,13 @@
 #          a separate file so reviewers can replicate the comparison directly.
 #
 #          For each response we compare:
-#            null:  response ~ treatment * wound * day + (1|tank) + (1|id)
-#                                + (1|thicket)               # genet as random
+#            null:  response ~ treatment * wound * day + thicket
+#                                + (1|tank) + (1|id)
 #            genet: response ~ treatment * wound * day * thicket
 #                                + (1|tank) + (1|id)         # genet as fixed
-#          The likelihood-ratio test on the additional fixed-effect terms is
-#          the formal test of genet variation in plasticity. Significant LRT
+#          The likelihood-ratio test uses the same random structure in both
+#          models; the additional fixed-effect terms test genet variation in
+#          plasticity. Significant LRT
 #          → adding genet × treatment significantly improves fit.
 #
 # Input:   data/processed/{pam_clean,color_clean,buoyant_weight_clean,
@@ -43,7 +44,7 @@ phys  <- readRDS(file.path(DATA_PROC, "symbiont_chl_clean.rds")) |>
 fit_and_report <- function(data, response, name, fixed_extra = NULL,
                            include_id = TRUE) {
   id_term <- if (include_id) " + (1 | id)" else ""
-  rhs_null  <- paste0("treatment * wound * day + (1 | tank) + (1 | thicket)",
+  rhs_null  <- paste0("treatment * wound * day + thicket + (1 | tank)",
                       id_term)
   rhs_genet <- paste0("treatment * wound * day * thicket + (1 | tank)",
                       id_term)
@@ -80,21 +81,32 @@ genet_tests <- bind_rows(
   fit_and_report(phys,  "log(cells_per_cm2)", "log_zoox",
                  fixed_extra = "biopsy_day_c", include_id = FALSE)
 )
-# Growth (areal calcification) has no time dim — simpler test
+# Growth (areal calcification) has no time dimension; retain tank as the
+# experimental block for the treatment assignment.
 bw_a       <- bw |> filter(is.finite(areal_calc))
-m_bw_null  <- lm(areal_calc ~ treatment * wound + thicket, data = bw_a)
-m_bw_genet <- lm(areal_calc ~ treatment * wound * thicket, data = bw_a)
+m_bw_null  <- lme4::lmer(
+  areal_calc ~ treatment * wound + thicket + (1 | tank),
+  data = bw_a, REML = FALSE,
+  control = lme4::lmerControl(check.conv.singular = .makeCC("ignore", tol = 1e-4))
+)
+m_bw_genet <- lme4::lmer(
+  areal_calc ~ treatment * wound * thicket + (1 | tank),
+  data = bw_a, REML = FALSE,
+  control = lme4::lmerControl(check.conv.singular = .makeCC("ignore", tol = 1e-4))
+)
+bw_lrt <- anova(m_bw_null, m_bw_genet)
+bw_lrt_df <- if ("Chi Df" %in% names(bw_lrt)) bw_lrt$`Chi Df`[2] else bw_lrt$Df[2]
 genet_tests <- bind_rows(genet_tests, tibble(
   response  = "growth_areal",
   n_obs     = nrow(bw_a),
   aic_null  = AIC(m_bw_null),
   aic_genet = AIC(m_bw_genet),
   delta_aic = AIC(m_bw_genet) - AIC(m_bw_null),
-  lrt_chisq = anova(m_bw_null, m_bw_genet)$F[2] * anova(m_bw_null, m_bw_genet)$Df[2],
-  lrt_df    = anova(m_bw_null, m_bw_genet)$Df[2],
-  lrt_p     = anova(m_bw_null, m_bw_genet)$`Pr(>F)`[2]
+  lrt_chisq = bw_lrt$Chisq[2],
+  lrt_df    = bw_lrt_df,
+  lrt_p     = bw_lrt$`Pr(>Chisq)`[2]
 ))
-saveRDS(m_bw_genet, file.path(MOD_DIR, "13_growth_genet_lm.rds"))
+saveRDS(m_bw_genet, file.path(MOD_DIR, "13_growth_genet_lmm.rds"))
 
 write_csv(genet_tests, file.path(TBL_DIR, "13_genet_anova.csv"))
 

@@ -69,8 +69,8 @@ n_chl_missing <- sum(is.na(meta$chlorophyll_ug_cm2))
 add("metadata", "chl-a populated",
     if (n_chl_missing == 0) "PASS" else "HANDLED",
     sprintf("%d/%d missing", n_chl_missing, nrow(meta)),
-    "0 missing once assay returned",
-    "handled by symbiont-only analysis and explicit chl-a placeholder panel")
+    "all missing because assay was not run",
+    "confirmed by Molly; analysis uses PAM, color, and symbiont density")
 
 # ---- PAM ------------------------------------------------------------------
 pam <- readRDS(file.path(DATA_PROC, "pam_clean.rds"))

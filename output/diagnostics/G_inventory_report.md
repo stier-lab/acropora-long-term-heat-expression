@@ -1,10 +1,12 @@
 # G. Diagnostic plot inventory
 
-**Generated:** 2026-06-13 07:09:15
+**Generated:** 2026-06-25 09:05:27
 
 | Status | Count |
 |---|---|
-| CURRENT | 27 |
+| BUILT | 9 |
+| CURRENT | 13 |
+| STALE | 5 |
 
 ## Newly built plots (9)
 

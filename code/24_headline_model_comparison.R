@@ -6,7 +6,7 @@
 #          fit the upgraded "maximum-rigor" specification and compare it
 #          head-to-head with the current primary model on the quantities the
 #          manuscript actually reports:
-#            - model fit (AIC)
+#            - model fit (AIC from ML fits, because fixed effects differ)
 #            - significance of the treatment × time interaction
 #            - the day-14 heat effect (28C - 31C marginal contrast, with CI)
 #          If the upgrade does not change the effect size or the conclusion,
@@ -54,12 +54,12 @@ compare_response <- function(data, response, label, do_ar1 = FALSE) {
   # --- Current primary model ---
   m_cur <- lme4::lmer(.y ~ treatment * wound * day * thicket +
                         (1 | tank) + (1 | id),
-                      data = data, REML = TRUE, control = ctrl)
+                      data = data, REML = FALSE, control = ctrl)
 
   # --- Upgraded: random slopes + quadratic time ---
   m_up <- lme4::lmer(.y ~ treatment * wound * poly(day, 2, raw = TRUE) * thicket +
                        (1 + day | id) + (1 | tank),
-                     data = data, REML = TRUE, control = ctrl)
+                     data = data, REML = FALSE, control = ctrl)
 
   # Treatment×time significance (Type-II)
   a_cur <- car::Anova(m_cur, type = 2)
@@ -91,7 +91,7 @@ compare_response <- function(data, response, label, do_ar1 = FALSE) {
       nlme::lme(.y ~ treatment * wound * day * thicket,
                 random = ~ 1 + day | id,
                 correlation = nlme::corAR1(form = ~ day | id),
-                data = data, method = "REML",
+                data = data, method = "ML",
                 control = nlme::lmeControl(opt = "optim", maxIter = 300,
                                            msMaxIter = 300, returnObject = TRUE)),
       error = function(e) { message(label, " AR1 lme failed: ", conditionMessage(e)); NULL })
@@ -129,9 +129,10 @@ verdict <- out |>
     up_sig  = day14_p[grepl("upgraded", model)][1] < 0.05,
     .groups = "drop") |>
   mutate(
-    pct_diff = round(100 * (up_eff - cur_eff) / cur_eff, 1),
+    pct_diff = if_else(abs(cur_eff) < 1e-8, NA_real_,
+                       round(100 * (up_eff - cur_eff) / cur_eff, 1)),
     same_conclusion = cur_sig == up_sig,
-    worth_it = abs(pct_diff) > 15 | !same_conclusion
+    worth_it = coalesce(abs(pct_diff) > 15, FALSE) | !same_conclusion
   )
 
 report <- c(

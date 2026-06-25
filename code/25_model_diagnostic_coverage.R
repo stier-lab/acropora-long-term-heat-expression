@@ -45,7 +45,12 @@ diag_map <- c(
   "12b_color_clmm"  = "G_12b_color_clmm_observed.png"
 )
 existing_diag <- function(stem) {
-  if (stem %in% names(diag_map)) return(diag_map[[stem]])
+  if (stem %in% names(diag_map)) {
+    f <- diag_map[[stem]]
+    if (file.exists(file.path(FIG_DIR, "diagnostics", f)) ||
+        file.exists(file.path(FIG_DIR, "12_diagnostics", f))) return(f)
+    return(NA_character_)
+  }
   # morphology: 12_morph_<t>_glmm -> B_<t>.png ; 12c_morph_<t>_blme -> G_12c_..._dharma.png
   if (grepl("^12_morph_.*_glmm$", stem)) {
     t <- sub("^12_morph_(.*)_glmm$", "\\1", stem)
@@ -70,6 +75,14 @@ build_dharma <- function(model, stem) {
   if (ok) out else NA_character_
 }
 
+diag_path <- function(fig) {
+  p <- file.path(DIAG_DIR, fig)
+  if (file.exists(p)) return(p)
+  p <- file.path(FIG_DIR, "12_diagnostics", fig)
+  if (file.exists(p)) return(p)
+  NA_character_
+}
+
 rows <- list()
 for (f in model_files) {
   stem <- tools::file_path_sans_ext(basename(f))
@@ -79,7 +92,19 @@ for (f in model_files) {
   diag_fig <- existing_diag(stem)
   status <- "covered (existing)"
 
-  # Build a diagnostic if none exists and the model class supports DHARMa
+  # Build a diagnostic if none exists or if the mapped diagnostic predates the
+  # saved model and the model class supports DHARMa.
+  if (!is.na(diag_fig) && cls %in% c("lmerMod", "lmerModLmerTest", "glmerMod", "lm")) {
+    dp <- diag_path(diag_fig)
+    if (!is.na(dp) && file.info(dp)$mtime < file.info(f)$mtime) {
+      rebuilt <- build_dharma(m, stem)
+      if (!is.na(rebuilt)) {
+        diag_fig <- basename(rebuilt)
+        status <- "covered (rebuilt stale K_)"
+      }
+    }
+  }
+
   if (is.na(diag_fig)) {
     if (cls %in% c("lmerMod", "lmerModLmerTest", "glmerMod", "lm")) {
       diag_fig <- build_dharma(m, stem)

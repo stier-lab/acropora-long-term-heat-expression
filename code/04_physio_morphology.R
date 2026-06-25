@@ -118,7 +118,7 @@ save_fig(p_traits_genet, "04b_morphology_trajectories_by_genet",
 
 # ---- Per-trait GLMM with genet × treatment ---------------------------------
 # Question: does the temperature effect on trait expression depend on genet?
-# Uses (1|tank) only as random; thicket becomes a fixed factor.
+# Uses tank and coral ID random intercepts; thicket becomes a fixed factor.
 fit_one <- function(trait_name) {
   d <- long |>
     filter(trait == trait_name, day >= 0) |>
@@ -126,7 +126,7 @@ fit_one <- function(trait_name) {
   if (length(unique(d$expressed)) < 2) return(NULL)
   fit <- tryCatch(
     suppressMessages(suppressWarnings(
-      lme4::glmer(expressed ~ treatment * day * thicket + (1 | tank),
+      lme4::glmer(expressed ~ treatment * day * thicket + (1 | tank) + (1 | id),
                   family = binomial, data = d,
                   control = lme4::glmerControl(optimizer = "bobyqa",
                                                optCtrl = list(maxfun = 2e5)))

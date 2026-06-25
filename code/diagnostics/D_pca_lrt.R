@@ -196,7 +196,7 @@ phys_d  <- readRDS(file.path(DATA_PROC, "symbiont_chl_clean.rds")) |>
 check_lmer_pair <- function(name, response, data, fixed_term = "day",
                             include_id = TRUE) {
   id_term <- if (include_id) " + (1 | id)" else ""
-  rhs0 <- sprintf("treatment * wound * %s + (1 | tank) + (1 | thicket)%s",
+  rhs0 <- sprintf("treatment * wound * %s + thicket + (1 | tank)%s",
                   fixed_term, id_term)
   rhs1 <- sprintf("treatment * wound * %s * thicket + (1 | tank)%s",
                   fixed_term, id_term)
@@ -284,26 +284,34 @@ lmer_checks <- list(
                                   include_id = FALSE)
 )
 
-# Growth LM
-m_bw_null  <- lm(areal_calc ~ treatment * wound + thicket, data = bw_d)
-m_bw_genet <- lm(areal_calc ~ treatment * wound * thicket, data = bw_d)
+# Growth LMM
+m_bw_null  <- lme4::lmer(
+  areal_calc ~ treatment * wound + thicket + (1 | tank),
+  data = bw_d, REML = FALSE,
+  control = lme4::lmerControl(check.conv.singular = .makeCC("ignore", tol = 1e-4))
+)
+m_bw_genet <- lme4::lmer(
+  areal_calc ~ treatment * wound * thicket + (1 | tank),
+  data = bw_d, REML = FALSE,
+  control = lme4::lmerControl(check.conv.singular = .makeCC("ignore", tol = 1e-4))
+)
 bw_anova <- anova(m_bw_null, m_bw_genet)
-p_bw0 <- length(coef(m_bw_null)); p_bw1 <- length(coef(m_bw_genet))
-ddf_bw <- p_bw1 - p_bw0
+p_bw0 <- length(lme4::fixef(m_bw_null)); p_bw1 <- length(lme4::fixef(m_bw_genet))
+ddf_bw <- if ("Chi Df" %in% names(bw_anova)) bw_anova$`Chi Df`[2] else bw_anova$Df[2]
 reported_df_bw <- anova_tab$lrt_df[anova_tab$response == "growth_areal"]
-add_check("growth_areal", "Model type", "lm + F-test", "INFO",
-          "Growth has no time dim — F-test not LRT")
+add_check("growth_areal", "Model type", "ML LMM + LRT", "INFO",
+          "Growth has no time dim; tank retained as random block")
 add_check("growth_areal", "df = diff in fixed-effect parameters",
           sprintf("computed=%d, reported=%d", ddf_bw, reported_df_bw),
           if (ddf_bw == reported_df_bw) "PASS" else "FAIL", "")
-add_check("growth_areal", "F-test p-value",
-          sprintf("p=%.3g", bw_anova$`Pr(>F)`[2]),
-          if (bw_anova$`Pr(>F)`[2] < 0.05) "SIG" else "NS", "")
+add_check("growth_areal", "LRT p-value",
+          sprintf("p=%.3g", bw_anova$`Pr(>Chisq)`[2]),
+          if (bw_anova$`Pr(>Chisq)`[2] < 0.05) "SIG" else "NS", "")
 report_lines <- c(report_lines, "",
   "### growth_areal",
-  sprintf("- lm-based F-test (no time dim); F(%d, %d) = %.2f, p = %.3g",
-          bw_anova$Df[2], bw_anova$Res.Df[2], bw_anova$F[2],
-          bw_anova$`Pr(>F)`[2]),
+  sprintf("- ML LMM LRT (tank random intercept); χ²(%d) = %.2f, p = %.3g",
+          ddf_bw, bw_anova$Chisq[2],
+          bw_anova$`Pr(>Chisq)`[2]),
   sprintf("- Fixed params: null=%d, full=%d (Δ=%d, reported df=%d)",
           p_bw0, p_bw1, ddf_bw, reported_df_bw))
 
@@ -352,7 +360,7 @@ report_lines <- c(report_lines, "", "## Summary verdicts\n",
   sprintf("- pam_fvfm LRT: **%s**", lrt_verdict("pam_fvfm")),
   sprintf("- color_dscale LRT: **%s**", lrt_verdict("color_dscale")),
   sprintf("- log_zoox LRT: **%s**", lrt_verdict("log_zoox")),
-  sprintf("- growth_areal F-test: **%s**", lrt_verdict("growth_areal")))
+  sprintf("- growth_areal LMM LRT: **%s**", lrt_verdict("growth_areal")))
 
 writeLines(report_lines, file.path(DIAG_OUT, "D_pca_lrt_report.md"))
 

@@ -28,13 +28,13 @@ Every fitted model cross-referenced to its residual/assumption diagnostic and th
 | `12_morph_tip_exist_glmm` | glmerMod | B_tip_exist.png | figures/04_morphology_trajectories.pdf / figures/14_morphology_KM.pdf | covered (existing) |
 | `12_morph_tip_extension_glmm` | glmerMod | B_tip_extension.png | figures/04_morphology_trajectories.pdf / figures/14_morphology_KM.pdf | covered (existing) |
 | `12_morph_wound_smoothed_glmm` | glmerMod | B_wound_smoothed.png | figures/04_morphology_trajectories.pdf / figures/14_morphology_KM.pdf | covered (existing) |
-| `12_bw_lm` | lm | A_bw_dharma.png | figures/05_buoyant_weight_growth.pdf | covered (existing) |
-| `12_bw_pct_lm` | lm | growth_pct.png | figures/05_buoyant_weight_growth.pdf | covered (existing) |
-| `13_growth_genet_lm` | lm | K_13_growth_genet_lm_dharma.png | figures/05_buoyant_weight_growth.pdf | covered (built K_) |
-| `02_pam_lmer` | lmerMod | K_02_pam_lmer_dharma.png | figures/02_pam_fvfm_trajectory.pdf | covered (existing) |
+| `02_pam_lmer` | lmerMod | K_02_pam_lmer_dharma.png | figures/02_pam_fvfm_trajectory.pdf | covered (rebuilt stale K_) |
 | `13_color_dscale_genet_lmm` | lmerMod | K_13_color_dscale_genet_lmm_dharma.png | figures/03_color_trajectory.pdf | covered (built K_) |
+| `13_growth_genet_lmm` | lmerMod | K_13_growth_genet_lmm_dharma.png | figures/05_buoyant_weight_growth.pdf | covered (built K_) |
 | `13_log_zoox_genet_lmm` | lmerMod | K_13_log_zoox_genet_lmm_dharma.png | figures/06_symbiont_chl_by_day.pdf | covered (built K_) |
 | `13_pam_fvfm_genet_lmm` | lmerMod | K_13_pam_fvfm_genet_lmm_dharma.png | figures/02_pam_fvfm_trajectory.pdf | covered (built K_) |
+| `12_bw_lm` | lmerModLmerTest | A_bw_dharma.png | figures/05_buoyant_weight_growth.pdf | covered (existing) |
+| `12_bw_pct_lm` | lmerModLmerTest | growth_pct.png | figures/05_buoyant_weight_growth.pdf | covered (existing) |
 | `12_color_lmm` | lmerModLmerTest | A_color_dharma.png | figures/03_color_trajectory.pdf | covered (existing) |
 | `12_pam_lmm` | lmerModLmerTest | A_pam_dharma.png | figures/02_pam_fvfm_trajectory.pdf | covered (existing) |
 | `12_zoox_lmm` | lmerModLmerTest | A_zoox_dharma.png | figures/06_symbiont_chl_by_day.pdf | covered (existing) |

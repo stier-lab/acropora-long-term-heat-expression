@@ -1,8 +1,10 @@
 # =============================================================================
 # Purpose: Time-to-onset analysis for each wound-healing morphological trait.
 #          For each wounded coral, compute the day when each binary trait
-#          first switches from 0 -> 1 ("event" day). Then fit Kaplan-Meier
-#          curves and Cox proportional-hazards models.
+#          first switches from 0 -> 1 ("first observed event" day). Because
+#          morphology was scored at discrete visits, also construct an
+#          interval-censored endpoint bounded by the previous scored day and
+#          the first scored day with trait expression.
 #
 #          Three Cox tests per trait (nested for LRT comparison):
 #            (a) baseline:    Surv ~ treatment
@@ -13,7 +15,8 @@
 #
 # Input:   data/processed/physio_clean.rds
 # Output:  output/tables/14_km_event_summary.csv         — per-trait/genet/treatment
-#          output/tables/14_cox_hazard_ratios.csv        — HR for 31 vs 28 (overall + by genet)
+#          output/tables/14_cox_hazard_ratios.csv        — HR for 31 vs 28 (first-observed approximation)
+#          output/tables/14_interval_survreg.csv         — interval-censored Weibull AFT tests
 #          output/tables/14_cox_genet_LRT.csv            — does genet × treatment improve fit?
 #          figures/14_morphology_KM.{pdf,png}            — KM by treatment
 #          figures/14b_morphology_KM_by_genet.{pdf,png}  — KM by treatment × genet
@@ -37,8 +40,23 @@ traits <- c("hole_in_center", "polyp_in_hole", "wound_smoothed",
             "pigment_over_wound", "tip_exist", "tip_extension",
             "new_corallites_on_tip")
 
-# For each (coral, trait) compute: event day = first day with value 1
-# (post-wounding only, day >= 0). Right-censor at last observation if 0.
+trait_interpretation <- tibble(
+  trait = traits,
+  event_interpretation = c(
+    "first observed hole closure",
+    "first observed polyp within wound",
+    "first observed smoothed wound surface",
+    "first observed pigment over wound; expression can be non-monotonic",
+    "first observed visible tip; expression can be non-monotonic",
+    "first observed tip extension; expression can be non-monotonic",
+    "first observed new corallites on tip"
+  )
+)
+
+# For each (coral, trait) compute first observed event day plus interval bounds:
+#   event_lower = previous observed day before first 1
+#   event_upper = first observed day with value 1
+# Right-censor at last observation if never observed.
 compute_events <- function(d, trait) {
   d |>
     filter(wound == "yes", !is.na(day), day >= 0) |>
@@ -50,6 +68,14 @@ compute_events <- function(d, trait) {
         first1 <- which(y == 1)[1]
         if (is.na(first1)) max(day, na.rm = TRUE) else day[first1]
       },
+      event_lower = {
+        first1 <- which(y == 1)[1]
+        if (is.na(first1)) max(day, na.rm = TRUE) else if (first1 == 1) 0 else day[first1 - 1]
+      },
+      event_upper = {
+        first1 <- which(y == 1)[1]
+        if (is.na(first1)) Inf else day[first1]
+      },
       event = as.integer(any(y == 1, na.rm = TRUE)),
       .groups = "drop"
     ) |>
@@ -60,7 +86,8 @@ events <- events |>
   mutate(
     treatment = factor(treatment, levels = c("28C", "31C")),
     thicket = factor(thicket)
-  )
+  ) |>
+  left_join(trait_interpretation, by = "trait")
 contrasts(events$treatment) <- contr.treatment(nlevels(events$treatment))
 
 # ---- KM summary tables ----------------------------------------------------
@@ -76,6 +103,67 @@ km_summary <- events |>
     .groups = "drop"
   )
 write_csv(km_summary, file.path(TBL_DIR, "14_km_event_summary.csv"))
+
+# ---- Interval-censored survival models ------------------------------------
+# These are the inferential survival tests for discretely scored morphology.
+# Cox/KM outputs below are retained as first-observed-day summaries/figures.
+fit_interval_survreg <- function(tr) {
+  d <- events |> filter(trait == tr)
+  if (sum(d$event) < 5 || length(unique(d$treatment)) < 2) return(NULL)
+  fit <- tryCatch(
+    survreg(Surv(event_lower, event_upper, type = "interval2") ~ treatment + thicket,
+            data = d, dist = "weibull"),
+    error = function(e) NULL
+  )
+  if (is.null(fit)) {
+    return(tibble(
+      trait = tr, term = "treatment", n = nrow(d), n_event = sum(d$event),
+      time_ratio_31_vs28 = NA_real_, ratio_lo = NA_real_, ratio_hi = NA_real_,
+      z = NA_real_, p = NA_real_, model = "interval-censored Weibull AFT",
+      event_interpretation = trait_interpretation$event_interpretation[
+        match(tr, trait_interpretation$trait)
+      ],
+      note = "survreg failed or treatment coefficient unavailable"
+    ))
+  }
+  tab <- summary(fit)$table
+  trt_row <- if ("treatment31C" %in% rownames(tab)) {
+    "treatment31C"
+  } else {
+    grep("^treatment", rownames(tab), value = TRUE)[1]
+  }
+  if (is.na(trt_row)) {
+    return(tibble(
+      trait = tr, term = "treatment", n = nrow(d), n_event = sum(d$event),
+      time_ratio_31_vs28 = NA_real_, ratio_lo = NA_real_, ratio_hi = NA_real_,
+      z = NA_real_, p = NA_real_, model = "interval-censored Weibull AFT",
+      event_interpretation = trait_interpretation$event_interpretation[
+        match(tr, trait_interpretation$trait)
+      ],
+      note = "treatment coefficient unavailable"
+    ))
+  }
+  est <- tab[trt_row, "Value"]
+  se <- tab[trt_row, "Std. Error"]
+  tibble(
+    trait = tr,
+    term = trt_row,
+    n = nrow(d),
+    n_event = sum(d$event),
+    time_ratio_31_vs28 = exp(est),
+    ratio_lo = exp(est - 1.96 * se),
+    ratio_hi = exp(est + 1.96 * se),
+    z = tab[trt_row, "z"],
+    p = tab[trt_row, "p"],
+    model = "interval-censored Weibull AFT",
+    event_interpretation = trait_interpretation$event_interpretation[
+      match(tr, trait_interpretation$trait)
+    ],
+    note = "time ratio >1 means later first expression at 31C"
+  )
+}
+interval_survreg <- map_dfr(traits, fit_interval_survreg)
+write_csv(interval_survreg, file.path(TBL_DIR, "14_interval_survreg.csv"))
 
 # ---- Inter-milestone lag: wound closure -> regeneration -------------------
 # The headline result is "heat impairs regeneration, not closure." Quantify it
@@ -171,7 +259,7 @@ fit_cox_overall <- function(tr) {
   s <- summary(fit)
   tibble(
     trait      = tr,
-    scope      = "overall (strata=thicket)",
+    scope      = "overall first-observed approximation (strata=thicket)",
     n          = s$n,
     n_event    = s$nevent,
     HR_31_vs28 = s$conf.int[1, "exp(coef)"],
@@ -216,7 +304,8 @@ fit_cox_per_genet <- function(tr) {
 
 cox_overall   <- map_dfr(traits, fit_cox_overall)
 cox_per_genet <- map_dfr(traits, fit_cox_per_genet)
-cox_results   <- bind_rows(cox_overall, cox_per_genet)
+cox_results   <- bind_rows(cox_overall, cox_per_genet) |>
+  mutate(time_scale = "first-observed-day approximation")
 write_csv(cox_results, file.path(TBL_DIR, "14_cox_hazard_ratios.csv"))
 
 # ---- Proportional-hazards diagnostics for EVERY overall Cox model ----------

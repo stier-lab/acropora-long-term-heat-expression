@@ -63,7 +63,7 @@ data — see **[`DOCS_INDEX.md`](DOCS_INDEX.md)**. This list is just the main re
 2. **`docs/ANALYSIS_SUMMARY.md`** — a visual, first-time-reader walkthrough of the analysis (what was measured, how, and what it found)
 3. **`README.md`** — research question, design table, key findings, repo map
 4. **`RESULTS.md`** — the full results narrative (all responses, genet effects, thermal context, caveats)
-5. **`NEXT_STEPS.md`** — what's still pending (chl-a values, RNA-seq, genet matching)
+5. **`NEXT_STEPS.md`** — what's still pending (RNA-seq, genet matching)
 6. **`literature/KNOWN_UNKNOWN_synthesis.md`** — what the field knows/doesn't about *A. pulchra*
    wounding & thermal tolerance, and where this study is the first to answer a question
 7. **`manuscript/Manuscript_LTH.md`** — the working paper draft
@@ -111,7 +111,7 @@ to navigate. The numbering is the run order:
 - ✅ **Manuscript: phenotype Methods + Results drafted** (Stier lab). Introduction, Discussion, and
   Abstract are Shreya's to write — the manuscript has placeholders, with *optional* draft notes in
   `docs/for_shreya/optional_intro_discussion_notes.md` (take or leave).
-- ⏳ **Pending:** chlorophyll-a values (assay), and the **RNA-seq** (144 libraries at the Bay lab) →
+- ⏳ **Pending:** the **RNA-seq** (144 libraries at the Bay lab) →
   see `NEXT_STEPS.md` and `docs/for_shreya/`.
 
 ## Glossary — the recovery terminology (used consistently throughout)

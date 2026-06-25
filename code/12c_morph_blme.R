@@ -12,8 +12,8 @@
 #          Fix: refit with `blme::bglmer` using weakly informative
 #          Cauchy(0, 2.5) priors on the fixed-effect coefficients (Gelman
 #          et al. 2008 default for logistic regression with separation).
-#          Same data, same fixed and random structure — only the prior
-#          is added. Coefficients become finite and Wald tests are
+#          Same data and fixed structure, with coral ID retained as the
+#          repeated-measures unit. Coefficients become finite and Wald tests are
 #          interpretable.
 #
 # Input:   data/processed/physio_clean.rds
@@ -46,7 +46,7 @@ fit_blme <- function(tr) {
   m <- tryCatch(
     suppressMessages(suppressWarnings(
       blme::bglmer(
-        y ~ treatment * day * thicket + (1 | tank),
+        y ~ treatment * day * thicket + (1 | tank) + (1 | id),
         family   = binomial,
         data     = d,
         fixef.prior = "t(scale = 2.5, df = 1)",   # Cauchy(0, 2.5) — Gelman 2008

@@ -7,22 +7,22 @@ model,check,observed,expected,status,note
 12_pam_lmm,random slope on day?,(1|id) only — no random slope,"considered (day|id) but n=14 days, few per id; likely overfits",HANDLED,Random slope considered and intentionally omitted; expected singular/overfit with sparse per-id trajectories
 12_color_lmm,fixed structure,color_num ~ treatment * wound * day * thicket + (1 | tank) +      (1 | id),treatment * wound * day * thicket,PASS,same 4-way as PAM
 12_color_lmm,ordinal data on Gaussian,Gaussian LMM on D1-D5 ordinal scale,either CLMM or note in Methods,HANDLED,Addressed by 12b CLMM robustness check; KS-violation noted in Section 10
-12_bw_lm,fixed structure,areal_calc ~ treatment * wound * thicket,treatment * wound * thicket,PASS,no day term — single endpoint measurement
-12_bw_lm,no random effects?,OLS only,OK because 1 obs per coral,PASS,tank (n=8) and id (n=48) would be singular with 1 obs/coral
+12_bw_lm,fixed structure,areal_calc ~ treatment * wound * thicket + (1 | tank),treatment * wound * thicket + (1 | tank),PASS,no day term; tank retained as treatment-assignment block
+12_bw_lm,random effects,tank,tank only,PASS,coral ID omitted because each coral has one endpoint growth observation
 12_bw_lm,n,48,48 (24 per temperature),PASS,Cells in design: 12 (2 trt x 2 wound x 3 genet = 12)
-12_bw_lm,df residual,36,~36 (48 - 12 fixed params),PASS,Adequate residual df for 3-way model
+12_bw_lm,df residual,34,~35-36 for tank-aware 3-way model,PASS,Adequate residual df for 3-way fixed structure
 12_zoox_lmm,fixed structure,log(cells_per_cm2) ~ treatment * wound * biopsy_day_c * thicket +      (1 | tank),treatment * wound * biopsy_day_c * thicket,PASS,biopsy_day_c is centered at Day 1; 4-way as for PAM
 12_zoox_lmm,drop (1|id) — destructive,tank,tank only (each coral 1 biopsy),PASS,Correct — destructive sampling means each id has 1 obs
 12_zoox_lmm,biopsy_day_c centering,"range = [0, 14]",0 to 14 (Day 1 = 0),PASS,Centered correctly at Day 1 baseline
 12c_morph_hole_in_center_blme.rds,fixed structure,y ~ treatment * day * thicket + (1 | tank),treatment * day * thicket (wound dropped — wounded-only),PASS,"Restricted to wounded corals; wound is a stratification, not a covariate"
 12c_morph_hole_in_center_blme.rds,"Cauchy(0,2.5) prior","fixef.prior = t(scale=2.5, df=1)",Gelman 2008 separation-fix default,PASS,Prior addresses the morphology separation issue
-12c_morph_new_corallites_on_tip_blme.rds,fixed structure,y ~ treatment * day * thicket + (1 | tank),treatment * day * thicket (wound dropped — wounded-only),PASS,"Restricted to wounded corals; wound is a stratification, not a covariate"
+12c_morph_new_corallites_on_tip_blme.rds,fixed structure,y ~ treatment * day * thicket + (1 | tank) + (1 | id),treatment * day * thicket (wound dropped — wounded-only),PASS,"Restricted to wounded corals; wound is a stratification, not a covariate"
 12c_morph_new_corallites_on_tip_blme.rds,"Cauchy(0,2.5) prior","fixef.prior = t(scale=2.5, df=1)",Gelman 2008 separation-fix default,PASS,Prior addresses the morphology separation issue
-12c_morph_pigment_over_wound_blme.rds,fixed structure,y ~ treatment * day * thicket + (1 | tank),treatment * day * thicket (wound dropped — wounded-only),PASS,"Restricted to wounded corals; wound is a stratification, not a covariate"
+12c_morph_pigment_over_wound_blme.rds,fixed structure,y ~ treatment * day * thicket + (1 | tank) + (1 | id),treatment * day * thicket (wound dropped — wounded-only),PASS,"Restricted to wounded corals; wound is a stratification, not a covariate"
 12c_morph_pigment_over_wound_blme.rds,"Cauchy(0,2.5) prior","fixef.prior = t(scale=2.5, df=1)",Gelman 2008 separation-fix default,PASS,Prior addresses the morphology separation issue
 12c_morph_polyp_in_hole_blme.rds,fixed structure,y ~ treatment * day * thicket + (1 | tank),treatment * day * thicket (wound dropped — wounded-only),PASS,"Restricted to wounded corals; wound is a stratification, not a covariate"
 12c_morph_polyp_in_hole_blme.rds,"Cauchy(0,2.5) prior","fixef.prior = t(scale=2.5, df=1)",Gelman 2008 separation-fix default,PASS,Prior addresses the morphology separation issue
-12c_morph_polyps_out_blme.rds,fixed structure,y ~ treatment * day * thicket + (1 | tank),treatment * day * thicket (wound dropped — wounded-only),PASS,"Restricted to wounded corals; wound is a stratification, not a covariate"
+12c_morph_polyps_out_blme.rds,fixed structure,y ~ treatment * day * thicket + (1 | tank) + (1 | id),treatment * day * thicket (wound dropped — wounded-only),PASS,"Restricted to wounded corals; wound is a stratification, not a covariate"
 12c_morph_polyps_out_blme.rds,"Cauchy(0,2.5) prior","fixef.prior = t(scale=2.5, df=1)",Gelman 2008 separation-fix default,PASS,Prior addresses the morphology separation issue
 12c_morph_tip_exist_blme.rds,fixed structure,y ~ treatment * day * thicket + (1 | tank),treatment * day * thicket (wound dropped — wounded-only),PASS,"Restricted to wounded corals; wound is a stratification, not a covariate"
 12c_morph_tip_exist_blme.rds,"Cauchy(0,2.5) prior","fixef.prior = t(scale=2.5, df=1)",Gelman 2008 separation-fix default,PASS,Prior addresses the morphology separation issue

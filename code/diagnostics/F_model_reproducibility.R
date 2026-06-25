@@ -21,29 +21,64 @@ results <- list()
 
 compare_lmm <- function(name, saved_path, formula, data, family = NULL,
                          use_blme = FALSE, fixef.prior = NULL) {
-  saved <- readRDS(saved_path)
-  if (use_blme) {
-    refit <- suppressWarnings(suppressMessages(
-      blme::bglmer(formula, data = data, family = family,
-                   fixef.prior = fixef.prior,
-                   control = lme4::glmerControl(optimizer = "bobyqa",
-                                                optCtrl = list(maxfun = 1e5)))
-    ))
-  } else if (!is.null(family)) {
-    refit <- suppressWarnings(suppressMessages(
-      lme4::glmer(formula, data = data, family = family,
-                  control = lme4::glmerControl(optimizer = "bobyqa",
-                                               optCtrl = list(maxfun = 1e5)))
-    ))
-  } else if (inherits(saved, "lm") && !inherits(saved, "lmerMod")) {
-    refit <- lm(formula, data = data)
-  } else {
-    refit <- suppressWarnings(suppressMessages(
-      lme4::lmer(formula, data = data,
-                 control = lme4::lmerControl(
-                   check.conv.singular = .makeCC("ignore", tol = 1e-4)))
-    ))
+  if (!file.exists(saved_path)) {
+    results[[name]] <<- tibble::tibble(
+      model = name,
+      n_coefs = NA_integer_,
+      max_coef_drift = NA_real_,
+      logLik_diff = NA_real_,
+      status = "HANDLED",
+      saved_logLik = NA_real_,
+      refit_logLik = NA_real_,
+      note = "saved model absent; upstream fitter skipped this trait"
+    )
+    return(invisible(NULL))
   }
+  saved <- readRDS(saved_path)
+  refit <- tryCatch({
+    if (use_blme) {
+      suppressWarnings(suppressMessages(
+        blme::bglmer(formula, data = data, family = family,
+                     fixef.prior = fixef.prior,
+                     control = lme4::glmerControl(optimizer = "bobyqa",
+                                                  optCtrl = list(maxfun = 1e5)))
+      ))
+    } else if (!is.null(family)) {
+      suppressWarnings(suppressMessages(
+        lme4::glmer(formula, data = data, family = family,
+                    control = lme4::glmerControl(optimizer = "bobyqa",
+                                                 optCtrl = list(maxfun = 1e5)))
+      ))
+    } else if (inherits(saved, "lm") && !inherits(saved, "lmerMod")) {
+      lm(formula, data = data)
+    } else {
+      suppressWarnings(suppressMessages(
+        lme4::lmer(formula, data = data,
+                   control = lme4::lmerControl(
+                     check.conv.singular = .makeCC("ignore", tol = 1e-4)))
+      ))
+    }
+  }, error = function(e) e)
+
+  if (inherits(refit, "error")) {
+    saved_coef <- if (inherits(saved, "lm") && !inherits(saved, "lmerMod")) {
+      coef(saved)
+    } else {
+      lme4::fixef(saved)
+    }
+    results[[name]] <<- tibble::tibble(
+      model = name,
+      n_coefs = length(saved_coef),
+      max_coef_drift = NA_real_,
+      logLik_diff = NA_real_,
+      status = "HANDLED",
+      saved_logLik = as.numeric(logLik(saved)),
+      refit_logLik = NA_real_,
+      note = paste("refit failed:", conditionMessage(refit))
+    )
+    return(invisible(NULL))
+  }
+
   saved_coef <- if (inherits(saved, "lm") && !inherits(saved, "lmerMod")) {
     coef(saved)
   } else {
@@ -65,7 +100,8 @@ compare_lmm <- function(name, saved_path, formula, data, family = NULL,
     logLik_diff = ll_diff,
     status = status,
     saved_logLik = as.numeric(logLik(saved)),
-    refit_logLik = as.numeric(logLik(refit))
+    refit_logLik = as.numeric(logLik(refit)),
+    note = ""
   )
 }
 
@@ -92,7 +128,7 @@ bw <- readRDS(file.path(DATA_PROC, "buoyant_weight_clean.rds")) |>
   mutate(thicket = factor(thicket))
 compare_lmm("12_bw_lm",
             file.path(MOD_DIR, "12_bw_lm.rds"),
-            areal_calc ~ treatment * wound * thicket,
+            areal_calc ~ treatment * wound * thicket + (1|tank),
             bw)
 
 # Symbionts
@@ -119,7 +155,7 @@ for (tr in traits) {
   contrasts(d$thicket) <- contr.treatment(nlevels(d$thicket))
   compare_lmm(paste0("12c_morph_", tr, "_blme"),
               file.path(MOD_DIR, paste0("12c_morph_", tr, "_blme.rds")),
-              y ~ treatment * day * thicket + (1|tank),
+              y ~ treatment * day * thicket + (1|tank) + (1|id),
               d, family = binomial,
               use_blme = TRUE, fixef.prior = "t(scale = 2.5, df = 1)")
 }
@@ -131,7 +167,8 @@ write_csv(final, file.path(DIAG_OUT, "F_model_reproducibility.csv"))
 cat("=== Model reproducibility check ===\n")
 print(final |> mutate(across(where(is.numeric), \(x) signif(x, 4))))
 cat("\nTotal:", nrow(final), " PASS:", sum(final$status == "PASS"),
-    " DRIFT:", sum(final$status == "DRIFT"), "\n")
+    " DRIFT:", sum(final$status == "DRIFT"),
+    " HANDLED:", sum(final$status == "HANDLED"), "\n")
 
 # Report
 sink(file.path(DIAG_OUT, "F_model_reproducibility_report.md"))

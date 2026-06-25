@@ -26,6 +26,7 @@
 # Output:  data/processed/buoyant_weight_clean.rds
 #          figures/05_buoyant_weight_growth.{pdf,png}
 #          output/tables/05_buoyant_weight_lm.csv
+#          output/tables/05_buoyant_weight_tank_test.csv
 #          output/tables/05b_growth_metric_comparison.csv
 # =============================================================================
 
@@ -97,10 +98,41 @@ saveRDS(bw, file.path(DATA_PROC, "buoyant_weight_clean.rds"))
 
 # ---- Primary model: areal calcification ------------------------------------
 bw_a <- bw |> filter(is.finite(areal_calc))
+# Coral-level coefficients are useful effect-size summaries, but temperature is
+# assigned at the tank level. The inferential heat-effect p-value below is
+# therefore a tank-level permutation test.
 m_growth <- lm(areal_calc ~ treatment * wound + thicket, data = bw_a)
 res <- broom::tidy(m_growth, conf.int = TRUE) |>
-  mutate(across(where(is.numeric), \(x) round(x, 4)))
+  mutate(model_scope = "coral-level descriptive coefficients",
+         across(where(is.numeric), \(x) round(x, 4))) |>
+  relocate(model_scope, .after = term)
 write_csv(res, file.path(TBL_DIR, "05_buoyant_weight_lm.csv"))
+
+tank_growth <- bw_a |>
+  group_by(tank, treatment) |>
+  summarise(mean_areal_calc = mean(areal_calc, na.rm = TRUE),
+            n_corals = n(), .groups = "drop")
+obs_diff <- with(tank_growth,
+                 mean(mean_areal_calc[treatment == "28C"]) -
+                   mean(mean_areal_calc[treatment == "31C"]))
+vals <- tank_growth$mean_areal_calc
+assignments <- combn(seq_along(vals), sum(tank_growth$treatment == "28C"),
+                     simplify = FALSE)
+perm_diffs <- vapply(assignments, function(idx) {
+  mean(vals[idx]) - mean(vals[-idx])
+}, numeric(1))
+tank_test <- tibble(
+  response = "areal_calc",
+  test = "tank-level exact permutation",
+  n_tanks = nrow(tank_growth),
+  n_28_tanks = sum(tank_growth$treatment == "28C"),
+  n_31_tanks = sum(tank_growth$treatment == "31C"),
+  estimate_28_minus_31 = obs_diff,
+  p_two_sided = mean(abs(perm_diffs) >= abs(obs_diff)),
+  note = "Temperature was randomized at the tank level; this p-value treats tanks, not corals, as exchangeable units."
+) |>
+  mutate(across(where(is.numeric), \(x) signif(x, 4)))
+write_csv(tank_test, file.path(TBL_DIR, "05_buoyant_weight_tank_test.csv"))
 
 # ---- Metric comparison (heat effect is robust to metric choice) ------------
 metric_compare <- purrr::map_dfr(
@@ -136,9 +168,12 @@ p_bw <- ggplot(bw_a, aes(interaction(treatment, wound, sep = " · "),
 
 save_fig(p_bw, "05_buoyant_weight_growth", width = 150, height = 95)
 
-cat("\n=== Areal calcification LM (primary) ===\n")
+cat("\n=== Areal calcification LM (coral-level descriptive) ===\n")
 print(res)
+cat("\n=== Areal calcification tank-level temperature test ===\n")
+print(tank_test)
 cat("\n=== Heat effect is robust to metric choice ===\n")
 print(metric_compare |> filter(term == "treatment"))
 cat("\nWrote: buoyant_weight_clean.rds, 05_buoyant_weight_lm.csv,",
+    "05_buoyant_weight_tank_test.csv,",
     "05b_growth_metric_comparison.csv, 05_buoyant_weight_growth.{pdf,png}\n")

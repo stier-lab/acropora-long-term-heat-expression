@@ -45,15 +45,17 @@ results in hand.
 ## Phenotype results these framings rest on (numbers → `output/tables/20_master_results.csv`)
 
 - Tissue healing (coenosarc closure) statistically indistinguishable between 28/31 °C; new-corallite
-  regeneration collapses under heat (Cox HR = 0.22, 95% CI 0.07–0.69, p = 0.010).
+  regeneration is delayed/suppressed under heat in the interval-censored model (time ratio = 1.32,
+  95% CI 1.19–1.47, p = 1.4e-7; first-observed Cox HR = 0.22, 95% CI 0.07–0.69).
 - Closed-but-never-regenerated: 67% at 31 °C vs 0% at 28 °C (median healing-to-regeneration lag 10 vs 8 d).
 - Whole-colony physiology responds to temperature, barely to wounding; areal calcification 38% lower at 31 °C.
 - Genet C multivariate displacement 1.06 vs 3.72 (A) / 3.34 (D); most likely to regenerate at 31 °C.
 - 31 °C sits ~4.4 °C below the population acute ED50 (35.4 °C; Cunning et al. 2024) — chronic/sublethal.
 
-**Fragility to carry forward (keep honest):** the regeneration result rests on 1 of 6 a-priori tests
-(new-corallite Cox, p = 0.0095); tip-exist/extension point the same way but are n.s. The
-pigment-over-wound PH effect is p = 0.059. Three genets resolve variation but not its architecture.
+**Fragility to carry forward (keep honest):** the regeneration result is strongest for interval-censored
+new-corallite onset (p = 1.4e-7); tip-exist is also delayed, while tip-extension points the same way but
+is n.s. The first-observed Cox model for new corallites is close to the PH diagnostic boundary, so the
+interval model and censored-fraction result are the cleaner anchors. Three genets resolve variation but not its architecture.
 Apical-tip excision is not identical to a surface wound bed (Munk 2024). See `RESULTS.md` §10.
 
 ---

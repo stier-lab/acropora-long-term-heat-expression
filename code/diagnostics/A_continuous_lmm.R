@@ -1,5 +1,5 @@
 # =============================================================================
-# Diagnostic suite for continuous-response LMMs / LM
+# Diagnostic suite for continuous-response LMMs
 #   Models:  12_pam_lmm.rds, 12_color_lmm.rds, 12_zoox_lmm.rds, 12_bw_lm.rds
 #   Checks:  DHARMa residuals, convergence/singularity, influence, emmeans
 #            direction sanity vs biological expectation.
@@ -286,64 +286,48 @@ zoox_sensitivity <- tryCatch({
 })
 
 # =============================================================================
-# 4. Buoyant-weight growth % -- 12_bw_lm.rds (OLS)
+# 4. Areal calcification -- 12_bw_lm.rds (tank-aware LMM)
 # =============================================================================
-cat("\n=== Model 4: BW growth % (lm) ===\n")
+cat("\n=== Model 4: Areal calcification (LMM) ===\n")
 m_bw <- readRDS(file.path(MOD_DIR, "12_bw_lm.rds"))
 
-# Save diagnostic plot panel
-png(file.path(DIAG_FIG, "A_bw_lm_base.png"),
-    width = 1600, height = 1200, res = 150)
-par(mfrow = c(2, 2)); plot(m_bw); par(mfrow = c(1, 1))
+check_lmer_convergence(m_bw, "12_bw_lm")
+run_dharma(m_bw, "12_bw_lm", "A_bw")
+
+png(file.path(DIAG_FIG, "A_bw_lmm_base.png"),
+    width = 1200, height = 900, res = 150)
+plot(fitted(m_bw), resid(m_bw),
+     xlab = "Fitted values", ylab = "Conditional residuals",
+     main = "12_bw_lm residuals vs fitted")
+abline(h = 0, lty = 2, col = "grey50")
+qqnorm(resid(m_bw), main = "12_bw_lm residual Q-Q")
+qqline(resid(m_bw), col = "#D55E00")
 dev.off()
 
-# Shapiro-Wilk on residuals
 sw <- shapiro.test(resid(m_bw))
 add_row("12_bw_lm", "shapiro_residual_normality",
         statistic = unname(sw$statistic), p_value = sw$p.value,
         threshold = "p>=0.05",
         status = ifelse(sw$p.value >= 0.05, "PASS",
                         ifelse(sw$p.value >= 0.01, "WARN", "FAIL")),
-        notes = "Shapiro-Wilk on OLS residuals")
+        notes = "Shapiro-Wilk on LMM conditional residuals")
 
-# Breusch-Pagan heteroscedasticity
-bp <- lmtest::bptest(m_bw)
-add_row("12_bw_lm", "breusch_pagan_heteroscedasticity",
-        statistic = unname(bp$statistic), p_value = bp$p.value,
-        threshold = "p>=0.05",
-        status = ifelse(bp$p.value >= 0.05, "PASS",
-                        ifelse(bp$p.value >= 0.01, "WARN", "FAIL")),
-        notes = "BP test for non-constant variance")
-
-# VIF (only meaningful in additive model; saturated 3-way -> singularities expected)
+# VIF (only meaningful in additive fixed-effect models; saturated 3-way -> singularities expected)
 add_row("12_bw_lm", "VIF",
         statistic = NA, p_value = NA, threshold = "<5 per term",
         status = "WARN",
-        notes = "Saturated 3-way interaction lm; VIFs uninterpretable. Skipped.")
+        notes = "Saturated 3-way fixed structure with tank random intercept; VIFs uninterpretable. Skipped.")
 
-# DHARMa works on lm too
-sim_bw <- tryCatch(
-  DHARMa::simulateResiduals(m_bw, n = 1000, seed = 42),
-  error = function(e) NULL
-)
-if (!is.null(sim_bw)) {
-  ks <- testUniformity(sim_bw, plot = FALSE)
-  add_row("12_bw_lm", "DHARMa_KS_uniformity",
-          statistic = unname(ks$statistic), p_value = ks$p.value,
-          threshold = "p>=0.05",
-          status = ifelse(ks$p.value >= 0.05, "PASS",
-                          ifelse(ks$p.value >= 0.01, "WARN", "FAIL")),
-          notes = "DHARMa KS on simulated residuals")
-  png(file.path(DIAG_FIG, "A_bw_dharma.png"),
-      width = 1600, height = 800, res = 150)
-  plot(sim_bw); dev.off()
+cd_bw <- top_cooks_lmer(m_bw, "12_bw_lm")
+if (!is.null(cd_bw)) {
+  top3_bw <- order(cd_bw, decreasing = TRUE)[seq_len(min(3, length(cd_bw)))]
+  bw_refit <- tryCatch(update(m_bw, data = model.frame(m_bw)[-top3_bw, , drop = FALSE]),
+                       error = function(e) NULL)
+} else {
+  top3_bw <- integer(0)
+  bw_refit <- NULL
 }
-
-cd_bw <- top_cooks_lm(m_bw, "12_bw_lm")
-top3_bw <- order(cd_bw, decreasing = TRUE)[seq_len(min(3, length(cd_bw)))]
-bw_refit <- tryCatch(update(m_bw, data = model.frame(m_bw)[-top3_bw, , drop = FALSE]),
-                     error = function(e) NULL)
-if (!is.null(bw_refit)) {
+if (!is.null(bw_refit) && length(top3_bw) > 0) {
   full_bw <- as.data.frame(pairs(emmeans::emmeans(m_bw, ~ treatment),
                                  reverse = FALSE, adjust = "none"))
   refit_bw <- as.data.frame(pairs(emmeans::emmeans(bw_refit, ~ treatment),
@@ -383,7 +367,7 @@ diag_df <- diag_df |>
       model == "12_zoox_lmm" & check %in% c("DHARMa_KS_uniformity", "DHARMa_outliers") &
         status == "HANDLED" ~ append_note(notes, "handled by explicit top-four residual sensitivity check"),
       model == "12_bw_lm" & check == "VIF" & status == "HANDLED" ~
-        append_note(notes, "handled by explicit full-factorial design statement; no additive VIF interpretation"),
+        append_note(notes, "handled by explicit full-factorial design statement and tank random intercept; no additive VIF interpretation"),
       model == "12_bw_lm" & check == "cooks_distance_max" & status == "HANDLED" ~
         append_note(notes, "handled by top-three Cook's-distance sensitivity check"),
       TRUE ~ notes

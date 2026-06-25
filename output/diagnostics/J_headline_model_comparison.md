@@ -8,13 +8,13 @@ code/24_headline_model_comparison.R.
 
 | Response | Model | AIC | trt×time p | day-14 effect | 95% CI | day-14 p |
 |---|---|---|---|---|---|---|
-| PAM Fv/Fm | current (linear, rand-intercept) | -1148.5 | 7.79e-26 | 0.0835 | [0.058, 0.109] | 6.76e-05 |
-| PAM Fv/Fm | upgraded (quad time + rand-slope) | -974.7 | 3.13e-15 | 0.0939 | [0.071, 0.117] | 1.09e-09 |
-| PAM Fv/Fm | AR(1) + rand-slope (nlme) | -1175 | 2.43e-12 | 0.0829 | [0.062, 0.104] | 1.36e-09 |
-| Color (D-scale) | current (linear, rand-intercept) | 284.6 | 2.89e-58 | 1.1526 | [0.854, 1.451] | 3.33e-05 |
-| Color (D-scale) | upgraded (quad time + rand-slope) | 327 | 1.68e-27 | 1.2607 | [0.996, 1.526] | 8.07e-12 |
+| PAM Fv/Fm | current (linear, rand-intercept) | -1444.6 | 6.91e-27 | 0.0835 | [0.060, 0.107] | 1.59e-06 |
+| PAM Fv/Fm | upgraded (quad time + rand-slope) | -1474.2 | 5.01e-19 | 0.0939 | [0.071, 0.116] | 2.26e-11 |
+| PAM Fv/Fm | AR(1) + rand-slope (nlme) | -1467 | 4.48e-14 | 0.0827 | [0.064, 0.101] | 1.11e-10 |
+| Color (D-scale) | current (linear, rand-intercept) | 104 | 1.74e-61 | 1.152 | [0.879, 1.425] | 4.23e-07 |
+| Color (D-scale) | upgraded (quad time + rand-slope) | 3.4 | 1.48e-27 | 1.261 | [0.999, 1.523] | 5.65e-14 |
 
 ## Verdict
 
-- **Color (D-scale)**: day-14 effect 1.153 (current) vs 1.261 (upgraded), +9.4%; conclusion unchanged. Upgrade not necessary (document as robustness).
+- **Color (D-scale)**: day-14 effect 1.152 (current) vs 1.261 (upgraded), +9.5%; conclusion unchanged. Upgrade not necessary (document as robustness).
 - **PAM Fv/Fm**: day-14 effect 0.084 (current) vs 0.094 (upgraded), +12.5%; conclusion unchanged. Upgrade not necessary (document as robustness).

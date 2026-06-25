@@ -33,8 +33,9 @@ with the phenotype trajectory:
 
 ### 1. The central phenotype anchor: healing proceeds, regeneration stalls under heat
 **Phenotype.** Tissue healing (coenosarc closure) is identical in both temperatures, but new-corallite
-regeneration collapses under heat (Cox HR = 0.22, 95% CI 0.07–0.69; 67% of heated corals closed but
-never rebuilt skeleton vs 0% at ambient). The divergence appears by **Day 10**.
+regeneration is delayed/suppressed under heat (interval-censored time ratio = 1.32, 95% CI 1.19–1.47;
+first-observed Cox HR = 0.22, 95% CI 0.07–0.69; 67% of heated corals closed but never rebuilt skeleton
+vs 0% at ambient). The divergence appears by **Day 10**.
 **Hypothesis (expression can confirm, extend, or revise).** At the margin, the *healing* program
 (Day 1–3) is induced similarly in both temps, while by **Day 10** heat specifically suppresses the
 *biomineralization / skeletal-organic-matrix* program that drives regeneration.

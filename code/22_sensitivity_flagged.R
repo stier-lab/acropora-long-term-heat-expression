@@ -54,30 +54,47 @@ c_drop <- lmerTest::lmer(color_num ~ treatment * wound * day + (1|tank) + (1|thi
 results$col_full <- grab(c_full, "Color D-scale (full data)",     "treatment:day")
 results$col_drop <- grab(c_drop, "Color D-scale (flagged dropped)","treatment:day")
 
-# ---- Areal calcification: treatment main effect (OLS, single obs/coral) ----
+# ---- Areal calcification: tank-level treatment permutation -----------------
 bw <- readRDS(file.path(DATA_PROC, "buoyant_weight_clean.rds")) |>
   mutate(thicket = factor(thicket)) |>
   filter(is.finite(areal_calc))
 bw_drop <- bw |> filter(!id %in% FLAGGED_IDS, tank != FLAGGED_TANK)
 
-grab_lm <- function(model, label) {
-  av <- as.data.frame(car::Anova(model, type = 2))
-  av$term <- rownames(av)
-  row <- av[av$term == "treatment", , drop = FALSE]
-  tibble(response = label, term = "treatment",
-         F_value = round(row[["F value"]], 2),
-         p_value = signif(row[["Pr(>F)"]], 3))
+tank_perm <- function(dat, label) {
+  tank_growth <- dat |>
+    group_by(tank, treatment) |>
+    summarise(mean_areal_calc = mean(areal_calc, na.rm = TRUE),
+              n_corals = n(), .groups = "drop")
+
+  n_by_temp <- table(tank_growth$treatment)
+  if (length(n_by_temp) != 2 || any(n_by_temp < 2)) {
+    return(tibble(response = label, term = "treatment (tank permutation)",
+                  F_value = NA_real_, p_value = NA_real_,
+                  estimate_28_minus_31 = NA_real_, n_tanks = nrow(tank_growth)))
+  }
+
+  vals <- tank_growth$mean_areal_calc
+  trt <- tank_growth$treatment
+  n28 <- sum(trt == "28C")
+  obs <- mean(vals[trt == "28C"]) - mean(vals[trt == "31C"])
+  null <- vapply(combn(seq_along(vals), n28, simplify = FALSE), \(idx) {
+    mean(vals[idx]) - mean(vals[-idx])
+  }, numeric(1))
+  p <- mean(abs(null) >= abs(obs))
+
+  tibble(response = label, term = "treatment (tank permutation)",
+         F_value = NA_real_, p_value = signif(p, 3),
+         estimate_28_minus_31 = round(obs, 3),
+         n_tanks = nrow(tank_growth))
 }
-g_full <- lm(areal_calc ~ treatment * wound * thicket, data = bw)
-g_drop <- lm(areal_calc ~ treatment * wound * thicket, data = bw_drop)
-results$bw_full <- grab_lm(g_full, "Areal calcification (full data)")
-results$bw_drop <- grab_lm(g_drop, "Areal calcification (flagged dropped)")
+results$bw_full <- tank_perm(bw, "Areal calcification (full data)")
+results$bw_drop <- tank_perm(bw_drop, "Areal calcification (flagged dropped)")
 
 out <- bind_rows(results)
 write_csv(out, file.path(TBL_DIR, "22_sensitivity_flagged.csv"))
 
 cat("\n=== Sensitivity to flagged samples (corals 116/121 + tank 3) ===\n")
 print(as.data.frame(out))
-cat("\nIf the key treatment terms stay significant in both rows of each pair,",
-    "the flagged samples do not drive the conclusions.\n")
+cat("\nInterpret the PAM/color rows by their treatment:day F-tests and growth by",
+    "the tank-level exact permutation p-value.\n")
 cat("Wrote output/tables/22_sensitivity_flagged.csv\n")

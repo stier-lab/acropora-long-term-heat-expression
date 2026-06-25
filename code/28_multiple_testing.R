@@ -23,7 +23,7 @@
 #
 # Input:   output/tables/12_anova_summary.csv,
 #          output/tables/12c_morph_blme_anova.csv,
-#          output/tables/14_cox_hazard_ratios.csv
+#          output/tables/14_interval_survreg.csv
 # Output:  output/tables/28_multiple_testing.csv
 # =============================================================================
 
@@ -41,6 +41,8 @@ add <- function(test, p_value, hypothesis, rationale) {
 anova12 <- read_csv(file.path(TBL_DIR, "12_anova_summary.csv"),
                     show_col_types = FALSE) |>
   filter(!grepl("^morph_", response_id))
+growth_tank <- read_csv(file.path(TBL_DIR, "05_buoyant_weight_tank_test.csv"),
+                        show_col_types = FALSE)
 phys <- list(
   c(resp = "pam_fvfm",         term = "treatment:day",
     rat = "Warner et al. 1999 (heat lowers Fv/Fm)"),
@@ -49,9 +51,14 @@ phys <- list(
   c(resp = "log_zoox_density", term = "treatment:biopsy_day_c",
     rat = "Hoegh-Guldberg 1999; Jokiel & Coles 1990 (symbiont loss)"),
   c(resp = "growth_areal",     term = "treatment",
-    rat = "Jokiel & Coles 1977 (heat reduces calcification)")
+    rat = "Jokiel & Coles 1977 (heat reduces calcification); tank-level permutation p")
 )
 for (h in phys) {
+  if (h["resp"] == "growth_areal" && nrow(growth_tank) > 0) {
+    add(paste0(h["resp"], " : ", h["term"], " (tank permutation)"),
+        growth_tank$p_two_sided[1], "a priori (confirmatory)", h["rat"])
+    next
+  }
   r <- anova12 |> filter(response_id == h["resp"], term == h["term"])
   if (nrow(r) == 0) next
   add(paste0(h["resp"], " : ", h["term"]),
@@ -72,14 +79,14 @@ for (i in seq_len(nrow(morph))) {
       else "no a-priori prediction for this closure/incidental trait")
 }
 
-# ---- Survival: overall Cox HR per milestone -------------------------------
-cox <- read_csv(file.path(TBL_DIR, "14_cox_hazard_ratios.csv"),
-                show_col_types = FALSE) |>
-  filter(grepl("overall", scope), !is.na(p))
-for (i in seq_len(nrow(cox))) {
-  tr <- cox$trait[i]
+# ---- Survival: interval-censored timing per milestone ---------------------
+surv <- read_csv(file.path(TBL_DIR, "14_interval_survreg.csv"),
+                 show_col_types = FALSE) |>
+  filter(!is.na(p))
+for (i in seq_len(nrow(surv))) {
+  tr <- surv$trait[i]
   is_ap <- tr %in% APRIORI_REGEN
-  add(paste0("cox:", tr, " : 31C vs 28C"), cox$p[i],
+  add(paste0("survival_interval:", tr, " : 31C vs 28C"), surv$p[i],
       if (is_ap) "a priori (confirmatory)" else "exploratory",
       if (is_ap) "central hypothesis: heat delays/prevents tip regeneration"
       else "no a-priori prediction for this closure milestone")

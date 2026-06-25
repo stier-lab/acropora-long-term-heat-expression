@@ -147,10 +147,13 @@ bw <- readRDS(file.path(DATA_PROC, "buoyant_weight_clean.rds")) |>
   mutate(thicket = as.factor(thicket))
 bw_a <- bw |> filter(is.finite(areal_calc))
 
-# n<=48 corals with 1 obs each — saturated random effects collapse. Drop (1|id)
-# (each id has exactly 1 obs) and (1|tank) (singular). Use OLS with full
-# treatment × wound × thicket fixed structure.
-m_bw <- lm(areal_calc ~ treatment * wound * thicket, data = bw_a)
+# n<=48 corals with 1 obs each — drop (1|id), but retain tank as the
+# experimental-unit random effect for the temperature treatment.
+m_bw <- lmerTest::lmer(
+  areal_calc ~ treatment * wound * thicket + (1 | tank),
+  data = bw_a, REML = TRUE,
+  control = lme4::lmerControl(check.conv.singular = .makeCC("ignore", tol = 1e-4))
+)
 saveRDS(m_bw, file.path(MOD_DIR, "12_bw_lm.rds"))
 record_results(m_bw, "growth_areal")
 
@@ -160,7 +163,11 @@ results_emm[["growth_areal"]] <- as_tibble(pairs(emm_bw, adjust = "tukey")) |>
 record_genet_effect(emm_bw, "growth_areal")
 
 # Robustness: % mass change (the previous primary metric)
-m_bw_pct <- lm(pct_growth ~ treatment * wound * thicket, data = bw)
+m_bw_pct <- lmerTest::lmer(
+  pct_growth ~ treatment * wound * thicket + (1 | tank),
+  data = bw, REML = TRUE,
+  control = lme4::lmerControl(check.conv.singular = .makeCC("ignore", tol = 1e-4))
+)
 saveRDS(m_bw_pct, file.path(MOD_DIR, "12_bw_pct_lm.rds"))
 record_results(m_bw_pct, "growth_pct")
 
@@ -202,11 +209,11 @@ traits <- c("polyps_out", "hole_in_center", "polyp_in_hole",
 fit_trait <- function(tr) {
   d <- ph |> mutate(y = .data[[tr]]) |> filter(!is.na(y))
   if (length(unique(d$y)) < 2 || nrow(d) < 30) return(NULL)
-  # Full treatment × day × genet model; drop tank random effect to avoid
-  # singular fits (8 tanks × small per-cell n).
+  # Full treatment × day × genet model. Include coral ID because morphology is
+  # repeatedly scored on the same fragments over time.
   m <- tryCatch(
     suppressMessages(suppressWarnings(
-      lme4::glmer(y ~ treatment * day * thicket + (1 | tank),
+      lme4::glmer(y ~ treatment * day * thicket + (1 | tank) + (1 | id),
                   family = binomial, data = d,
                   control = lme4::glmerControl(optimizer = "bobyqa",
                                                optCtrl = list(maxfun = 1e5)))

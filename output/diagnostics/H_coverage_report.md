@@ -1,14 +1,14 @@
 # H. Master spreadsheet coverage check
 
-Generated: 2026-06-14 09:29:52 
+Generated: 2026-06-25 09:05:27 
 
-Master rows: 411 
+Master rows: 323 
 
 ## Coverage per source CSV
 
 | File | Src rows | Master rows | Status |
 |---|---|---|---|
-| 12_anova_summary.csv | 119 | 63 | COVERED |
+| 12_anova_summary.csv | 115 | 59 | COVERED |
 | 12_genet_treatment_effects.csv | 48 | 24 | COVERED |
 | 12_r2_summary.csv | 5 | 10 | COVERED |
 | 13_genet_anova.csv | 4 | 4 | COVERED |
@@ -16,8 +16,8 @@ Master rows: 411
 | 14_cox_genet_LRT.csv | 7 | 14 | COVERED |
 | 05_buoyant_weight_lm.csv | 6 | 5 | COVERED |
 | 12b_color_clmm.csv | 4 | 3 | COVERED |
-| 12c_morph_blme_fixed_effects.csv | 96 | 88 | COVERED |
-| 12c_morph_blme_anova.csv | 56 | 56 | COVERED |
+| 12c_morph_blme_fixed_effects.csv | 36 | 33 | COVERED |
+| 12c_morph_blme_anova.csv | 21 | 21 | COVERED |
 | 15_pca_loadings.csv | 4 | 16 | COVERED |
 | 15_genet_pca_displacement.csv | 3 | 3 | COVERED |
 | 19_genet_resilience_summary.csv | 3 | 3 | COVERED |

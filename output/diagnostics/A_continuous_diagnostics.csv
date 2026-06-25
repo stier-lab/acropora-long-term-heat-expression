@@ -5,7 +5,7 @@ model,check,statistic,p_value,threshold,status,notes
 12_pam_lmm,DHARMa_KS_uniformity,0.05750000000000001,0.21655128882752686,p>=0.05,PASS,Kolmogorov-Smirnov on scaled residuals
 12_pam_lmm,DHARMa_dispersion,0.907364555747556,0.524,p>=0.05,PASS,Ratio of obs/sim residual variance
 12_pam_lmm,DHARMa_outliers,2,0.52,p>=0.05,PASS,Excess outliers vs expected
-12_pam_lmm,cooks_distance,NA,NA,max < 4/n,HANDLED,influence.ME::influence failed; handled with saved residual plots and direction checks
+12_pam_lmm,cooks_distance_max,0.17625285512571717,NA,< 0.0119 (4/n),WARN,"Top-3 obs idx: 325,29,331; cd: 0.176,0.047,0.039"
 12_pam_lmm,emmeans_direction_pam_fvfm,0.08351137901185723,6.762696713397034e-5,expected: heated decrease vs control,PASS,contrast 28C - 31C = 0.0835 (p=6.76e-05); observed heated decrease
 12_color_lmm,isSingular,0,NA,FALSE,PASS,Singular fit means a variance component is at/near zero
 12_color_lmm,variance_components_near_zero,0,NA,0,PASS,VarCorr (grp:var): id:2.45e-02; tank:2.39e-02; Residual:5.78e-02
@@ -13,7 +13,7 @@ model,check,statistic,p_value,threshold,status,notes
 12_color_lmm,DHARMa_KS_uniformity,0.1828333333333334,3.509113508275159e-10,p>=0.05,HANDLED,Kolmogorov-Smirnov on scaled residuals; handled by ordinal CLMM robustness model 12b_color_clmm
 12_color_lmm,DHARMa_dispersion,0.890000347878702,0.522,p>=0.05,PASS,Ratio of obs/sim residual variance
 12_color_lmm,DHARMa_outliers,4,0.1,p>=0.05,PASS,Excess outliers vs expected
-12_color_lmm,cooks_distance,NA,NA,max < 4/n,HANDLED,influence.ME::influence failed; handled with saved residual plots and direction checks
+12_color_lmm,cooks_distance_max,0.057335120587274406,NA,< 0.0119 (4/n),WARN,"Top-3 obs idx: 37,1,296; cd: 0.057,0.052,0.038"
 12_color_lmm,emmeans_direction_color_dscale,1.152569680231233,3.326905922818359e-5,expected: heated decrease vs control,PASS,contrast 28C - 31C = 1.1526 (p=3.33e-05); observed heated decrease
 12_zoox_lmm,isSingular,0,NA,FALSE,PASS,Singular fit means a variance component is at/near zero
 12_zoox_lmm,variance_components_near_zero,0,NA,0,PASS,VarCorr (grp:var): tank:3.31e-02; Residual:2.05e-01
@@ -24,10 +24,14 @@ model,check,statistic,p_value,threshold,status,notes
 12_zoox_lmm,cooks_distance,NA,NA,max < 4/n,HANDLED,influence.ME::influence failed; handled with saved residual plots and direction checks
 12_zoox_lmm,emmeans_direction_log_zoox,1.888187203707167,1.5637963410812603e-7,expected: heated decrease vs control,PASS,contrast 28C - 31C = 1.8882 (p=1.56e-07); observed heated decrease
 12_zoox_lmm,outlier_sensitivity_top4,1.8589955413977945,9.697599149882501e-9,same direction as full model,PASS,"dropped largest |scaled residual| rows 187,130,186,189; full est=1.888, refit est=1.859"
-12_bw_lm,shapiro_residual_normality,0.9587375879421663,0.08976377754764181,p>=0.05,PASS,Shapiro-Wilk on OLS residuals
-12_bw_lm,breusch_pagan_heteroscedasticity,16.495485922764164,0.12370996793693166,p>=0.05,PASS,BP test for non-constant variance
-12_bw_lm,VIF,NA,NA,<5 per term,HANDLED,Saturated 3-way interaction lm; VIFs uninterpretable. Skipped.; handled by explicit full-factorial design statement; no additive VIF interpretation
-12_bw_lm,DHARMa_KS_uniformity,0.1148333333333333,0.5513362543165253,p>=0.05,PASS,DHARMa KS on simulated residuals
-12_bw_lm,cooks_distance_max,0.28562782191806957,NA,< 0.0833 (4/n),HANDLED,"Top-3 obs idx: 38,41,2; cd: 0.286,0.150,0.107; handled by top-three Cook's-distance sensitivity check"
-12_bw_lm,cooks_top3_sensitivity,3.149751235627675,1.4035925395412572e-7,same direction as full model,PASS,"dropped top Cook's rows 38,41,2; full est=2.886, refit est=3.150"
-12_bw_lm,emmeans_direction_growth_pct,2.8864084652954696,2.4336719673842572e-5,expected: heated decrease vs control,PASS,contrast 28C - 31C = 2.8864 (p=2.43e-05); observed heated decrease
+12_bw_lm,isSingular,0,NA,FALSE,PASS,Singular fit means a variance component is at/near zero
+12_bw_lm,variance_components_near_zero,0,NA,0,PASS,VarCorr (grp:var): tank:1.35e+00; Residual:2.88e+00
+12_bw_lm,optimizer_convergence_messages,0,NA,0,PASS,
+12_bw_lm,DHARMa_KS_uniformity,0.1135,0.5665007668699221,p>=0.05,PASS,Kolmogorov-Smirnov on scaled residuals
+12_bw_lm,DHARMa_dispersion,0.7862639889355763,0.416,p>=0.05,PASS,Ratio of obs/sim residual variance
+12_bw_lm,DHARMa_outliers,0,1,p>=0.05,PASS,Excess outliers vs expected
+12_bw_lm,shapiro_residual_normality,0.9425388322344773,0.02034150786577755,p>=0.05,WARN,Shapiro-Wilk on LMM conditional residuals
+12_bw_lm,VIF,NA,NA,<5 per term,HANDLED,Saturated 3-way fixed structure with tank random intercept; VIFs uninterpretable. Skipped.; handled by explicit full-factorial design statement and tank random intercept; no additive VIF interpretation
+12_bw_lm,cooks_distance_max,0.30130549741907325,NA,< 0.0833 (4/n),HANDLED,"Top-3 obs idx: 38,41,45; cd: 0.301,0.118,0.110; handled by top-three Cook's-distance sensitivity check"
+12_bw_lm,cooks_top3_sensitivity,2.8062086463842433,0.006776233023028324,same direction as full model,PASS,"dropped top Cook's rows 38,41,45; full est=2.894, refit est=2.806"
+12_bw_lm,emmeans_direction_growth_pct,2.8942556041512195,0.023310154705779722,expected: heated decrease vs control,PASS,contrast 28C - 31C = 2.8943 (p=0.0233); observed heated decrease

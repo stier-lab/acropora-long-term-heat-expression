@@ -316,6 +316,39 @@ cox_rows <- read_csv(file.path(TBL_DIR, "14_cox_hazard_ratios.csv"),
     source_artifact = "output/tables/14_cox_hazard_ratios.csv"
   )
 
+interval_rows <- if (file.exists(file.path(TBL_DIR, "14_interval_survreg.csv"))) {
+  read_csv(file.path(TBL_DIR, "14_interval_survreg.csv"),
+           show_col_types = FALSE) |>
+    filter(is.finite(time_ratio_31_vs28), time_ratio_31_vs28 > 0) |>
+    transmute(
+      domain          = "Survival",
+      response        = str_to_sentence(gsub("_", " ", trait)),
+      model_type      = "interval-censored Weibull AFT",
+      term            = "time ratio 31C/28C",
+      test            = "Wald z",
+      statistic       = z,
+      df1             = 1, df2 = NA_real_, n = n,
+      estimate        = time_ratio_31_vs28,
+      units           = "time ratio",
+      pct_change      = (time_ratio_31_vs28 - 1) * 100,
+      ci_low          = ratio_lo,
+      ci_high         = ratio_hi,
+      p_value         = p,
+      qualitative     = sprintf(
+        "%s: %s at 31C (time ratio=%.2f, %s). %s",
+        trait,
+        case_when(time_ratio_31_vs28 > 1.1 & p < 0.05 ~ "later first expression",
+                  time_ratio_31_vs28 < 0.9 & p < 0.05 ~ "earlier first expression",
+                  TRUE                                  ~ "no detectable timing change"),
+        time_ratio_31_vs28,
+        if_else(p < 0.05, "sig", "n.s."),
+        event_interpretation
+      ),
+      source_script   = "code/14_morphology_kaplan.R",
+      source_artifact = "output/tables/14_interval_survreg.csv"
+    )
+} else tibble()
+
 cox_tt <- if (file.exists(file.path(TBL_DIR, "14c_cox_tt_pigment_genetC.csv"))) {
   read_csv(file.path(TBL_DIR, "14c_cox_tt_pigment_genetC.csv"),
            show_col_types = FALSE) |>
@@ -389,7 +422,9 @@ lrt13 <- read_csv(file.path(TBL_DIR, "13_genet_anova.csv"),
     domain          = "Physiology",
     response        = response_label_map[response] |> coalesce(response),
     model_type      = "LRT (null vs genet x trt)",
-    term            = "LRT: adding genet x treatment x wound x day",
+    term            = if_else(response == "growth_areal",
+                              "LRT: adding genet x treatment x wound",
+                              "LRT: adding genet x treatment x wound x day"),
     test            = "LRT chi-sq",
     statistic       = lrt_chisq,
     df1             = lrt_df, df2 = NA_real_, n = n_obs,
@@ -452,13 +487,13 @@ bw_lm <- read_csv(file.path(TBL_DIR, "05_buoyant_weight_lm.csv"),
                   show_col_types = FALSE) |>
   filter(term != "(Intercept)") |>
   transmute(
-    domain="Physiology", response="Buoyant weight growth (%)",
-    model_type="LM",
+    domain="Physiology", response="Areal calcification",
+    model_type="LM (coral-level descriptive)",
     term=paste0("fixed: ", term),
     test="t",
     statistic=statistic,
     df1=NA_real_, df2=NA_real_, n=NA_real_,
-    estimate=estimate, units="%",
+    estimate=estimate, units="mg cm^-2 d^-1",
     pct_change=NA_real_, ci_low=conf.low, ci_high=conf.high,
     p_value=p.value,
     qualitative=sprintf("%s: est=%.2f%% (%s)", term, estimate,
@@ -466,6 +501,26 @@ bw_lm <- read_csv(file.path(TBL_DIR, "05_buoyant_weight_lm.csv"),
     source_script="code/05_buoyant_weight.R",
     source_artifact="output/tables/05_buoyant_weight_lm.csv"
   )
+
+bw_tank_test <- if (file.exists(file.path(TBL_DIR, "05_buoyant_weight_tank_test.csv"))) {
+  read_csv(file.path(TBL_DIR, "05_buoyant_weight_tank_test.csv"),
+           show_col_types = FALSE) |>
+    transmute(
+      domain="Physiology", response="Areal calcification",
+      model_type="tank-level randomization",
+      term="treatment: 28C - 31C",
+      test=test,
+      statistic=estimate_28_minus_31,
+      df1=NA_real_, df2=NA_real_, n=n_tanks,
+      estimate=estimate_28_minus_31, units="mg cm^-2 d^-1",
+      pct_change=NA_real_, ci_low=NA_real_, ci_high=NA_real_,
+      p_value=p_two_sided,
+      qualitative=sprintf("Tank-level heat effect %.2f mg cm^-2 d^-1 (p=%.3g)",
+                          estimate_28_minus_31, p_two_sided),
+      source_script="code/05_buoyant_weight.R",
+      source_artifact="output/tables/05_buoyant_weight_tank_test.csv"
+    )
+} else tibble()
 
 # ===========================================================================
 # Block 9 — Color CLMM ordinal robustness (script 12b)
@@ -783,8 +838,8 @@ resilience_scope_rows <- if (file.exists(file.path(TBL_DIR, "19c_resilience_deco
 # ===========================================================================
 master <- bind_rows(anova12, genet_rows, r2_rows,
                     morph_anova, morph_fixed,
-                    cox_rows, cox_genet_rows, cox_tt,
-                    lrt13, pca_load, pca_disp, bw_lm,
+                    interval_rows, cox_rows, cox_genet_rows, cox_tt,
+                    lrt13, pca_load, pca_disp, bw_lm, bw_tank_test,
                     clmm_rows, bw_means_rows, bw_pct_drop, zoox_means_rows,
                     ts_rows, coxph_rows, thermal_rows,
                     lag_rows, icc_rows, mt_rows, probc_rows,

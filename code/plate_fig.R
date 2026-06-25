@@ -75,10 +75,14 @@ if(nrow(.overlap)>0) stop("Control and anchor wells overlap at: ",
 # 3) Experimental design (balanced)
 # -----------------------------
 temps <- c(28,31); days <- c(0,3,9); wounds <- c("U","W")
-tanks <- c("A","B","C","D"); genotypes <- c("A","B","C")
+tanks_by_temp <- list(`28` = c(3, 6, 9, 12), `31` = c(4, 5, 10, 11))
+genotypes <- c("A","C","D")
 
-design <- expand.grid(Temp=temps, Day=days, Wound=wounds, Tank=tanks, Geno=genotypes,
-                      stringsAsFactors = FALSE) %>%
+design <- purrr::map_dfr(temps, \(tt) {
+  expand.grid(Temp=tt, Day=days, Wound=wounds,
+              Tank=tanks_by_temp[[as.character(tt)]], Geno=genotypes,
+              stringsAsFactors = FALSE)
+}) %>%
   arrange(Temp, Day, Wound, Tank, Geno)
 
 set.seed(123)
@@ -149,12 +153,10 @@ plate2_filled <- fill_plate(plate2, samples_p2)
 plates_all <- bind_rows(plate1_filled, plate2_filled) %>%
   mutate(
     Plate   = factor(plate, levels=c(1,2), labels=c("Plate 1","Plate 2")),
-    TankNum = rep(1:12, length.out=n()),
-    Thicket = rep(c("A","C","D"), length.out=n()),
     lbl_top = if_else(SampleType=="Primary", paste0("D", Day, " ", Wound), ""),
     lbl_bot = case_when(
       SampleType != "Primary" ~ "",
-      TRUE ~ paste0("T", TankNum, "·", Thicket)
+      TRUE ~ paste0("T", Tank, "·", Geno)
     ),
     ctrl_lbl = recode(control_type,
                       "Extraction NTC"     = "Extr NTC",

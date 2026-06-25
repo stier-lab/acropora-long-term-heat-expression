@@ -18,7 +18,8 @@
 #          value; FLAG = it does not (stale, or formatted off).
 #
 # Input:   manuscript/Manuscript_LTH.md
-#          output/tables/{12_anova_summary,14_cox_hazard_ratios,14_cox_genet_LRT,
+#          output/tables/{12_anova_summary,14_interval_survreg,
+#                         14_cox_hazard_ratios,14_cox_genet_LRT,
 #                         14_milestone_lag_summary,15_genet_pca_displacement,
 #                         26_thermal_context}.csv
 #          data/processed/{buoyant_weight_clean,coral_physio_wide}.rds
@@ -65,7 +66,13 @@ add_check <- function(label, values, digits, source) {
   )
 }
 
-# ---- 1. Cox HR for new-corallite regeneration (headline) -------------------
+# ---- 1. New-corallite regeneration timing (headline + Cox summary) ----------
+aft <- read_csv(file.path(TBL_DIR, "14_interval_survreg.csv"), show_col_types = FALSE)
+nc_aft <- aft |> filter(trait == "new_corallites_on_tip")
+add_check("Interval AFT new corallites (time ratio + 95% CI bounds)",
+          c(nc_aft$time_ratio_31_vs28[1], nc_aft$ratio_lo[1], nc_aft$ratio_hi[1]), 2,
+          "14_interval_survreg.csv")
+
 cox <- read_csv(file.path(TBL_DIR, "14_cox_hazard_ratios.csv"), show_col_types = FALSE)
 nc  <- cox |> filter(trait == "new_corallites_on_tip", grepl("overall", scope))
 add_check("Cox HR new corallites (HR + 95% CI bounds)",

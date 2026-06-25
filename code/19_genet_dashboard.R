@@ -32,6 +32,9 @@ pca  <- read_csv(file.path(TBL_DIR, "15_genet_pca_displacement.csv"),
 # wound (both wounded and unwounded show heat effects), keeping the
 # standardized effect as estimate / SD_pooled.
 cont_eff <- cont |>
+  filter(response %in% c("pam_fvfm", "color_dscale", "growth_areal",
+                         "log_zoox_density"),
+         is.finite(estimate)) |>
   group_by(response, thicket) |>
   summarise(estimate = mean(estimate, na.rm = TRUE),
             se = mean(SE, na.rm = TRUE),
@@ -48,15 +51,19 @@ cont_eff <- cont |>
 cox_per_genet <- cox |>
   filter(grepl("^genet=", scope), is.finite(HR_31_vs28),
          HR_31_vs28 > 0, HR_31_vs28 < Inf) |>
-  mutate(thicket = sub("^genet=", "", scope),
+  mutate(thicket = sub("\\s+first-observed approximation$", "",
+                       sub("^genet=", "", scope)),
          logHR = log(HR_31_vs28),
          response = paste0("morph_", trait))
 
 cox_eff <- cox_per_genet |>
   group_by(response) |>
-  mutate(z = -logHR / max(abs(logHR), na.rm = TRUE)) |>
+  mutate(hr_scale = max(abs(logHR), na.rm = TRUE),
+         z = if_else(is.finite(hr_scale) & hr_scale > 0,
+                     -logHR / hr_scale, NA_real_)) |>
   # Sign flipped: more negative HR (delayed healing) → more positive z (more impaired)
   ungroup() |>
+  filter(is.finite(z)) |>
   select(response, thicket, estimate = logHR, z) |>
   mutate(metric = "−log(HR 31C/28C) for healing trait onset",
          se = NA_real_)

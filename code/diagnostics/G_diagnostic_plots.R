@@ -33,11 +33,32 @@ plot_for <- function(mdl_path) {
   base <- tools::file_path_sans_ext(basename(mdl_path))
   explicit <- c(
     "02_pam_lmer" = "K_02_pam_lmer_dharma.png",
+    "12_pam_lmm" = "A_pam_dharma.png",
+    "12_color_lmm" = "A_color_dharma.png",
+    "12_zoox_lmm" = "A_zoox_dharma.png",
+    "12_bw_lm" = "A_bw_dharma.png",
     "12_bw_pct_lm" = "growth_pct.png"
   )
   if (base %in% names(explicit)) {
     hits <- all_plots[basename(all_plots) == explicit[[base]]]
     return(list(pattern = explicit[[base]], hits = hits))
+  }
+  if (grepl("^12_morph_.*_glmm$", base)) {
+    trait <- sub("^12_morph_(.*)_glmm$", "\\1", base)
+    expected <- c(paste0("B_", trait, ".png"),
+                  paste0("K_", base, "_dharma.png"))
+    hits <- all_plots[basename(all_plots) %in% expected]
+    return(list(pattern = paste(expected, collapse = "|"), hits = hits))
+  }
+  if (grepl("^12c_morph_.*_blme$", base)) {
+    expected <- paste0("G_", base, "_dharma.png")
+    hits <- all_plots[basename(all_plots) == expected]
+    return(list(pattern = expected, hits = hits))
+  }
+  if (base == "12b_color_clmm") {
+    expected <- "G_12b_color_clmm_observed.png"
+    hits <- all_plots[basename(all_plots) == expected]
+    return(list(pattern = expected, hits = hits))
   }
 
   # Look for any plot whose name contains the model basename or its trait token
@@ -47,25 +68,28 @@ plot_for <- function(mdl_path) {
   list(pattern = pattern, hits = hits)
 }
 
-inventory <- tibble::tibble(
-  model     = basename(all_models),
-  model_mtime = file.info(all_models)$mtime,
-  diagnostic_plot = NA_character_,
-  plot_mtime    = as.POSIXct(NA),
-  status        = NA_character_
-)
+make_inventory <- function() {
+  inventory <- tibble::tibble(
+    model     = basename(all_models),
+    model_mtime = file.info(all_models)$mtime,
+    diagnostic_plot = NA_character_,
+    plot_mtime    = as.POSIXct(NA),
+    status        = NA_character_
+  )
 
-for (i in seq_along(all_models)) {
-  mp <- plot_for(all_models[i])
-  if (length(mp$hits)) {
-    most_recent <- mp$hits[which.max(file.info(mp$hits)$mtime)]
-    inventory$diagnostic_plot[i] <- basename(most_recent)
-    inventory$plot_mtime[i]     <- file.info(most_recent)$mtime
-    inventory$status[i] <- if (file.info(most_recent)$mtime <
-                                inventory$model_mtime[i]) "STALE" else "CURRENT"
-  } else {
-    inventory$status[i] <- "MISSING"
+  for (i in seq_along(all_models)) {
+    mp <- plot_for(all_models[i])
+    if (length(mp$hits)) {
+      most_recent <- mp$hits[which.max(file.info(mp$hits)$mtime)]
+      inventory$diagnostic_plot[i] <- basename(most_recent)
+      inventory$plot_mtime[i]     <- file.info(most_recent)$mtime
+      inventory$status[i] <- if (file.info(most_recent)$mtime <
+                                  inventory$model_mtime[i]) "STALE" else "CURRENT"
+    } else {
+      inventory$status[i] <- "MISSING"
+    }
   }
+  inventory
 }
 
 # Build plots for missing fits ---------------------------------------------
@@ -127,10 +151,17 @@ if (file.exists(clmm_path)) {
   cat("  built G_12b_color_clmm_observed.png\n")
 }
 
-# Update inventory with new BUILT statuses
+# Recompute inventory after building plots; otherwise newly rebuilt plots are
+# incorrectly reported as stale based on the pre-build file mtimes.
+all_plots  <- list.files(DIAG_FIG, pattern = "\\.png$", full.names = TRUE)
+extra_plots <- list.files(here("figures", "12_diagnostics"),
+                          pattern = "\\.png$", full.names = TRUE)
+all_plots <- c(all_plots, extra_plots)
+inventory <- make_inventory()
+
 inventory <- inventory |>
   mutate(status = case_when(
-    model %in% paste0(tools::file_path_sans_ext(built), ".rds") ~ "BUILT",
+    diagnostic_plot %in% built & status == "CURRENT" ~ "BUILT",
     grepl("^12c_morph_", model) & status == "MISSING" ~ "BUILT",
     model == "12b_color_clmm.rds" & status == "MISSING" ~ "BUILT",
     TRUE ~ status

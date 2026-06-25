@@ -1,5 +1,5 @@
 # PCA + Genet LRT Diagnostics
-_Run: 2026-06-13 07:04:05_
+_Run: 2026-06-25 09:05:14_
 
 ## PCA (15_multivariate.R)
 
@@ -19,23 +19,23 @@ _Run: 2026-06-13 07:04:05_
 ## Genet LRTs (13_genet_interaction.R)
 
 ### pam_fvfm
-- n_obs = 336; fixed params: null=8, full=24 (Δfx=16). Total npar Δ=15 (reported df=15).
+- n_obs = 336; fixed params: null=10, full=24 (Δfx=14). Total npar Δ=14 (reported df=14).
 - REML status: null=FALSE, full=FALSE, saved=FALSE (all should be FALSE)
 - Convergence: null singular=FALSE, full singular=FALSE, warnings=0
-- LRT χ²(15) = 90.49, p = 8.02e-13 (recomputed 8.02e-13)
+- LRT χ²(14) = 79.03, p = 4.28e-11 (recomputed 4.28e-11)
 ### color_dscale
-- n_obs = 336; fixed params: null=8, full=24 (Δfx=16). Total npar Δ=15 (reported df=15).
+- n_obs = 336; fixed params: null=10, full=24 (Δfx=14). Total npar Δ=14 (reported df=14).
 - REML status: null=FALSE, full=FALSE, saved=FALSE (all should be FALSE)
 - Convergence: null singular=FALSE, full singular=FALSE, warnings=0
-- LRT χ²(15) = 177.72, p = 6.85e-30 (recomputed 6.85e-30)
+- LRT χ²(14) = 169.31, p = 9.43e-29 (recomputed 9.43e-29)
 ### log_zoox
-- n_obs = 192; fixed params: null=8, full=24 (Δfx=16). Total npar Δ=15 (reported df=15).
+- n_obs = 192; fixed params: null=10, full=24 (Δfx=14). Total npar Δ=14 (reported df=14).
 - REML status: null=FALSE, full=FALSE, saved=FALSE (all should be FALSE)
 - Convergence: null singular=FALSE, full singular=FALSE, warnings=0
-- LRT χ²(15) = 73.57, p = 1.03e-09 (recomputed 1.03e-09)
+- LRT χ²(14) = 64.30, p = 2.04e-08 (recomputed 2.04e-08)
 
 ### growth_areal
-- lm-based F-test (no time dim); F(6, 36) = 0.62, p = 0.716
+- ML LMM LRT (tank random intercept); χ²(6) = 6.50, p = 0.37
 - Fixed params: null=6, full=12 (Δ=6, reported df=6)
 
 ## Effect direction vs. emmeans
@@ -51,4 +51,4 @@ _Run: 2026-06-13 07:04:05_
 - pam_fvfm LRT: **PASS**
 - color_dscale LRT: **PASS**
 - log_zoox LRT: **PASS**
-- growth_areal F-test: **PASS**
+- growth_areal LMM LRT: **PASS**

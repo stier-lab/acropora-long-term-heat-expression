@@ -15,24 +15,24 @@ PCA,PC1 biological interpretation,PAM=+0.52 color=+0.53 growth=+0.41 zoox=+0.53,
 pam_fvfm,Null model REML status,REML=FALSE,PASS,LRT on fixed effects requires REML=FALSE
 pam_fvfm,Full model REML status,REML=FALSE,PASS,LRT on fixed effects requires REML=FALSE
 pam_fvfm,Saved model REML status (on disk),REML=FALSE,PASS,saved object at 13_pam_fvfm_genet_lmm.rds
-pam_fvfm,"LRT df matches anova(m0,m1) Df","anova_df=15, reported=15",PASS,"fixed Δ=16 (null p_fx=8, full p_fx=24); total npar Δ=15 (incl. random-effect rebalance)"
+pam_fvfm,"LRT df matches anova(m0,m1) Df","anova_df=14, reported=14",PASS,"fixed Δ=14 (null p_fx=10, full p_fx=24); total npar Δ=14 (incl. random-effect rebalance)"
 pam_fvfm,Convergence / singular fits,"null sing=FALSE, full sing=FALSE, warns=0",PASS,no warnings
-pam_fvfm,LRT p-value reproducibility,"recomputed=8.02e-13, reported=8.02e-13",PASS,
+pam_fvfm,LRT p-value reproducibility,"recomputed=4.28e-11, reported=4.28e-11",PASS,
 color_dscale,Null model REML status,REML=FALSE,PASS,LRT on fixed effects requires REML=FALSE
 color_dscale,Full model REML status,REML=FALSE,PASS,LRT on fixed effects requires REML=FALSE
 color_dscale,Saved model REML status (on disk),REML=FALSE,PASS,saved object at 13_color_dscale_genet_lmm.rds
-color_dscale,"LRT df matches anova(m0,m1) Df","anova_df=15, reported=15",PASS,"fixed Δ=16 (null p_fx=8, full p_fx=24); total npar Δ=15 (incl. random-effect rebalance)"
+color_dscale,"LRT df matches anova(m0,m1) Df","anova_df=14, reported=14",PASS,"fixed Δ=14 (null p_fx=10, full p_fx=24); total npar Δ=14 (incl. random-effect rebalance)"
 color_dscale,Convergence / singular fits,"null sing=FALSE, full sing=FALSE, warns=0",PASS,no warnings
-color_dscale,LRT p-value reproducibility,"recomputed=6.85e-30, reported=6.85e-30",PASS,
+color_dscale,LRT p-value reproducibility,"recomputed=9.43e-29, reported=9.43e-29",PASS,
 log_zoox,Null model REML status,REML=FALSE,PASS,LRT on fixed effects requires REML=FALSE
 log_zoox,Full model REML status,REML=FALSE,PASS,LRT on fixed effects requires REML=FALSE
 log_zoox,Saved model REML status (on disk),REML=FALSE,PASS,saved object at 13_log_zoox_genet_lmm.rds
-log_zoox,"LRT df matches anova(m0,m1) Df","anova_df=15, reported=15",PASS,"fixed Δ=16 (null p_fx=8, full p_fx=24); total npar Δ=15 (incl. random-effect rebalance)"
+log_zoox,"LRT df matches anova(m0,m1) Df","anova_df=14, reported=14",PASS,"fixed Δ=14 (null p_fx=10, full p_fx=24); total npar Δ=14 (incl. random-effect rebalance)"
 log_zoox,Convergence / singular fits,"null sing=FALSE, full sing=FALSE, warns=0",PASS,no warnings
-log_zoox,LRT p-value reproducibility,"recomputed=1.03e-09, reported=1.03e-09",PASS,
-growth_areal,Model type,lm + F-test,INFO,Growth has no time dim — F-test not LRT
+log_zoox,LRT p-value reproducibility,"recomputed=2.04e-08, reported=2.04e-08",PASS,
+growth_areal,Model type,ML LMM + LRT,INFO,Growth has no time dim; tank retained as random block
 growth_areal,df = diff in fixed-effect parameters,"computed=6, reported=6",PASS,
-growth_areal,F-test p-value,p=0.716,NS,
+growth_areal,LRT p-value,p=0.37,NS,
 emmeans,PAM Fv/Fm — direction of heat effect across genets,"Δ range = 0.111, sign mix = all same",INFO,a: -0.148; c: -0.037; d: -0.131
 emmeans,Color (D-scale) — direction of heat effect across genets,"Δ range = 1.562, sign mix = all same",INFO,a: -1.875; c: -0.312; d: -1.562
 emmeans,Calcification (mg cm⁻² d⁻¹) — direction of heat effect across genets,"Δ range = 2.304, sign mix = all same",INFO,a: -3.685; c: -1.381; d: -3.549

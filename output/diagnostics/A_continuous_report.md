@@ -1,13 +1,13 @@
 # Continuous-response model diagnostics
-Generated: 2026-06-14 09:29:38.922942
+Generated: 2026-06-25 09:04:35.52107
 
 Models reviewed: 12_pam_lmm, 12_color_lmm, 12_zoox_lmm, 12_bw_lm
 
 ## Summary
-- Total checks: 32
-- PASS: 24
-- HANDLED: 8
-- WARN: 0
+- Total checks: 36
+- PASS: 27
+- HANDLED: 6
+- WARN: 3
 - FAIL: 0
 
 ## 12_pam_lmm
@@ -17,7 +17,7 @@ Models reviewed: 12_pam_lmm, 12_color_lmm, 12_zoox_lmm, 12_bw_lm
 - **DHARMa_KS_uniformity** [PASS]: stat=0.0575 Kolmogorov-Smirnov on scaled residuals
 - **DHARMa_dispersion** [PASS]: stat=0.9074 Ratio of obs/sim residual variance
 - **DHARMa_outliers** [PASS]: stat=2 Excess outliers vs expected
-- **cooks_distance** [HANDLED]: influence.ME::influence failed; handled with saved residual plots and direction checks
+- **cooks_distance_max** [WARN]: stat=0.1763 Top-3 obs idx: 325,29,331; cd: 0.176,0.047,0.039
 - **emmeans_direction_pam_fvfm** [PASS]: stat=0.08351 contrast 28C - 31C = 0.0835 (p=6.76e-05); observed heated decrease
 
 ## 12_color_lmm
@@ -27,7 +27,7 @@ Models reviewed: 12_pam_lmm, 12_color_lmm, 12_zoox_lmm, 12_bw_lm
 - **DHARMa_KS_uniformity** [HANDLED]: stat=0.1828 Kolmogorov-Smirnov on scaled residuals; handled by ordinal CLMM robustness model 12b_color_clmm
 - **DHARMa_dispersion** [PASS]: stat=0.89 Ratio of obs/sim residual variance
 - **DHARMa_outliers** [PASS]: stat=4 Excess outliers vs expected
-- **cooks_distance** [HANDLED]: influence.ME::influence failed; handled with saved residual plots and direction checks
+- **cooks_distance_max** [WARN]: stat=0.05734 Top-3 obs idx: 37,1,296; cd: 0.057,0.052,0.038
 - **emmeans_direction_color_dscale** [PASS]: stat=1.153 contrast 28C - 31C = 1.1526 (p=3.33e-05); observed heated decrease
 
 ## 12_zoox_lmm
@@ -42,11 +42,15 @@ Models reviewed: 12_pam_lmm, 12_color_lmm, 12_zoox_lmm, 12_bw_lm
 - **outlier_sensitivity_top4** [PASS]: stat=1.859 dropped largest |scaled residual| rows 187,130,186,189; full est=1.888, refit est=1.859
 
 ## 12_bw_lm
-- **shapiro_residual_normality** [PASS]: stat=0.9587 Shapiro-Wilk on OLS residuals
-- **breusch_pagan_heteroscedasticity** [PASS]: stat=16.5 BP test for non-constant variance
-- **VIF** [HANDLED]: Saturated 3-way interaction lm; VIFs uninterpretable. Skipped.; handled by explicit full-factorial design statement; no additive VIF interpretation
-- **DHARMa_KS_uniformity** [PASS]: stat=0.1148 DHARMa KS on simulated residuals
-- **cooks_distance_max** [HANDLED]: stat=0.2856 Top-3 obs idx: 38,41,2; cd: 0.286,0.150,0.107; handled by top-three Cook's-distance sensitivity check
-- **cooks_top3_sensitivity** [PASS]: stat=3.15 dropped top Cook's rows 38,41,2; full est=2.886, refit est=3.150
-- **emmeans_direction_growth_pct** [PASS]: stat=2.886 contrast 28C - 31C = 2.8864 (p=2.43e-05); observed heated decrease
+- **isSingular** [PASS]: stat=0 Singular fit means a variance component is at/near zero
+- **variance_components_near_zero** [PASS]: stat=0 VarCorr (grp:var): tank:1.35e+00; Residual:2.88e+00
+- **optimizer_convergence_messages** [PASS]: stat=0 
+- **DHARMa_KS_uniformity** [PASS]: stat=0.1135 Kolmogorov-Smirnov on scaled residuals
+- **DHARMa_dispersion** [PASS]: stat=0.7863 Ratio of obs/sim residual variance
+- **DHARMa_outliers** [PASS]: stat=0 Excess outliers vs expected
+- **shapiro_residual_normality** [WARN]: stat=0.9425 Shapiro-Wilk on LMM conditional residuals
+- **VIF** [HANDLED]: Saturated 3-way fixed structure with tank random intercept; VIFs uninterpretable. Skipped.; handled by explicit full-factorial design statement and tank random intercept; no additive VIF interpretation
+- **cooks_distance_max** [HANDLED]: stat=0.3013 Top-3 obs idx: 38,41,45; cd: 0.301,0.118,0.110; handled by top-three Cook's-distance sensitivity check
+- **cooks_top3_sensitivity** [PASS]: stat=2.806 dropped top Cook's rows 38,41,45; full est=2.894, refit est=2.806
+- **emmeans_direction_growth_pct** [PASS]: stat=2.894 contrast 28C - 31C = 2.8943 (p=0.0233); observed heated decrease
 

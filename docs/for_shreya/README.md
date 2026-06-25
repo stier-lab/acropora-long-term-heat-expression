@@ -33,7 +33,7 @@ has built on the LTH project (#17: heat × wound × *A. pulchra*, Mo'orea 2025).
   the run) if the manuscript no longer matches. It is scoped to the Stier-lab **phenotype
   Methods/Results** — it does not police your Introduction, Discussion, Abstract, or the
   transcriptomics. So when an analysis is edited, re-running tells you what to update, but nothing
-  blocks you. (Currently 14/14 phenotype checks pass.)
+  blocks you. (Currently 15/15 phenotype checks pass.)
 - The Results section of `manuscript/Manuscript_LTH.md` is **already written** for the phenotype side
   — photochemistry, pigmentation, calcification, symbionts, the healing-vs-regeneration morphology,
   genet variation, and the Cunning thermal-context placement.
@@ -65,12 +65,12 @@ phenotype-side hypothesis. The manuscript Results marks the integration points w
 
 ## A few honest things worth knowing
 
-- **The regeneration result has a soft spot:** it's formally carried by 1 of 6 a-priori tests (the
-  new-corallite Cox model, p = 0.0095); tip-exist/extension point the same way but are n.s. The
+- **The regeneration result has a soft spot:** it is strongest for interval-censored new-corallite
+  onset (p = 1.4e-7); tip-exist is also delayed, while tip-extension remains n.s. The
   censored fraction (67% closed-but-never-regenerated vs 0%) and the per-coral lag are the strongest
   framing. See `RESULTS.md` §10.
-- **Chlorophyll-a is still pending** (a metadata column waiting on the assay); the pipeline handles it
-  automatically once values land.
+- **Chlorophyll-a was not run**; the metadata slot remains for provenance, but the analysis uses
+  PAM, color-card scores, and symbiont counts instead.
 - **Three genets** means we can detect genotype variation but not its genetic architecture — your
   SNP work is what would resolve that and link it to Cunning's ED50s.
 

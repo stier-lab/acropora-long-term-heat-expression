@@ -26,7 +26,8 @@ should explain mechanistically:
 
 1. **Heat impairs *regeneration*, not wound *closure*.** Wounds seal at the same
    rate in both temperatures, but new-corallite formation at the regenerating
-   tip collapses under heat (Cox HR = 0.22, p = 0.010). The lesion is in the
+   tip is delayed/suppressed under heat (interval-censored time ratio = 1.32,
+   p = 1.4e-7; first-observed Cox HR = 0.22). The lesion is in the
    skeletal-regrowth program, not re-epithelialization.
 2. **Genotype-level thermal tolerance: C > D > A.** Genet C is the most resilient
    across photochemistry, pigmentation, symbiont retention, and calcification;
@@ -61,8 +62,8 @@ hypotheses to confirm or overturn — we deliberately do **not** name candidate 
 sets you interrogate are your call.
 
 - **Does heat suppress the regeneration program while sparing the healing program?** Phenotype: wounds
-  seal at the same rate in both temperatures, but new-corallite formation collapses under heat
-  (Cox HR = 0.22, p = 0.010). The expression data can ask whether, at the wound margin, the
+  seal at the same rate in both temperatures, but new-corallite formation is delayed/suppressed under heat
+  (interval-censored time ratio = 1.32, p = 1.4e-7; first-observed Cox HR = 0.22). The expression data can ask whether, at the wound margin, the
   early-healing processes (re-epithelialization, immune, ECM remodeling, proliferation) are induced
   similarly in both temperatures while skeletal/biomineralization and corallite-patterning processes
   are specifically suppressed under heat — **or** whether heat suppresses healing too, which would

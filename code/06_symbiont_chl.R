@@ -1,8 +1,9 @@
 # =============================================================================
-# Purpose: Symbiont density (cells/cm^2) and chlorophyll-a (ug/cm^2).
+# Purpose: Symbiont density (cells/cm^2); chlorophyll-a was planned but not run.
 #          Endpoint physiological response variables sampled destructively at
 #          each biopsy timepoint.
-#          Joins symbiont counts with metadata (chl-a is in metadata.csv).
+#          Joins symbiont counts with metadata. The chl-a column is retained only
+#          as provenance for the planned-but-not-collected assay.
 # Input:   data/raw/symbiont_counts/Raw_counts.csv  (4 hemocytometer reps per coral)
 #          data/raw/symbiont_counts/metadata_ordered_merge.csv
 #          data/processed/coral_metadata.rds
@@ -34,6 +35,7 @@ meta <- readRDS(file.path(DATA_PROC, "coral_metadata.rds"))
 reps <- raw_counts |>
   rename(coral_id = coral_id_3) |>
   filter(!is.na(coral_id)) |>
+  mutate(coral_id = as.integer(coral_id)) |>
   mutate(across(c(q1, q2, q3, q4), as.numeric)) |>
   rowwise() |>
   mutate(quad_mean = mean(c(q1, q2, q3, q4), na.rm = TRUE)) |>
@@ -62,14 +64,23 @@ zoox <- zoox_meta |>
     wound           = factor(wound, levels = c("no", "yes")),
     sa_cm2          = as.numeric(calculated_sa_standard_curve),
     slurry_ml       = as.numeric(slurry_volume_m_l),
-    zoox_avg_hemo   = as.numeric(average),
+    zoox_avg_sheet  = as.numeric(average),
     # Hemocytometer formula: density = (cells/quadrant) * 10^4 (cells/mL)
     # Total in slurry = density * slurry_mL ; then per cm^2 = / SA
-    cells_per_cm2   = (zoox_avg_hemo * 1e4 * slurry_ml) / sa_cm2
+    cells_per_cm2_sheet = (zoox_avg_sheet * 1e4 * slurry_ml) / sa_cm2
   ) |>
   filter(!is.na(id)) |>
+  left_join(reps, by = c("id" = "coral_id")) |>
+  mutate(
+    zoox_avg_hemo = coalesce(mean_quad_count, zoox_avg_sheet),
+    count_source = if_else(!is.na(mean_quad_count), "raw_counts", "metadata_average"),
+    # Hemocytometer formula: density = (cells/quadrant) * 10^4 (cells/mL)
+    # Total in slurry = density * slurry_mL ; then per cm^2 = / SA
+    cells_per_cm2 = (zoox_avg_hemo * 1e4 * slurry_ml) / sa_cm2
+  ) |>
   mutate(tank = as.integer(tank)) |>
-  select(id, treatment, wound, biopsy_day, thicket, tank, sa_cm2, cells_per_cm2)
+  select(id, treatment, wound, biopsy_day, thicket, tank, sa_cm2,
+         cells_per_cm2, count_source, n_reps)
 
 # Pull chlorophyll from master metadata
 chl <- meta |>
@@ -124,13 +135,13 @@ if (has_chl) {
     theme(legend.position = "bottom")
   save_fig(p_combo, "06_symbiont_chl_by_day", width = 170, height = 95)
 } else {
-  message("Chlorophyll values not yet populated in master metadata — ",
+  message("Chlorophyll-a assay was not run for this project — ",
           "saving single-panel symbiont figure.")
   save_fig(p_zoox, "06_symbiont_density_by_day", width = 140, height = 100)
-  # Also write the two-panel layout with an explicit placeholder for chl
+  # Also write the two-panel layout with an explicit note for chl-a
   p_chl_placeholder <- ggplot() +
     annotate("text", x = 0.5, y = 0.5,
-             label = "Chlorophyll-a values\nnot yet populated\n(awaiting assay)",
+             label = "Chlorophyll-a assay\nwas not run\nfor this project",
              size = 4, colour = "grey30", lineheight = 1.1) +
     theme_void() +
     theme(panel.background = element_rect(fill = "grey96", colour = NA),

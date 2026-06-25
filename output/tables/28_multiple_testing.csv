@@ -2,19 +2,14 @@ hypothesis,test,rationale,p_value,p_BH,p_reported,significant
 a priori (confirmatory),pam_fvfm : treatment:day,Warner et al. 1999 (heat lowers Fv/Fm),0,NA,0,TRUE
 a priori (confirmatory),color_dscale : treatment:day,Hoegh-Guldberg 1999 (heat-driven paling),0,NA,0,TRUE
 a priori (confirmatory),log_zoox_density : treatment:biopsy_day_c,Hoegh-Guldberg 1999; Jokiel & Coles 1990 (symbiont loss),0,NA,0,TRUE
-a priori (confirmatory),growth_areal : treatment,Jokiel & Coles 1977 (heat reduces calcification),2e-5,NA,2e-5,TRUE
-exploratory,morph:polyps_out : treatment,no a-priori prediction for this closure/incidental trait,0.824,0.824,0.824,FALSE
-exploratory,morph:hole_in_center : treatment,no a-priori prediction for this closure/incidental trait,0,0,0,TRUE
-exploratory,morph:polyp_in_hole : treatment,no a-priori prediction for this closure/incidental trait,0,0,0,TRUE
-exploratory,morph:wound_smoothed : treatment,no a-priori prediction for this closure/incidental trait,0.7135,0.8027,0.8027,FALSE
-exploratory,morph:pigment_over_wound : treatment,no a-priori prediction for this closure/incidental trait,0.4786,0.6153,0.6153,FALSE
-a priori (confirmatory),morph:tip_exist : treatment,central hypothesis: heat impairs tip regeneration,4.521999999999999e-97,NA,4.521999999999999e-97,TRUE
-a priori (confirmatory),morph:tip_extension : treatment,central hypothesis: heat impairs tip regeneration,0.2155,NA,0.2155,FALSE
+a priori (confirmatory),growth_areal : treatment (tank permutation),Jokiel & Coles 1977 (heat reduces calcification); tank-level permutation p,0.05714,NA,0.05714,FALSE
+exploratory,morph:polyps_out : treatment,no a-priori prediction for this closure/incidental trait,0.8546,0.9996,0.9996,FALSE
+exploratory,morph:pigment_over_wound : treatment,no a-priori prediction for this closure/incidental trait,0.9996,0.9996,0.9996,FALSE
 a priori (confirmatory),morph:new_corallites_on_tip : treatment,central hypothesis: heat impairs tip regeneration,0,NA,0,TRUE
-exploratory,cox:hole_in_center : 31C vs 28C,no a-priori prediction for this closure milestone,0.4468,0.6153,0.6153,FALSE
-exploratory,cox:polyp_in_hole : 31C vs 28C,no a-priori prediction for this closure milestone,0.4468,0.6153,0.6153,FALSE
-exploratory,cox:wound_smoothed : 31C vs 28C,no a-priori prediction for this closure milestone,0.2517,0.6153,0.6153,FALSE
-exploratory,cox:pigment_over_wound : 31C vs 28C,no a-priori prediction for this closure milestone,0.4751,0.6153,0.6153,FALSE
-a priori (confirmatory),cox:tip_exist : 31C vs 28C,central hypothesis: heat delays/prevents tip regeneration,0.3683,NA,0.3683,FALSE
-a priori (confirmatory),cox:tip_extension : 31C vs 28C,central hypothesis: heat delays/prevents tip regeneration,0.6131,NA,0.6131,FALSE
-a priori (confirmatory),cox:new_corallites_on_tip : 31C vs 28C,central hypothesis: heat delays/prevents tip regeneration,0.009537,NA,0.009537,TRUE
+exploratory,survival_interval:hole_in_center : 31C vs 28C,no a-priori prediction for this closure milestone,0.4545,0.9091,0.9091,FALSE
+exploratory,survival_interval:polyp_in_hole : 31C vs 28C,no a-priori prediction for this closure milestone,0.4545,0.9091,0.9091,FALSE
+exploratory,survival_interval:wound_smoothed : 31C vs 28C,no a-priori prediction for this closure milestone,0.02241,0.1345,0.1345,FALSE
+exploratory,survival_interval:pigment_over_wound : 31C vs 28C,no a-priori prediction for this closure milestone,0.7401,0.9996,0.9996,FALSE
+a priori (confirmatory),survival_interval:tip_exist : 31C vs 28C,central hypothesis: heat delays/prevents tip regeneration,0.03555,NA,0.03555,TRUE
+a priori (confirmatory),survival_interval:tip_extension : 31C vs 28C,central hypothesis: heat delays/prevents tip regeneration,0.1803,NA,0.1803,FALSE
+a priori (confirmatory),survival_interval:new_corallites_on_tip : 31C vs 28C,central hypothesis: heat delays/prevents tip regeneration,1.387e-7,NA,1.387e-7,TRUE

@@ -5,7 +5,7 @@
 **Experiment:** Heat (28 °C vs 31 °C) × wounding (unwounded vs wounded) factorial on the
 coral *Acropora pulchra*, Mo'orea (Gump Station), 2025. Three genets/thickets (a, c, d),
 8 experimental tanks, ~208 individually tracked fragments. Each fragment carries a unique
-integer `id` that links every data stream (PAM, color, morphology, growth, symbiont/chl,
+integer `id` that links every data stream (PAM, color, morphology, growth, symbionts,
 wax, worm, RNA-seq).
 
 **This file is the canonical guide to the data folders.** It exists so the collaborator
@@ -58,7 +58,7 @@ in the metadata — collection 2025-06-17, ramp ending 2025-06-29 — so do not 
 calendar offset; use `biopsy_day` / `day`, not raw dates, as the time axis.)
 
 **Repeated vs terminal measures.** PAM, color, and morphology are **repeated** on the same
-`id` across days (longitudinal). Symbiont/chl, wax SA, and buoyant weight are **terminal**
+`id` across days (longitudinal). Symbionts, wax SA, and buoyant weight are **terminal**
 (one row per fragment at its biopsy day). Join longitudinal streams on `(id, day)`;
 terminal streams on `id` alone.
 
@@ -71,7 +71,7 @@ terminal streams on `id` alone.
 - **Script:** `code/01_load_clean_metadata.R` → **`data/processed/coral_metadata.rds`** (208 × 23; also written as `coral_metadata.csv`).
 - **Role:** the canonical per-fragment table every other script joins against by `id`.
 - **Key columns:** `id`, `species`, `thicket`, `sample`, `wound`, `tank`, `treatment` (factor 28C/31C; `treatment_c` keeps numeric), `biopsy_day`, `biopsy_date`, `collection_date`, `coord_lat`/`coord_long` (collection site per thicket), `acclimation_start_date`, `heat_ramp_start_date`, `heat_ramp_end_date`, `biopsy_notes`, `collected_in_liquid_nitrogen`, `in_dna_rna_shield`, `sub_samples_taken` (which sub-sections — tip/wound/middle/far — went into RNA/DNA shield), `percent_growth_bw`, `calculated_sa` (cm², wax-curve SA), `chlorophyll_ug_cm2`, `zooxanthellae_cells_cm2`.
-- **DATA-QUALITY NOTE:** `chlorophyll_ug_cm2` **and** `zooxanthellae_cells_cm2` are **entirely empty (0/208)** in this table — chl-a/zoox were never merged back into the master sheet. Use `symbiont_chl_clean` for symbiont densities (see below). Chlorophyll-a appears to be **not yet measured / pending** (consistent with the project's "awaiting chl-a + RNA-seq" status).
+- **DATA-QUALITY NOTE:** `chlorophyll_ug_cm2` **and** `zooxanthellae_cells_cm2` are **entirely empty (0/208)** in this table. Use `symbiont_chl_clean` for symbiont densities (see below). Chlorophyll-a was planned but ultimately **not run**, so it is not part of the analysis.
 - `biopsy_day` is `NA` for the 16 `photo` fragments.
 
 ### `pam_clean` — photosynthetic efficiency (Fv/Fm)
@@ -102,10 +102,10 @@ terminal streams on `id` alone.
 - Per-fragment surface area from wax mass (`sa_curve_cm2`, primary) cross-checked against caliper geometry (`sa_caliper_cm2`).
 - **Columns:** `id`, `treatment`, `biopsy_day`, `thicket`, `wound`, `dry_g`, `wax_g`, `sa_caliper_cm2`, `sa_curve_cm2`. The denominator for `buoyant_weight_clean$areal_calc` and `symbiont_chl_clean`.
 
-### `symbiont_chl_clean` — symbiont density (+ chl-a slot)
-- **Raw:** `data/raw/symbiont_counts/Raw_counts.csv` (4 hemocytometer quadrant counts Q1–Q4 per fragment) + `metadata_ordered_merge.csv` (SA, slurry volume). **Script:** `code/06_symbiont_chl.R` → **`symbiont_chl_clean.rds`** (192 × 9).
-- **Columns:** `id`, `treatment`, `wound`, `biopsy_day`, `thicket`, `tank`, `sa_cm2`, `cells_per_cm2` (symbiont density, **populated 192/192**), `chlorophyll_ug_cm2`.
-- **DATA-QUALITY NOTE:** `chlorophyll_ug_cm2` here is **also empty (0/192)** — chl-a is pending. The chl-a column is plumbed through the pipeline but contains no values yet.
+### `symbiont_chl_clean` — symbiont density (+ planned chl-a slot)
+- **Raw:** `data/raw/symbiont_counts/Raw_counts.csv` (4 hemocytometer quadrant counts Q1–Q4 per fragment) + `metadata_ordered_merge.csv` (SA, slurry volume). **Script:** `code/06_symbiont_chl.R` → **`symbiont_chl_clean.rds`** (192 rows; columns may expand as provenance fields are added).
+- **Columns:** `id`, `treatment`, `wound`, `biopsy_day`, `thicket`, `tank`, `sa_cm2`, `cells_per_cm2` (symbiont density, **populated 192/192**), `count_source`, `n_reps`, `chlorophyll_ug_cm2`.
+- **DATA-QUALITY NOTE:** `chlorophyll_ug_cm2` here is **also empty (0/192)** because the chl-a assay was not run.
 
 ### `worm_clean` — flatworm contamination check
 - **Raw:** `data/raw/worm_presence/Sheet1.csv` (3 dates: 06/07, 06/08, 06/12). **Script:** `code/10_worms.R` → **`worm_clean.rds`** (576 × 9).

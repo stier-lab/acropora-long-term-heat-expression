@@ -78,21 +78,24 @@ m <- readRDS(file.path(MOD_DIR, "12_bw_lm.rds"))
 d <- readRDS(file.path(DATA_PROC, "buoyant_weight_clean.rds"))
 form <- paste(format(formula(m)), collapse = " ")
 add_row("12_bw_lm", "fixed structure", form,
-        "treatment * wound * thicket",
-        if (grepl("treatment \\* wound \\* thicket", form)) "PASS" else "FAIL",
-        "no day term — single endpoint measurement")
-add_row("12_bw_lm", "no random effects?",
-        "OLS only", "OK because 1 obs per coral",
-        "PASS", "tank (n=8) and id (n=48) would be singular with 1 obs/coral")
+        "treatment * wound * thicket + (1 | tank)",
+        if (grepl("treatment \\* wound \\* thicket", form) &&
+            "tank" %in% names(lme4::ranef(m))) "PASS" else "FAIL",
+        "no day term; tank retained as treatment-assignment block")
+add_row("12_bw_lm", "random effects",
+        paste(names(lme4::ranef(m)), collapse = "+"),
+        "tank only",
+        if (identical(names(lme4::ranef(m)), "tank")) "PASS" else "FAIL",
+        "coral ID omitted because each coral has one endpoint growth observation")
 add_row("12_bw_lm", "n",
         nrow(d), "48 (24 per temperature)",
         if (nrow(d) == 48) "PASS" else "WARN",
         sprintf("Cells in design: %d (2 trt x 2 wound x 3 genet = 12)",
                 cells(d, treatment, wound, thicket)))
 add_row("12_bw_lm", "df residual",
-        m$df.residual, "~36 (48 - 12 fixed params)",
-        if (m$df.residual >= 30) "PASS" else "WARN",
-        "Adequate residual df for 3-way model")
+        df.residual(m), "~35-36 for tank-aware 3-way model",
+        if (df.residual(m) >= 30) "PASS" else "WARN",
+        "Adequate residual df for 3-way fixed structure")
 
 # ---- Symbiont density ----
 m <- readRDS(file.path(MOD_DIR, "12_zoox_lmm.rds"))

@@ -77,12 +77,12 @@ every coral that healed went on to regenerate; at 31 °C **67 % healed but never
 ![Kaplan–Meier curves: wound closure vs new-corallite regeneration](../figures/14_morphology_KM.png)
 
 **How we asked it, statistically.** Each binary recovery trait (e.g. "wound smoothed", "new
-corallites present") was turned into a **time-to-event**: the day a coral first reached that
-milestone. We then used **Kaplan–Meier curves** (the fraction not-yet-reached over time) and **Cox
-proportional-hazards models** (the *hazard ratio* = relative rate of reaching the milestone in heated
-vs ambient). Healing traits: hazard ratio ≈ 1, *n.s.* (no difference). New-corallite regeneration:
-**HR = 0.22 (95 % CI 0.07–0.69, *p* = 0.010)** — heated corals reached it at roughly one-fifth the
-rate. *Plain version: survival analysis is the right tool because many corals never reach the
+corallites present") was turned into a **time-to-event** interval: the previous scored day and the
+first scored day when a coral reached that milestone. The primary timing test is an
+**interval-censored Weibull AFT model**; Kaplan-Meier and Cox curves are retained as first-observed-day
+summaries. New-corallite regeneration: **time ratio = 1.32 (95 % CI 1.19–1.47, *p* = 1.4e-7)** —
+heated corals reached it later or not within the experiment. *Plain version: survival analysis is the
+right tool because many corals never reach the
 milestone in 15 days ("censored") — it uses both the timing and the never-happened information,
 which a simple percentage throws away.*
 
@@ -131,20 +131,20 @@ same population, and noted that both methods independently detect genotype-level
 |---|---|
 | **Linear mixed model (LMM)** | Regression for the continuous responses that accounts for repeated measures (same coral over time) and grouping (corals in tanks) via random effects. |
 | **treatment × day interaction** | The *rate* at which heated and ambient corals diverge — this is the heat signal, not the day-0 main effect. |
-| **Kaplan–Meier / Cox / hazard ratio** | Survival analysis for "time until a recovery milestone." HR < 1 = slower/less likely under heat; HR = 0.22 means ~1/5 the rate. |
+| **Interval survival / Kaplan–Meier / Cox** | Survival analysis for "time until a recovery milestone." Interval models handle discrete scoring days; KM/Cox summarize first observed onset. |
 | **genet as a fixed effect** | With only 3 genets, we estimate each one's effect directly rather than as a variance component (more reliable with so few groups). |
 | **type-III ANOVA** | Tests each term adjusting for all others (the correct default for interaction models). |
 | **confirmatory vs exploratory** | A-priori predictions (grounded in the literature) are reported unadjusted; exploratory tests are multiple-comparison corrected (`code/28`). |
 
 ## Honest caveats (worth knowing on a first read)
 
-- **The regeneration result is real but concentrated:** of 6 a-priori skeletal-regeneration tests,
-  the new-corallite Cox model is the one that's formally significant (*p* = 0.0095); tip-exist /
-  tip-extension point the same way but are non-significant. The censored fraction (67 % vs 0 %) and
+- **The regeneration result is real but concentrated:** the strongest timing signal is
+  new-corallite onset in the interval-censored model (*p* = 1.4e-7); tip-exist is also delayed
+  (*p* = 0.036), while tip-extension remains non-significant. The censored fraction (67 % vs 0 %) and
   the per-coral lag are the strongest framing. (`RESULTS.md` §10.)
 - **Three genets** is enough to detect genotype variation but not its genetic architecture — that's
   what the forthcoming gene-expression + SNP work resolves.
-- **Chlorophyll-a is pending** (assay), and the apical-tip wound assay isn't identical to a surface
+- **Chlorophyll-a was not run**, and the apical-tip wound assay isn't identical to a surface
   wound bed — so the phase-decoupling should be retested across wound geometries.
 
 ## Where to go next
