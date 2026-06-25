@@ -1,6 +1,6 @@
 # External reference data
 
-> 🗂️ **Provenance for the Cunning 2024 CBASS ED50 data** · Updated 2026-06-07 · Index: [`DOCS_INDEX.md`](../../DOCS_INDEX.md) · used by `code/26_thermal_context.R`.
+> 🗂️ **Provenance for the Cunning 2024 CBASS ED50 data** · Updated 2026-06-07 · Index: [`README.md`](../../README.md) · used by `code/sensitivity/26_thermal_context.R`.
 
 ## `cunning2024_apulchra_ed50.csv`
 
@@ -20,7 +20,7 @@ doi:10.1007/s00338-024-02577-7. Data: github.com/jrcunning/CBASS_methods
 the primary dose-response fit; `ed50.f`/`std.error.f` the refined fit.
 
 **Why it's here (LTH project #17):** Same species and island as the LTH
-heat × wound experiment. Used by `code/26_thermal_context.R` to (a) place the
+heat × wound experiment. Used by `code/sensitivity/26_thermal_context.R` to (a) place the
 LTH chronic treatments (28 °C, 31 °C) on a calibrated *A. pulchra* thermal-
 tolerance axis and (b) compare the magnitude of among-genotype thermal-
 tolerance variation across the acute (CBASS) and chronic (LTH) methods.

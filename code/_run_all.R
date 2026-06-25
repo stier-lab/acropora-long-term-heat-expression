@@ -20,9 +20,7 @@ scripts <- c(
   "09_ysi_water_chem.R",
   "10_worms.R",
   "11_combined_figure.R",
-  "12_extended_stats.R",
-  "12b_color_clmm_robustness.R",
-  "12c_morph_blme.R",
+  "12_models.R",               # primary models + color-CLMM & morphology-blme robustness (was 12/12b/12c)
   "13_genet_interaction.R",
   "14_morphology_kaplan.R",
   "15_multivariate.R",
@@ -30,13 +28,13 @@ scripts <- c(
   "17_figure_audit.R",
   "18_data_validation.R",
   "19_genet_dashboard.R",
-  "22_sensitivity_flagged.R",
-  "23_timeseries_diagnostics.R",
-  "24_headline_model_comparison.R",
-  "26_thermal_context.R",
-  "27_variance_partitioning.R",
-  "28_multiple_testing.R",
-  "29_morphology_prob_contrasts.R",
+  "sensitivity/22_sensitivity_flagged.R",
+  "sensitivity/23_timeseries_diagnostics.R",
+  "sensitivity/24_headline_model_comparison.R",
+  "sensitivity/26_thermal_context.R",
+  "sensitivity/27_variance_partitioning.R",
+  "sensitivity/28_multiple_testing.R",
+  "sensitivity/29_morphology_prob_contrasts.R",
   "diagnostics/A_continuous_lmm.R",
   "diagnostics/B_morphology_glmm.R",
   "diagnostics/C_cox_diagnostics.R",
@@ -47,7 +45,7 @@ scripts <- c(
   "20_master_results_table.R",
   "diagnostics/H_spreadsheet_coverage.R",
   "31_rnaseq_covariate_table.R",    # handoff: per-library phenotype covariates for the RNA-seq
-  "25_model_diagnostic_coverage.R",
+  "sensitivity/25_model_diagnostic_coverage.R",
   "30_manuscript_audit.R"          # advisory phenotype reproducibility check — warns (never fails) if phenotype numbers drift
 )
 

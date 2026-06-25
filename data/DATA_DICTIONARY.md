@@ -1,6 +1,6 @@
 # Data Dictionary — LTH Expression by Temperature (Project #17, 2025)
 
-> 🗂️ **Variable definitions for all raw streams** · Updated 2026-06-12 · Index: [`DOCS_INDEX.md`](../DOCS_INDEX.md) · decodes `data/raw/`; per-stream codebooks in `data/metadata/`; loaded by `code/01`.
+> 🗂️ **Variable definitions for all raw streams** · Updated 2026-06-12 · Index: [`README.md`](../README.md) · decodes `data/raw/`; per-stream codebooks in `data/metadata/`; loaded by `code/01`.
 
 **Experiment:** Heat (28 °C vs 31 °C) × wounding (unwounded vs wounded) factorial on the
 coral *Acropora pulchra*, Mo'orea (Gump Station), 2025. Three genets/thickets (a, c, d),
@@ -123,7 +123,7 @@ terminal streams on `id` alone.
 - **Script output (no single raw file):** **`coral_physio_wide.rds`** (48 × 8) — one row per growth fragment with terminal/endpoint values: `pam_end`, `color_end`, `growth_areal`, `zoox_end`, keyed by `id` + design factors. Convenience table for multivariate/endpoint analyses.
 
 ### External — `cunning2024_apulchra_ed50.csv`
-- Per-genet acute thermal-tolerance ED50 (°C) for *A. pulchra* from Mahana, Mo'orea (CBASS assay; Cunning et al. 2024 *Coral Reefs*). Used by `code/26_thermal_context.R` to place the chronic 28/31 °C treatments on a calibrated tolerance axis. **Caveat:** acute (18 h) ≠ chronic (weeks); Cunning's numbered genets are **not** matched to LTH thickets a/c/d. See `data/external/README.md`.
+- Per-genet acute thermal-tolerance ED50 (°C) for *A. pulchra* from Mahana, Mo'orea (CBASS assay; Cunning et al. 2024 *Coral Reefs*). Used by `code/sensitivity/26_thermal_context.R` to place the chronic 28/31 °C treatments on a calibrated tolerance axis. **Caveat:** acute (18 h) ≠ chronic (weeks); Cunning's numbered genets are **not** matched to LTH thickets a/c/d. See `data/external/README.md`.
 
 ---
 

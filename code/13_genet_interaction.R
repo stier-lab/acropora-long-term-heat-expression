@@ -5,7 +5,7 @@
 #
 #          Note: the BROADER genet analysis (per-response interaction tests,
 #          per-genet emmeans contrasts, full ANOVA) is integrated into the
-#          primary statistics in code/12_extended_stats.R. This script is the
+#          primary statistics in code/12_models.R. This script is the
 #          focused formal test that the Progress Notes asked for (2026-04-29:
 #          "Add in genet effects and see if there is a difference"), kept as
 #          a separate file so reviewers can replicate the comparison directly.

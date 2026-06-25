@@ -1,6 +1,6 @@
 # Literature — *Acropora pulchra* (LTH "expression by temperature" + wound-healing model)
 
-> 🗂️ **Literature overview** · Updated 2026-06-12 · Index: [`DOCS_INDEX.md`](../DOCS_INDEX.md) · PDFs in `literature/pdfs/`; refs in `manuscript/references.bib`.
+> 🗂️ **Literature overview** · Updated 2026-06-12 · Index: [`README.md`](../README.md) · PDFs in `literature/pdfs/`; refs in `manuscript/references.bib`.
 
 Curated library for the LTH heat × wounding project and for parameterizing a third
 species (*A. pulchra*) in the coral wound-healing model (`~/coral-wound-healing-model`).

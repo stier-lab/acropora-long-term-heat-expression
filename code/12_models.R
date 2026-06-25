@@ -1,40 +1,54 @@
 # =============================================================================
-# Purpose: Primary statistical analysis with genet (thicket) as a first-class
-#          fixed effect. Models full treatment × wound × day × thicket
-#          interactions where data permit; tank and individual coral retained
-#          as random effects.
+# Purpose: Primary statistical models for every continuous + morphological
+#          response, plus the two robustness refits that the diagnostics call
+#          for. This single file replaces the former 12 / 12b / 12c trio:
 #
-#          With only 3 field-collected genets (a, c, d), the design treats
-#          thicket as fixed rather than random (Bolker 2008, Gelman 2005):
-#          when the number of levels of a grouping factor is small, a fixed-
-#          effects representation has better estimation properties and
-#          surfaces per-genet effect sizes directly.
+#            PART 1 — Primary models (was 12_extended_stats.R)
+#                     LMM/GLMM with treatment × wound × day × thicket fixed
+#                     structure; genet (thicket) is a first-class fixed effect
+#                     because only 3 genets were collected (Bolker 2008,
+#                     Gelman 2005: few grouping levels → fixed beats random).
+#                     Produces type-III ANOVA, emmeans contrasts, R²m/R²c,
+#                     per-genet treatment effects, and DHARMa diagnostics.
 #
-#          For each response, this script produces:
-#            - LMM/GLMM with treatment × wound × day × thicket fixed structure
-#            - Type-III ANOVA for all main and interaction terms
-#            - emmeans estimates per genet × treatment × wound (key contrasts)
-#            - DHARMa residual diagnostics
-#            - R²m / R²c (MuMIn::r.squaredGLMM)
-#            - Per-genet treatment-effect summary (forest-plot-ready)
+#            PART 2 — Color ordinal-CLMM robustness (was 12b)
+#                     Refit the 5-level color D-scale under the correct ordinal
+#                     likelihood; confirms the Gaussian LMM's inferences hold.
+#
+#            PART 3 — Penalized morphology refit (was 12c)
+#                     blme::bglmer with Cauchy(0, 2.5) priors to tame the
+#                     complete/quasi-complete separation in 7/8 binary traits;
+#                     yields finite, interpretable coefficient Wald tests.
 #
 # Input:   data/processed/{pam_clean,color_clean,buoyant_weight_clean,
 #                          symbiont_chl_clean,physio_clean}.rds
-# Output:  output/models/12_<response>_lmm.rds         — fitted model objects
-#          output/tables/12_anova_summary.csv           — ANOVA all terms
-#          output/tables/12_emmeans_contrasts.csv       — pairwise contrasts
-#          output/tables/12_genet_treatment_effects.csv — per-genet treatment effect
-#          output/tables/12_r2_summary.csv              — R² per response
-#          figures/12_diagnostics/<response>.png        — DHARMa plots
+# Output:  output/models/12_<response>_lmm.rds          — primary fits
+#          output/models/12b_color_clmm.rds             — ordinal robustness
+#          output/models/12c_morph_<trait>_blme.rds     — penalized refits
+#          output/tables/12_anova_summary.csv            — ANOVA all terms
+#          output/tables/12_emmeans_contrasts.csv        — pairwise contrasts
+#          output/tables/12_genet_treatment_effects.csv  — per-genet effects
+#          output/tables/12_r2_summary.csv               — R² per response
+#          output/tables/12_morph_fixed_effects.csv      — raw glmer fixefs
+#          output/tables/12b_color_clmm*.csv             — ordinal robustness
+#          output/tables/12c_morph_blme_*.csv            — penalized robustness
+#          figures/12_diagnostics/<response>.png         — DHARMa plots
 # =============================================================================
 
 source(here::here("code", "00_setup.R"))
 suppressPackageStartupMessages({
   library(MuMIn)
+  library(blme)
+  # NB: do NOT attach `ordinal` — it masks dplyr::slice and breaks downstream
+  # scripts. PART 2 calls it namespace-qualified (ordinal::clmm).
 })
 
 DIAG_DIR <- file.path(FIG_DIR, "12_diagnostics")
 dir.create(DIAG_DIR, recursive = TRUE, showWarnings = FALSE)
+
+# =============================================================================
+# PART 1 — PRIMARY MODELS  (formerly 12_extended_stats.R)
+# =============================================================================
 
 results_anova        <- list()
 results_emm          <- list()
@@ -290,3 +304,158 @@ print(all_genet |>
 cat("\nWrote: 12_anova_summary.csv, 12_emmeans_contrasts.csv,",
     "12_genet_treatment_effects.csv, 12_r2_summary.csv,",
     "12_morph_fixed_effects.csv, diagnostics in figures/12_diagnostics/\n")
+
+# =============================================================================
+# PART 2 — COLOR ORDINAL-CLMM ROBUSTNESS  (formerly 12b_color_clmm_robustness.R)
+#
+# Residual diagnostics flagged the Gaussian color LMM as KS-non-uniform (the
+# D-scale is a 5-level ordinal). We keep the Gaussian model for presentation
+# (it matches the other physiology metrics) but confirm here that every
+# qualitative inference holds under the correct ordinal likelihood.
+# =============================================================================
+cat("\n=== PART 2: color ordinal-CLMM robustness ===\n")
+
+color_ord_df <- readRDS(file.path(DATA_PROC, "color_clean.rds")) |>
+  mutate(thicket = factor(thicket),
+         # Convert split scores (e.g. 3.5) to the next-higher D category.
+         # base::round() uses bankers rounding, so 2.5 would become 2 while
+         # 3.5 becomes 4; floor(x + 0.5) is deterministic half-up rounding.
+         color_ord = factor(pmin(pmax(as.integer(floor(color_num + 0.5)), 1), 5),
+                            ordered = TRUE))
+
+# The 4-way fixed × random structure is too rich for clmm (Hessian singular).
+# Robustness check: same data, ordinal likelihood, slightly reduced structure
+# — treatment × wound × day + thicket interactions, single (1|id) random.
+m_clmm <- ordinal::clmm(
+  color_ord ~ treatment * wound * day + treatment * thicket +
+              treatment * wound * thicket + day * thicket + (1 | id),
+  data = color_ord_df, Hess = TRUE
+)
+saveRDS(m_clmm, file.path(MOD_DIR, "12b_color_clmm.rds"))
+
+# Type-I Wald per term (drop1-based)
+av_drop <- as.data.frame(drop1(m_clmm, test = "Chisq")) |>
+  tibble::rownames_to_column("term") |>
+  mutate(response = "color_dscale_ordinal")
+write_csv(av_drop, file.path(TBL_DIR, "12b_color_clmm.csv"))
+av <- av_drop |> rename(LR.stat = LRT, `Pr(>Chisq)` = `Pr(>Chi)`)
+
+# Compare to Gaussian LMM for the headline term — treatment main effect
+m_gauss <- readRDS(file.path(MOD_DIR, "12_color_lmm.rds"))
+gauss_av <- as.data.frame(anova(m_gauss))
+cat("\n=== Treatment main-effect comparison (Gaussian LMM vs ordinal CLMM) ===\n")
+if ("treatment" %in% rownames(gauss_av)) {
+  cat("Gaussian LMM treatment: F =",
+      round(gauss_av["treatment", "F value"], 2), "\n")
+}
+trt_row <- av[grepl("^treatment$", av$term), , drop = FALSE]
+if (nrow(trt_row) > 0) {
+  cat("Ordinal CLMM treatment: LRT =", round(trt_row$LR.stat[1], 2),
+      " p =", signif(trt_row$`Pr(>Chisq)`[1], 3), "\n")
+} else {
+  cat("CLMM drop1 did not report a main treatment term (likely all retained due to higher-order interactions); see 12b_color_clmm.csv for full term-by-term tests.\n")
+}
+
+# Per-genet contrasts: skip if Hessian is singular (emmeans would fail).
+# The drop1 LRT table above is the primary robustness output.
+pairs_df <- tryCatch({
+  emm <- emmeans::emmeans(m_clmm, ~ treatment | thicket * wound,
+                          at = list(day = 14))
+  as_tibble(pairs(emm, adjust = "none")) |>
+    mutate(response = "color_dscale_ordinal")
+}, error = function(e) {
+  message("emmeans pairwise contrasts skipped (Hessian singular: ",
+          conditionMessage(e), ")")
+  tibble(
+    note = "CLMM Hessian singular; per-genet contrasts not computable from this fit",
+    response = "color_dscale_ordinal"
+  )
+})
+write_csv(pairs_df, file.path(TBL_DIR, "12b_color_clmm_genet_effects.csv"))
+
+cat("\nWrote 12b_color_clmm.csv, 12b_color_clmm_genet_effects.csv, 12b_color_clmm.rds\n")
+cat("CLMM fit converged (LL =", round(as.numeric(logLik(m_clmm)), 1),
+    "); use drop1 LRTs in 12b_color_clmm.csv for term-by-term tests.\n")
+cat("Robustness conclusion: see report (overall direction of every term should match the Gaussian LMM).\n")
+
+# =============================================================================
+# PART 3 — PENALIZED MORPHOLOGY REFIT  (formerly 12c_morph_blme.R)
+#
+# The raw glmer fits in PART 1 give finite predictions (the random-effect
+# penalty regularizes them) and correct omnibus type-II Wald χ², but the
+# *individual coefficient* Wald z's blow up when any treatment × day × thicket
+# cell reaches 0 or 1 observed events (7/8 traits hit this). Refit with
+# blme::bglmer + Cauchy(0, 2.5) priors (Gelman et al. 2008 default) so the
+# coefficients become finite and Wald tests interpretable.
+# =============================================================================
+cat("\n=== PART 3: penalized morphology GLMMs (blme::bglmer, Cauchy(0,2.5)) ===\n")
+
+ph_blme <- readRDS(file.path(DATA_PROC, "physio_clean.rds")) |>
+  filter(wound == "yes", !is.na(day), day >= 0) |>
+  mutate(
+    treatment = factor(treatment),
+    thicket = factor(thicket)
+  )
+
+fit_blme <- function(tr) {
+  d <- ph_blme |> mutate(y = .data[[tr]]) |> filter(!is.na(y))
+  if (length(unique(d$y)) < 2 || nrow(d) < 30) return(NULL)
+  contrasts(d$treatment) <- contr.treatment(nlevels(d$treatment))
+  contrasts(d$thicket) <- contr.treatment(nlevels(d$thicket))
+  # Cauchy(0, 2.5) prior on all fixed effects — Gelman 2008 default for
+  # logistic regression with separation. Same structure as PART 1.
+  m <- tryCatch(
+    suppressMessages(suppressWarnings(
+      blme::bglmer(
+        y ~ treatment * day * thicket + (1 | tank) + (1 | id),
+        family   = binomial,
+        data     = d,
+        fixef.prior = "t(scale = 2.5, df = 1)",   # Cauchy(0, 2.5) — Gelman 2008
+        control  = lme4::glmerControl(optimizer = "bobyqa",
+                                      optCtrl = list(maxfun = 1e5))
+      )
+    )),
+    error = function(e) {
+      message("bglmer failed for ", tr, ": ", conditionMessage(e))
+      NULL
+    }
+  )
+  if (is.null(m)) return(NULL)
+  saveRDS(m, file.path(MOD_DIR, paste0("12c_morph_", tr, "_blme.rds")))
+  av <- as.data.frame(car::Anova(m, type = 2)) |>
+    tibble::rownames_to_column("term") |>
+    mutate(trait = tr)
+  tidy <- broom.mixed::tidy(m, effects = "fixed") |>
+    mutate(trait = tr, max_se = max(std.error, na.rm = TRUE))
+  list(anova = av, tidy = tidy)
+}
+
+res <- map(traits, function(tr) {
+  cat("Fitting:", tr, "... ")
+  out <- fit_blme(tr)
+  if (is.null(out)) cat("skipped\n")
+  else cat("done (max fixef SE =",
+           round(max(out$tidy$std.error, na.rm = TRUE), 2), ")\n")
+  out
+}) |> setNames(traits) |> compact()
+
+# Aggregate
+blme_anova <- map_dfr(res, "anova")
+blme_tidy  <- map_dfr(res, "tidy")
+write_csv(blme_anova, file.path(TBL_DIR, "12c_morph_blme_anova.csv"))
+write_csv(blme_tidy,  file.path(TBL_DIR, "12c_morph_blme_fixed_effects.csv"))
+
+# Compare: how many fixef SEs are still pathological?
+cat("\n=== SE sanity (after Cauchy prior) ===\n")
+ses <- blme_tidy |> group_by(trait) |>
+  summarise(n_fixed = n(),
+            n_sep   = sum(std.error > 50, na.rm = TRUE),
+            max_se  = max(std.error, na.rm = TRUE))
+print(ses)
+
+cat("\nWrote 12c_morph_blme_anova.csv (",
+    nrow(blme_anova), "rows ),\n",
+    "      12c_morph_blme_fixed_effects.csv (",
+    nrow(blme_tidy), "rows),\n",
+    "      output/models/12c_morph_<trait>_blme.rds (",
+    length(res), "fits)\n", sep = "")

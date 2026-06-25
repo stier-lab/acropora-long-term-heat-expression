@@ -1,5 +1,5 @@
 # Continuous-response model diagnostics
-Generated: 2026-06-25 09:04:35.52107
+Generated: 2026-06-25 10:23:38.370372
 
 Models reviewed: 12_pam_lmm, 12_color_lmm, 12_zoox_lmm, 12_bw_lm
 

@@ -1,6 +1,6 @@
 # Library map — paper → *A. pulchra* relevance → model/project connection
 
-> 🗂️ **Paper → relevance → connection map** · Updated 2026-06-12 · Index: [`DOCS_INDEX.md`](../DOCS_INDEX.md) · machine-readable twin: `literature/library_map.csv`.
+> 🗂️ **Paper → relevance → connection map** · Updated 2026-06-12 · Index: [`README.md`](../README.md) · machine-readable twin: `literature/library_map.csv`.
 
 **What this is.** Every PDF in `pdfs/` mapped to (1) how it relates to *Acropora pulchra* and
 (2) the specific wound-healing-model parameter or LTH-project role it supports. The library is

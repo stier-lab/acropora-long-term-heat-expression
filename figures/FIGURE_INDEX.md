@@ -1,6 +1,6 @@
 # Figure Index — LTH (Heat × Wound × *A. pulchra*, Mo'orea 2025)
 
-> 🗂️ **Catalog of every figure → its script** · Updated 2026-06-12 · Index: [`DOCS_INDEX.md`](../DOCS_INDEX.md) · figures built by `code/11,13–16,19,26`.
+> 🗂️ **Catalog of every figure → its script** · Updated 2026-06-12 · Index: [`README.md`](../README.md) · figures built by `code/11,13–16,19,26`.
 
 Catalog of the 23 PNG figures in `figures/` (each has a matching PDF), the
 `code/NN_*.R` script that generates it, and where it maps to the manuscript
@@ -81,4 +81,4 @@ and supplementary context, not numbered main-text figures.
 | `19_genet_dashboard.png` | Forest plot of standardized heat sensitivity across all responses, per genet | `code/19_genet_dashboard.R` | Fig. 3C |
 | `19b_genet_resilience_ranking.png` | Composite thermal-resilience score ranking per genet | `code/19_genet_dashboard.R` | Fig. 3C (companion) |
 | `19c_decomposed_resilience.png` | Heat sensitivity decomposed by wound state (wounded vs unwounded) | `code/19_genet_dashboard.R` | — |
-| `26_thermal_context.png` | LTH 28/31 °C vs Cunning et al. 2024 acute CBASS ED50s — chronic-sublethal context | `code/26_thermal_context.R` | — |
+| `26_thermal_context.png` | LTH 28/31 °C vs Cunning et al. 2024 acute CBASS ED50s — chronic-sublethal context | `code/sensitivity/26_thermal_context.R` | — |

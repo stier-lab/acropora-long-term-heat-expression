@@ -1,6 +1,6 @@
 # What we know and don't know — *A. pulchra* wounding, healing, regeneration & thermal tolerance
 
-> 🗂️ **Knowledge-gap synthesis (Intro framing)** · Updated 2026-06-12 · Index: [`DOCS_INDEX.md`](../DOCS_INDEX.md) · grounded in `literature/pdfs/`.
+> 🗂️ **Knowledge-gap synthesis (Intro framing)** · Updated 2026-06-12 · Index: [`README.md`](../README.md) · grounded in `literature/pdfs/`.
 
 A reading synthesis across **this LTH library** (`literature/`, 98 PDFs), the **wound-healing-model
 library** (`~/coral-wound-healing-model/literature/`), and the curated NotebookLM corpora
@@ -126,7 +126,7 @@ The threshold between "tolerable warming" and "regeneration-blocking heat" for *
 2. **The ED50 ↔ regeneration link** — whether thermally tolerant genets retain regenerative
    capacity. Cunning gives ED50s, Kaufman gives donor-history effects, but no one has correlated a
    genet's thermal threshold with its regeneration under heat. LTH approaches this; the SNP-matching
-   of thickets A/C/D to Cunning's genotyped genets is the pending step (see `NEXT_STEPS.md`).
+   of thickets A/C/D to Cunning's genotyped genets is the pending step (see `README.md (Pending work)`).
 3. **Mechanism** (RNA-seq, pending) and **field realism** (healing under corallivory/algal
    competition + heat) remain open for *A. pulchra*.
 

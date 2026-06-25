@@ -1,9 +1,9 @@
 # Citation audit — *Acropora pulchra* library (backward snowball)
 
-> 🗂️ **Backward-snowball citation audit** · Updated 2026-06-12 · Index: [`DOCS_INDEX.md`](../DOCS_INDEX.md) · library in `literature/pdfs/`.
+> 🗂️ **Backward-snowball citation audit** · Updated 2026-06-12 · Index: [`README.md`](../README.md) · library in `literature/pdfs/`.
 
 > **A-PRIORI HYPOTHESIS CITATIONS VERIFIED (2026-06-08).** The four confirmatory a-priori
-> citations hard-coded in `code/28_multiple_testing.R` (and echoed in `RESULTS.md` §10 and the
+> citations hard-coded in `code/sensitivity/28_multiple_testing.R` (and echoed in `RESULTS.md` §10 and the
 > manuscript Introduction) were checked against the *Acropora pulchra* NotebookLM notebook
 > (`f9a97210-…`), which returned the exact reference-list entries from multiple in-notebook sources.
 > **All four ground their claims and all metadata is correct — no citation string needed fixing:**

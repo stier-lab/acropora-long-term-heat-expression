@@ -4,7 +4,7 @@ Observations carried over from Molly's original exploratory analysis
 (`code/archive/molly_original/`), verified against the processed data, plus the
 sensitivity analysis that tests whether they change any conclusion.
 
-Verified 2026-06-04. Sensitivity check: `code/22_sensitivity_flagged.R`.
+Verified 2026-06-04. Sensitivity check: `code/sensitivity/22_sensitivity_flagged.R`.
 
 ## Flagged individual colonies
 
@@ -37,6 +37,6 @@ holds.
 
 These are documented, not excluded. None of them is a data-entry error — they
 are biological/replicate-level variation. The sensitivity analysis
-(`code/22_sensitivity_flagged.R`, `output/tables/22_sensitivity_flagged.csv`)
+(`code/sensitivity/22_sensitivity_flagged.R`, `output/tables/22_sensitivity_flagged.csv`)
 re-runs the key tests with the flagged colonies and tank 3 removed and reports
 whether any qualitative conclusion changes.

@@ -136,7 +136,7 @@ anova12 <- read_csv(file.path(TBL_DIR, "12_anova_summary.csv"),
     qualitative     = paste0(term, " effect on ", response,
                              if_else(coalesce(`Pr(>F)`, `Pr(>Chisq)`) < 0.05,
                                      " (significant)", " (n.s.)")),
-    source_script   = "code/12_extended_stats.R",
+    source_script   = "code/12_models.R",
     source_artifact = "output/tables/12_anova_summary.csv"
   )
 
@@ -198,7 +198,7 @@ genet_rows <- genet_eff_pct |>
               "no change"),
       if_else(!is.na(pct_change), sprintf("(%+.1f%%)", pct_change), "")
     ),
-    source_script   = "code/12_extended_stats.R",
+    source_script   = "code/12_models.R",
     source_artifact = "output/tables/12_genet_treatment_effects.csv"
   )
 
@@ -221,7 +221,7 @@ r2_rows <- read_csv(file.path(TBL_DIR, "12_r2_summary.csv"),
     pct_change      = NA_real_, ci_low = NA_real_, ci_high = NA_real_,
     p_value         = NA_real_,
     qualitative     = sprintf("%s = %.3f", metric, value),
-    source_script   = "code/12_extended_stats.R",
+    source_script   = "code/12_models.R",
     source_artifact = "output/tables/12_r2_summary.csv"
   )
 
@@ -245,7 +245,7 @@ morph_anova <- read_csv(file.path(TBL_DIR, "12c_morph_blme_anova.csv"),
     qualitative     = paste0(term, " effect on ", trait,
                              if_else(`Pr(>Chisq)` < 0.05,
                                      " (significant)", " (n.s.)")),
-    source_script   = "code/12c_morph_blme.R",
+    source_script   = "code/12_models.R",
     source_artifact = "output/tables/12c_morph_blme_anova.csv"
   )
 
@@ -279,7 +279,7 @@ morph_fixed <- read_csv(
       sprintf("%s: OR=%.2f (%s, blme penalized)", term, exp(estimate),
               if_else(2 * pnorm(-abs(statistic)) < 0.05, "sig", "n.s."))
     ),
-    source_script   = "code/12c_morph_blme.R",
+    source_script   = "code/12_models.R",
     source_artifact = "output/tables/12c_morph_blme_fixed_effects.csv"
   )
 
@@ -542,7 +542,7 @@ clmm_rows <- if (file.exists(file.path(TBL_DIR, "12b_color_clmm.csv"))) {
       p_value         = `Pr(>Chi)`,
       qualitative     = sprintf("%s (ordinal CLMM): %s", term,
                                 if_else(`Pr(>Chi)` < 0.05, "sig", "n.s.")),
-      source_script   = "code/12b_color_clmm_robustness.R",
+      source_script   = "code/12_models.R",
       source_artifact = "output/tables/12b_color_clmm.csv"
     )
 } else {
@@ -641,7 +641,7 @@ ts_rows <- if (file.exists(file.path(TBL_DIR, "23_timeseries_diagnostics.csv")))
       pct_change      = NA_real_, ci_low = NA_real_, ci_high = NA_real_,
       p_value         = p_value,
       qualitative     = conclusion,
-      source_script   = "code/23_timeseries_diagnostics.R",
+      source_script   = "code/sensitivity/23_timeseries_diagnostics.R",
       source_artifact = "output/tables/23_timeseries_diagnostics.csv"
     )
 } else tibble()
@@ -686,7 +686,7 @@ thermal_rows <- if (file.exists(file.path(TBL_DIR, "26_thermal_context.csv"))) {
       pct_change = NA_real_, ci_low = NA_real_, ci_high = NA_real_,
       p_value = NA_real_,
       qualitative = "acute thermal-tolerance benchmark; 31C chronic is sublethal (below acute ED50)",
-      source_script = "code/26_thermal_context.R",
+      source_script = "code/sensitivity/26_thermal_context.R",
       source_artifact = "data/external/cunning2024_apulchra_ed50.csv"
     )
 } else tibble()
@@ -730,7 +730,7 @@ icc_rows <- if (file.exists(file.path(TBL_DIR, "27_variance_partitioning.csv")))
       pct_change = NA_real_, ci_low = NA_real_, ci_high = NA_real_,
       p_value = NA_real_,
       qualitative = sprintf("%s: %.1f%% of variance", component, 100 * icc),
-      source_script = "code/27_variance_partitioning.R",
+      source_script = "code/sensitivity/27_variance_partitioning.R",
       source_artifact = "output/tables/27_variance_partitioning.csv"
     )
 } else tibble()
@@ -753,7 +753,7 @@ mt_rows <- if (file.exists(file.path(TBL_DIR, "28_multiple_testing.csv"))) {
                             hypothesis,
                             ifelse(significant, "significant", "n.s."),
                             rationale),
-      source_script = "code/28_multiple_testing.R",
+      source_script = "code/sensitivity/28_multiple_testing.R",
       source_artifact = "output/tables/28_multiple_testing.csv"
     )
 } else tibble()
@@ -776,7 +776,7 @@ probc_rows <- if (file.exists(file.path(TBL_DIR, "29_morphology_prob_contrasts.c
       p_value = p_value,
       qualitative = sprintf("P(28C)=%.2f vs P(31C)=%.2f; OR(31vs28)=%.2g",
                             prob_28, prob_31, or_31_vs_28),
-      source_script = "code/29_morphology_prob_contrasts.R",
+      source_script = "code/sensitivity/29_morphology_prob_contrasts.R",
       source_artifact = "output/tables/29_morphology_prob_contrasts.csv"
     )
 } else tibble()

@@ -1,6 +1,6 @@
 # For Shreya — collaboration brief
 
-> 🗂️ **Lead-author landing page** · Updated 2026-06-12 · Index: [`DOCS_INDEX.md`](../../DOCS_INDEX.md) · front door to everything in `docs/for_shreya/`.
+> 🗂️ **Lead-author landing page** · Updated 2026-06-12 · Index: [`README.md`](../../README.md) · front door to everything in `docs/for_shreya/`.
 
 Welcome, and thanks for leading this one. This folder is your front door to everything the Stier lab
 has built on the LTH project (#17: heat × wound × *A. pulchra*, Mo'orea 2025). The short version:
@@ -24,7 +24,7 @@ has built on the LTH project (#17: heat × wound × *A. pulchra*, Mo'orea 2025).
 ## What's done and reproducible (so you don't have to reconstruct it)
 
 - **The whole phenotype pipeline runs with one command** and regenerates every figure and table:
-  `Rscript code/_run_all.R` (~3 min). Start at **`START_HERE.md`** (repo root) for the tour.
+  `Rscript code/_run_all.R` (~4 min). Start at **`README.md`** (repo root) for the tour.
 - **Every statistic lives in one table:** `output/tables/20_master_results.csv` (description +
   effect size + test stat + df + p + CI per row; formatted version `_paper_ready.csv`). Never
   hand-copy a number — cite the table.
@@ -42,8 +42,8 @@ has built on the LTH project (#17: heat × wound × *A. pulchra*, Mo'orea 2025).
 
 | Need | Path |
 |---|---|
-| Orientation / how to run | `START_HERE.md`, `README.md` (repo root) |
-| Visual first-read walkthrough of the analysis | `docs/ANALYSIS_SUMMARY.md` |
+| Orientation / how to run | `README.md` (repo root) |
+| Visual first-read walkthrough of the analysis | `README.md` (Findings section) |
 | Full phenotype results narrative | `RESULTS.md` (incl. §10 limitations/caveats) |
 | Every statistic (source of truth) | `output/tables/20_master_results.csv` |
 | Your RNA-seq questions/goals + the genet-matching goal | `docs/for_shreya/analysis_proposal.md` |

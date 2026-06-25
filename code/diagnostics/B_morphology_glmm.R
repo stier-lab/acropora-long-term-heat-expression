@@ -1,7 +1,7 @@
 # =============================================================================
 # Diagnostic battery for morphological binomial GLMMs (script 12)
 # =============================================================================
-# Models fit in code/12_extended_stats.R are:
+# Models fit in code/12_models.R are:
 #   glmer(y ~ treatment * day * thicket + (1|tank), family = binomial,
 #         data = filter(physio_clean, wound == "yes"))
 # 7-8 traits saved to output/models/12_morph_<trait>_glmm.rds.

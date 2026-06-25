@@ -18,7 +18,7 @@ source(here::here("code", "00_setup.R"))
 # data/raw/plate_layout/Plate_2.csv      — already present
 
 if (!file.exists(file.path(DATA_RAW, "sequencing", "counts.csv"))) {
-  message("RNA-seq counts not yet present. This script is a stub — see NEXT_STEPS.md.")
+  message("RNA-seq counts not yet present. This script is a stub — see README.md (Pending work).")
   quit(save = "no", status = 0)
 }
 
