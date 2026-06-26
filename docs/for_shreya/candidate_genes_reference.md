@@ -10,8 +10,7 @@ discovery genome-wide; use this to *interpret* and *cross-check* the output, and
 confirmatory qRT-PCR panel if wanted.
 
 **Every gene–citation pair below was verified by reading the actual paper** (close reads of the
-PDFs; Cleves & Tinoco 2020 via NotebookLM). The verification corrected several errors carried over
-from the planning docs — see the **Verification ledger** at the bottom. Source tags: a paper name =
+PDFs; Cleves & Tinoco 2020 via NotebookLM). Source tags: a paper name =
 the gene is named *in that paper*; **(lab)** = from the lab's own planning docs/panels (no external
 primary confirmed); ⚠ = a flagged discrepancy.
 
@@ -69,23 +68,6 @@ the **heat × wound interaction** is the molecular LTH phenotype, and **per-gene
   (deferred next step).
 - **Pathways, not single loci** — many rows are families; the count matrix will have multiple
   paralogs per family.
-
-## Verification ledger (2026-06-26)
-
-Every cited paper was read and each gene checked against its text. Corrections applied:
-
-| Item | Planning-doc claim | What the paper actually says | Action |
-|---|---|---|---|
-| **TGF-β** | regeneration candidate, cited to Xu 2023 | Xu 2023 states Wnt and FGF "**but not TGF-β**" pathways are involved | Moved to **(lab)** NSF-panel only; flagged ⚠ as contradicted by Xu |
-| **Wnt3** | specific candidate (NSF panel, "Xu/Tinoco") | Xu names many Wnts (1/2b/4/7b/8/8a/16/10) + β-catenin, **not Wnt3** | Relabeled "Wnt ligands"; Wnt3 marked as the lab panel's pick |
-| **PCNA** | proliferation marker (NSF panel, "Xu/Tinoco") | **not** in Xu 2023; co-cite "Tinoco 2023" does not exist | Marked **(lab)**, unverified; advise substituting a verified marker |
-| **"Tinoco et al. 2023"** | cited for Wnt/FGF/PCNA/TGF-β | does not exist; only Cleves & **Tinoco 2020** (HSF, PNAS) | Removed; added Cleves & Tinoco 2020 → HSF |
-| **"Hemond & Vollmer 2015"** | positional-confound caveat | correct paper is **Hemond, Kaluziak & Vollmer 2014** (BMC Genomics) | Citation corrected |
-| **Palmer 2011 (PO, phagocytosis)** | wound machinery incl. phenoloxidase, phagocytosis | both discussed only re *other* organisms; coral findings are amoebocytes + melanin cells; **no gene symbols** | Row reframed as cellular/timeline; PO/phagocytosis removed |
-| **MMPs** | wound remodelling (would-be Xu) | Xu reports **ADAMTS**, not MMPs | MMPs kept as **(lab)** Common-Garden; ADAMTS credited to Xu |
-| **peroxiredoxin** | antioxidant (Barshis) | Barshis names **peroxidasin** (a distinct ECM peroxidase) | Corrected to peroxidasin |
-| **HSP90** | implied HSP candidate | not named in Barshis 2013 or Bay & Palumbi 2015 | Omitted (kept HSP70/HSP75 only) |
-| **C-type lectin → Barshis** | lectin (Barshis + Seneca) | Barshis named *mannose-binding* lectin (down); C-type lectin is Seneca's (AmCTL, up) | C-type lectin credited to Seneca only |
 
 ## References (verified)
 
