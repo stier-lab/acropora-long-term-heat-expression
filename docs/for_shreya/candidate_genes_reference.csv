@@ -1,22 +1,23 @@
-gene_or_family,axis,functional_role,direction_under_heat,lth_relevance,sources
-c-Fos,wound_acute,Immediate-early transcription factor (peaks ~6h post-wound),up acute,Cleanest acute wound marker; tests if acute response is intact under heat,Xu 2023
-JNK,wound_acute,Stress-activated MAP-kinase; early wound signaling,up acute,Immediate-early injury cascade; pairs with c-Fos,Xu 2023
-NF-kB,wound_immunity,Innate-immune transcription factor,up early,Immune phase of healing; may be heat-sensitive,Signaling notes
-Wnt / Wnt3 / beta-catenin,regeneration,Axis patterning and tissue regeneration,context-dependent,Core regeneration pathway (the phase heat impairs); Phoenix/proliferation marker,Xu 2023; NSF Aim-2
-FGF ligands / FGF-receptor / Sprouty,regeneration,Growth-factor signaling (wound-specific),expected down under heat,Proliferative regrowth signal; suppressed if regeneration blocked,Xu 2023; NSF Aim-2
-TGF-beta,wound_regeneration,Wound repair and cell migration,context-dependent,Bridges closure and tissue remodeling,Xu 2023; NSF Aim-2
-MMPs (matrix metalloproteinases),wound,Tissue/ECM remodeling,up,Remodeling during closure and regrowth,Common-Garden H10
-ADAMTS metalloproteases,wound,Extracellular-matrix remodeling (wound-specific),up,ECM turnover at the wound bed,Signaling notes
-PCNA,regeneration,Proliferating-cell nuclear antigen (proliferation marker),up with proliferation,Reads out proliferation; key for the Phoenix (regeneration-from-within) test,NSF Aim-2
-Carbonic anhydrase / galaxin / SLC4g,skeletal_repair,Calcification / biomineralization,context-dependent,New-skeleton/corallite formation = the LTH regeneration milestone (new_corallites_on_tip),Signaling notes
-Immune cells / wound-healing machinery,wound_immunity,Granular amoebocytes; melanin/PO; phagocytosis,n/a,Conserved coral immune + wound-healing processes; baseline for healing phase,Palmer 2011
-HSP70 / HSP75 / HSP90,heat,Molecular chaperones (core heat-shock response),up acute; higher baseline (frontloaded) in tolerant,Thermal axis + genet test: frontloading predicts resilient genet C carries higher baseline HSPs,Barshis 2013; Bay & Palumbi 2015
-Small HSPs (HSPB1/Hsp23; Hsp16.2),heat,Small heat-shock chaperones,up acute; lower in tolerant,Acute-stress reporters; contrast with frontloaded HSP70,Barshis 2013
-HSF (heat-shock transcription factor),heat,Master regulator of the HSP response,activates HSPs under heat,Upstream switch for the HSP program; CRISPR knockout reduces thermal tolerance,Cleves & Tinoco 2020
-Antioxidants: Cu/Zn-SOD; catalase; peroxiredoxin/peroxidasin,heat,Reactive-oxygen-species detoxification,catalase up in bleaching; peroxidasin frontloaded in tolerant,Sub-bleaching oxidative load; likely cost diverting resources from regeneration at 31C,Barshis 2013; Seneca & Palumbi 2010
-Apoptosis / TNF pathway: TNFR; TRAF3,heat,Programmed cell death + immune signaling,TRAF3 among top up under heat; frontloaded in tolerant,Cell-fate decisions under heat; links stress to tissue loss,Barshis 2013
-Ubiquitin-proteasome (E3/RING-finger ligases; proteasome),heat,Protein quality control / turnover of damaged protein,up acute; elevated pre-stress in tolerant,Proteostasis under thermal load,Bay & Palumbi 2015; Dixon 2015
-Ion / Ca2+ transporters + oxidoreductases,heat,Ion homeostasis and redox balance,higher pre-stress in tolerant (heritable),Heritable heat-tolerance correlate; Ca2+ handling also links to calcification,Dixon 2015
-Chromoprotein / GFP-like pigments,heat,Photoprotection (screening pigments),up in bleaching,Molecular side of LTH color-card paling,Seneca & Palumbi 2010
-C-type lectins,heat_immunity,Symbiont recognition / innate immunity,up in bleaching,Host-symbiont signaling under heat (LTH symbiont-density loss),Seneca & Palumbi 2010; Barshis 2013
-Signaling / TF network modules,heat,Co-expressed regulatory modules (GPCR signaling/TFs up; ECM down),rapidly modulated,WGCNA module-level view; resilience = rapid signaling modulation,Thomas 2019
+gene_or_family,axis,functional_role,direction_under_heat,lth_relevance,sources,verification
+c-Fos,wound_acute,Immediate-early transcription factor,up in earliest regeneration stage,Cleanest acute wound marker; is the acute response intact under heat,Xu 2023,confirmed in paper
+JNK cascade,wound_acute,Stress-activated MAP-kinase signalling,up (GO enrichment),Immediate-early injury cascade; regulates c-Fos,Xu 2023,confirmed in paper
+NF-kB,wound_immunity,Innate-immune signalling,up (GO: NF-kB-inducing kinase),Immune phase of healing,Xu 2023,confirmed in paper
+Wnt ligands + beta-catenin (APC; Wntless),regeneration,Axis patterning and tissue regeneration,context-dependent,Core regeneration pathway (the phase heat impairs),Xu 2023,confirmed in paper (Wnt3 NOT in Xu = NSF panel pick)
+FGF ligands / FGF-receptors / Sprouty,regeneration,Growth-factor signalling (wound-specific),expected down under heat,Proliferative regrowth signal; suppressed if regeneration blocked,Xu 2023,confirmed in paper
+ADAMTS metalloproteases,wound,Extracellular-matrix remodelling,up,ECM turnover at the wound bed (ADAMTS18-like),Xu 2023,confirmed in paper
+Galaxin,skeletal_repair,Skeletal organic-matrix / biomineralization,context-dependent,New-skeleton/corallite formation = LTH regeneration milestone,Xu 2023,confirmed in paper
+Ca2+ transport genes (carbonic anhydrase; SLC4g),skeletal_repair,Calcification ion transport,context-dependent,Calcification under heat (LTH 38pct drop),Xu 2023 (Ca-transport GO); lab (CA/SLC4g),partial (CA/SLC4g lab-only)
+MMPs (matrix metalloproteinases),wound,Tissue/ECM remodelling,up,Remodelling during closure/regrowth,lab Common-Garden H10,lab-only (Xu reports ADAMTS not MMPs)
+TGF-beta,test_only,Wound repair / cell migration (vertebrate paradigm),n/a,Listed in NSF panel; TEST do not assume,lab NSF Aim-2,CONTRADICTED: Xu 2023 found TGF-beta NOT involved
+PCNA,regeneration,Proliferation marker (Phoenix-effect test),up with proliferation,Reads out proliferation,lab NSF Aim-2,unverified (not in Xu; co-cite Tinoco 2023 does not exist)
+Granular amoebocytes + melanin immune cells,wound_immunity,Cellular four-phase wound response (degranulation/infiltration 6h/proliferation 24h/maturation 48h),n/a,Cellular framework + timeline for healing phase,Palmer 2011,confirmed cells (NO gene symbols; PO/phagocytosis not coral findings)
+HSP70 (+ HSP75),heat,Core heat-shock chaperones,up acute; higher baseline (frontloaded) in tolerant,Thermal axis + genet test (frontloading predicts resilient genet C),Barshis 2013 (HSP70); Bay & Palumbi 2015 (HSP75),confirmed in papers (HSP90 not named; omitted)
+Small HSPs (HSPB1/Hsp23; Hsp16.2),heat,Small heat-shock chaperones,up acute; lower in tolerant,Acute-stress reporters; contrast with frontloaded HSP70,Barshis 2013,confirmed in paper
+HSF (heat-shock transcription factor),heat,Master regulator of the HSP response,activates HSPs under heat,Upstream switch; CRISPR knockout reduces thermal tolerance,Cleves & Tinoco 2020,confirmed (NotebookLM; no local PDF)
+Cu/Zn-SOD; catalase; peroxidasin,heat,Reactive-oxygen-species detoxification,catalase up in bleaching; SOD/peroxidasin in tolerant,Sub-bleaching oxidative load; cost diverting resources from regeneration,Barshis 2013 (SOD/peroxidasin); Seneca & Palumbi 2010 (catalase),confirmed in papers (peroxidasin not peroxiredoxin)
+TNFR; TRAF3 (TNF/apoptosis),heat,Programmed cell death + immune signalling,TRAF3 among top up; frontloaded in tolerant,Cell-fate decisions under heat; links stress to tissue loss,Barshis 2013,confirmed in paper
+Ubiquitin-proteasome (E3/RING-finger ligases; proteasome),heat,Protein quality control,up acute; elevated pre-stress in tolerant,Proteostasis under thermal load,Bay & Palumbi 2015 (ubiquitin/RING); Dixon 2015 (proteasome),confirmed in papers
+Ion / Ca2+ transporters + oxidoreductases,heat,Ion homeostasis and redox balance,higher pre-stress in tolerant (heritable),Heritable heat-tolerance correlate; Ca2+ links to calcification,Dixon 2015,confirmed in paper
+Chromoprotein / GFP-like pigments,heat,Photoprotection (screening pigments),up in bleaching,Molecular side of LTH color-card paling,Seneca & Palumbi 2010,confirmed in paper
+C-type lectin,heat_immunity,Symbiont recognition / innate immunity,up in bleaching,Host-symbiont signalling under heat (LTH symbiont loss),Seneca & Palumbi 2010,confirmed in paper (Barshis named mannose-binding lectin down; different)
+Signalling / TF network modules,heat,Co-expressed regulatory modules (GPCR/TFs up; ECM down),rapidly modulated,WGCNA module-level resilience view,Thomas 2019,confirmed in paper (module-level; no individual genes)
