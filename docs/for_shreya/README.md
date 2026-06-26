@@ -48,6 +48,7 @@ has built on the LTH project (#17: heat × wound × *A. pulchra*, Mo'orea 2025).
 | Every statistic (source of truth) | `output/tables/20_master_results.csv` |
 | Your RNA-seq questions/goals + the genet-matching goal | `docs/for_shreya/analysis_proposal.md` |
 | **Phenotype → expression hypotheses (suggested)** | `docs/for_shreya/gene_expression_integration_map.md` |
+| **Candidate-gene reference (optional, literature-derived)** | `docs/for_shreya/candidate_genes_reference.md` |
 | **Optional Intro/Discussion draft (take or leave)** | `docs/for_shreya/optional_intro_discussion_notes.md` |
 | Verified references + cite→PDF index | `manuscript/references.bib`, `literature/CITATIONS_INDEX.md` |
 | Literature library (98 PDFs, mapped) | `literature/LIBRARY_MAP.md`, `literature/LITERATURE.md` |
