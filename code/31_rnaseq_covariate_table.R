@@ -16,6 +16,17 @@
 #          (Per-coral regeneration outcome is NOT attached: RNA-seq fragments were
 #          destructively biopsied at D1/D3/D10, before the regeneration trajectory.)
 #
+# What & why: a coral fragment that was sequenced is the SAME individual we
+#   measured phenotypes on. To ask "does gene expression track the organism's
+#   physiology?" you need expression and phenotype side by side, keyed to the
+#   same fragment. This script does that bookkeeping ONCE: it takes the list of
+#   RNA-seq libraries and glues on (a) the experimental design each fragment was
+#   under, (b) its symbiont density at biopsy, and (c) its genet-level resilience
+#   scores. It writes TWO files — a harmonized join (recoded to match the rest of
+#   the phenotype analysis) and a raw, un-recoded lookup (so the lead author can
+#   choose her own factor levels / reference categories). It fits no model; it
+#   just hands the expression analyst a ready-to-merge covariate table.
+#
 # Input:   data/raw/plate_layout/Selected_Samples.csv
 #          data/processed/symbiont_chl_clean.rds
 #          output/tables/19_genet_resilience_summary.csv
@@ -23,9 +34,14 @@
 #          output/tables/31_rnaseq_library_lookup_raw.csv        (raw, un-recoded)
 # =============================================================================
 
+# 00_setup.R loads packages and defines shared paths (DATA_RAW, DATA_PROC,
+# TBL_DIR for output/tables, ...).
 source(here::here("code", "00_setup.R"))
 
 # ---- RNA-seq library rows, as they appear in the source plate layout ---------
+# Selected_Samples.csv is the wet-lab plate map; it lists every well, of several
+# sample types. We keep only SampleType == "gene" (the RNA-seq libraries) — the
+# other rows (e.g. SNP/DNA samples) are not part of the expression covariate table.
 sel_raw <- read_csv(file.path(DATA_RAW, "plate_layout", "Selected_Samples.csv"),
                     show_col_types = FALSE) |>
   filter(SampleType == "gene")
@@ -43,6 +59,10 @@ raw_lookup <- sel_raw |>
 write_csv(raw_lookup, file.path(TBL_DIR, "31_rnaseq_library_lookup_raw.csv"))
 
 # ---- RNA-seq library list (144 'gene' libraries), harmonized to phenotype coding
+# transmute() keeps ONLY the columns it names. Here we both rename and recode so
+# the design fields read identically to the rest of the phenotype pipeline (so a
+# later join "just works"). `id` is the integer Fragment_ID — the join key used
+# below to attach per-fragment symbiont density.
 libs <- sel_raw |>
   transmute(
     library_id = Sample_ID,
@@ -56,11 +76,16 @@ libs <- sel_raw |>
   )
 
 # ---- Per-fragment symbiont density (destructive biopsy; one row per coral) ---
+# The symbiont table can have repeats per fragment; distinct(id) keeps one row
+# per coral so the left_join below stays one-row-per-library (no fan-out).
 sym <- readRDS(file.path(DATA_PROC, "symbiont_chl_clean.rds")) |>
   distinct(id, .keep_all = TRUE) |>
   transmute(id, symbiont_cells_per_cm2 = cells_per_cm2)
 
 # ---- Per-genet resilience covariates (genet-level; from the dashboard) -------
+# These three numbers describe the GENET (A/C/D), not the individual fragment, so
+# every library sharing a genet gets the same value once joined by `genet`.
+# `thicket` is this project's column name for genet identity.
 res <- read_csv(file.path(TBL_DIR, "19_genet_resilience_summary.csv"),
                 show_col_types = FALSE) |>
   transmute(genet                       = thicket,
@@ -68,6 +93,9 @@ res <- read_csv(file.path(TBL_DIR, "19_genet_resilience_summary.csv"),
             genet_pca_displacement      = round(pca_displacement, 3),
             genet_resilience_rank       = rank_overall)
 
+# Assemble: start from one row per library, attach per-fragment symbiont density
+# (by id) and per-genet resilience (by genet). left_join keeps every library even
+# if a covariate is missing (NA) — e.g. fragments with no symbiont measurement.
 covariates <- libs |>
   left_join(sym, by = "id") |>
   left_join(res, by = "genet") |>

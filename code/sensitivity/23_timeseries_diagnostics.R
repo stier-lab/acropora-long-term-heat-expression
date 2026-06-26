@@ -24,15 +24,29 @@
 #          different cohort at each biopsy day), so within-coral autocorrelation
 #          does not apply — only the linearity-of-time check is run for it.
 #
+# What & why: the manuscript's main models keep time simple — a straight line in
+#   `day` with one random intercept per coral. That is easy to interpret, but for
+#   repeated measurements of the same coral it can be wrong in two ways that
+#   matter: (1) measurements close in time are correlated (autocorrelation),
+#   which makes p-values look more significant than they should; and (2) the real
+#   trajectory may curve rather than rise/fall at a constant rate. This script
+#   stress-tests both assumptions and asks the only question that counts: does the
+#   treatment×time conclusion still hold under the more careful model? Nothing
+#   here replaces the primary models — it documents that they are defensible.
 # Input:   data/processed/{pam_clean,color_clean,symbiont_chl_clean}.rds
 # Output:  output/tables/23_timeseries_diagnostics.csv
 #          output/diagnostics/I_timeseries_report.md
 #          figures/diagnostics/I_<response>_acf.png
 # =============================================================================
 
+# 00_setup.R loads packages and shared paths (DATA_PROC, TBL_DIR, FIG_DIR, ...).
 source(here::here("code", "00_setup.R"))
-suppressPackageStartupMessages({ library(nlme) })
+suppressPackageStartupMessages({ library(nlme) })   # nlme::lme handles corAR1
 
+# ---- Results collector -----------------------------------------------------
+# Every diagnostic appends one tidy row via add(); bind_rows(rows) at the end
+# assembles the full table. Storing a "conclusion" string with each row lets the
+# markdown report read like plain English.
 rows <- list()
 add <- function(response, check, statistic, df, p_value, conclusion, detail = "") {
   rows[[length(rows) + 1]] <<- tibble(
@@ -44,22 +58,30 @@ add <- function(response, check, statistic, df, p_value, conclusion, detail = ""
   )
 }
 
+# Where the ACF diagnostic PNGs go.
 DIAG_DIR <- file.path(FIG_DIR, "diagnostics")
 dir.create(DIAG_DIR, recursive = TRUE, showWarnings = FALSE)
 
 # ---------------------------------------------------------------------------
 # Repeated-measures diagnostics (PAM, color)
 # ---------------------------------------------------------------------------
+# For one repeated-measures response: run all three diagnostics + the ACF plot.
+# Generic column names (.y response, .t time) let the same code serve PAM and color.
 ts_repeated <- function(data, response, time = "day", label) {
   data <- data |>
     mutate(thicket = factor(thicket), tank = factor(tank), id = factor(id)) |>
     rename(.y = all_of(response), .t = all_of(time)) |>
     filter(!is.na(.y), !is.na(.t)) |>
-    arrange(tank, id, .t)
+    arrange(tank, id, .t)               # AR(1) needs rows in time order within coral
 
+  # Full fixed-effects structure mirrors the primary model (all interactions).
   fixed <- .y ~ treatment * wound * .t * thicket
 
   # --- 1. AR(1) temporal autocorrelation -----------------------------------
+  # Fit twice with nlme::lme: a baseline assuming independent within-coral
+  # residuals, then the same model with an AR(1) correlation structure (residuals
+  # one timepoint apart correlate by phi, two apart by phi^2, ...). Nested in
+  # tank/id. method = "ML" (not REML) so the two are comparable by likelihood.
   base <- tryCatch(
     nlme::lme(fixed, random = ~ 1 | tank/id, data = data, method = "ML",
               control = nlme::lmeControl(opt = "optim", maxIter = 200,
@@ -70,6 +92,9 @@ ts_repeated <- function(data, response, time = "day", label) {
     error = function(e) { message(label, " AR1 lme failed: ", conditionMessage(e)); NULL }) else NULL
 
   if (!is.null(base) && !is.null(ar1)) {
+    # Likelihood-ratio test: is the AR(1) model a significantly better fit? A
+    # small p means the autocorrelation is real and the simpler model understated
+    # uncertainty. phi is the estimated lag-1 correlation (0 = none, ->1 = strong).
     lr  <- anova(base, ar1)
     phi <- tryCatch(coef(ar1$modelStruct$corStruct, unconstrained = FALSE)[[1]],
                     error = function(e) NA_real_)
@@ -81,7 +106,9 @@ ts_repeated <- function(data, response, time = "day", label) {
         else "no significant residual autocorrelation",
         sprintf("phi=%.3f; AIC base=%.1f AR1=%.1f", phi, AIC(base), AIC(ar1)))
 
-    # Does the treatment×day conclusion survive AR(1)?
+    # Does the treatment×day conclusion survive AR(1)? Pull the treatment×time
+    # coefficient's t/p from each fit; the regex finds the interaction row whose
+    # name contains both "treatment" and the time term (.t).
     get_td <- function(m) {
       tt <- summary(m)$tTable
       r  <- grep("treatment.*:.t$|:.t$", rownames(tt))
@@ -90,6 +117,9 @@ ts_repeated <- function(data, response, time = "day", label) {
       tt[r, c("t-value", "p-value")]
     }
     td_b <- get_td(base); td_a <- get_td(ar1)
+    # The headline robustness check: flag only if significance flips (crosses
+    # 0.05) between the baseline and AR(1) fits — that would mean the conclusion
+    # depended on ignoring autocorrelation.
     add(label, "treatment×time robustness to AR(1)",
         td_a[1], NA, td_a[2],
         sprintf("treatment×time p: base=%.3g, AR(1)=%.3g — %s",
@@ -101,6 +131,12 @@ ts_repeated <- function(data, response, time = "day", label) {
   }
 
   # --- 2. Random slope vs intercept ----------------------------------------
+  # Should each coral get its OWN time slope, or just its own intercept? Compare
+  # (1 | id) vs (1 + .t | id) by LRT. Built via as.formula() strings so the
+  # random part can be swapped while the fixed part stays identical. (The first
+  # m_int fit is immediately overwritten by the explicit string-built version
+  # below — only the explicit ones are compared.) The singular-fit check is set
+  # to "ignore" because these rich random structures often hit boundaries.
   m_int <- tryCatch(lme4::lmer(
     update(fixed, . ~ . - .t + .t),   # keep formula; randoms differ below
     data = data, REML = FALSE,
@@ -119,6 +155,8 @@ ts_repeated <- function(data, response, time = "day", label) {
     control = lme4::lmerControl(check.conv.singular = .makeCC("ignore", 1e-4))),
     error = function(e) NULL)
   if (!is.null(m_int) && !is.null(m_slp)) {
+    # Small p => corals really do follow different trajectories and the random
+    # slope is warranted; otherwise the intercept-only model is adequate.
     lr <- anova(m_int, m_slp)
     p_rs <- lr$`Pr(>Chisq)`[2]
     add(label, "random slope of time by coral (LRT vs intercept-only)",
@@ -130,9 +168,13 @@ ts_repeated <- function(data, response, time = "day", label) {
   }
 
   # --- 3. Linearity of time (linear vs quadratic) --------------------------
+  # Delegate to the shared helper (also used for the cross-sectional symbionts).
   ts_linearity(data, ".y", ".t", label, has_id = TRUE)
 
   # --- ACF figure ----------------------------------------------------------
+  # Visual companion to test 1: autocorrelation-function plots of the normalized
+  # residuals, baseline vs AR(1). Bars beyond the dashed bounds = leftover
+  # autocorrelation; a good AR(1) fit should flatten them.
   if (!is.null(base)) {
     png(file.path(DIAG_DIR, paste0("I_", gsub("[^a-z]", "", tolower(label)), "_acf.png")),
         width = 1100, height = 500, res = 150)
@@ -150,6 +192,10 @@ ts_repeated <- function(data, response, time = "day", label) {
 # ---------------------------------------------------------------------------
 # Linearity-of-time check (works for repeated or cross-sectional)
 # ---------------------------------------------------------------------------
+# Fit a linear-in-time model and a quadratic-in-time model, then LRT them.
+# has_id toggles the random structure: repeated measures get (1|tank)+(1|id);
+# cross-sectional data (symbionts: one obs/coral) get (1|tank) only — there is
+# no within-coral replication to support an id random effect.
 ts_linearity <- function(data, ycol, tcol, label, has_id) {
   d <- data |> rename(.y = all_of(ycol), .t = all_of(tcol)) |>
     filter(!is.na(.y), !is.na(.t)) |>
@@ -161,12 +207,15 @@ ts_linearity <- function(data, ycol, tcol, label, has_id) {
     data = d, REML = FALSE,
     control = lme4::lmerControl(check.conv.singular = .makeCC("ignore", 1e-4))),
     error = function(e) NULL)
+  # poly(.t, 2) adds a curvature (squared-time) term and its treatment interaction.
   m_quad <- tryCatch(lme4::lmer(
     as.formula(paste("(.y) ~ treatment * poly(.t, 2) + wound + thicket", rand)),
     data = d, REML = FALSE,
     control = lme4::lmerControl(check.conv.singular = .makeCC("ignore", 1e-4))),
     error = function(e) NULL)
   if (!is.null(m_lin) && !is.null(m_quad)) {
+    # Small p => the quadratic fits significantly better, i.e. the trajectory
+    # curves and a single linear slope is only an approximation.
     lr <- anova(m_lin, m_quad)
     p_nl <- lr$`Pr(>Chisq)`[2]
     add(label, "nonlinearity of time (quadratic vs linear, LRT)",
@@ -183,19 +232,23 @@ ts_linearity <- function(data, ycol, tcol, label, has_id) {
 # ---------------------------------------------------------------------------
 cat("=== Time-series diagnostics ===\n")
 
+# Both repeated-measures responses get the full battery (AR(1) + slopes + curvature).
 pam <- readRDS(file.path(DATA_PROC, "pam_clean.rds"))
 ts_repeated(pam, "fv_fm", "day", "PAM Fv/Fm")
 
 color <- readRDS(file.path(DATA_PROC, "color_clean.rds"))
 ts_repeated(color, "color_num", "day", "Color (D-scale)")
 
-# Symbiont density: cross-sectional (1 obs/coral) — linearity only
+# Symbiont density: cross-sectional (1 obs/coral) — linearity only. Log-transform
+# the cell counts (right-skewed, multiplicative) before the curvature check;
+# time here is biopsy_day (which cohort was sacrificed), not repeated sampling.
 zoox <- readRDS(file.path(DATA_PROC, "symbiont_chl_clean.rds")) |>
   filter(is.finite(cells_per_cm2), cells_per_cm2 > 0) |>
   mutate(.logz = log(cells_per_cm2))
 ts_linearity(zoox |> rename(yy = .logz), "yy", "biopsy_day",
              "log symbionts (cross-sectional)", has_id = FALSE)
 
+# ---- Collect + write -------------------------------------------------------
 out <- bind_rows(rows)
 write_csv(out, file.path(TBL_DIR, "23_timeseries_diagnostics.csv"))
 

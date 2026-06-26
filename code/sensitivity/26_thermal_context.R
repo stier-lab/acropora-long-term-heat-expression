@@ -20,25 +20,46 @@
 #             possible yet (requires LTH RNA-seq SNPs vs Cunning genet_map).
 #             We therefore compare the STRUCTURE/MAGNITUDE of variation, not
 #             individual genets.
+#
+# What & why: a reviewer's first question about a chronic-heat experiment is
+#   "how hot is hot?" — was 31 °C a gentle nudge or a lethal cook? To answer it
+#   we borrow an independent, calibrated yardstick: Cunning et al. (2024) ran an
+#   acute CBASS assay (a standardized 18-h heat ramp) on 20 genotypes of THIS
+#   species from the SAME reef (Mahana, Mo'orea) and fitted an ED50 — the
+#   temperature where photosynthetic efficiency (Fv/Fm) collapses to half. Their
+#   mean ED50 is ~35.4 °C, so our 31 °C treatment sits ~4 °C *below* the acute
+#   breaking point: chronic-but-sublethal, not an acute kill. The script does two
+#   things: (#2) drops 28/31 °C onto that ED50 number line, and (#1) checks that
+#   both methods — acute CBASS and our chronic LTH design — agree that there is
+#   substantial heritable variation in heat tolerance among genotypes. This is
+#   context/benchmarking, not a hypothesis test on our own data.
 # Input:   data/external/cunning2024_apulchra_ed50.csv
 #          output/tables/19_genet_resilience_summary.csv
 # Output:  output/tables/26_thermal_context.csv
 #          figures/26_thermal_context.{pdf,png}
 # =============================================================================
 
+# 00_setup.R loads packages and defines shared paths (TBL_DIR, ...), the
+# theme_pub() plot theme, and save_fig().
 source(here::here("code", "00_setup.R"))
 
+# The two chronic treatment temperatures, named so the figure can label them.
 LTH_TREATMENTS <- c(ambient = 28, heated = 31)
 
+# One ED50 (°C) per Cunning genotype — the acute thermal-tolerance benchmark.
 ed50 <- read_csv(file.path(here::here("data", "external"),
                            "cunning2024_apulchra_ed50.csv"),
                  show_col_types = FALSE)
 
 # ---- (#2) Acute ED50 summary + treatment placement ------------------------
+# Summarise the acute benchmark, then measure how far our treatments sit below
+# it. A large positive "below ED50" gap = our heat is well under the acute limit.
 ed50_mean <- mean(ed50$ed50); ed50_sd <- sd(ed50$ed50)
 ed50_min  <- min(ed50$ed50);  ed50_max <- max(ed50$ed50)
-ed50_cv   <- 100 * ed50_sd / ed50_mean
+ed50_cv   <- 100 * ed50_sd / ed50_mean   # CV = SD/mean, a scale-free spread metric
 
+# Assemble the context table: the ED50 distribution plus the temperature gaps
+# between each treatment and the ED50 (mean and lowest-genotype) thresholds.
 ctx <- tibble(
   metric = c("acute ED50 mean (°C)", "acute ED50 range (°C)", "acute ED50 SD (°C)",
              "acute ED50 CV (%)", "n genets (Cunning)",
@@ -50,9 +71,13 @@ ctx <- tibble(
 write_csv(ctx, file.path(TBL_DIR, "26_thermal_context.csv"))
 
 # ---- (#1) Among-genotype variation: acute vs chronic ----------------------
+# Side-by-side concordance check: does each method detect genotype variation?
+# We are NOT correlating individual genets (labels aren't matched across studies)
+# — only comparing whether both approaches find a meaningful spread.
 res <- read_csv(file.path(TBL_DIR, "19_genet_resilience_summary.csv"),
                 show_col_types = FALSE)
-# Chronic among-thicket variation: spread of the standardized resilience score
+# Chronic among-thicket variation: spread (max - min) of the standardized
+# resilience score across our 3 thickets — the chronic analogue of the ED50 range.
 chronic_range <- diff(range(res$mean_sensitivity))
 concordance <- tibble(
   method   = c("Acute CBASS (Cunning 2024)", "Chronic LTH (this study)"),
@@ -66,9 +91,11 @@ concordance <- tibble(
 write_csv(concordance, file.path(TBL_DIR, "26_genotype_variation_concordance.csv"))
 
 # ---- Figure: thermal-context number line ----------------------------------
-# Acute ED50 distribution (20 genets) vs the two chronic LTH treatments.
-ed50_pts <- ed50 |> mutate(y = 0)
-band <- tibble(xmin = ed50_min, xmax = ed50_max)
+# A one-dimensional temperature axis: the spread of acute ED50s (20 genets, in
+# orange) and the two chronic treatment triangles (28/31 °C, blue) on the same
+# scale, so the reader sees at a glance that heat stays below the acute threshold.
+ed50_pts <- ed50 |> mutate(y = 0)          # all points on the y = 0 baseline
+band <- tibble(xmin = ed50_min, xmax = ed50_max)   # shaded ED50 genet range
 
 p <- ggplot() +
   # acute ED50 genet range band + points

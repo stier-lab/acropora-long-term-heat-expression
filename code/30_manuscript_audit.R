@@ -17,6 +17,18 @@
 #          rule is one-directional — PASS = the manuscript contains the current
 #          value; FLAG = it does not (stale, or formatted off).
 #
+# What & why: numbers in a manuscript drift. You rerun an analysis, an estimate
+#   shifts in the third decimal, but the prose still quotes last month's value.
+#   This script is the safety net, and it runs LAST in the pipeline (after every
+#   table has been regenerated). For each headline phenotype number it recomputes
+#   the value straight from the fresh outputs, then searches the manuscript text
+#   for that value. If it is there -> PASS; if it is not -> FLAG (and a warning).
+#   Crucially this is ADVISORY: it never errors out the build. A flag is a "go
+#   check this sentence," not a failure — so a number you are mid-edit on cannot
+#   block the whole pipeline. It only polices the Stier-lab phenotype sections;
+#   the lead author's narrative (Intro/Discussion/Abstract/transcriptomics) is
+#   deliberately out of scope. Currently 15/15 checks pass.
+#
 # Input:   manuscript/Manuscript_LTH.md
 #          output/tables/{12_anova_summary,14_interval_survreg,
 #                         14_cox_hazard_ratios,14_cox_genet_LRT,
@@ -27,8 +39,12 @@
 #          warns (does not stop) if any phenotype number has drifted
 # =============================================================================
 
+# 00_setup.R loads packages and defines shared paths (TBL_DIR for output/tables,
+# DATA_PROC, ...).
 source(here::here("code", "00_setup.R"))
 
+# Read the whole manuscript into ONE string (lines collapsed with "\n") so the
+# token searches below are simple substring tests against the full text.
 ms_path <- here::here("manuscript", "Manuscript_LTH.md")
 ms <- paste(readLines(ms_path, warn = FALSE), collapse = "\n")
 # Normalize the typographic minus (U+2212, used in the prose) to ASCII "-" so a
@@ -52,10 +68,14 @@ token_found <- function(x, digits) {
   any(vapply(fmt_cands(x, digits), \(s) grepl(s, ms, fixed = TRUE), logical(1)))
 }
 
+# checks accumulates one tibble row per registered claim; add_check() appends to
+# it via <<- (assign in the enclosing scope). Each check PASSES only when ALL of
+# its identifying tokens are found, so a multi-part claim (e.g. estimate + both CI
+# bounds) can't pass on a partial coincidental match.
 checks <- list()
 add_check <- function(label, values, digits, source) {
   # values: numeric vector of identifying tokens; digits: matching precision(s)
-  digits <- rep_len(digits, length(values))
+  digits <- rep_len(digits, length(values))  # recycle one digit spec across all values
   oks <- mapply(token_found, values, digits)
   checks[[length(checks) + 1]] <<- tibble(
     check    = label,

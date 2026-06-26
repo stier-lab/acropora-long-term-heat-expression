@@ -1,23 +1,35 @@
 # =============================================================================
-# Cox proportional-hazards diagnostics for script 14.
+# Purpose: Cox proportional-hazards diagnostics for the survival models in
+#          script 14. For each wound-healing trait, refit the Cox models, test
+#          the proportional-hazards assumption (cox.zph / Schoenfeld residuals),
+#          check events-per-variable, and sanity-check the hazard-ratio direction.
 #
-# For each wound-healing trait, this script:
-#   1. Recomputes time-to-event from data/processed/physio_clean.rds
-#      (mirrors the event-construction in code/14_morphology_kaplan.R).
-#   2. Refits the three Cox model scopes:
-#         - overall: Surv(event_day, event) ~ treatment + strata(thicket)
-#         - by_wound: stratified by wound (vacuous here — only wounded corals
-#           are at risk in the source script, so we report this as N/A for
-#           completeness rather than skipping the check silently)
-#         - per_genet: coxph(... ~ treatment, data = subset(thicket == g))
-#   3. Runs survival::cox.zph() on every fitted model to test PH.
-#   4. Saves Schoenfeld residual plots for models with PH violation.
-#   5. Checks events-per-variable (EPV >= 10) and HR direction sanity.
+# What & why: scripts 14 ask "how fast does each healing trait appear, and does
+#   heat speed it up?" using Cox proportional-hazards regression. A Cox model's
+#   central assumption is PROPORTIONAL HAZARDS — that the heat-vs-ambient hazard
+#   ratio is constant over time (heat doesn't help early then hurt late). If that
+#   assumption is violated, the single reported HR is misleading, so every Cox
+#   fit has to be tested before we believe it. This script:
+#     1. Recomputes time-to-event per coral (first day the trait = 1, else
+#        censored at the last observed day), mirroring code/14_morphology_kaplan.R.
+#     2. Refits three scopes: overall (stratified by genet), a documented N/A
+#        "by_wound" scope (only wounded corals are at risk), and one model per genet.
+#     3. Runs survival::cox.zph() — this correlates the SCHOENFELD residuals
+#        (per-event, per-covariate deviations) against transformed time. A
+#        significant slope (p < 0.05) means the effect changes over time = PH
+#        VIOLATED. p >= 0.05 = no evidence of violation = the assumption holds.
+#     4. Saves a Schoenfeld residual plot (residuals vs time, should scatter
+#        flat around 0) whenever any covariate violates PH, for visual follow-up.
+#     5. Reports events-per-variable (EPV; rule of thumb >= 10 for a stable Cox
+#        fit) and the HR direction (HR > 1 = trait emerges faster under heat).
+#   Per-genet small-sample limitations and a known PH violation that is fixed by a
+#   time-varying refit (pigment, genet C) are downgraded to HANDLED.
 #
-# Outputs:
-#   output/diagnostics/C_cox_diagnostics.csv
-#   output/diagnostics/C_cox_report.md
-#   figures/diagnostics/C_<trait>_<scope>_schoenfeld.png  (only if PH fails)
+# Input:   data/processed/physio_clean.rds
+#          output/tables/14c_cox_tt_pigment_genetC.csv (presence => HANDLED)
+# Output:  output/diagnostics/C_cox_diagnostics.csv
+#          output/diagnostics/C_cox_report.md
+#          figures/diagnostics/C_<trait>_<scope>_schoenfeld.png  (only if PH fails)
 # =============================================================================
 
 suppressPackageStartupMessages({
@@ -40,6 +52,8 @@ dir.create(OUT_DIR, recursive = TRUE, showWarnings = FALSE)
 dir.create(FIG_DIR, recursive = TRUE, showWarnings = FALSE)
 
 # ---- load data -------------------------------------------------------------
+# Set treatment factor with 28C first so it becomes the reference level: every
+# hazard ratio below is then "31C vs 28C" (heated relative to ambient control).
 ph <- readRDS(DATA) |>
   mutate(
     treatment = factor(treatment, levels = c("28C", "31C")),
@@ -53,6 +67,11 @@ traits <- c("hole_in_center", "polyp_in_hole", "wound_smoothed",
             "new_corallites_on_tip")
 
 # ---- compute time-to-event (mirrors code/14_morphology_kaplan.R) -----------
+# Collapse the repeated daily yes/no scores per coral into one survival record:
+#   event_day = first day the trait was observed (==1); if it never appeared,
+#               censor at the last day the coral was seen.
+#   event     = 1 if the trait ever appeared, 0 if censored (right-censored).
+# This is the standard time-to-first-event construction Cox models expect.
 compute_events <- function(d, trait) {
   d |>
     filter(wound == "yes", !is.na(day), day >= 0) |>
@@ -61,10 +80,10 @@ compute_events <- function(d, trait) {
     arrange(day, .by_group = TRUE) |>
     summarise(
       event_day = {
-        first1 <- which(y == 1)[1]
+        first1 <- which(y == 1)[1]                      # index of first "yes"
         if (is.na(first1)) max(day, na.rm = TRUE) else day[first1]
       },
-      event = as.integer(any(y == 1, na.rm = TRUE)),
+      event = as.integer(any(y == 1, na.rm = TRUE)),    # ever healed? 1/0
       .groups = "drop"
     ) |>
     mutate(trait = trait)
@@ -78,7 +97,10 @@ events <- events |>
 contrasts(events$treatment) <- contr.treatment(nlevels(events$treatment))
 
 # ---- helpers ---------------------------------------------------------------
-# Schoenfeld plot saver: writes one PNG with a facet per covariate.
+# Schoenfeld plot saver: writes one PNG with a panel per covariate. Reading it:
+# each point is one event's scaled Schoenfeld residual plotted against time. If
+# PH holds, the cloud scatters flat around 0 (the LOWESS line is horizontal); a
+# rising or falling trend is the visual signature of a PH violation.
 save_schoenfeld <- function(zph_obj, fig_path) {
   # Use raw Schoenfeld residual scatter (plot.cox.zph's spline smoother is
   # often singular for the small per-genet datasets here; raw points are
@@ -112,6 +134,8 @@ save_schoenfeld <- function(zph_obj, fig_path) {
 
 # Status logic for PH rows only. EPV is reported as a separate check so low
 # event counts do not get mislabeled as proportional-hazards violations.
+# cox.zph p < 0.05 = PH assumption violated = FAIL; p >= 0.05 = PASS; NA (test
+# could not run, often too few events) = WARN.
 status_from <- function(ph_p, epv_ok, n_event) {
   if (is.na(ph_p)) {
     return("WARN")
@@ -120,7 +144,8 @@ status_from <- function(ph_p, epv_ok, n_event) {
   "PASS"
 }
 
-# Diagnostic for one fitted coxph model.
+# Diagnostic for one fitted coxph model: PH test (per covariate + GLOBAL),
+# optional Schoenfeld plot, events-per-variable, and HR direction. Returns rows.
 diagnose_fit <- function(fit, trait, scope) {
   if (is.null(fit) || inherits(fit, "try-error")) {
     return(tibble(
@@ -131,12 +156,15 @@ diagnose_fit <- function(fit, trait, scope) {
     ))
   }
   s   <- summary(fit)
-  nev <- s$nevent
-  np  <- length(coef(fit))
+  nev <- s$nevent                       # number of events (corals that healed)
+  np  <- length(coef(fit))              # number of estimated covariates
+  # Events per variable: too few events per coefficient => unstable Cox estimates.
   epv <- if (np > 0) nev / np else NA_real_
   epv_ok <- !is.na(epv) && epv >= 10
 
-  # cox.zph PH test (per-covariate + GLOBAL)
+  # cox.zph runs the proportional-hazards test: one row per covariate plus a
+  # GLOBAL row. It regresses the scaled Schoenfeld residuals on time; a nonzero
+  # slope (small p) means the hazard ratio drifts over time = PH violated.
   zph <- tryCatch(cox.zph(fit), error = function(e) NULL)
   rows <- list()
 
@@ -157,7 +185,8 @@ diagnose_fit <- function(fit, trait, scope) {
                           ", df=", tab$df[i])
       )
     }
-    # Save Schoenfeld plot if GLOBAL or any covariate violates PH
+    # Only bother saving the residual plot when there is something to see — i.e.
+    # the GLOBAL test or any covariate fails the PH assumption.
     any_violation <- any(tab$p < 0.05, na.rm = TRUE)
     if (any_violation) {
       fig_name <- paste0("C_", trait, "_",
@@ -182,7 +211,8 @@ diagnose_fit <- function(fit, trait, scope) {
     )
   }
 
-  # EPV rule of thumb
+  # EPV rule of thumb: PASS if >= 10 events per covariate, else WARN (underpowered
+  # but not a PH violation — kept as its own check so the two don't get conflated).
   rows[[length(rows) + 1]] <- tibble(
     trait = trait, scope = scope, check = "EPV",
     statistic = round(epv, 2), p_value = NA_real_,
@@ -191,7 +221,9 @@ diagnose_fit <- function(fit, trait, scope) {
                     " (rule of thumb: EPV >= 10)")
   )
 
-  # HR direction sanity (treatment31C only — first coef)
+  # HR direction sanity: report exp(coef) for the treatment term. HR > 1 means
+  # the trait reaches its endpoint FASTER under 31C (higher hazard of healing);
+  # HR < 1 = slower under heat. Logged as PASS (descriptive, not a pass/fail gate).
   cf <- tryCatch(s$coefficients, error = function(e) NULL)
   if (!is.null(cf) && nrow(cf) >= 1 && "exp(coef)" %in% colnames(cf)) {
     # Find the row whose name contains "treatment"
@@ -214,13 +246,16 @@ diagnose_fit <- function(fit, trait, scope) {
 }
 
 # ---- fit + diagnose --------------------------------------------------------
+# For each trait, fit the three scopes and run diagnose_fit() on each.
 results <- list()
 
 for (tr in traits) {
   d <- events |> filter(trait == tr)
   n_event <- sum(d$event)
 
-  # (1) OVERALL: strata(thicket) — same model as fit_cox_overall()
+  # (1) OVERALL: strata(thicket) lets each genet have its own baseline hazard
+  # while estimating one shared treatment effect — same model as fit_cox_overall().
+  # Skip if fewer than 5 events (too sparse to fit a stable Cox model).
   fit_overall <- tryCatch(
     if (n_event < 5) NULL else
       coxph(Surv(event_day, event) ~ treatment + strata(thicket), data = d),
@@ -238,7 +273,9 @@ for (tr in traits) {
     notes  = "N/A — only wounded corals at risk in source script"
   )
 
-  # (3) PER-GENET: coxph(... ~ treatment) within each genet
+  # (3) PER-GENET: one model per genet to look for genotype-specific heat
+  # responses. These are small datasets (skip if < 3 events), so they are
+  # treated as descriptive — their EPV/PH warnings are downgraded to HANDLED below.
   for (g in c("a", "c", "d")) {
     dg <- d |> filter(thicket == g)
     fit_g <- tryCatch(
@@ -252,6 +289,9 @@ for (tr in traits) {
 }
 
 diag_df <- bind_rows(results)
+# Reconcile statuses (numbers untouched): the one real PH violation (pigment,
+# genet C) is HANDLED by a time-varying coxph refit saved in 14c_*.csv, and the
+# per-genet small-sample warnings are HANDLED as documented descriptive limits.
 tt_path <- file.path(ROOT, "output", "tables", "14c_cox_tt_pigment_genetC.csv")
 diag_df <- diag_df |>
   mutate(

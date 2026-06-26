@@ -1,13 +1,42 @@
 # =============================================================================
-# Diagnostic suite for continuous-response LMMs
-#   Models:  12_pam_lmm.rds, 12_color_lmm.rds, 12_zoox_lmm.rds, 12_bw_lm.rds
-#   Checks:  DHARMa residuals, convergence/singularity, influence, emmeans
-#            direction sanity vs biological expectation.
-#   Outputs: output/diagnostics/A_continuous_diagnostics.csv
-#            output/diagnostics/A_continuous_report.md
-#            figures/diagnostics/A_<model>_*.png
+# Purpose: Diagnostic suite for the four continuous-response mixed models. For
+#          each model run DHARMa simulated residuals, convergence/singularity
+#          checks, influence (Cook's distance), and an emmeans direction-sanity
+#          check against the biological expectation.
+#
+# What & why: before we trust any p-value in the paper, each fitted model gets a
+#   "did this fit actually behave?" audit. This script loads the four
+#   already-fitted continuous-outcome models (PAM Fv/Fm, color D-scale, log
+#   symbiont density, areal calcification) and puts each through the same battery:
+#     - DHARMa: simulate many new datasets FROM the fitted model, then compare
+#       the simulated residuals to the observed ones. Raw residuals from mixed
+#       models are not expected to look normal, so DHARMa rescales each
+#       observation's residual to a uniform(0,1) "quantile" — a correctly
+#       specified model produces flat, uniform residuals. We then formally test
+#       that uniformity (Kolmogorov-Smirnov), the dispersion (is the spread
+#       right, or over/under-dispersed?), and whether there are more extreme
+#       outliers than the model expects. p >= 0.05 = the model passes that test.
+#     - convergence / singularity: did the optimizer find a stable solution, or
+#       did a random-effect variance collapse to ~0 (a "singular" fit)?
+#     - influence: does one coral disproportionately drive the result (Cook's D)?
+#     - direction sanity: does the heated-vs-control contrast point the way
+#       biology predicts (heat should DROP Fv/Fm, symbionts, color, and growth)?
+#   Every check writes a PASS / WARN / FAIL / HANDLED row. FAILs that are already
+#   addressed by a companion robustness model (e.g. the ordinal color CLMM) are
+#   downgraded to HANDLED in the final reconciliation step.
+# Input:   output/models/12_pam_lmm.rds, 12_color_lmm.rds, 12_zoox_lmm.rds,
+#          12_bw_lm.rds (plus data/processed/symbiont_chl_clean.rds for the
+#          zoox outlier-sensitivity refit)
+# Output:  output/diagnostics/A_continuous_diagnostics.csv
+#          output/diagnostics/A_continuous_report.md
+#          figures/diagnostics/A_<model>_*.png
 # =============================================================================
 
+# ---- Setup -----------------------------------------------------------------
+# 00_setup.R loads shared packages/paths (OUT_DIR, FIG_DIR, MOD_DIR, DATA_PROC).
+# The extra libraries here are the diagnostic toolkit: DHARMa (residual checks),
+# lme4/lmerTest (the mixed models), emmeans (treatment contrasts), and
+# influence.ME (Cook's distance for lmer fits).
 suppressPackageStartupMessages({
   source(here::here("code", "00_setup.R"))
   library(DHARMa)
@@ -22,12 +51,17 @@ suppressPackageStartupMessages({
   library(readr)
 })
 
+# Diagnostics get their own output/figure subfolders so they never overwrite the
+# main analysis outputs. recursive + showWarnings=FALSE => safe to re-run.
 DIAG_OUT <- file.path(OUT_DIR, "diagnostics")
 DIAG_FIG <- file.path(FIG_DIR, "diagnostics")
 dir.create(DIAG_OUT, recursive = TRUE, showWarnings = FALSE)
 dir.create(DIAG_FIG, recursive = TRUE, showWarnings = FALSE)
 
 # ---- Result accumulator ----------------------------------------------------
+# Every check appends one tidy row (model, check, statistic, p, threshold,
+# status, notes) to `rows`; they are stacked into one table at the end. Building
+# a single long table keeps the CSV/report machine-readable and consistent.
 rows <- list()
 add_row <- function(model, check, statistic = NA_real_, p_value = NA_real_,
                     threshold = NA_character_, status = "PASS", notes = "") {
@@ -46,7 +80,13 @@ append_note <- function(old, extra) {
 }
 
 # ---- DHARMa helper for mixed models ---------------------------------------
+# Runs the standard DHARMa battery on one model and records a row per test.
+# DHARMa simulates new responses from the fitted model and turns each observed
+# residual into a uniform(0,1) quantile; a good model => flat uniform residuals.
 run_dharma <- function(model, model_name, fig_prefix) {
+  # Simulate 1000 datasets from the fitted model. refit=FALSE uses the fast
+  # conditional-simulation approach (no re-estimation per draw); seed=42 makes
+  # the simulated residuals reproducible across runs.
   sim <- tryCatch(
     DHARMa::simulateResiduals(model, n = 1000, refit = FALSE, seed = 42),
     error = function(e) { message("DHARMa failed: ", conditionMessage(e)); NULL }
@@ -57,7 +97,9 @@ run_dharma <- function(model, model_name, fig_prefix) {
     return(invisible(NULL))
   }
 
-  # KS uniformity
+  # KS uniformity: are the scaled residuals actually uniform(0,1)? The
+  # Kolmogorov-Smirnov test compares their distribution to a flat line.
+  # Big p = residuals look uniform = model captures the distribution shape.
   ks <- testUniformity(sim, plot = FALSE)
   add_row(model_name, "DHARMa_KS_uniformity",
           statistic = unname(ks$statistic), p_value = ks$p.value,
@@ -66,7 +108,10 @@ run_dharma <- function(model, model_name, fig_prefix) {
                           ifelse(ks$p.value >= 0.01, "WARN", "FAIL")),
           notes = "Kolmogorov-Smirnov on scaled residuals")
 
-  # Dispersion
+  # Dispersion: is the residual spread right? testDispersion compares the
+  # variance of observed residuals to the simulated ones. statistic ~ 1 = OK;
+  # > 1 = overdispersed (more noise than the model allows), < 1 = underdispersed.
+  # Small p flags a mis-modeled variance. Grade: p>=.05 PASS, >=.01 WARN, else FAIL.
   disp <- tryCatch(testDispersion(sim, plot = FALSE),
                    error = function(e) NULL)
   if (!is.null(disp)) {
@@ -78,7 +123,9 @@ run_dharma <- function(model, model_name, fig_prefix) {
             notes = "Ratio of obs/sim residual variance")
   }
 
-  # Outliers
+  # Outliers: are there more observations falling outside the simulated range
+  # than expected? type="bootstrap" gives a calibrated p-value (falls back to the
+  # default test if bootstrap errors). Small p = excess outliers worth a look.
   out <- tryCatch(testOutliers(sim, plot = FALSE, type = "bootstrap"),
                   error = function(e) tryCatch(testOutliers(sim, plot = FALSE),
                                                error = function(e) NULL))
@@ -91,7 +138,8 @@ run_dharma <- function(model, model_name, fig_prefix) {
             notes = "Excess outliers vs expected")
   }
 
-  # Save DHARMa diagnostic plot
+  # Save the standard two-panel DHARMa plot (QQ of scaled residuals + residual-
+  # vs-predicted) for visual confirmation of the numeric tests above.
   png(file.path(DIAG_FIG, paste0(fig_prefix, "_dharma.png")),
       width = 1600, height = 800, res = 150)
   plot(sim)
@@ -101,7 +149,12 @@ run_dharma <- function(model, model_name, fig_prefix) {
 }
 
 # ---- Convergence / singularity for lmer ------------------------------------
+# Three sanity checks that the model fit is numerically trustworthy: not
+# singular, no near-zero variance components, and no optimizer warnings.
 check_lmer_convergence <- function(model, model_name) {
+  # isSingular: TRUE means a random-effect variance (or correlation) sits on the
+  # boundary (~0). The fit still "works" but the random structure is overspecified,
+  # so we flag it WARN rather than trust that variance component.
   sing <- lme4::isSingular(model, tol = 1e-4)
   add_row(model_name, "isSingular",
           statistic = as.integer(sing), p_value = NA,
@@ -109,6 +162,9 @@ check_lmer_convergence <- function(model, model_name) {
           status = ifelse(sing, "WARN", "PASS"),
           notes = "Singular fit means a variance component is at/near zero")
 
+  # Pull out the estimated random-effect variances and count any that are
+  # effectively zero (< 1e-6) — the same problem isSingular flags, reported
+  # explicitly so the report shows WHICH grouping factor collapsed.
   vc <- as.data.frame(VarCorr(model))
   zero_vc <- vc[vc$vcov < 1e-6 & !is.na(vc$vcov), , drop = FALSE]
   add_row(model_name, "variance_components_near_zero",
@@ -119,7 +175,8 @@ check_lmer_convergence <- function(model, model_name) {
                          paste(sprintf("%s:%.2e", vc$grp, vc$vcov),
                                collapse = "; ")))
 
-  # Convergence messages from optimizer
+  # Any warning the optimizer left behind (e.g. "max|grad|" or
+  # "failed to converge"). Zero messages = clean convergence = PASS.
   msg <- model@optinfo$conv$lme4$messages
   if (is.null(msg)) msg <- character(0)
   add_row(model_name, "optimizer_convergence_messages",
@@ -130,7 +187,14 @@ check_lmer_convergence <- function(model, model_name) {
 }
 
 # ---- Influence (Cook's distance) -------------------------------------------
+# Cook's distance measures how much the whole fit would shift if one observation
+# were deleted. A common rule of thumb is "concerning if > 4/n"; here we report
+# the single largest value and which rows it belongs to. Two versions: one for
+# lmer (needs influence.ME to refit leaving each obs out) and one for plain lm.
 top_cooks_lmer <- function(model, model_name, k = 3) {
+  # influence.ME refits the model dropping each observation in turn; this is the
+  # honest way to get Cook's D for a mixed model. It can fail on tricky fits, so
+  # we trap that and fall back to the saved residual plots / direction checks.
   inf <- tryCatch(
     influence.ME::influence(model, obs = TRUE),
     error = function(e) NULL
@@ -141,6 +205,8 @@ top_cooks_lmer <- function(model, model_name, k = 3) {
             "influence.ME::influence failed; handled with saved residual plots and direction checks")
     return(NULL)
   }
+  # Cook's D per observation; threshold = 4/n. We keep the top-k most influential
+  # row indices so a human can eyeball whether they are real or data-entry slips.
   cd <- as.numeric(cooks.distance(inf))
   n <- length(cd)
   thresh <- 4 / n
@@ -156,6 +222,7 @@ top_cooks_lmer <- function(model, model_name, k = 3) {
   invisible(cd)
 }
 
+# Plain-lm version: cooks.distance() works directly, no leave-one-out refitting.
 top_cooks_lm <- function(model, model_name, k = 3) {
   cd <- cooks.distance(model)
   n  <- length(cd)
@@ -201,6 +268,10 @@ check_direction <- function(model, model_name, response_label,
   # i.e. control - heated. Positive => control higher than heated.
   est <- cs$estimate[1]
   pv  <- cs$p.value[1]
+  # Translate the sign into what HEATED corals did: if control > heated (est > 0)
+  # the response went DOWN under heat. We then compare that to `expect` (the
+  # biology-predicted direction). This is a sanity check, not a hypothesis test —
+  # a mismatch is a WARN to investigate, not a hard failure.
   observed_dir <- ifelse(est > 0, "decrease", "increase") # of heated vs control
   ok <- observed_dir == expect
   add_row(model_name, paste0("emmeans_direction_", response_label),
@@ -250,6 +321,8 @@ check_direction(m_zoox, "12_zoox_lmm", "log_zoox",
 # Outlier sensitivity for the zoox model: residual diagnostics flag a small
 # number of extreme observations. Refit after dropping the four largest
 # standardized residuals and require the day-14 treatment direction to match.
+# The logic: if the conclusion survives deleting its most extreme points, those
+# outliers are not driving the result, so the headline finding is robust.
 zoox_sensitivity <- tryCatch({
   phys <- readRDS(file.path(DATA_PROC, "symbiont_chl_clean.rds")) |>
     filter(is.finite(cells_per_cm2), cells_per_cm2 > 0) |>
@@ -271,6 +344,8 @@ zoox_sensitivity <- tryCatch({
   refit_cs <- as.data.frame(pairs(emmeans::emmeans(
     m_refit, ~ treatment, at = list(biopsy_day_c = 14)
   ), reverse = FALSE, adjust = "none"))
+  # PASS = the day-14 heat contrast keeps the same sign after dropping the four
+  # most extreme residuals (conclusion not outlier-driven).
   same_direction <- sign(full_cs$estimate[1]) == sign(refit_cs$estimate[1])
   add_row("12_zoox_lmm", "outlier_sensitivity_top4",
           statistic = refit_cs$estimate[1], p_value = refit_cs$p.value[1],
@@ -294,6 +369,9 @@ m_bw <- readRDS(file.path(MOD_DIR, "12_bw_lm.rds"))
 check_lmer_convergence(m_bw, "12_bw_lm")
 run_dharma(m_bw, "12_bw_lm", "A_bw")
 
+# Classic base-R residual diagnostics in addition to DHARMa: residual-vs-fitted
+# should show no pattern (flat cloud around 0 = constant variance, no curvature),
+# and the Q-Q plot should hug the line (residuals ~ normal).
 png(file.path(DIAG_FIG, "A_bw_lmm_base.png"),
     width = 1200, height = 900, res = 150)
 plot(fitted(m_bw), resid(m_bw),
@@ -304,6 +382,9 @@ qqnorm(resid(m_bw), main = "12_bw_lm residual Q-Q")
 qqline(resid(m_bw), col = "#D55E00")
 dev.off()
 
+# Shapiro-Wilk formalizes the Q-Q plot: H0 = residuals are normal. Large p =
+# no evidence against normality (PASS). The LMM here has few enough points that
+# this is interpretable; for big n it gets oversensitive, so we read it with DHARMa.
 sw <- shapiro.test(resid(m_bw))
 add_row("12_bw_lm", "shapiro_residual_normality",
         statistic = unname(sw$statistic), p_value = sw$p.value,
@@ -318,6 +399,9 @@ add_row("12_bw_lm", "VIF",
         status = "WARN",
         notes = "Saturated 3-way fixed structure with tank random intercept; VIFs uninterpretable. Skipped.")
 
+# Cook's-distance sensitivity for growth: drop the three most influential corals,
+# refit, and confirm the treatment contrast keeps its sign (same robustness idea
+# as the zoox top-4 check above).
 cd_bw <- top_cooks_lmer(m_bw, "12_bw_lm")
 if (!is.null(cd_bw)) {
   top3_bw <- order(cd_bw, decreasing = TRUE)[seq_len(min(3, length(cd_bw)))]
@@ -349,6 +433,11 @@ check_direction(m_bw, "12_bw_lm", "growth_pct",
 # =============================================================================
 # Write outputs
 # =============================================================================
+# Stack all the per-check rows into one table, then "reconcile" statuses: a FAIL
+# or WARN that is already addressed elsewhere in the analysis (an ordinal CLMM for
+# color, the explicit residual-sensitivity refit for zoox, the design-based VIF
+# argument for growth) is relabeled HANDLED so the summary isn't alarmist about
+# issues we deliberately dealt with. The numeric statistics are never altered.
 diag_df <- dplyr::bind_rows(rows)
 diag_df <- diag_df |>
   mutate(

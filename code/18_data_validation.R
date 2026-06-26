@@ -7,11 +7,28 @@
 #            - Date sequence anomalies (records before acclimation start, etc.)
 #            - Tank assignments inconsistent with treatment expectation
 #                (28 °C tanks must be 3, 6, 9, 12; 31 °C tanks must be 4, 5, 10, 11)
+#
+# What & why: before trusting any model or figure, we confirm each cleaned
+#   dataset matches what the experiment SHOULD have produced. This script does
+#   not test a biological hypothesis — it is the data-integrity gate. It loads
+#   every processed .rds file and asserts the things that must be true if the
+#   pipeline ran correctly: the right number of fragments, the expected factor
+#   levels (two temperatures, two wound states, three genets a/c/d), tank↔
+#   treatment plumbing intact, plausible value ranges, and no fragment IDs that
+#   appear in a response stream but are missing from the master metadata
+#   ("orphans"). Each check is logged PASS / FAIL / WARN / HANDLED / INFO so a
+#   reviewer can see at a glance whether the data are sound — a FAIL means stop
+#   and fix before publishing.
 # Output:  output/tables/18_validation_summary.csv  — one row per check
 # =============================================================================
 
 source(here::here("code", "00_setup.R"))
 
+# ---- Check recorder --------------------------------------------------------
+# Accumulate every check into a list of one-row tibbles. add() appends a result;
+# the `<<-` writes to the `results` list defined in the enclosing scope (not a
+# local copy), so each call grows the running log. status is a flag string
+# (PASS/FAIL/WARN/HANDLED/INFO) interpreted at the end.
 results <- list()
 add <- function(stream, check, status, value, expected = "", notes = "") {
   results[[length(results) + 1]] <<- tibble(
@@ -21,10 +38,18 @@ add <- function(stream, check, status, value, expected = "", notes = "") {
   )
 }
 
+# The fixed design constants every stream is checked against. Tank→treatment is
+# determined by the heater/plumbing layout: tanks 3,6,9,12 are ambient (28 °C),
+# tanks 4,5,10,11 are heated (31 °C). Genets (field colonies) are a, c, d.
 EXPECTED_28C_TANKS <- c(3L, 6L, 9L, 12L)
 EXPECTED_31C_TANKS <- c(4L, 5L, 10L, 11L)
 EXPECTED_GENETS    <- c("a", "c", "d")
 
+# Reusable check: for a given dataset, confirm the tanks actually observed in
+# each treatment exactly match the expected plumbing layout. identical() is
+# strict (same values AND order, hence the sort() above) — a mismatch means a
+# tank was mislabelled or a fragment landed in the wrong treatment. Each
+# treatment is only checked if that dataset contains rows for it (length() > 0).
 check_tanks <- function(stream, d) {
   obs_28 <- sort(unique(d$tank[d$treatment == "28C"]))
   obs_31 <- sort(unique(d$tank[d$treatment == "31C"]))
@@ -53,9 +78,13 @@ check_tanks <- function(stream, d) {
 }
 
 # ---- Metadata --------------------------------------------------------------
+# The master spine (from 01_load_clean_metadata.R). Confirm the total fragment
+# count and that the design factors carry exactly the expected levels.
 meta <- readRDS(file.path(DATA_PROC, "coral_metadata.rds"))
 add("metadata", "n total fragments", if (nrow(meta) == 208) "PASS" else "FAIL",
     nrow(meta), 208, "192 destructive + 16 microscope = 208")
+# setequal() compares as sets (order-independent), so these pass as long as the
+# right levels are present regardless of ordering.
 add("metadata", "treatments", if (setequal(levels(meta$treatment), c("28C", "31C"))) "PASS" else "FAIL",
     paste(levels(meta$treatment), collapse = ","), "28C, 31C")
 add("metadata", "wound levels", if (setequal(levels(meta$wound), c("no", "yes"))) "PASS" else "FAIL",
@@ -65,6 +94,10 @@ add("metadata", "genets", if (setequal(unique(meta$thicket), EXPECTED_GENETS)) "
     paste(EXPECTED_GENETS, collapse = ","))
 check_tanks("metadata", meta)
 
+# Chlorophyll-a was never assayed, so the column is entirely NA. This is a known,
+# accepted gap (not a pipeline bug) — flagged HANDLED rather than FAIL so the log
+# documents it without halting; downstream physiology relies on PAM, colour, and
+# symbiont density instead.
 n_chl_missing <- sum(is.na(meta$chlorophyll_ug_cm2))
 add("metadata", "chl-a populated",
     if (n_chl_missing == 0) "PASS" else "HANDLED",
@@ -73,6 +106,9 @@ add("metadata", "chl-a populated",
     "confirmed by Molly; analysis uses PAM, color, and symbiont density")
 
 # ---- PAM ------------------------------------------------------------------
+# Photosynthetic efficiency (Fv/Fm) from the pulse-amplitude-modulated probe.
+# Cleaned data averages the top + bottom probe readings per coral, so the row
+# count is ~half the raw. Fv/Fm is a ratio bounded [0, 1]; check it stays sane.
 pam <- readRDS(file.path(DATA_PROC, "pam_clean.rds"))
 add("pam", "n observations (top+bottom averaged)",
     if (nrow(pam) > 300) "PASS" else "WARN",
@@ -86,6 +122,8 @@ add("pam", "Fv/Fm range", "INFO",
 check_tanks("pam", pam)
 
 # ---- Color ----------------------------------------------------------------
+# Visual bleaching score on the CoralWatch D-scale (integer 1 = palest/bleached
+# to 6 = darkest/healthiest). Confirm scores stay within that ordinal range.
 color <- readRDS(file.path(DATA_PROC, "color_clean.rds"))
 add("color", "n observations", if (nrow(color) > 300) "PASS" else "WARN",
     nrow(color), "~336")
@@ -95,6 +133,8 @@ add("color", "D-scale range", "INFO",
 check_tanks("color", color)
 
 # ---- Buoyant weight -------------------------------------------------------
+# Calcification (skeletal growth) for the 48-coral physiology subset. % growth
+# should be positive for corals that grew over the experiment.
 bw <- readRDS(file.path(DATA_PROC, "buoyant_weight_clean.rds"))
 add("buoyant_weight", "n corals", if (nrow(bw) == 48) "PASS" else "WARN",
     nrow(bw), 48, "physiology subset")
@@ -103,6 +143,10 @@ add("buoyant_weight", "% growth range", "INFO",
     "positive for growing corals")
 
 # ---- Symbionts ------------------------------------------------------------
+# Symbiodiniaceae (zooxanthellae) density per cm². is.finite() guards against
+# Inf/NaN produced when a surface area was zero/missing in the cells/cm²
+# calculation — those non-finite values would break the median, so they are
+# counted and excluded. A drop in density is the cellular signature of bleaching.
 sym <- readRDS(file.path(DATA_PROC, "symbiont_chl_clean.rds"))
 add("symbionts", "n biopsies", if (nrow(sym) >= 150) "PASS" else "WARN",
     nrow(sym), "~192")
@@ -115,6 +159,11 @@ add("symbionts", "median (cells/cm²)", "INFO",
     "~7e5–1e6")
 
 # ---- Wax dipping ----------------------------------------------------------
+# Two surface-area methods are cross-validated: direct caliper geometry vs the
+# wax-dipping standard curve. cor(use = "complete.obs") gives the agreement
+# (Pearson r) over corals measured both ways. Here r falls below the 0.7
+# threshold — flagged HANDLED (not FAIL): the curve is kept and shown in
+# figure 07 for transparency rather than silently discarded.
 wax <- readRDS(file.path(DATA_PROC, "wax_clean.rds"))
 add("wax_dipping", "n corals", if (nrow(wax) >= 150) "PASS" else "WARN",
     nrow(wax), "~192")
@@ -126,6 +175,9 @@ add("wax_dipping", "caliper-curve SA correlation",
     "below threshold; standard curve retained and plotted in figure 07 for transparency")
 
 # ---- Physio morphology ----------------------------------------------------
+# The repeated non-destructive morphology measurements (the headline
+# wound-healing data). One row per coral × timepoint, so the count is large.
+# Confirm wounded corals are being tracked.
 ph <- readRDS(file.path(DATA_PROC, "physio_clean.rds"))
 add("morphology", "n observations", if (nrow(ph) > 700) "PASS" else "WARN",
     nrow(ph), "~768")
@@ -134,6 +186,9 @@ add("morphology", "wounded corals tracked", "INFO",
 check_tanks("morphology", ph)
 
 # ---- YSI ------------------------------------------------------------------
+# Daily handheld water-quality spot checks (from 09). na.rm = TRUE because some
+# readings may be missing; the temperature range just confirms tanks held a
+# plausible 27–33 °C window.
 ysi <- readRDS(file.path(DATA_PROC, "ysi_clean.rds"))
 add("ysi", "n daily readings", if (nrow(ysi) > 50) "PASS" else "WARN",
     nrow(ysi), "~72", "9 tanks × ~8 days")
@@ -143,11 +198,16 @@ add("ysi", "temperature (°C) range", "INFO",
     "[27, 33] reasonable")
 
 # ---- Apex -----------------------------------------------------------------
+# Continuous logger temperature (thousands of records). INFO only — just report
+# the count, no pass/fail threshold.
 apex <- readRDS(file.path(DATA_PROC, "apex_temperature_daily.rds"))
 add("apex", "n daily probe-records", "INFO", nrow(apex),
     "thousands across 6 datalog files")
 
 # ---- Worms ----------------------------------------------------------------
+# Vermetid/worm contamination presence flag. Sum the positives; documented as a
+# known nuisance (concentrated in 31C tanks, treated with Worm Exit), logged
+# INFO so it is recorded but does not block analysis.
 worms <- readRDS(file.path(DATA_PROC, "worm_clean.rds"))
 total_pos <- sum(worms$present, na.rm = TRUE)
 add("worms", "total worm-positive obs", "INFO",
@@ -155,6 +215,10 @@ add("worms", "total worm-positive obs", "INFO",
     "21 unique corals contaminated; concentrated in 31C tanks on 06/07 — treated with Worm Exit")
 
 # ---- Cross-stream ID checks -----------------------------------------------
+# Every fragment measured in a response stream must exist in the master
+# metadata, or joins downstream will silently drop data. setdiff(stream, meta)
+# finds "orphan" IDs present in a stream but absent from metadata — any orphan
+# is a FAIL (a labelling error to fix before analysis).
 ids_in_meta <- meta$id
 ids_in_pam  <- unique(pam$id)
 ids_in_bw   <- unique(bw$id)
@@ -176,6 +240,9 @@ add("cross-stream", "wax-dipping ids in metadata",
     length(orphan_wax), 0)
 
 # ---- Output ---------------------------------------------------------------
+# Stack all the accumulated one-row results into a single table, save it, then
+# pretty-print a marker-prefixed line per check and a final tally. The closing
+# warning fires only if any check FAILed — the gate that should stop publication.
 out <- bind_rows(results)
 write_csv(out, file.path(TBL_DIR, "18_validation_summary.csv"))
 

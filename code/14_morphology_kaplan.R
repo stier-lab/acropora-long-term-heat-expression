@@ -13,6 +13,46 @@
 #          LRT (a→b) tests main effect of genet on hazard; LRT (b→c) tests
 #          whether the temperature effect depends on genet.
 #
+# What & why: we asked WHEN each wound-healing milestone first appears, not just
+#   whether it ever did. The natural-seeming approaches both fail here. A t-test
+#   on "day reached" silently throws away every coral that never reaches the
+#   milestone (and at 31 °C ~67% close their wound but NEVER regenerate a tip) —
+#   you can't average a number that doesn't exist, and dropping those corals
+#   biases the answer toward the few fast healers. A simple "% reached by day 15"
+#   throws away the timing information and the fact that some corals were only
+#   watched briefly. Survival analysis is built exactly for this: it handles
+#   CENSORING — corals we know reached the milestone only AFTER their last
+#   observation (right-censored) or BETWEEN two scoring visits (interval-
+#   censored) — so every coral contributes the information it has. That is why
+#   survival analysis, not a t-test or a percentage, is the right tool when many
+#   corals never reach the endpoint.
+#
+#   Three complementary survival tools appear below, in order of rigor:
+#     1. Interval-censored Weibull AFT (survreg, the PRIMARY inferential test):
+#        morphology was scored only at discrete visits (D0/D1/D3/D10/D15), so we
+#        never see the exact day a trait switched on — only that it happened in
+#        the window between the last "0" visit and the first "1" visit. The AFT
+#        (Accelerated Failure Time) model uses that [lower, upper] interval
+#        honestly. Its effect is a TIME RATIO: time-ratio > 1 means 31 °C corals
+#        take LONGER to reach the milestone (the program is slowed/blocked).
+#     2. Kaplan-Meier (KM) curves: the descriptive, assumption-light picture —
+#        the cumulative fraction of corals that have reached the milestone by
+#        each day, one curve per group. Great for figures; no p-value by itself.
+#     3. Cox proportional-hazards (coxph): models the HAZARD (instantaneous rate
+#        of reaching the milestone). Its effect is a HAZARD RATIO: HR < 1 means
+#        31 °C corals reach the milestone at a slower rate. NOTE: KM/Cox here use
+#        a "first-observed-day" approximation (they pin the event to the visit
+#        day, ignoring the interval) — they support the figures and a sanity
+#        check, while the interval-censored AFT is the model we trust for
+#        inference. Cox assumes the HR is constant over time (the "proportional
+#        hazards" assumption); we check it for every model with cox.zph, which
+#        tests whether the scaled Schoenfeld residuals trend with time. A small
+#        p there flags a PH violation, which we then refit with a time-varying
+#        coefficient (see the very end).
+#   Time ratio (AFT) and hazard ratio (Cox) point the same way but are NOT the
+#   same number: a time ratio describes the clock (how much longer it takes); a
+#   hazard ratio describes the rate (how much less likely per unit time).
+#
 # Input:   data/processed/physio_clean.rds
 # Output:  output/tables/14_km_event_summary.csv         — per-trait/genet/treatment
 #          output/tables/14_cox_hazard_ratios.csv        — HR for 31 vs 28 (first-observed approximation)
@@ -22,12 +62,20 @@
 #          figures/14b_morphology_KM_by_genet.{pdf,png}  — KM by treatment × genet
 # =============================================================================
 
+# 00_setup.R loads tidyverse/here, shared paths (DATA_PROC, TBL_DIR, FIG_DIR),
+# theme_pub(), and save_fig(). survival = the engine (Surv/survreg/coxph/cox.zph);
+# survminer = convenience helpers for survival plots.
 source(here::here("code", "00_setup.R"))
 suppressPackageStartupMessages({
   library(survival)
   library(survminer)
 })
 
+# ---- Load + set factor levels ---------------------------------------------
+# Set the reference level deliberately: 28C is the baseline, so every model's
+# "treatment31C" term reads as "31 °C relative to 28 °C". thicket = coral genet
+# (A/C/D). contr.treatment makes the contrasts explicit dummy coding rather than
+# relying on R's session default (keeps results reproducible across machines).
 ph <- readRDS(file.path(DATA_PROC, "physio_clean.rds")) |>
   mutate(
     treatment = factor(treatment, levels = c("28C", "31C")),
@@ -36,10 +84,19 @@ ph <- readRDS(file.path(DATA_PROC, "physio_clean.rds")) |>
   )
 contrasts(ph$treatment) <- contr.treatment(nlevels(ph$treatment))
 
+# ---- Define the wound-healing milestones ----------------------------------
+# Each trait is a binary 0/1 scored at each visit. They span the healing
+# sequence from wound closure (early) to skeletal regeneration (late). The
+# headline contrast is wound_smoothed (closure) vs new_corallites_on_tip
+# (regeneration) — heat blocks the latter but not the former.
 traits <- c("hole_in_center", "polyp_in_hole", "wound_smoothed",
             "pigment_over_wound", "tip_exist", "tip_extension",
             "new_corallites_on_tip")
 
+# Plain-language gloss for each event, carried into the output tables so a reader
+# of the CSV knows what "reaching the milestone" means for each trait. Several
+# traits can flicker on and off between visits (non-monotonic), which is exactly
+# why we anchor on the FIRST observed "1" rather than the final state.
 trait_interpretation <- tibble(
   trait = traits,
   event_interpretation = c(
@@ -53,35 +110,55 @@ trait_interpretation <- tibble(
   )
 )
 
-# For each (coral, trait) compute first observed event day plus interval bounds:
-#   event_lower = previous observed day before first 1
-#   event_upper = first observed day with value 1
-# Right-censor at last observation if never observed.
+# ---- Turn repeated 0/1 scores into one survival record per coral -----------
+# This is the heart of the censoring logic. For each (coral, trait) we collapse
+# the visit-by-visit 0/1 history into:
+#   event_day   = first day the trait was seen as 1 (used by KM/Cox); if never
+#                 seen, the last day we observed the coral (a right-censored time)
+#   event_lower = last day still scored 0 before the first 1 (0 if the very first
+#                 visit was already 1) — the EARLIEST the event could have happened
+#   event_upper = first day scored 1 — the LATEST it could have happened; Inf if
+#                 it never happened (right-censored: event is somewhere after the
+#                 last visit, possibly never)
+#   event       = 1 if the trait was ever observed, else 0 (the censoring flag)
+# The [event_lower, event_upper] pair is what makes the survreg fit honestly
+# INTERVAL-censored: we admit we only know the event fell inside that window, not
+# the exact day. only wound == "yes" corals can heal a wound, so unwounded
+# controls are excluded here.
 compute_events <- function(d, trait) {
   d |>
     filter(wound == "yes", !is.na(day), day >= 0) |>
     mutate(y = .data[[trait]]) |>
     group_by(id, treatment, tank, thicket) |>
-    arrange(day, .by_group = TRUE) |>
+    arrange(day, .by_group = TRUE) |>   # order visits so "first 1" is meaningful
     summarise(
+      # which(y == 1)[1] = index of the first visit at which the trait was 1.
+      # NA means it never switched on -> right-censor at the last observed day.
       event_day = {
         first1 <- which(y == 1)[1]
         if (is.na(first1)) max(day, na.rm = TRUE) else day[first1]
       },
+      # lower bound of the interval: the visit just before the first 1 (so we
+      # know the event happened after this day). 0 if it was on at visit 1.
       event_lower = {
         first1 <- which(y == 1)[1]
         if (is.na(first1)) max(day, na.rm = TRUE) else if (first1 == 1) 0 else day[first1 - 1]
       },
+      # upper bound of the interval: the first day we saw the 1. Inf = never seen
+      # = right-censored (survreg reads [lower, Inf] as "event after lower").
       event_upper = {
         first1 <- which(y == 1)[1]
         if (is.na(first1)) Inf else day[first1]
       },
-      event = as.integer(any(y == 1, na.rm = TRUE)),
+      event = as.integer(any(y == 1, na.rm = TRUE)),  # 1 = observed, 0 = censored
       .groups = "drop"
     ) |>
     mutate(trait = trait)
 }
+# Run the collapse for every trait and stack the results (one row per coral×trait)
 events <- map_dfr(traits, ~ compute_events(ph, .x))
+# Re-assert factor levels/contrasts on the summarised table (group_by/summarise
+# can drop them) so every downstream model again treats 28C as the reference.
 events <- events |>
   mutate(
     treatment = factor(treatment, levels = c("28C", "31C")),
@@ -91,7 +168,9 @@ events <- events |>
 contrasts(events$treatment) <- contr.treatment(nlevels(events$treatment))
 
 # ---- KM summary tables ----------------------------------------------------
-# Per trait × genet × treatment median time-to-event
+# Descriptive median time-to-event per trait × genet × treatment. Medians/IQRs
+# are computed only over corals that ACTUALLY reached the milestone (event == 1);
+# a median of a censored sample is undefined, hence the NA guards.
 km_summary <- events |>
   group_by(trait, treatment, thicket) |>
   summarise(
@@ -104,9 +183,13 @@ km_summary <- events |>
   )
 write_csv(km_summary, file.path(TBL_DIR, "14_km_event_summary.csv"))
 
-# ---- Interval-censored survival models ------------------------------------
-# These are the inferential survival tests for discretely scored morphology.
-# Cox/KM outputs below are retained as first-observed-day summaries/figures.
+# ---- Interval-censored survival models (PRIMARY inference) -----------------
+# THE model we trust. survreg fits a Weibull Accelerated Failure Time (AFT)
+# model: it models the (log) time-to-event directly, so its treatment effect is
+# a TIME RATIO. Surv(lower, upper, type = "interval2") feeds in the honest
+# [event_lower, event_upper] windows from above, with Inf upper = right-censored.
+# We adjust for thicket (genet) as a fixed effect. Guard: need >=5 events and
+# both treatments present, or the model is not estimable.
 fit_interval_survreg <- function(tr) {
   d <- events |> filter(trait == tr)
   if (sum(d$event) < 5 || length(unique(d$treatment)) < 2) return(NULL)
@@ -126,6 +209,8 @@ fit_interval_survreg <- function(tr) {
       note = "survreg failed or treatment coefficient unavailable"
     ))
   }
+  # Pull the treatment coefficient row by name (its exact label can vary with
+  # contrast coding, hence the grep fallback).
   tab <- summary(fit)$table
   trt_row <- if ("treatment31C" %in% rownames(tab)) {
     "treatment31C"
@@ -143,6 +228,10 @@ fit_interval_survreg <- function(tr) {
       note = "treatment coefficient unavailable"
     ))
   }
+  # AFT coefficients are on the log-time scale, so exp() turns them into a TIME
+  # RATIO and exp(est ± 1.96·SE) gives its 95% CI. time_ratio > 1 => 31 °C corals
+  # take proportionally longer to reach the milestone (delayed/blocked program);
+  # a CI excluding 1 is the "significant" case.
   est <- tab[trt_row, "Value"]
   se <- tab[trt_row, "Std. Error"]
   tibble(
@@ -162,6 +251,7 @@ fit_interval_survreg <- function(tr) {
     note = "time ratio >1 means later first expression at 31C"
   )
 }
+# Fit the primary AFT for every trait and collect into one table.
 interval_survreg <- map_dfr(traits, fit_interval_survreg)
 write_csv(interval_survreg, file.path(TBL_DIR, "14_interval_survreg.csv"))
 
@@ -172,6 +262,8 @@ write_csv(interval_survreg, file.path(TBL_DIR, "14_interval_survreg.csv"))
 # (`new_corallites_on_tip`). Corals that close but never regenerate within the
 # experiment are right-censored (no lag) and counted separately — heat is
 # expected to inflate that censored fraction.
+# Reshape to one row per coral with a column per trait (event_<trait> and
+# event_day_<trait>) so we can subtract one milestone's day from another's.
 ev_wide <- events |>
   select(id, treatment, thicket, trait, event, event_day) |>
   pivot_wider(names_from = trait, values_from = c(event, event_day))
@@ -219,8 +311,12 @@ lag_summary <- lag_long |>
   )
 write_csv(lag_summary, file.path(TBL_DIR, "14_milestone_lag_summary.csv"))
 
-# Wilcoxon test of the primary closure->regeneration lag (28 vs 31) among
-# corals that reached both, where estimable.
+# Wilcoxon rank-sum (non-parametric, robust to the small skewed lag distribution)
+# on the primary closure->regeneration lag, 28 vs 31, among corals that reached
+# both milestones. This is a secondary, conditional comparison: it only sees the
+# corals that DID regenerate, so it understates the heat effect (the corals most
+# hurt by heat never regenerate and so are absent here) — read it alongside the
+# pct_closed_no_regen column, which captures that missing mass.
 prim <- lag_long |> filter(pair == "wound_smoothed -> new_corallites_on_tip",
                            reached_both)
 lag_test <- if (length(unique(prim$treatment)) == 2 &&
@@ -248,6 +344,13 @@ cat("\nPrimary lag test (closure -> new corallites, 28C vs 31C):\n")
 print(as.data.frame(lag_test))
 
 # ---- Cox PH per trait (overall + per genet) -------------------------------
+# Supporting (not primary) analysis: Cox models the HAZARD (rate of reaching the
+# milestone) and reports a HAZARD RATIO. It uses event_day (the first-observed
+# day), so it ignores the interval — a deliberate approximation that pairs with
+# the KM figures. strata(thicket) lets each genet keep its own baseline hazard
+# shape while sharing one treatment effect (i.e. control for genet without
+# assuming the genets heal on the same clock). HR < 1 = 31 °C reaches the
+# milestone at a slower rate. Guard: >=5 events or the fit is unstable.
 fit_cox_overall <- function(tr) {
   d <- events |> filter(trait == tr)
   if (sum(d$event) < 5) return(NULL)
@@ -270,6 +373,9 @@ fit_cox_overall <- function(tr) {
   )
 }
 
+# Same Cox model, but fit separately within each genet (no strata, since each
+# fit is already one genet) to see whether the heat effect differs by genotype.
+# Sparse cells (<3 events) return NA rather than an unreliable estimate.
 fit_cox_per_genet <- function(tr) {
   events |>
     filter(trait == tr) |>
@@ -302,6 +408,7 @@ fit_cox_per_genet <- function(tr) {
     select(trait, scope, n, n_event, HR_31_vs28, HR_lo, HR_hi, z, p)
 }
 
+# Run both Cox variants across all traits and stack into one HR table.
 cox_overall   <- map_dfr(traits, fit_cox_overall)
 cox_per_genet <- map_dfr(traits, fit_cox_per_genet)
 cox_results   <- bind_rows(cox_overall, cox_per_genet) |>
@@ -309,8 +416,13 @@ cox_results   <- bind_rows(cox_overall, cox_per_genet) |>
 write_csv(cox_results, file.path(TBL_DIR, "14_cox_hazard_ratios.csv"))
 
 # ---- Proportional-hazards diagnostics for EVERY overall Cox model ----------
-# cox.zph (Schoenfeld residual test + plot) for all traits, not just the one
-# that violated PH. Documents the assumption visually for each model.
+# Cox's one big assumption: the hazard ratio is CONSTANT over time (proportional
+# hazards). cox.zph tests this by checking whether the scaled Schoenfeld
+# residuals (per-event-time deviations of the covariate from its risk-set mean)
+# TREND with time. No trend -> flat residuals -> PH holds; a slope -> the effect
+# changes over time -> PH violated. A large chisq / small p flags a violation.
+# We run and save the test + plot for every trait (ph_ok = p >= 0.05), not just
+# the one that fails, so the assumption is documented for each model.
 DIAG_DIR <- file.path(FIG_DIR, "diagnostics")
 dir.create(DIAG_DIR, recursive = TRUE, showWarnings = FALSE)
 ph_rows <- list()
@@ -320,7 +432,7 @@ for (tr in traits) {
   fit <- tryCatch(coxph(Surv(event_day, event) ~ treatment + strata(thicket),
                         data = d), error = function(e) NULL)
   if (is.null(fit)) next
-  zph <- tryCatch(cox.zph(fit), error = function(e) NULL)
+  zph <- tryCatch(cox.zph(fit), error = function(e) NULL)  # the Schoenfeld PH test
   if (is.null(zph)) next
   ph_rows[[tr]] <- tibble(
     trait      = tr,
@@ -356,6 +468,14 @@ cat("\n=== Proportional-hazards (cox.zph) tests, all overall Cox models ===\n")
 print(as.data.frame(cox_ph |> mutate(across(where(is.numeric), \(x) round(x, 4)))))
 
 # ---- LRT: does genet × treatment improve over treatment + genet? ----------
+# Likelihood-ratio tests on NESTED Cox models. A bigger model can only fit at
+# least as well, so the LRT asks whether the extra terms improve fit MORE than
+# expected by chance (chi-square on the degrees of freedom added):
+#   base  = treatment only
+#   add   = treatment + genet      -> LRT(base, add)  tests a genet main effect
+#   inter = treatment * genet      -> LRT(add, inter) tests whether the heat
+#                                     effect DEPENDS on genet (the interaction)
+# Need >=10 events for the interaction model to be remotely estimable.
 fit_lrt <- function(tr) {
   d <- events |> filter(trait == tr)
   if (sum(d$event) < 10) return(NULL)
@@ -366,8 +486,8 @@ fit_lrt <- function(tr) {
   m_inter <- tryCatch(coxph(Surv(event_day, event) ~ treatment * thicket, data = d),
                       error = function(e) NULL)
   if (any(sapply(list(m_base, m_add, m_inter), is.null))) return(NULL)
-  lrt_g  <- anova(m_base, m_add)
-  lrt_gi <- anova(m_add, m_inter)
+  lrt_g  <- anova(m_base, m_add)    # genet main effect
+  lrt_gi <- anova(m_add, m_inter)   # genet × treatment interaction
   tibble(
     trait               = tr,
     chisq_genet_main    = lrt_g$Chisq[2],
@@ -382,22 +502,27 @@ cox_lrt <- map_dfr(traits, fit_lrt)
 write_csv(cox_lrt, file.path(TBL_DIR, "14_cox_genet_LRT.csv"))
 
 # ---- KM facet figure ------------------------------------------------------
-# Build per-trait, per-treatment survival curves manually for ggplot
+# Build the Kaplan-Meier curves by hand (rather than survfit) so they slot
+# straight into ggplot. The KM estimator is a product over each event day of
+# (1 - events/at-risk): at each day, the fraction still "surviving" (i.e. not yet
+# expressing the trait) is multiplied down. We plot 1 - survival = the
+# cumulative % of corals that HAVE reached the milestone by each day. The leading
+# c(0, ...) / c(1, ...) seeds the curve at day 0 with 100% not-yet-expressed.
 km_curves <- events |>
   group_by(trait, treatment) |>
   group_modify(\(d, k) {
     d <- dplyr::arrange(d, event_day)
-    times <- sort(unique(d$event_day))
+    times <- sort(unique(d$event_day))         # distinct days something happened
     # Build a step at every distinct day, NA-safe
-    n_at_risk <- sapply(times, \(t) sum(d$event_day >= t))
-    n_events  <- sapply(times, \(t) sum(d$event_day == t & d$event == 1))
-    haz       <- n_events / pmax(n_at_risk, 1)
-    surv      <- cumprod(1 - haz)
+    n_at_risk <- sapply(times, \(t) sum(d$event_day >= t))         # still eligible
+    n_events  <- sapply(times, \(t) sum(d$event_day == t & d$event == 1))  # events that day
+    haz       <- n_events / pmax(n_at_risk, 1)  # day-specific hazard (pmax avoids /0)
+    surv      <- cumprod(1 - haz)               # KM survival = running product
     out_day   <- c(0, times)
     out_surv  <- c(1, surv)
     tibble(day = out_day,
            surv = out_surv,
-           cum_event = 1 - out_surv)
+           cum_event = 1 - out_surv)            # what we actually plot
   }) |>
   ungroup() |>
   mutate(trait = factor(trait,
@@ -407,6 +532,8 @@ km_curves <- events |>
                                    "Tip exists", "Tip extension",
                                    "New corallites on tip")))
 
+# geom_step draws the proper KM staircase (the curve only changes on event days);
+# one panel per trait, blue = 28 °C, orange = 31 °C.
 p_km <- ggplot(km_curves, aes(day, cum_event,
                               colour = treatment, group = treatment)) +
   geom_step(linewidth = 0.7) +
@@ -424,6 +551,9 @@ p_km <- ggplot(km_curves, aes(day, cum_event,
 save_fig(p_km, "14_morphology_KM", width = 200, height = 130)
 
 # ---- Genet-resolved KM figure --------------------------------------------
+# Identical KM construction, but split a third way by genet so each
+# treatment × genet cell gets its own curve (line colour = temperature,
+# linetype = genet). Reveals whether all three genotypes show the same pattern.
 km_curves_genet <- events |>
   group_by(trait, treatment, thicket) |>
   group_modify(\(d, k) {
@@ -464,9 +594,12 @@ p_km_genet <- ggplot(km_curves_genet,
 save_fig(p_km_genet, "14b_morphology_KM_by_genet", width = 210, height = 135)
 
 # ---- Time-varying-coefficient refit for the one PH violation -------------
-# Cox diagnostics flagged pigment_over_wound in genet c (cox.zph chisq = 6.59,
-# p = 0.0103, n_event = 5) as violating PH. Refit with a log(t+1)
-# time-varying coefficient on treatment so the HR is allowed to evolve.
+# Follow-up for the single model that failed the PH check above. When PH is
+# violated, a single constant HR is misleading, so we let the treatment effect
+# CHANGE with time: tt() supplies a time transform, here multiplying the 31 °C
+# indicator by log(t + 1), so the effective HR is exp(coef · log(t + 1)) — it can
+# grow or shrink as the experiment proceeds rather than being pinned at one value.
+# This is a robustness check on that one cell, not a headline result.
 pig_c <- events |>
   filter(trait == "pigment_over_wound", thicket == "c", event_day > 0)
 

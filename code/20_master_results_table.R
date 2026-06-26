@@ -27,6 +27,20 @@
 #            source_script     code file that produced the row
 #            source_artifact   CSV / model RDS it came from
 #
+# What & why: this is the single source of truth for the manuscript's numbers.
+#   Every other script writes its own results CSV in its own shape; here we read
+#   them all back in and recast each into the one shared row schema described
+#   above, so that every effect size, test statistic, df, p-value and CI cited
+#   in the paper can be traced to exactly one row — and to the script that made
+#   it (the source_script / source_artifact columns). Each "Block" below is a
+#   small adapter with the same job: read one upstream table, rename/compute its
+#   columns into the common schema, and tag its domain. The blocks are then
+#   row-bound into `master` and written out twice — a tidy machine-readable CSV
+#   and a paper-ready formatted CSV. Nothing here fits a model; it only
+#   transcribes and harmonizes results that already exist. Blocks wrapped in
+#   `if (file.exists(...))` are optional sensitivity analyses that may not have
+#   been run; they simply contribute zero rows (an empty tibble) when their
+#   source CSV is absent, so the table degrades gracefully.
 # Input:   output/tables/*.csv, output/models/*.rds
 # Output:  output/tables/20_master_results.csv             — tidy spreadsheet
 #          output/tables/20_master_results_paper_ready.csv — manuscript-formatted
@@ -35,14 +49,21 @@
 source(here::here("code", "00_setup.R"))
 
 # ---- Helpers --------------------------------------------------------------
+# Small formatters and lookups shared by the blocks below.
+
+# Render a p-value the journal way: "<0.001" below that threshold, else 3 dp.
 fmt_p   <- function(p) {
   ifelse(is.na(p), NA_character_,
          ifelse(p < 0.001, "<0.001", sprintf("%.3f", p)))
 }
+# Fixed-decimal number formatter (NA-safe) for the paper-ready table.
 fmt_num <- function(x, d = 2) {
   ifelse(is.na(x), NA_character_, formatC(x, format = "f", digits = d))
 }
 
+# Turn an estimate + p-value into a plain-language direction sentence. Defined
+# here as a reusable qualitative-summary helper; the blocks below currently
+# build their own bespoke sentences inline rather than calling this.
 qual_dir <- function(estimate, p, response_label,
                      positive = "higher", negative = "lower",
                      ref = "31 °C vs 28 °C") {
@@ -52,6 +73,7 @@ qual_dir <- function(estimate, p, response_label,
   paste0(response_label, " ", direction, " under ", ref)
 }
 
+# Lookup: internal response_id -> manuscript-ready response label.
 response_label_map <- c(
   pam_fvfm         = "PAM Fv/Fm",
   color_dscale     = "Color (Siebeck D)",
@@ -61,6 +83,7 @@ response_label_map <- c(
   pct_growth       = "Buoyant weight growth (%)"
 )
 
+# Lookup: internal response_id -> natural (back-transformed) units for display.
 natural_units <- c(
   pam_fvfm         = "Fv/Fm",
   color_dscale     = "D-scale units",
@@ -73,6 +96,10 @@ natural_units <- c(
 baseline_means <- function() {
   # Compute mean of the response at 28C (end of experiment) so the per-genet
   # treatment effects can be expressed as % change. Used for pct_change column.
+  # Returns a named list (one tibble of thicket x wound baselines per response).
+  # Note: log_zoox_density gets an EMPTY baseline tibble on purpose — its %
+  # change is derived analytically from the log estimate (see attach_pct), not
+  # from a baseline mean, so no 28C mean is needed.
   pam  <- readRDS(file.path(DATA_PROC, "pam_clean.rds"))
   col  <- readRDS(file.path(DATA_PROC, "color_clean.rds"))
   bw   <- readRDS(file.path(DATA_PROC, "buoyant_weight_clean.rds"))
@@ -103,6 +130,7 @@ baseline_means <- function() {
   )
 }
 
+# Compute the baselines once, up front, for reuse by Block 2's % change.
 bases <- baseline_means()
 
 # ===========================================================================
@@ -112,6 +140,9 @@ bases <- baseline_means()
 # duplicates of those in 04_morphology_trait_anova_genet.csv (same model,
 # different script that writes the table) — drop them here and pick up
 # the morphology ANOVAs in Block 4 below.
+# Emits one row per omnibus fixed-effect test (Treatment, Wound, Day, and their
+# interactions); test column is "ANOVA F" when an F value exists (lmerTest /
+# car F-tests) and "Wald chi-sq" otherwise.
 anova12 <- read_csv(file.path(TBL_DIR, "12_anova_summary.csv"),
                     show_col_types = FALSE) |>
   filter(!grepl("^morph_", response_id),
@@ -143,10 +174,17 @@ anova12 <- read_csv(file.path(TBL_DIR, "12_anova_summary.csv"),
 # ===========================================================================
 # Block 2 — Per-genet treatment contrasts at end of experiment (script 12)
 # ===========================================================================
+# One row per genet x wound contrast (28C - 31C) at Day 14, with estimate, SE,
+# and the % change of 31C relative to 28C attached for natural-scale responses.
 genet_eff <- read_csv(file.path(TBL_DIR, "12_genet_treatment_effects.csv"),
                       show_col_types = FALSE)
 
-# Attach baseline and compute pct change
+# Attach baseline and compute pct change. The estimate is 28C - 31C, so the
+# heat-driven change of 31C relative to 28C is -estimate (hence the minus
+# signs). Three back-transform rules by response type:
+#   growth_pct       -> estimate is already a % difference, so % change = -estimate
+#   log_zoox_density -> estimate is on the log scale, so % change = exp(-estimate)-1
+#   everything else  -> divide -estimate by the 28C baseline mean
 attach_pct <- function(df, response_key) {
   base_df <- bases[[response_key]]
   if (is.null(base_df)) {
@@ -164,6 +202,8 @@ attach_pct <- function(df, response_key) {
     })
 }
 
+# Apply attach_pct to each response separately (each needs its own baseline),
+# then stack the results back together.
 genet_eff_pct <- bind_rows(
   attach_pct(filter(genet_eff, response == "pam_fvfm"),       "pam_fvfm"),
   attach_pct(filter(genet_eff, response == "color_dscale"),   "color_dscale"),
@@ -171,6 +211,9 @@ genet_eff_pct <- bind_rows(
   attach_pct(filter(genet_eff, response == "log_zoox_density"),"log_zoox_density")
 )
 
+# Recast the per-genet contrasts into the common schema. test = Wald z when a
+# z-ratio is present (e.g. GLMM/emmeans on z scale), else Satterthwaite t; the
+# 95% CI is built from the estimate +/- 1.96*SE.
 genet_rows <- genet_eff_pct |>
   transmute(
     domain          = "Physiology",
@@ -205,6 +248,8 @@ genet_rows <- genet_eff_pct |>
 # ===========================================================================
 # Block 3 — R² per response (script 12)
 # ===========================================================================
+# Marginal (fixed effects only) and conditional (fixed + random) R^2 from each
+# LMM. pivot_longer makes one row per R^2 metric per response.
 r2_rows <- read_csv(file.path(TBL_DIR, "12_r2_summary.csv"),
                     show_col_types = FALSE) |>
   pivot_longer(c(R2_marginal, R2_conditional),
@@ -228,6 +273,10 @@ r2_rows <- read_csv(file.path(TBL_DIR, "12_r2_summary.csv"),
 # ===========================================================================
 # Block 4 — Morphology GLMM ANOVA (penalized fits)
 # ===========================================================================
+# Morphology traits are binary (trait expressed yes/no) and prone to perfect
+# separation, so they are fit with blme (a weakly-informative Cauchy(0,2.5)
+# prior on the fixed effects) instead of plain glmer. This first table is the
+# omnibus Wald chi-sq per fixed effect.
 morph_anova <- read_csv(file.path(TBL_DIR, "12c_morph_blme_anova.csv"),
                         show_col_types = FALSE) |>
   transmute(
@@ -250,7 +299,12 @@ morph_anova <- read_csv(file.path(TBL_DIR, "12c_morph_blme_anova.csv"),
   )
 
 # Primary morphology fixed-effects: pull from the blme (Cauchy-penalized)
-# refit so that Wald tests are interpretable under separation.
+# refit so that Wald tests are interpretable under separation. Each coefficient
+# is an odds ratio after exp(); pct_change is (OR - 1) * 100.
+# A `separated` flag catches coefficients where even the prior could not tame
+# the estimate (giant SE or implausibly large effect). For those rows we blank
+# out the unstable estimate/CI/p and keep only the omnibus chi-sq from above,
+# so the table never reports an artefactual "significant" odds ratio.
 morph_fixed <- read_csv(
   file.path(TBL_DIR, "12c_morph_blme_fixed_effects.csv"),
   show_col_types = FALSE
@@ -286,6 +340,10 @@ morph_fixed <- read_csv(
 # ===========================================================================
 # Block 5 — Cox PH hazard ratios (script 14)
 # ===========================================================================
+# Wound-healing milestones (e.g. hole closure, polyp/tip regeneration) are
+# time-to-event outcomes, modelled with Cox proportional hazards. HR_31_vs28 is
+# the hazard ratio for reaching the milestone under 31C vs 28C: HR > 1 = faster
+# onset under heat, HR < 1 = delayed. Filter drops non-finite/degenerate HRs.
 cox_rows <- read_csv(file.path(TBL_DIR, "14_cox_hazard_ratios.csv"),
                      show_col_types = FALSE) |>
   filter(is.finite(HR_31_vs28), HR_31_vs28 > 0, HR_31_vs28 < Inf) |>
@@ -316,6 +374,9 @@ cox_rows <- read_csv(file.path(TBL_DIR, "14_cox_hazard_ratios.csv"),
     source_artifact = "output/tables/14_cox_hazard_ratios.csv"
   )
 
+# Interval-censored Weibull AFT alternative to the Cox model: because traits
+# were only observed on discrete survey days, the true event time lies in an
+# interval. time_ratio_31_vs28 > 1 means heat delays first expression.
 interval_rows <- if (file.exists(file.path(TBL_DIR, "14_interval_survreg.csv"))) {
   read_csv(file.path(TBL_DIR, "14_interval_survreg.csv"),
            show_col_types = FALSE) |>
@@ -349,6 +410,10 @@ interval_rows <- if (file.exists(file.path(TBL_DIR, "14_interval_survreg.csv")))
     )
 } else tibble()
 
+# Time-varying-coefficient Cox refit for the one case (pigmentation, genet C)
+# where the standard Cox model violated the proportional-hazards assumption.
+# tt(treatment) lets the treatment effect change with log(t+1); a non-sig
+# result here means the earlier per-genet HR was inflated by the PH violation.
 cox_tt <- if (file.exists(file.path(TBL_DIR, "14c_cox_tt_pigment_genetC.csv"))) {
   read_csv(file.path(TBL_DIR, "14c_cox_tt_pigment_genetC.csv"),
            show_col_types = FALSE) |>
@@ -374,6 +439,9 @@ cox_tt <- if (file.exists(file.path(TBL_DIR, "14c_cox_tt_pigment_genetC.csv"))) 
     )
 } else tibble()
 
+# Likelihood-ratio tests for whether genet matters in the Cox models: one row
+# for the genet main effect, one for the genet x treatment interaction. The two
+# transmute() calls below pull those two tests out of the same source table.
 cox_genet_lrt <- read_csv(file.path(TBL_DIR, "14_cox_genet_LRT.csv"),
                           show_col_types = FALSE)
 cox_genet_rows <- bind_rows(
@@ -416,6 +484,9 @@ cox_genet_rows <- bind_rows(
 # ===========================================================================
 # Block 6 — Genet LRT comparisons (script 13)
 # ===========================================================================
+# Does adding the genet x treatment (x wound x day) interaction improve fit?
+# One LRT per continuous response, comparing the null model to the full model.
+# estimate carries the delta-AIC; the term string notes the exact interaction.
 lrt13 <- read_csv(file.path(TBL_DIR, "13_genet_anova.csv"),
                   show_col_types = FALSE) |>
   transmute(
@@ -444,6 +515,8 @@ lrt13 <- read_csv(file.path(TBL_DIR, "13_genet_anova.csv"),
 # ===========================================================================
 # Block 7 — PCA + genet displacement (script 15)
 # ===========================================================================
+# Two products of the end-of-experiment multivariate PCA. First: the variable
+# loadings on each principal component (pivoted to one row per variable x PC).
 pca_load <- read_csv(file.path(TBL_DIR, "15_pca_loadings.csv"),
                      show_col_types = FALSE) |>
   pivot_longer(starts_with("PC"), names_to = "PC", values_to = "loading") |>
@@ -462,6 +535,8 @@ pca_load <- read_csv(file.path(TBL_DIR, "15_pca_loadings.csv"),
     source_artifact="output/tables/15_pca_loadings.csv"
   )
 
+# Second: how far each genet's centroid moves in PC space from 28C to 31C —
+# a single multivariate "how much did heat shift this genet" distance.
 pca_disp <- read_csv(file.path(TBL_DIR, "15_genet_pca_displacement.csv"),
                      show_col_types = FALSE) |>
   transmute(
@@ -483,6 +558,8 @@ pca_disp <- read_csv(file.path(TBL_DIR, "15_genet_pca_displacement.csv"),
 # ===========================================================================
 # Block 8 — Buoyant weight LM (script 05 — single fixed-effect table)
 # ===========================================================================
+# Coral-level descriptive linear model of areal calcification; one row per
+# fixed-effect coefficient (intercept dropped), with t-test and 95% CI.
 bw_lm <- read_csv(file.path(TBL_DIR, "05_buoyant_weight_lm.csv"),
                   show_col_types = FALSE) |>
   filter(term != "(Intercept)") |>
@@ -502,6 +579,9 @@ bw_lm <- read_csv(file.path(TBL_DIR, "05_buoyant_weight_lm.csv"),
     source_artifact="output/tables/05_buoyant_weight_lm.csv"
   )
 
+# Tank-level randomization test: the experimental unit for temperature is the
+# tank (n = 8), not the coral, so this is the design-honest treatment test that
+# avoids pseudoreplication from many corals within a tank.
 bw_tank_test <- if (file.exists(file.path(TBL_DIR, "05_buoyant_weight_tank_test.csv"))) {
   read_csv(file.path(TBL_DIR, "05_buoyant_weight_tank_test.csv"),
            show_col_types = FALSE) |>
@@ -525,6 +605,10 @@ bw_tank_test <- if (file.exists(file.path(TBL_DIR, "05_buoyant_weight_tank_test.
 # ===========================================================================
 # Block 9 — Color CLMM ordinal robustness (script 12b)
 # ===========================================================================
+# Robustness check: colour was modelled as continuous in Block 1, but it is an
+# ordered Siebeck D-scale. A cumulative-link mixed model (CLMM) re-tests each
+# effect treating colour as ordinal; matching significance confirms the main
+# analysis is not an artefact of treating an ordinal score as continuous.
 clmm_rows <- if (file.exists(file.path(TBL_DIR, "12b_color_clmm.csv"))) {
   read_csv(file.path(TBL_DIR, "12b_color_clmm.csv"),
            show_col_types = FALSE) |>
@@ -553,6 +637,8 @@ clmm_rows <- if (file.exists(file.path(TBL_DIR, "12b_color_clmm.csv"))) {
 # Block 10 — Raw summary stats for the manuscript narrative
 #            (cells / growth means, so the prose cites the table, not ad-hoc numbers)
 # ===========================================================================
+# Raw per-treatment buoyant-weight growth means (mean, SD, n) so the prose can
+# cite this table instead of recomputing numbers ad hoc.
 bw_raw <- readRDS(file.path(DATA_PROC, "buoyant_weight_clean.rds")) |>
   group_by(treatment) |>
   summarise(mean_pct = mean(pct_growth, na.rm = TRUE),
@@ -577,6 +663,8 @@ bw_means_rows <- bw_raw |>
     source_artifact="data/processed/buoyant_weight_clean.rds"
   )
 
+# Derived headline number: the % reduction in mass gain at 31C relative to 28C
+# (one of the paper's take-home figures), computed straight from the two means.
 bw_pct_drop <- bw_raw |>
   summarise(
     pct_drop_31C_vs_28C = (mean_pct[treatment == "31C"] -
@@ -598,6 +686,8 @@ bw_pct_drop <- bw_raw |>
     source_artifact="data/processed/buoyant_weight_clean.rds"
   )
 
+# Raw symbiont-density means at the first and last biopsy day per treatment, so
+# the narrative can cite starting vs ending zooxanthellae densities directly.
 zoox_raw <- readRDS(file.path(DATA_PROC, "symbiont_chl_clean.rds")) |>
   filter(is.finite(cells_per_cm2), cells_per_cm2 > 0)
 
@@ -625,6 +715,9 @@ zoox_means_rows <- zoox_raw |>
 # Block 11 — Time-series diagnostics (script 23): autocorrelation,
 #            random slope, nonlinearity-of-time for repeated-measures responses
 # ===========================================================================
+# Checks that the repeated-measures LMMs are well specified (residual
+# autocorrelation, need for random slopes, nonlinear time). df is read as text
+# upstream, so as.numeric() coerces it (suppressWarnings hides NA coercions).
 ts_rows <- if (file.exists(file.path(TBL_DIR, "23_timeseries_diagnostics.csv"))) {
   read_csv(file.path(TBL_DIR, "23_timeseries_diagnostics.csv"),
            show_col_types = FALSE) |>
@@ -649,6 +742,9 @@ ts_rows <- if (file.exists(file.path(TBL_DIR, "23_timeseries_diagnostics.csv")))
 # ===========================================================================
 # Block 12 — Cox proportional-hazards tests (script 14, all overall models)
 # ===========================================================================
+# Schoenfeld-residual (cox.zph) test of the proportional-hazards assumption for
+# every Cox model in Block 5. ph_ok flags whether the assumption held; failures
+# point to the time-varying refit captured in cox_tt above.
 coxph_rows <- if (file.exists(file.path(TBL_DIR, "14_cox_ph_tests.csv"))) {
   read_csv(file.path(TBL_DIR, "14_cox_ph_tests.csv"), show_col_types = FALSE) |>
     transmute(
@@ -672,6 +768,9 @@ coxph_rows <- if (file.exists(file.path(TBL_DIR, "14_cox_ph_tests.csv"))) {
 # ===========================================================================
 # Block 13 — Thermal context vs Cunning et al. 2024 acute ED50 (script 26)
 # ===========================================================================
+# External benchmark (not a result of this study): published acute-heat ED50
+# values for A. pulchra at Mahana, used to place the 31C chronic treatment in
+# context (it sits below the acute lethal threshold, i.e. sublethal stress).
 thermal_rows <- if (file.exists(file.path(TBL_DIR, "26_thermal_context.csv"))) {
   read_csv(file.path(TBL_DIR, "26_thermal_context.csv"), show_col_types = FALSE) |>
     transmute(
@@ -694,6 +793,9 @@ thermal_rows <- if (file.exists(file.path(TBL_DIR, "26_thermal_context.csv"))) {
 # ===========================================================================
 # Block 14 — Inter-milestone lag (script 14): closure -> regeneration
 # ===========================================================================
+# Median number of days between a wound closing and the tissue then
+# regenerating, per treatment, plus the % of wounds that closed but never
+# regenerated (pct_closed_no_regen). CI columns carry the IQR of the lag.
 lag_rows <- if (file.exists(file.path(TBL_DIR, "14_milestone_lag_summary.csv"))) {
   read_csv(file.path(TBL_DIR, "14_milestone_lag_summary.csv"),
            show_col_types = FALSE) |>
@@ -718,6 +820,8 @@ lag_rows <- if (file.exists(file.path(TBL_DIR, "14_milestone_lag_summary.csv")))
 # ===========================================================================
 # Block 15 — Variance partitioning / ICC (script 27)
 # ===========================================================================
+# Intraclass correlations: the fraction of variance each random effect (tank,
+# genet, colony, ...) explains in each model — i.e. where the variability lives.
 icc_rows <- if (file.exists(file.path(TBL_DIR, "27_variance_partitioning.csv"))) {
   read_csv(file.path(TBL_DIR, "27_variance_partitioning.csv"),
            show_col_types = FALSE) |>
@@ -738,6 +842,9 @@ icc_rows <- if (file.exists(file.path(TBL_DIR, "27_variance_partitioning.csv")))
 # ===========================================================================
 # Block 16 — Multiple-testing sensitivity (script 28)
 # ===========================================================================
+# Documents which hypotheses were a priori/confirmatory (reported on raw p) vs
+# exploratory (Benjamini-Hochberg FDR-adjusted), with the rationale for each, so
+# reviewers can see the multiple-comparisons stance is principled, not post hoc.
 mt_rows <- if (file.exists(file.path(TBL_DIR, "28_multiple_testing.csv"))) {
   read_csv(file.path(TBL_DIR, "28_multiple_testing.csv"),
            show_col_types = FALSE) |>
@@ -761,6 +868,10 @@ mt_rows <- if (file.exists(file.path(TBL_DIR, "28_multiple_testing.csv"))) {
 # ===========================================================================
 # Block 17 — Morphology probability-scale contrasts (script 29)
 # ===========================================================================
+# Back-transforms the binary morphology GLMMs to the probability scale so the
+# heat effect reads as an absolute difference in the probability of trait
+# expression (delta_prob = P(28C) - P(31C)) — far more interpretable than the
+# log-odds in Block 4. Also carries the odds ratio for cross-reference.
 probc_rows <- if (file.exists(file.path(TBL_DIR, "29_morphology_prob_contrasts.csv"))) {
   read_csv(file.path(TBL_DIR, "29_morphology_prob_contrasts.csv"),
            show_col_types = FALSE) |>
@@ -784,6 +895,10 @@ probc_rows <- if (file.exists(file.path(TBL_DIR, "29_morphology_prob_contrasts.c
 # ===========================================================================
 # Block 18 — Composite genet resilience scores (script 19)
 # ===========================================================================
+# The cross-response synthesis from script 19: each genet's mean standardized
+# heat sensitivity (lower = more resilient; genet C wins). NB the ci_low/ci_high
+# columns are repurposed here to carry the median sensitivity and the PCA
+# displacement (not a confidence interval) so they ride along in the same row.
 resilience_rows <- if (file.exists(file.path(TBL_DIR, "19_genet_resilience_summary.csv"))) {
   read_csv(file.path(TBL_DIR, "19_genet_resilience_summary.csv"),
            show_col_types = FALSE) |>
@@ -811,6 +926,8 @@ resilience_rows <- if (file.exists(file.path(TBL_DIR, "19_genet_resilience_summa
     )
 } else tibble()
 
+# Same composite, but split by scope (heat-only vs heat-while-wounded) to show
+# whether a genet's resilience is general or specific to the wounded condition.
 resilience_scope_rows <- if (file.exists(file.path(TBL_DIR, "19c_resilience_decomp_by_scope.csv"))) {
   read_csv(file.path(TBL_DIR, "19c_resilience_decomp_by_scope.csv"),
            show_col_types = FALSE) |>
@@ -836,6 +953,9 @@ resilience_scope_rows <- if (file.exists(file.path(TBL_DIR, "19c_resilience_deco
 # ===========================================================================
 # Combine and write
 # ===========================================================================
+# Stack every block into one long table (optional blocks contribute nothing
+# when empty), round all numeric columns to 4 dp, sort, then add a single
+# human-readable `description` string per row and move it to the front.
 master <- bind_rows(anova12, genet_rows, r2_rows,
                     morph_anova, morph_fixed,
                     interval_rows, cox_rows, cox_genet_rows, cox_tt,
@@ -853,9 +973,14 @@ master <- bind_rows(anova12, genet_rows, r2_rows,
                               domain, response, term, model_type, test)) |>
   relocate(description)
 
+# The tidy, programmatic source of truth — every downstream consumer reads this.
 write_csv(master, file.path(TBL_DIR, "20_master_results.csv"))
 
 # ---- Paper-ready formatted version ---------------------------------------
+# A second, presentation-formatted copy: pretty column names, p-values via
+# fmt_p(), df collapsed to "df1, df2" when a denominator df exists, estimates
+# carrying their units, and CIs/%-changes as formatted strings — drop-in for a
+# manuscript table.
 paper_ready <- master |>
   transmute(
     Description   = description,
@@ -884,6 +1009,9 @@ paper_ready <- master |>
   )
 write_csv(paper_ready, file.path(TBL_DIR, "20_master_results_paper_ready.csv"))
 
+# ---- Console summary ------------------------------------------------------
+# Quick sanity report: total rows and the breakdown by domain and model type,
+# so a run confirms every block contributed and nothing silently dropped out.
 cat("\n=== Master results table ===\n")
 cat("Rows:", nrow(master), "\n")
 cat("By domain:\n")

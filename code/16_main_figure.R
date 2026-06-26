@@ -7,6 +7,22 @@
 #                   traits (wound smoothed vs new corallites — closure
 #                   preserved, regeneration impaired)
 #          Panel D: PCA biplot (multivariate summary)
+#
+# What & why: this is the manuscript's single multi-panel "story" figure. Each
+#   panel is built as its own self-contained ggplot object (pA, pB, pC, pD), then
+#   patchwork stitches them into a 2×2 grid at the very end. The narrative reads
+#   left-to-right, top-to-bottom: (A) prove the treatment worked — the tanks
+#   really sat at 28 vs 31 °C; (B) show whole-colony physiological stress diverge
+#   over time (Fv/Fm); (C) the headline mechanism — heat lets wounds close
+#   (left KM) but blocks new-corallite regeneration (right KM); (D) tie it all
+#   together in multivariate space. Key assembly conventions used throughout:
+#   each panel carries a letter via labs(tag = ...) (NOT a subtitle — panel
+#   descriptions live in the caption); legends are suppressed per-panel with
+#   guide = "none" and groups are instead DIRECT-LABELLED inside the panel
+#   (annotate()) or collected once at the bottom via guides = "collect"; every
+#   panel shares the same Okabe-Ito blue/orange (28 °C = #56B4E9, 31 °C = #D55E00)
+#   and theme_pub(9) so the grid looks like one figure, not four. The final
+#   composition step controls relative panel widths/heights and the figure title.
 # Input:   data/processed/{apex_temperature_daily,pam_clean,physio_clean,
 #                          coral_physio_wide}.rds
 # Output:  figures/16_manuscript_fig1.{pdf,png}
@@ -15,18 +31,24 @@
 source(here::here("code", "00_setup.R"))
 suppressPackageStartupMessages(library(survival))
 
+# One cleaned table per panel — A pulls from the Apex temperature loggers,
+# B from PAM fluorometry, C from the morphology scores, D from the wide
+# one-row-per-coral physiology summary.
 apex   <- readRDS(file.path(DATA_PROC, "apex_temperature_daily.rds"))
 pam    <- readRDS(file.path(DATA_PROC, "pam_clean.rds"))
 physio <- readRDS(file.path(DATA_PROC, "physio_clean.rds"))
 wide   <- readRDS(file.path(DATA_PROC, "coral_physio_wide.rds"))
 
-# ---- Panel A: tank temperature --------------------------------------------
+# ---- Panel A: tank temperature (treatment validation) ---------------------
+# Reduce the logger probes to the eight experimental tanks, fix unit drift, and
+# tag each tank with its treatment so the trace shows 28 vs 31 °C separation.
 temp_pa <- apex |>
   mutate(probe = str_squish(probe)) |>
   filter(str_detect(probe, "^Temp\\d+$"),
          is.finite(value_mean), value_mean > 0) |>
   mutate(
     tank = as.integer(str_extract(probe, "\\d+")),
+    # some probes logged °F, some °C; anything > 60 must be °F -> convert to °C
     value_c = if_else(value_mean > 60, (value_mean - 32) * 5 / 9, value_mean),
     treatment = case_when(
       tank %in% c(3, 6, 9, 12)  ~ "28C",
@@ -37,7 +59,9 @@ temp_pa <- apex |>
   filter(!is.na(treatment), value_c > 15, value_c < 40,
          between(date, as_date("2025-05-25"), as_date("2025-06-22")))
 
-# Direct labels for the two-group temperature treatment
+# With only two groups we direct-label instead of using a legend (CLAUDE.md
+# tiered legend rule). Grab one anchor point per treatment — the last date of one
+# tank — to position the "28 °C"/"31 °C" text annotations placed below.
 last_28 <- temp_pa |> filter(treatment == "28C") |>
   group_by(tank) |> slice_max(date, n = 1) |> ungroup() |>
   slice(1)
@@ -45,6 +69,8 @@ last_31 <- temp_pa |> filter(treatment == "31C") |>
   group_by(tank) |> slice_max(date, n = 1) |> ungroup() |>
   slice(1)
 
+# group = tank draws one line per tank; colour encodes treatment. Dashed grey
+# guides at 28/31 mark the target temperatures.
 pA <- ggplot(temp_pa, aes(date, value_c, group = tank, colour = treatment)) +
   geom_hline(yintercept = c(28, 31), linetype = "dashed",
              colour = "grey55", linewidth = 0.3) +
@@ -63,13 +89,19 @@ pA <- ggplot(temp_pa, aes(date, value_c, group = tank, colour = treatment)) +
        tag = "A") +   # panel descriptions belong in the figure caption, not subtitles
   theme_pub(9)
 
-# ---- Panel B: PAM trajectory ----------------------------------------------
+# ---- Panel B: PAM trajectory (whole-colony stress) ------------------------
+# Collapse to group means ± standard error per day × treatment × wound, so the
+# panel shows four mean trajectories with shaded SE ribbons.
 pam_df <- pam |>
   group_by(day, treatment, wound) |>
   summarise(m = mean(fv_fm, na.rm = TRUE),
             se = sd(fv_fm, na.rm = TRUE) / sqrt(n()),
             .groups = "drop")
 
+# Ribbon (mean±SE) + line + points, grouped by treatment×wound. Treatment is
+# direct-labelled at the right edge (annotate) with clip = "off" so the labels
+# can sit just outside the plotting area; the wound shape legend is collected
+# later from panel D so it appears only once.
 pB <- ggplot(pam_df, aes(day, m, colour = treatment,
                           fill = treatment, shape = wound)) +
   geom_ribbon(aes(ymin = m - se, ymax = m + se,
@@ -99,9 +131,16 @@ pB <- ggplot(pam_df, aes(day, m, colour = treatment,
   theme_pub(9)
 
 # ---- Panel C: KM curves for the two diagnostic traits --------------------
+# The mechanistic punchline, distilled from the full code/14 analysis to just the
+# two contrasting milestones: closure (wound_smoothed) vs regeneration
+# (new_corallites_on_tip). We recompute first-observed event days and Kaplan-
+# Meier curves inline here (same logic as code/14) so this figure is
+# self-contained. See code/14 for the censoring/KM explanation.
 focus_traits <- c(wound_smoothed = "Wound smoothed (closure)",
                   new_corallites_on_tip = "New corallites on tip (regeneration)")
 
+# Collapse each coral's 0/1 history to its first-observed event day (or last day
+# seen if never reached = right-censored), one record per coral × trait.
 ph_events <- map_dfr(names(focus_traits), function(tr) {
   physio |>
     filter(wound == "yes", !is.na(day), day >= 0) |>
@@ -119,6 +158,8 @@ ph_events <- map_dfr(names(focus_traits), function(tr) {
     mutate(trait = unname(focus_traits[tr]))
 })
 
+# Kaplan-Meier by hand: cumprod of (1 - events/at-risk) over event days, plotted
+# as cumulative % expressing (1 - survival), seeded at day 0 = 0% expressed.
 km_curves <- ph_events |>
   group_by(trait, treatment) |>
   group_modify(\(d, k) {
@@ -131,6 +172,8 @@ km_curves <- ph_events |>
   }) |> ungroup() |>
   mutate(trait = factor(trait, levels = unname(focus_traits)))
 
+# Two side-by-side KM staircases (facet per trait); the colour legend is
+# suppressed here and collected once at the bottom of the assembled figure.
 pC <- ggplot(km_curves, aes(day, cum_event,
                             colour = treatment, group = treatment)) +
   geom_step(linewidth = 0.8) +
@@ -144,7 +187,11 @@ pC <- ggplot(km_curves, aes(day, cum_event,
        tag = "C") +
   theme_pub(9)
 
-# ---- Panel D: PCA biplot -------------------------------------------------
+# ---- Panel D: PCA biplot (multivariate summary) ---------------------------
+# Compress four end-of-experiment response variables into two principal axes.
+# pca_in keeps only complete cases; the parallel `keep`/`groups` carry the
+# matching treatment/wound labels for colouring points. center+scale. = TRUE
+# standardises the variables so no single one dominates by virtue of its units.
 pca_vars <- c("pam_end", "color_end", "growth_areal", "zoox_end")
 pretty   <- c(pam_end      = "Fv/Fm",
               color_end    = "Color",
@@ -155,13 +202,19 @@ keep     <- complete.cases(wide[, pca_vars])
 groups   <- wide[keep, c("treatment", "wound")]
 
 pca   <- prcomp(pca_in, center = TRUE, scale. = TRUE)
-var_e <- summary(pca)$importance[2, ] * 100
-scores <- as.data.frame(pca$x) |> bind_cols(groups)
+var_e <- summary(pca)$importance[2, ] * 100   # % variance per PC (for axis labels)
+scores <- as.data.frame(pca$x) |> bind_cols(groups)   # coral positions in PC space
+# Loadings = variable arrows. Scaled ×2.7 only so the arrows are visible against
+# the point cloud (a biplot's arrow length is arbitrary; this is cosmetic).
 load_a <- as.data.frame(pca$rotation) |>
   tibble::rownames_to_column("variable") |>
   mutate(label = unname(pretty[variable]),
          across(c(PC1, PC2), \(x) x * 2.7))
 
+# Biplot layers, drawn back-to-front: zero gridlines -> 68% treatment ellipses
+# (one SD-equivalent cloud) -> coral points (colour = treatment, shape = wound)
+# -> loading arrows -> ggrepel labels nudged off the arrow tips so text never
+# overlaps. Wound shapes are direct-labelled with a small annotate() legend.
 pD <- ggplot(scores, aes(PC1, PC2, colour = treatment, shape = wound)) +
   geom_hline(yintercept = 0, colour = "grey85", linewidth = 0.25) +
   geom_vline(xintercept = 0, colour = "grey85", linewidth = 0.25) +
@@ -195,8 +248,11 @@ pD <- ggplot(scores, aes(PC1, PC2, colour = treatment, shape = wound)) +
   theme_pub(9)
 
 # ---- Compose ---------------------------------------------------------------
-# Consolidate legends; add top margin so the title doesn't kiss the panel
-# letters; use patchwork to align axes.
+# Assemble the four panels with patchwork. `+` places panels side by side, `/`
+# stacks rows. Top row A|B is equal width; bottom row gives the two-facet KM
+# panel C extra room (1.4 vs 1) so its facets don't get squeezed by the biplot.
+# heights = c(0.9, 1.1) makes the bottom row a bit taller; guides = "collect"
+# gathers every surviving legend (the wound shapes) into ONE shared legend.
 top_row <- pA + pB + patchwork::plot_layout(widths = c(1, 1))
 bot_row <- pC + pD + patchwork::plot_layout(widths = c(1.4, 1))
 fig1    <- (top_row / bot_row) +
@@ -211,10 +267,14 @@ fig1    <- (top_row / bot_row) +
                                    margin = margin(b = 10))
     )
   ) &
+  # `&` applies this theme to EVERY panel at once (patchwork operator), so the
+  # single collected legend sits at the bottom across the whole figure.
   theme(legend.position = "bottom",
         legend.box      = "horizontal",
         legend.margin   = margin(t = 4))
 
+# save_fig() writes the vector PDF (for the manuscript) + a PNG preview at the
+# given size in mm; double-column width since this is the main figure.
 save_fig(fig1, "16_manuscript_fig1", width = 220, height = 175)
 
 cat("Wrote 16_manuscript_fig1.{pdf,png}\n")

@@ -2,12 +2,34 @@
 # Purpose: Run the full LTH analysis pipeline in dependency order.
 #          Source this once from the project root: `Rscript code/_run_all.R`
 #          Total runtime ~3 minutes (Apex XML parse dominates first pass).
+#
+# What & why: this is the MASTER pipeline runner — the single entry point that
+#   reproduces every table and figure from the raw data in one command. It just
+#   source()s each analysis script in turn. The ONLY thing that matters here is
+#   the ORDER: many scripts read .rds/.csv files that an EARLIER script wrote, so
+#   running them out of order would read stale (or missing) inputs. The list
+#   below is therefore a dependency order, not an alphanumeric one. A few load-
+#   bearing examples (see also the inline notes):
+#     - 01 (load/clean metadata) runs first: nearly everything downstream reads
+#       the cleaned data it produces.
+#     - 07 (wax dipping) runs BEFORE 05 (buoyant weight) because 05's areal
+#       calcification needs the per-coral surface areas that 07 writes — despite
+#       "05" sorting before "07" numerically.
+#     - 31 (RNA-seq covariate handoff) runs late: it joins the symbiont table
+#       (06) and the genet resilience summary (19), so both must exist first.
+#     - 30 (manuscript audit) runs DEAD LAST: it checks the manuscript against
+#       the freshly regenerated tables, so every table must already be rebuilt.
+#   Bottom line: edit this list with care — reordering can silently feed a script
+#   yesterday's outputs.
 # =============================================================================
 
-# Source from project root (resolve via here::here, which uses .Rproj/.here)
+# Source from project root (resolve via here::here, which uses .Rproj/.here).
+# setwd() so the relative file.path("code", s) calls below resolve regardless of
+# where Rscript was launched.
 project_root <- here::here()
 setwd(project_root)
 
+# Pipeline steps, in dependency order. Read top-to-bottom = the order they run.
 scripts <- c(
   "01_load_clean_metadata.R",
   "02_pam_analysis.R",
@@ -49,6 +71,9 @@ scripts <- c(
   "30_manuscript_audit.R"          # advisory phenotype reproducibility check — warns (never fails) if phenotype numbers drift
 )
 
+# Run each script in turn, printing a banner and per-script timing. A failure in
+# any script throws and stops the loop here (so you see exactly which step broke)
+# — except 30's audit, which only WARNS and lets the run finish.
 t0 <- Sys.time()
 for (s in scripts) {
   cat("\n============================================================\n",
@@ -63,6 +88,7 @@ t1 <- Sys.time()
 cat("\n\nFull pipeline complete in",
     round(as.numeric(t1 - t0, units = "mins"), 2), "min.\n")
 
-# Save session info for reproducibility provenance
+# Save session info (R version + exact package versions) for reproducibility
+# provenance — so a future reader knows the software state this run was built on.
 dir.create("output", showWarnings = FALSE)
 writeLines(capture.output(sessionInfo()), "output/session_info.txt")

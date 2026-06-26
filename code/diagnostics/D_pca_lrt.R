@@ -1,14 +1,36 @@
 # =============================================================================
-# PCA and genet-LRT diagnostic — verifies:
-#   1. PCA from 15_multivariate.R (n, variance explained, Kaiser, loadings,
-#      centering/scaling).
-#   2. Genet LRTs from 13_genet_interaction.R (REML status, df, convergence,
-#      effect direction vs. emmeans).
-# Output:
-#   output/diagnostics/D_pca_lrt_diagnostics.csv
-#   output/diagnostics/D_pca_lrt_report.md
-#   figures/diagnostics/D_pca_scree.png
-#   figures/diagnostics/D_pca_loadings.png
+# Purpose: Verify the two multivariate/interaction analyses. (1) The PCA from
+#          15_multivariate.R — sample size, variance explained, Kaiser criterion,
+#          loadings, and centering/scaling. (2) The genet likelihood-ratio tests
+#          from 13_genet_interaction.R — REML status, degrees of freedom,
+#          convergence, and effect direction vs. emmeans.
+#
+# What & why: two of the paper's claims rest on machinery that is easy to get
+#   subtly wrong, so this script independently re-derives both and checks them.
+#     PCA: collapses the four end-of-experiment health metrics (Fv/Fm, color,
+#     growth, log symbionts) into a few axes. We confirm the inputs were CENTERED
+#     and SCALED (mandatory — the variables are on different units), that PC1+PC2
+#     explain enough variance (>= 60%) to justify reading a biplot, how many axes
+#     pass the Kaiser rule (eigenvalue > 1), and that the "health" variables load
+#     on PC1 with a consistent sign (the biological-interpretation sanity check).
+#     LRT: a likelihood-ratio test compares two NESTED models — here a model with
+#     genet as an additive term vs. one where genet interacts with everything
+#     (treatment x wound x day x thicket). The LRT asks "does letting the heat
+#     response differ by genet improve fit more than chance?" (a test for G x E).
+#     Two things MUST be true for an LRT on fixed effects to be valid: both models
+#     are fit by ML (REML = FALSE), and the degrees of freedom equal the
+#     difference in parameters. This script refits the nested pair, confirms
+#     REML = FALSE on both (and on the saved object), checks the df bookkeeping,
+#     re-runs anova() to reproduce the reported p-value, and verifies the
+#     direction of the per-genet heat effect against the saved emmeans table.
+#
+# Input:   data/processed/{pam,color,buoyant_weight,symbiont_chl}_clean.rds
+#          output/models/13_<response>_genet_lmm.rds (saved full models)
+#          output/tables/13_genet_anova.csv, 13_genet_emmeans.csv
+# Output:  output/diagnostics/D_pca_lrt_diagnostics.csv
+#          output/diagnostics/D_pca_lrt_report.md
+#          figures/diagnostics/D_pca_scree.png
+#          figures/diagnostics/D_pca_loadings.png
 # =============================================================================
 
 suppressPackageStartupMessages({
@@ -21,6 +43,9 @@ DIAG_FIG <- here::here("figures", "diagnostics")
 dir.create(DIAG_OUT, recursive = TRUE, showWarnings = FALSE)
 dir.create(DIAG_FIG, recursive = TRUE, showWarnings = FALSE)
 
+# One tidy row per check. Note: D uses INFO (descriptive, no pass/fail) alongside
+# PASS/WARN/FAIL because several PCA outputs (variance, loadings) are reported,
+# not graded.
 results <- list()
 add_check <- function(analysis, check, statistic, status, notes = "") {
   results[[length(results) + 1]] <<- tibble(
@@ -37,6 +62,9 @@ report_lines <- c("# PCA + Genet LRT Diagnostics",
 # ----------------------------------------------------------------------------
 report_lines <- c(report_lines, "## PCA (15_multivariate.R)\n")
 
+# Rebuild the PCA input the same way script 15 did: take each coral's LAST
+# observation per metric (end-of-experiment state), then join into one wide
+# table keyed by coral identity (id x treatment x wound x thicket).
 pam   <- readRDS(file.path(DATA_PROC, "pam_clean.rds"))
 color <- readRDS(file.path(DATA_PROC, "color_clean.rds"))
 bw    <- readRDS(file.path(DATA_PROC, "buoyant_weight_clean.rds"))
@@ -60,11 +88,14 @@ wide <- pam_last |>
   inner_join(bw_summary, by = c("id", "treatment", "wound", "thicket")) |>
   left_join(zoox_last,   by = c("id", "treatment", "wound", "thicket"))
 
+# Symbiont density is added as a 4th variable only if it is present (it is
+# left-joined and can be missing). PCA needs complete cases, so drop_na() here.
 pca_vars <- c("pam_end", "color_end", "growth_pct")
 if (any(!is.na(wide$zoox_end))) pca_vars <- c(pca_vars, "zoox_end")
 pca_input <- wide[, pca_vars, drop = FALSE] |> drop_na()
 n_pca <- nrow(pca_input)
 
+# Rough adequacy floor: PCA on ~4 vars wants at least ~30 complete corals.
 add_check("PCA", "Sample size (complete cases)", n_pca,
           if (n_pca >= 30) "PASS" else "WARN",
           sprintf("%d corals with all %d vars", n_pca, length(pca_vars)))
@@ -72,16 +103,21 @@ report_lines <- c(report_lines,
   sprintf("- n = %d corals on %d vars (%s)", n_pca, length(pca_vars),
           paste(pca_vars, collapse = ", ")))
 
+# center + scale. = standardize each variable to mean 0, SD 1 before rotating —
+# essential because Fv/Fm, % color, % growth and log-cells have wildly different
+# scales and an unscaled PCA would just track whichever has the biggest numbers.
 pca <- prcomp(pca_input, center = TRUE, scale. = TRUE)
-var_exp <- summary(pca)$importance[2, ] * 100
-cum_var <- summary(pca)$importance[3, ] * 100
-eigen <- pca$sdev^2
+var_exp <- summary(pca)$importance[2, ] * 100   # % variance per component
+cum_var <- summary(pca)$importance[3, ] * 100   # cumulative %
+eigen <- pca$sdev^2                             # eigenvalues (for Kaiser rule)
 
 for (i in seq_along(var_exp)) {
   add_check("PCA", sprintf("Variance explained PC%d", i),
             sprintf("%.1f%%", var_exp[i]), "INFO",
             sprintf("cumulative = %.1f%%", cum_var[i]))
 }
+# A 2-D biplot only faithfully represents the data if the first two axes carry
+# most of the variance; >= 60% is the working threshold for trusting the biplot.
 pc12 <- sum(var_exp[1:2])
 add_check("PCA", "PC1+PC2 cumulative variance",
           sprintf("%.1f%%", pc12),
@@ -95,6 +131,8 @@ report_lines <- c(report_lines,
   sprintf("- PC1+PC2 = **%.1f%%** (%s)", pc12,
           if (pc12 >= 60) "PASS" else "WARN — below 60% threshold"))
 
+# Kaiser rule: keep components whose eigenvalue > 1, i.e. that explain more than
+# a single original (standardized) variable would on its own. Reported, not graded.
 n_kaiser <- sum(eigen > 1)
 add_check("PCA", "Kaiser criterion (eigenvalues > 1)",
           n_kaiser, "INFO",
@@ -104,7 +142,8 @@ report_lines <- c(report_lines,
   sprintf("- Kaiser: %d PCs with eigenvalue > 1 (eigenvals %s)", n_kaiser,
           paste(sprintf("%.2f", eigen), collapse = ", ")))
 
-# Centering & scaling
+# Confirm prcomp actually stored centering/scaling constants (it returns the
+# means/SDs it used). Both must be present or the PCA is invalid => FAIL.
 centered <- !is.null(pca$center) && length(pca$center) > 0
 scaled   <- !is.null(pca$scale) && !isFALSE(pca$scale)
 add_check("PCA", "Centered AND scaled",
@@ -128,7 +167,9 @@ for (pc in colnames(load_mat)) {
             sprintf("%s (%+.2f)", top_var, ord[1]), "INFO", "")
 }
 
-# Biological interpretation of PC1
+# Biological interpretation of PC1: if PC1 is a "coral health" axis, the health
+# metrics (Fv/Fm, color) should load with the SAME sign. Mixed signs would mean
+# PC1 is not cleanly interpretable as overall health => WARN.
 pc1 <- load_mat[, "PC1"]
 hp_load <- pc1[c("pam_end", "color_end")]
 hp_sym <- if (all(hp_load > 0) | all(hp_load < 0)) "PASS" else "WARN"
@@ -142,7 +183,8 @@ add_check("PCA", "PC1 biological interpretation",
                  if (hp_sym == "PASS") "consistent."
                  else "inconsistent signs flagged."))
 
-# Scree + loadings figures
+# Scree + loadings figures: scree shows variance per PC (dashed line = the
+# "equal share" reference); loadings show how each variable weights each PC.
 scree_df <- tibble(PC = factor(paste0("PC", seq_along(var_exp)),
                                levels = paste0("PC", seq_along(var_exp))),
                    variance = var_exp,
@@ -181,6 +223,8 @@ ggsave(file.path(DIAG_FIG, "D_pca_loadings.png"), p_load,
 # ----------------------------------------------------------------------------
 report_lines <- c(report_lines, "", "## Genet LRTs (13_genet_interaction.R)\n")
 
+# Load the results script 13 reported, so we can independently reproduce its LRT
+# df and p-values (anova_tab) and check effect directions (emm_tab).
 anova_tab <- read_csv(file.path(TBL_DIR, "13_genet_anova.csv"),
                       show_col_types = FALSE)
 emm_tab   <- read_csv(file.path(TBL_DIR, "13_genet_emmeans.csv"),
@@ -193,6 +237,12 @@ phys_d  <- readRDS(file.path(DATA_PROC, "symbiont_chl_clean.rds")) |>
   filter(is.finite(cells_per_cm2), cells_per_cm2 > 0) |>
   mutate(thicket = factor(thicket), biopsy_day_c = biopsy_day - 1)
 
+# Refit the nested model pair for one response and run all LRT validity checks.
+# m0 = "null": genet enters only additively (thicket as a main effect).
+# m1 = "full": genet interacts with everything (treatment*wound*day*thicket).
+# The LRT of m0 vs m1 is the test for genotype-by-environment structure. Both are
+# fit with REML = FALSE because likelihood-ratio tests on FIXED effects are only
+# valid under ML; warnings during fitting are captured rather than printed.
 check_lmer_pair <- function(name, response, data, fixed_term = "day",
                             include_id = TRUE) {
   id_term <- if (include_id) " + (1 | id)" else ""
@@ -215,6 +265,9 @@ check_lmer_pair <- function(name, response, data, fixed_term = "day",
     warning = function(w) { warns1 <<- c(warns1, conditionMessage(w))
                              invokeRestart("muffleWarning") })
 
+  # Validity gate 1: all three objects must be ML (REML = FALSE). isREML == FALSE
+  # => PASS. The saved on-disk model is checked too, to confirm script 13 itself
+  # used ML and the diagnostic is testing the same thing that was reported.
   reml0 <- isREML(m0); reml1 <- isREML(m1); reml_saved <- isREML(m1_saved)
   add_check(name, "Null model REML status", sprintf("REML=%s", reml0),
             if (!reml0) "PASS" else "FAIL",
@@ -227,6 +280,10 @@ check_lmer_pair <- function(name, response, data, fixed_term = "day",
             if (!reml_saved) "PASS" else "FAIL",
             paste("saved object at", basename(m1_path)))
 
+  # Validity gate 2: the LRT degrees of freedom must equal the number of EXTRA
+  # parameters the full model estimates. We compute it two ways (fixed-effect
+  # count vs. total npar from logLik) and confirm the total matches what script 13
+  # reported. ddf_total is what anova(m0, m1) uses for the chi-square df.
   p0_fx <- length(lme4::fixef(m0)); p1_fx <- length(lme4::fixef(m1))
   # npar from anova() includes σ² + random-effect variances; the null has an
   # extra (1|thicket) variance because the full moves thicket to fixed effects.
@@ -252,6 +309,9 @@ check_lmer_pair <- function(name, response, data, fixed_term = "day",
               paste(c(warns0, warns1), collapse = " | ")
             else "no warnings")
 
+  # Reproducibility: re-run the LRT here and confirm its p-value matches the one
+  # script 13 saved to within 1e-6. A mismatch (WARN) would mean the reported
+  # number can't be regenerated from the data — exactly what diagnostics catch.
   lrt <- anova(m0, m1)
   recomputed_p <- lrt$`Pr(>Chisq)`[2]
   reported_p <- anova_tab$lrt_p[anova_tab$response == name]
@@ -284,7 +344,10 @@ lmer_checks <- list(
                                   include_id = FALSE)
 )
 
-# Growth LMM
+# Growth LMM: same nested-LRT idea, but growth has no repeated-measures time
+# dimension (one calcification value per coral), so the formulas drop `day` and
+# there is no (1|id); tank is kept as a random block. Singular fits are tolerated
+# (check.conv.singular ignore) because the design can zero out a variance component.
 m_bw_null  <- lme4::lmer(
   areal_calc ~ treatment * wound + thicket + (1 | tank),
   data = bw_d, REML = FALSE,
@@ -315,7 +378,12 @@ report_lines <- c(report_lines, "",
   sprintf("- Fixed params: null=%d, full=%d (Δ=%d, reported df=%d)",
           p_bw0, p_bw1, ddf_bw, reported_df_bw))
 
-# Effect direction — does interaction make sense given emmeans?
+# Effect direction — does a significant genet interaction actually look like
+# G x E? For each response we compute the heat effect (31C - 28C) within each
+# genet. If the sign FLIPS across genets ("crossing"), that is genuine
+# genotype-by-environment interaction; if all genets move the same way, the
+# interaction is just a difference in magnitude (additive/parallel). Descriptive
+# (INFO) — it interprets the LRT result rather than re-testing it.
 report_lines <- c(report_lines, "", "## Effect direction vs. emmeans\n")
 for (resp in unique(emm_tab$response)) {
   sub <- emm_tab |> filter(response == resp)

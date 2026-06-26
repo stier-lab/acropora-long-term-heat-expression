@@ -9,6 +9,17 @@
 #          Also produces a composite "thermal resilience score" per genet
 #          — the inverse of mean standardized effect across responses.
 #
+# What & why: this is the synthesis script. Every other analysis asks "does
+#   heat affect response X?"; this one asks the cross-cutting question "which
+#   genet best tolerates heat overall?" To put effects measured in completely
+#   different units on one axis (Fv/Fm, a colour score, calcification rate,
+#   symbiont counts, and wound-healing hazard ratios), each effect is rescaled
+#   WITHIN its own response so the largest-magnitude effect = 1 (this is the "z"
+#   column — a row-max standardization, not a statistical z-score). Positive
+#   means the genet's phenotype is worse at 31 °C than 28 °C, i.e. more heat-
+#   sensitive. Averaging these standardized values per genet yields a single
+#   resilience ranking; in this dataset genet C is the most resilient. Nothing
+#   here fits a new model — every number is a re-summary of upstream tables.
 # Input:   output/tables/12_genet_treatment_effects.csv   (continuous responses)
 #          output/tables/14_cox_hazard_ratios.csv         (per-genet HR for KM)
 #          output/tables/15_genet_pca_displacement.csv    (multivariate)
@@ -17,8 +28,14 @@
 #          output/tables/19_genet_resilience_summary.csv
 # =============================================================================
 
+# 00_setup.R loads packages, shared paths (TBL_DIR, FIG_DIR), theme_pub(),
+# save_fig(), and the genet colour palette PAL_GENO used below.
 source(here::here("code", "00_setup.R"))
 
+# ---- Load upstream effect tables ------------------------------------------
+# Three sources, one per analysis domain: per-genet continuous LMM contrasts
+# (script 12), wound-healing Cox hazard ratios (script 14), and the
+# multivariate per-genet PCA displacement (script 15).
 cont <- read_csv(file.path(TBL_DIR, "12_genet_treatment_effects.csv"),
                  show_col_types = FALSE)
 cox  <- read_csv(file.path(TBL_DIR, "14_cox_hazard_ratios.csv"),
@@ -95,11 +112,13 @@ all_eff <- bind_rows(
     )
   )
 
-# Sort by domain then by response_label for the y-axis
+# Sort by domain then by response_label for the y-axis (so rows group by domain)
 all_eff <- all_eff |>
   mutate(response_label = factor(response_label,
                                   levels = unique(response_label[order(domain, response_label)])))
 
+# Forest plot: each point is one genet's standardized heat effect on one
+# response, faceted by domain. Dashed line at x = 0 marks "no heat effect".
 p_dash <- ggplot(all_eff,
                   aes(z, response_label,
                       colour = thicket, shape = thicket)) +
@@ -134,8 +153,12 @@ resilience <- all_eff |>
             by = "thicket") |>
   mutate(rank_overall = rank(mean_sensitivity))
 
+# This summary table is the headline output: it (and its rank_overall column)
+# is what script 20 reads back in as the "Genet resilience" rows.
 write_csv(resilience, file.path(TBL_DIR, "19_genet_resilience_summary.csv"))
 
+# Bar chart of the composite ranking; each bar is annotated with that genet's
+# multivariate PCA displacement as an independent cross-check on the ordering.
 p_rank <- ggplot(resilience,
                   aes(reorder(thicket, -mean_sensitivity),
                       mean_sensitivity, fill = thicket)) +
@@ -205,6 +228,8 @@ decomp <- bind_rows(
     )
   )
 
+# Same forest plot as p_dash, but now faceted domain (rows) × scope (columns)
+# so heat-only and heat-while-wounded sensitivity can be compared side by side.
 p_decomp <- ggplot(decomp,
                     aes(z, response_label,
                         colour = thicket, shape = thicket)) +

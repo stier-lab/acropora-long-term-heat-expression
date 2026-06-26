@@ -3,6 +3,17 @@
 #          - Mixed model: Fv/Fm ~ treatment * wound * day + (1|tank) + (1|thicket)
 #          - Within-coral repeated measures via random effect of id
 #          - Figure: trajectories with 95% CI, faceted by treatment, color by wound
+#
+# What & why: Fv/Fm is the dark-adapted maximum photochemical efficiency of
+#   photosystem II, measured with a pulse-amplitude-modulation (PAM) fluorometer.
+#   It is the standard, non-destructive readout of how stressed the coral's
+#   symbiotic algae (Symbiodiniaceae) are: a healthy symbiont sits near ~0.6,
+#   and the value drops as heat stress damages the photosynthetic machinery (the
+#   first step toward bleaching). Here we ask whether the 31 °C heat treatment
+#   depressed Fv/Fm over the experiment, and whether wounding and the genotype of
+#   the host coral modified that response. This is the physiological backbone for
+#   the headline result — that heat impairs the symbiosis (and thus the energy
+#   budget needed for regeneration), even when the wound itself still closes.
 # Input:   data/raw/pam/PAM_data.csv
 #          data/processed/coral_metadata.rds
 # Output:  data/processed/pam_clean.rds
@@ -11,47 +22,62 @@
 #          output/models/02_pam_lmer.rds
 # =============================================================================
 
+# 00_setup.R loads packages, defines shared paths (DATA_RAW, DATA_PROC, TBL_DIR,
+# MOD_DIR), the theme_pub() plot theme, the PAL_WOUND palette, and save_fig().
 source(here::here("code", "00_setup.R"))
 
 # ---- Load ------------------------------------------------------------------
+# clean_names() converts the spreadsheet headers to predictable snake_case.
 pam_raw <- read_csv(file.path(DATA_RAW, "pam", "PAM_data.csv"),
                     show_col_types = FALSE) |>
   janitor::clean_names()
 
+# Coral metadata (genet/thicket assignment etc.) built in an earlier script.
 meta <- readRDS(file.path(DATA_PROC, "coral_metadata.rds"))
 
 # ---- Clean -----------------------------------------------------------------
-# The Fv/Fm column was a spreadsheet formula in some rows ("=L2/100"); recompute
-# from Y and the divisor convention used (Y / 1000 in PAM convention).
+# Coerce every column to its proper type and recover Fv/Fm. The Fv/Fm column was
+# a live spreadsheet formula in some rows ("=L2/100"), so it reads back as text;
+# where that happens we recompute it from the raw "Y" reading using the PAM
+# convention (Y / 1000) rather than trusting the broken cell.
 pam <- pam_raw |>
   rename(thicket = matches("^thicket"),
          fv_fm   = matches("^fv_fm")) |>
   mutate(
     date       = as_date(date),
-    day        = as.integer(day),
+    day        = as.integer(day),                # day relative to wounding (D0)
+    # Treatment recorded as the numeric set-point (28/31 °C); make it an ordered
+    # 2-level factor with 28C first so model contrasts read as "31C vs 28C".
     treatment  = factor(as.integer(treatment), levels = c(28, 31),
                         labels = c("28C", "31C")),
     tank       = as.integer(tank),
-    wound      = factor(wound, levels = c("no", "yes")),
-    thicket    = str_to_lower(str_squish(thicket)),
-    id         = as.integer(id),
-    location   = str_to_lower(location),
-    f          = as.numeric(f),
+    wound      = factor(wound, levels = c("no", "yes")),  # "no" = baseline level
+    thicket    = str_to_lower(str_squish(thicket)),       # genet ID; tidy whitespace/case
+    id         = as.integer(id),                 # unique coral fragment ID
+    location   = str_to_lower(location),         # probe placement: top vs bottom
+    f          = as.numeric(f),                  # raw PAM fluorescence channels
     m          = as.numeric(m),
     y          = as.numeric(y),
     e          = as.numeric(e),
-    # PAM convention: Fv/Fm = Y / 1000 when reported as raw "Y"
+    # PAM convention: Fv/Fm = Y / 1000 when reported as raw "Y". Only fall back to
+    # this when the fv_fm cell failed to parse as a number (the broken-formula rows).
     fv_fm      = if_else(is.na(suppressWarnings(as.numeric(fv_fm))),
                          y / 1000,
                          suppressWarnings(as.numeric(fv_fm)))
   ) |>
+  # Keep only biologically valid Fv/Fm: it is a ratio bounded in (0, 1), so 0,
+  # negatives, and >1 are measurement/parsing errors and are dropped.
   filter(!is.na(fv_fm), fv_fm > 0, fv_fm < 1)
 
-# Average top/bottom replicate measurements per coral-day
+# Average the two within-coral probe readings (top + bottom) into one value per
+# coral per day. These are technical replicates of the same fragment, not
+# independent observations, so they are collapsed before modelling (the
+# justification for this is tested in the sensitivity block below).
 pam_avg <- pam |>
   group_by(date, day, treatment, tank, thicket, wound, id) |>
   summarise(fv_fm = mean(fv_fm, na.rm = TRUE), .groups = "drop")
 
+# Save the cleaned, one-row-per-coral-per-day table for downstream scripts.
 saveRDS(pam_avg, file.path(DATA_PROC, "pam_clean.rds"))
 
 # ---- Location (top vs bottom) sensitivity check ----------------------------
@@ -65,11 +91,19 @@ if ("location" %in% names(pam) &&
     length(unique(na.omit(pam$location))) > 1) {
   pam_loc <- pam |> mutate(location = factor(location))
   # lmerTest::lmer (not lme4::lmer) so anova() returns Satterthwaite p-values.
+  # REML = FALSE (ML) here because this is a test about FIXED effects (the
+  # location terms): likelihood-ratio / ML F-tests on fixed effects are only
+  # valid under ML, whereas REML is reserved for the final variance estimates.
+  # check.conv.singular = "ignore": this saturated 4-way model can drive a
+  # variance component to 0; we tolerate that since we only need the fixed-effect
+  # tests, not the random-effect estimates.
   mod_loc <- lmerTest::lmer(
     fv_fm ~ treatment * wound * day * location + (1 | tank) + (1 | id),
     data = pam_loc, REML = FALSE,
     control = lme4::lmerControl(check.conv.singular = .makeCC("ignore", tol = 1e-4))
   )
+  # Pull the ANOVA table and keep only rows that mention "location" — the terms
+  # that decide whether probe placement matters.
   loc_anova <- as.data.frame(anova(mod_loc)) |>
     tibble::rownames_to_column("term") |>
     filter(grepl("location", term))
@@ -93,29 +127,43 @@ if ("location" %in% names(pam) &&
 }
 
 # ---- Mixed model -----------------------------------------------------------
-# Continuous day, factor treatment×wound. Random: tank + thicket + id (within).
+# The headline model. Day is continuous (a linear time trend), treatment and
+# wound are factors, and they are fully crossed so we can read off whether heat
+# and wounding interact and whether their effects change through time.
+# Random intercepts soak up the non-independence in the design:
+#   (1|tank)    — corals sharing a tank share its micro-environment
+#   (1|thicket) — fragments from the same genet share genotype/colony history
+#   (1|id)      — repeated measures on the same fragment across days
+# REML = TRUE here (unlike the ML sensitivity model): this is the FINAL model, so
+# we want the less-biased REML estimates of the variance components.
 mod <- lme4::lmer(
   fv_fm ~ treatment * wound * day + (1 | tank) + (1 | thicket) + (1 | id),
   data = pam_avg, REML = TRUE
 )
 saveRDS(mod, file.path(MOD_DIR, "02_pam_lmer.rds"))
 
-# Treatment contrasts at each integer day
+# Estimated marginal means: model-predicted Fv/Fm for every treatment×wound cell
+# at each observed day, then pairwise contrasts. adjust = "tukey" controls the
+# family-wise error rate across the multiple pairwise comparisons within each day.
 emm <- emmeans::emmeans(mod, ~ treatment * wound | day,
                         at = list(day = sort(unique(pam_avg$day))))
 contrasts_tbl <- as_tibble(pairs(emm, adjust = "tukey"))
 write_csv(contrasts_tbl, file.path(TBL_DIR, "02_pam_treatment_contrasts.csv"))
 
 # ---- Figure ----------------------------------------------------------------
+# Collapse to one mean (± standard error) per day × treatment × wound cell for
+# plotting. Note this shows the raw cell means, not the model-adjusted means.
 plot_df <- pam_avg |>
   group_by(day, treatment, wound) |>
   summarise(
     mean = mean(fv_fm, na.rm = TRUE),
-    se   = sd(fv_fm, na.rm = TRUE) / sqrt(n()),
+    se   = sd(fv_fm, na.rm = TRUE) / sqrt(n()),  # SE = SD / sqrt(n)
     n    = n(),
     .groups = "drop"
   )
 
+# One panel per temperature; within each, a line per wound status with a ±1 SE
+# ribbon. The dotted vertical line at day 0 marks the wounding event.
 p_pam <- ggplot(plot_df, aes(day, mean,
                              colour = wound, fill = wound, group = wound)) +
   geom_ribbon(aes(ymin = mean - se, ymax = mean + se),

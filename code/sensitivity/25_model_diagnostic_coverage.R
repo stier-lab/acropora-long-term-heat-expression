@@ -6,21 +6,36 @@
 #          model to (a) its diagnostic figure and (b) the figure that
 #          visualizes its fitted result. Fails loudly (non-zero summary) if any
 #          model is left without a diagnostic.
+#
+# What & why: a reviewer's fair question is "did you actually check the
+#   assumptions of EVERY model you fit, or just the convenient ones?" This script
+#   makes that impossible to fudge. It walks the folder of saved model objects,
+#   and for each one confirms a residual/assumption diagnostic exists — reusing
+#   one already made by an earlier script, or building a fresh DHARMa plot on the
+#   spot if not. The output is an audit table: every model paired with its
+#   diagnostic plot and with the manuscript figure that shows its result. If any
+#   model slips through without a diagnostic, the script ends with a loud WARNING
+#   and a non-zero gap count. This is bookkeeping for reproducibility, not new
+#   statistics.
 # Input:   output/models/*.rds  (+ Cox PH plots from script 14)
 # Output:  output/tables/25_model_diagnostic_coverage.csv
 #          output/diagnostics/K_model_coverage_report.md
 #          figures/diagnostics/K_<model>_dharma.png   (for any that were missing)
 # =============================================================================
 
+# 00_setup.R loads packages and shared paths (MOD_DIR, FIG_DIR, TBL_DIR, ...).
 source(here::here("code", "00_setup.R"))
-suppressPackageStartupMessages({ library(DHARMa) })
+suppressPackageStartupMessages({ library(DHARMa) })   # simulation-based residuals
 
 DIAG_DIR <- file.path(FIG_DIR, "diagnostics")
 dir.create(DIAG_DIR, recursive = TRUE, showWarnings = FALSE)
 
+# Every fitted model the pipeline saved to disk; this is the master list we audit.
 model_files <- list.files(MOD_DIR, pattern = "\\.rds$", full.names = TRUE)
 
-# Map each model (by name pattern) to the figure that visualizes its result.
+# ---- Crosswalk: model -> the manuscript figure that shows its result -------
+# Pattern-matches a model's filename stem to the results figure it underlies, so
+# the audit table links each model to where its finding actually appears.
 result_fig <- function(m) {
   dplyr::case_when(
     grepl("pam",   m) ~ "figures/02_pam_fvfm_trajectory.pdf",
@@ -33,8 +48,10 @@ result_fig <- function(m) {
   )
 }
 
-# Explicit crosswalk: model stem -> existing diagnostic figure. Anything not
-# mapped gets a K_ plot built.
+# ---- Crosswalk: model -> its EXISTING diagnostic figure --------------------
+# Models diagnosed by earlier scripts (12, 12b, 12c, diagnostics/A, ...) already
+# have a plot on disk; this names them so we reuse rather than rebuild. Any stem
+# not found here (or whose plot is missing) falls through to a freshly built K_ plot.
 diag_map <- c(
   "02_pam_lmer"     = "K_02_pam_lmer_dharma.png",
   "12_pam_lmm"      = "A_pam_dharma.png",
@@ -44,6 +61,7 @@ diag_map <- c(
   "12_bw_pct_lm"    = "growth_pct.png",
   "12b_color_clmm"  = "G_12b_color_clmm_observed.png"
 )
+# Resolve a model stem to its existing diagnostic filename, or NA if none exists.
 existing_diag <- function(stem) {
   if (stem %in% names(diag_map)) {
     f <- diag_map[[stem]]
@@ -51,7 +69,8 @@ existing_diag <- function(stem) {
         file.exists(file.path(FIG_DIR, "12_diagnostics", f))) return(f)
     return(NA_character_)
   }
-  # morphology: 12_morph_<t>_glmm -> B_<t>.png ; 12c_morph_<t>_blme -> G_12c_..._dharma.png
+  # morphology models follow naming conventions, so derive their plot names:
+  # 12_morph_<trait>_glmm -> B_<trait>.png ; 12c_morph_<trait>_blme -> G_12c_..._dharma.png
   if (grepl("^12_morph_.*_glmm$", stem)) {
     t <- sub("^12_morph_(.*)_glmm$", "\\1", stem)
     f <- paste0("B_", t, ".png")
@@ -64,6 +83,11 @@ existing_diag <- function(stem) {
   NA_character_
 }
 
+# ---- Build a fresh DHARMa diagnostic on demand -----------------------------
+# Simulate scaled (quantile) residuals and write the standard QQ + residual-vs-
+# predicted panel. Wrapped in tryCatch so one un-simulatable model can't abort
+# the whole audit; on failure it closes any half-open graphics device and
+# returns NA so the model is reported as a gap.
 build_dharma <- function(model, stem) {
   out <- file.path(DIAG_DIR, paste0("K_", stem, "_dharma.png"))
   ok <- tryCatch({
@@ -75,6 +99,7 @@ build_dharma <- function(model, stem) {
   if (ok) out else NA_character_
 }
 
+# Locate a named diagnostic file across the two folders it might live in.
 diag_path <- function(fig) {
   p <- file.path(DIAG_DIR, fig)
   if (file.exists(p)) return(p)
@@ -83,17 +108,20 @@ diag_path <- function(fig) {
   NA_character_
 }
 
+# ---- Audit loop: one pass per saved model ----------------------------------
 rows <- list()
 for (f in model_files) {
   stem <- tools::file_path_sans_ext(basename(f))
   m <- tryCatch(readRDS(f), error = function(e) NULL)
-  cls <- if (is.null(m)) "unreadable" else class(m)[1]
+  cls <- if (is.null(m)) "unreadable" else class(m)[1]   # model class drives handling
 
   diag_fig <- existing_diag(stem)
   status <- "covered (existing)"
 
-  # Build a diagnostic if none exists or if the mapped diagnostic predates the
-  # saved model and the model class supports DHARMa.
+  # Freshness guard: if a reusable diagnostic exists BUT is older than the saved
+  # model (i.e. the model was refit after the plot was made), the plot is stale —
+  # rebuild it so the diagnostic reflects the current fit. Only for DHARMa-capable
+  # classes (Gaussian/binomial mixed models and lm).
   if (!is.na(diag_fig) && cls %in% c("lmerMod", "lmerModLmerTest", "glmerMod", "lm")) {
     dp <- diag_path(diag_fig)
     if (!is.na(dp) && file.info(dp)$mtime < file.info(f)$mtime) {
@@ -105,14 +133,19 @@ for (f in model_files) {
     }
   }
 
+  # No existing diagnostic found -> try to create coverage now.
   if (is.na(diag_fig)) {
     if (cls %in% c("lmerMod", "lmerModLmerTest", "glmerMod", "lm")) {
+      # Standard models: build a DHARMa plot.
       diag_fig <- build_dharma(m, stem)
       status <- if (!is.na(diag_fig)) "covered (built K_)" else "DHARMa failed"
     } else if (grepl("clmm", stem)) {
+      # Ordinal (cumulative link mixed) models aren't DHARMa-compatible; their
+      # assumption check is the observed-vs-fitted plot from script 12b.
       diag_fig <- "figures/diagnostics/G_12b_color_clmm_observed.png"
       status <- "covered (ordinal: observed-vs-fitted)"
     } else {
+      # Anything else genuinely lacks a diagnostic -> counts as a gap.
       status <- "no diagnostic"
     }
   }
@@ -125,7 +158,10 @@ for (f in model_files) {
   )
 }
 
-# Cox models are not saved as .rds; document their PH diagnostics from script 14
+# ---- Cox survival models (not saved as .rds) -------------------------------
+# Kaplan-Meier/Cox models from script 14 live only as their Schoenfeld
+# proportional-hazards diagnostic PNGs, so add them to the manifest by scanning
+# for those files rather than reading model objects.
 cox_ph_figs <- list.files(DIAG_DIR, pattern = "^14_cox_ph_.*\\.png$")
 for (cf in cox_ph_figs) {
   tr <- sub("^14_cox_ph_(.*)\\.png$", "\\1", cf)
@@ -137,9 +173,11 @@ for (cf in cox_ph_figs) {
   )
 }
 
+# ---- Tally coverage --------------------------------------------------------
 cov <- bind_rows(rows) |> arrange(class, model)
 write_csv(cov, file.path(TBL_DIR, "25_model_diagnostic_coverage.csv"))
 
+# "covered" appears in every success status string; anything else is a gap.
 n_total   <- nrow(cov)
 n_covered <- sum(grepl("covered", cov$status))
 n_gap     <- n_total - n_covered

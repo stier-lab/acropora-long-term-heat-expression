@@ -20,6 +20,21 @@
 #          plasticity. Significant LRT
 #          → adding genet × treatment significantly improves fit.
 #
+# What & why: code/12 already estimates the genet effects inside each full model.
+#   This script asks one clean, separable question that a reviewer can run on its
+#   own: "does genotype matter at all?" We compare two nested models that differ
+#   ONLY in whether genet interacts with the other predictors. The null lets each
+#   genet have its own intercept (thicket as an additive main effect) but forces
+#   all genets to respond to heat/wound/time the SAME way. The genet model lets
+#   genet × everything vary (genet as a fully crossed fixed effect). A likelihood-
+#   ratio test of null vs genet then tests whether genotypes differ in their
+#   PLASTICITY (their reaction to treatment), which is exactly G × E. Both models
+#   are fit with REML = FALSE (plain ML) because an LRT comparing models with
+#   DIFFERENT fixed effects is only valid under ML — REML likelihoods are not
+#   comparable across different fixed structures. The companion figure draws the
+#   reaction norms (genet means at 28 vs 31 °C): parallel lines = additive
+#   temperature effect; crossing/fanning lines = genotype × environment.
+#
 # Input:   data/processed/{pam_clean,color_clean,buoyant_weight_clean,
 #                          symbiont_chl_clean}.rds
 # Output:  output/tables/13_genet_anova.csv             — LRT comparison
@@ -28,8 +43,12 @@
 #          output/models/13_<response>_genet_lmm.rds   — alt-model objects
 # =============================================================================
 
+# 00_setup.R: packages, shared paths (DATA_PROC, MOD_DIR, TBL_DIR), palettes
+# (PAL_GENO) and the theme_pub() / save_fig() figure helpers.
 source(here::here("code", "00_setup.R"))
 
+# Load the four continuous responses; thicket (genet) → factor so it enters the
+# models as discrete fixed levels rather than a number.
 pam   <- readRDS(file.path(DATA_PROC, "pam_clean.rds")) |>
   mutate(thicket = factor(thicket))
 color <- readRDS(file.path(DATA_PROC, "color_clean.rds")) |>
@@ -39,13 +58,22 @@ bw    <- readRDS(file.path(DATA_PROC, "buoyant_weight_clean.rds")) |>
 phys  <- readRDS(file.path(DATA_PROC, "symbiont_chl_clean.rds")) |>
   filter(is.finite(cells_per_cm2), cells_per_cm2 > 0) |>
   mutate(thicket = factor(thicket),
-         biopsy_day_c = biopsy_day - 1)
+         biopsy_day_c = biopsy_day - 1)   # centred time axis (matches code/12)
 
+# fit_and_report(): build the null and genet models for one response, fit both by
+# ML, save the genet model, and return a one-row LRT summary.
+#   fixed_extra  — swap the time variable name (e.g. "day" → "biopsy_day_c") for
+#                  responses whose time column differs.
+#   include_id   — drop the (1|id) random intercept for destructively-sampled
+#                  responses (one observation per coral → id not identifiable).
 fit_and_report <- function(data, response, name, fixed_extra = NULL,
                            include_id = TRUE) {
   id_term <- if (include_id) " + (1 | id)" else ""
+  # NULL model: genet is additive only (thicket main effect) — all genets share
+  # one treatment × wound × day response surface.
   rhs_null  <- paste0("treatment * wound * day + thicket + (1 | tank)",
                       id_term)
+  # GENET model: genet fully crossed — each genet gets its own response surface.
   rhs_genet <- paste0("treatment * wound * day * thicket + (1 | tank)",
                       id_term)
   if (!is.null(fixed_extra)) {
@@ -54,12 +82,16 @@ fit_and_report <- function(data, response, name, fixed_extra = NULL,
   }
   f0 <- as.formula(paste(response, "~", rhs_null))
   f1 <- as.formula(paste(response, "~", rhs_genet))
+  # REML = FALSE (ML): required so the two models' likelihoods are comparable —
+  # they differ in fixed effects, and REML is invalid for that comparison.
   m0 <- suppressWarnings(suppressMessages(
     lme4::lmer(f0, data = data, REML = FALSE)))
   m1 <- suppressWarnings(suppressMessages(
     lme4::lmer(f1, data = data, REML = FALSE)))
   saveRDS(m1, file.path(MOD_DIR, paste0("13_", name, "_genet_lmm.rds")))
-  # LRT comparison
+  # LRT comparison: anova(m0, m1) gives the χ², df (= number of extra genet
+  # interaction terms), and p-value; we also report ΔAIC as a fit-vs-complexity
+  # check that does not rely on a p-value threshold.
   lrt <- anova(m0, m1)
   tibble(
     response      = name,
@@ -73,6 +105,7 @@ fit_and_report <- function(data, response, name, fixed_extra = NULL,
   )
 }
 
+# Run the LRT for the three time-series responses and stack the summary rows.
 genet_tests <- bind_rows(
   fit_and_report(pam,   "fv_fm",              "pam_fvfm"),
   fit_and_report(color, "color_num",          "color_dscale"),
@@ -81,8 +114,10 @@ genet_tests <- bind_rows(
   fit_and_report(phys,  "log(cells_per_cm2)", "log_zoox",
                  fixed_extra = "biopsy_day_c", include_id = FALSE)
 )
-# Growth (areal calcification) has no time dimension; retain tank as the
-# experimental block for the treatment assignment.
+# Growth is handled separately because it has NO time dimension (one calcification
+# rate per coral), so the null/genet pair drops the `day` terms entirely. Retain
+# (1|tank) as the experimental block for the treatment assignment; same ML fit so
+# the LRT is valid.
 bw_a       <- bw |> filter(is.finite(areal_calc))
 m_bw_null  <- lme4::lmer(
   areal_calc ~ treatment * wound + thicket + (1 | tank),
@@ -95,6 +130,8 @@ m_bw_genet <- lme4::lmer(
   control = lme4::lmerControl(check.conv.singular = .makeCC("ignore", tol = 1e-4))
 )
 bw_lrt <- anova(m_bw_null, m_bw_genet)
+# Guard for lme4 version differences: the LRT df column is sometimes "Chi Df",
+# sometimes "Df" — pick whichever is present.
 bw_lrt_df <- if ("Chi Df" %in% names(bw_lrt)) bw_lrt$`Chi Df`[2] else bw_lrt$Df[2]
 genet_tests <- bind_rows(genet_tests, tibble(
   response  = "growth_areal",
@@ -112,6 +149,11 @@ write_csv(genet_tests, file.path(TBL_DIR, "13_genet_anova.csv"))
 
 # ---- Per-genet means at end of experiment ---------------------------------
 # Reaction norms: response ~ treatment, one slope per genet
+# make_react_norm(): take the LAST timepoint per response (the end-of-experiment
+# state, where treatment divergence is largest) and compute the genet × treatment
+# mean ± SE. These raw cell means are what the reaction-norm figure plots — they
+# visualize the same G × E that the LRT above tests formally. (Raw summaries, not
+# model-adjusted emmeans, so the figure shows the data directly.)
 make_react_norm <- function(data, response_col, label) {
   last_day <- if ("day" %in% names(data)) {
     data |> filter(day == max(day, na.rm = TRUE))
@@ -129,6 +171,9 @@ make_react_norm <- function(data, response_col, label) {
     mutate(response = label)
 }
 
+# Assemble the four-panel reaction-norm table. PAM and color use the helper;
+# growth and symbionts are summarized inline because growth has no time axis and
+# symbionts are shown on a log10 scale for readability.
 emm_long <- bind_rows(
   make_react_norm(pam,   "fv_fm",                "PAM Fv/Fm"),
   make_react_norm(color, "color_num",            "Color (D-scale)"),
@@ -149,6 +194,9 @@ emm_long <- bind_rows(
 write_csv(emm_long, file.path(TBL_DIR, "13_genet_emmeans.csv"))
 
 # ---- Reaction-norm figure --------------------------------------------------
+# One panel per response; x = temperature, one coloured line per genet. The
+# slope of each line is that genet's heat response; differences in slope between
+# genets are the visual signature of the G × E that the LRT tests.
 p_react <- ggplot(emm_long, aes(treatment, mean,
                                  colour = thicket, group = thicket)) +
   geom_line(linewidth = 0.6) +
