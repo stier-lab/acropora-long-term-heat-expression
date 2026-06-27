@@ -1,5 +1,5 @@
 # Morphological GLMM diagnostics
-Generated: 2026-06-26 12:19:07.326819
+Generated: 2026-06-26 17:36:22.571526
 Source data: physio_clean.rds (N=384 rows, wound==yes only)
 
 ## hole_in_center

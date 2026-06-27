@@ -50,9 +50,11 @@ source(here::here("code", "00_setup.R"))
 # Load the four continuous responses; thicket (genet) → factor so it enters the
 # models as discrete fixed levels rather than a number.
 pam   <- readRDS(file.path(DATA_PROC, "pam_clean.rds")) |>
-  mutate(thicket = factor(thicket))
+  mutate(thicket = factor(thicket)) |>
+  filter(day >= 0)   # exclude the pre-treatment baseline from the day-slope models
 color <- readRDS(file.path(DATA_PROC, "color_clean.rds")) |>
-  mutate(thicket = factor(thicket))
+  mutate(thicket = factor(thicket)) |>
+  filter(day >= 0)   # (matches 12_models, so the genet LRTs use the same data)
 bw    <- readRDS(file.path(DATA_PROC, "buoyant_weight_clean.rds")) |>
   mutate(thicket = factor(thicket))
 phys  <- readRDS(file.path(DATA_PROC, "symbiont_chl_clean.rds")) |>

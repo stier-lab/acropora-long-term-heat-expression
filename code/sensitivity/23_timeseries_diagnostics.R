@@ -233,10 +233,12 @@ ts_linearity <- function(data, ycol, tcol, label, has_id) {
 cat("=== Time-series diagnostics ===\n")
 
 # Both repeated-measures responses get the full battery (AR(1) + slopes + curvature).
-pam <- readRDS(file.path(DATA_PROC, "pam_clean.rds"))
+# day >= 0 so the residual diagnostics describe the same post-wounding model that
+# 12_models fits (the pre-treatment baseline is excluded there).
+pam <- readRDS(file.path(DATA_PROC, "pam_clean.rds")) |> filter(day >= 0)
 ts_repeated(pam, "fv_fm", "day", "PAM Fv/Fm")
 
-color <- readRDS(file.path(DATA_PROC, "color_clean.rds"))
+color <- readRDS(file.path(DATA_PROC, "color_clean.rds")) |> filter(day >= 0)
 ts_repeated(color, "color_num", "day", "Color (D-scale)")
 
 # Symbiont density: cross-sectional (1 obs/coral) — linearity only. Log-transform

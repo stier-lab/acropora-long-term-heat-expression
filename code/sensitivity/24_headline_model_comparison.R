@@ -70,7 +70,7 @@ compare_response <- function(data, response, label, do_ar1 = FALSE) {
   data <- data |>
     mutate(thicket = factor(thicket), tank = factor(tank), id = factor(id)) |>
     rename(.y = all_of(response)) |>
-    filter(!is.na(.y), !is.na(day))
+    filter(!is.na(.y), !is.na(day), day >= 0)   # post-wounding only (matches 12_models)
 
   # --- Current primary model ---
   # What the manuscript actually uses: linear day, random intercepts only.

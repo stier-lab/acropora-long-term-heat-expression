@@ -148,7 +148,8 @@ set.seed(42)
 # Each block below rebuilds the exact analysis data (mutate(thicket=factor(...))
 # matches the source script) and re-fits the same formula the saved model used.
 pam <- readRDS(file.path(DATA_PROC, "pam_clean.rds")) |>
-  mutate(thicket = factor(thicket))
+  mutate(thicket = factor(thicket)) |>
+  filter(day >= 0)   # match 12_models (day-slope models exclude pre-treatment)
 compare_lmm("12_pam_lmm",
             file.path(MOD_DIR, "12_pam_lmm.rds"),
             fv_fm ~ treatment * wound * day * thicket + (1|tank) + (1|id),
@@ -157,7 +158,8 @@ compare_lmm("12_pam_lmm",
 # ---- Color -----------------------------------------------------------------
 # Same 4-way LMM as PAM, on the numeric color score.
 color <- readRDS(file.path(DATA_PROC, "color_clean.rds")) |>
-  mutate(thicket = factor(thicket))
+  mutate(thicket = factor(thicket)) |>
+  filter(day >= 0)   # match 12_models
 compare_lmm("12_color_lmm",
             file.path(MOD_DIR, "12_color_lmm.rds"),
             color_num ~ treatment * wound * day * thicket + (1|tank) + (1|id),

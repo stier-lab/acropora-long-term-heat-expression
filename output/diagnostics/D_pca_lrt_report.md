@@ -1,5 +1,5 @@
 # PCA + Genet LRT Diagnostics
-_Run: 2026-06-26 12:19:53_
+_Run: 2026-06-26 17:37:06_
 
 ## PCA (15_multivariate.R)
 
@@ -22,12 +22,12 @@ _Run: 2026-06-26 12:19:53_
 - n_obs = 336; fixed params: null=10, full=24 (Δfx=14). Total npar Δ=14 (reported df=14).
 - REML status: null=FALSE, full=FALSE, saved=FALSE (all should be FALSE)
 - Convergence: null singular=FALSE, full singular=FALSE, warnings=0
-- LRT χ²(14) = 79.03, p = 4.28e-11 (recomputed 4.28e-11)
+- LRT χ²(14) = 79.03, p = 6.38e-11 (recomputed 4.28e-11)
 ### color_dscale
 - n_obs = 336; fixed params: null=10, full=24 (Δfx=14). Total npar Δ=14 (reported df=14).
 - REML status: null=FALSE, full=FALSE, saved=FALSE (all should be FALSE)
 - Convergence: null singular=FALSE, full singular=FALSE, warnings=0
-- LRT χ²(14) = 169.31, p = 9.43e-29 (recomputed 9.43e-29)
+- LRT χ²(14) = 169.31, p = 8.02e-25 (recomputed 9.43e-29)
 ### log_zoox
 - n_obs = 192; fixed params: null=10, full=24 (Δfx=14). Total npar Δ=14 (reported df=14).
 - REML status: null=FALSE, full=FALSE, saved=FALSE (all should be FALSE)

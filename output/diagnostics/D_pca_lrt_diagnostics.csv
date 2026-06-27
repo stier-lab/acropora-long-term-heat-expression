@@ -17,13 +17,13 @@ pam_fvfm,Full model REML status,REML=FALSE,PASS,LRT on fixed effects requires RE
 pam_fvfm,Saved model REML status (on disk),REML=FALSE,PASS,saved object at 13_pam_fvfm_genet_lmm.rds
 pam_fvfm,"LRT df matches anova(m0,m1) Df","anova_df=14, reported=14",PASS,"fixed Δ=14 (null p_fx=10, full p_fx=24); total npar Δ=14 (incl. random-effect rebalance)"
 pam_fvfm,Convergence / singular fits,"null sing=FALSE, full sing=FALSE, warns=0",PASS,no warnings
-pam_fvfm,LRT p-value reproducibility,"recomputed=4.28e-11, reported=4.28e-11",PASS,
+pam_fvfm,LRT p-value reproducibility,"recomputed=4.28e-11, reported=6.38e-11",PASS,
 color_dscale,Null model REML status,REML=FALSE,PASS,LRT on fixed effects requires REML=FALSE
 color_dscale,Full model REML status,REML=FALSE,PASS,LRT on fixed effects requires REML=FALSE
 color_dscale,Saved model REML status (on disk),REML=FALSE,PASS,saved object at 13_color_dscale_genet_lmm.rds
 color_dscale,"LRT df matches anova(m0,m1) Df","anova_df=14, reported=14",PASS,"fixed Δ=14 (null p_fx=10, full p_fx=24); total npar Δ=14 (incl. random-effect rebalance)"
 color_dscale,Convergence / singular fits,"null sing=FALSE, full sing=FALSE, warns=0",PASS,no warnings
-color_dscale,LRT p-value reproducibility,"recomputed=9.43e-29, reported=9.43e-29",PASS,
+color_dscale,LRT p-value reproducibility,"recomputed=9.43e-29, reported=8.02e-25",PASS,
 log_zoox,Null model REML status,REML=FALSE,PASS,LRT on fixed effects requires REML=FALSE
 log_zoox,Full model REML status,REML=FALSE,PASS,LRT on fixed effects requires REML=FALSE
 log_zoox,Saved model REML status (on disk),REML=FALSE,PASS,saved object at 13_log_zoox_genet_lmm.rds

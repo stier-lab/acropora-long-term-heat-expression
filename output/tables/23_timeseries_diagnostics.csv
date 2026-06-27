@@ -1,10 +1,10 @@
 response,check,statistic,df,p_value,conclusion,detail
-PAM Fv/Fm,AR(1) temporal autocorrelation (LRT vs no-corr),10.3842,1,0.001271,autocorrelation PRESENT (phi=-0.41); refit AR(1),phi=-0.414; AIC base=-1444.6 AR1=-1453.0
-PAM Fv/Fm,treatment×time robustness to AR(1),10.8399,NA,4.812e-23,"treatment×time p: base=8.24e-21, AR(1)=4.81e-23 — conclusion unchanged",
-PAM Fv/Fm,random slope of time by coral (LRT vs intercept-only),23.0719,2,9.772e-6,random slope improves fit (individual trajectories differ),AIC int=-1444.6 slope=-1463.7
-PAM Fv/Fm,"nonlinearity of time (quadratic vs linear, LRT)",9.9054,2,0.007064,trajectory is NONLINEAR — linear slope is an approximation,AIC linear=-1396.0 quad=-1401.9
-Color (D-scale),AR(1) temporal autocorrelation (LRT vs no-corr),0,1,1,no significant residual autocorrelation,phi=0.000; AIC base=104.0 AR1=106.0
-Color (D-scale),treatment×time robustness to AR(1),15.3061,NA,1.677e-38,"treatment×time p: base=1.68e-38, AR(1)=1.68e-38 — conclusion unchanged",
-Color (D-scale),random slope of time by coral (LRT vs intercept-only),83.9844,2,5.795e-19,random slope improves fit (individual trajectories differ),AIC int=104.0 slope=24.1
-Color (D-scale),"nonlinearity of time (quadratic vs linear, LRT)",15.769,2,3.765e-4,trajectory is NONLINEAR — linear slope is an approximation,AIC linear=241.6 quad=229.8
+PAM Fv/Fm,AR(1) temporal autocorrelation (LRT vs no-corr),0,1,0.9996,no significant residual autocorrelation,phi=0.000; AIC base=-1237.6 AR1=-1235.6
+PAM Fv/Fm,treatment×time robustness to AR(1),10.38,NA,6.382e-21,"treatment×time p: base=6.38e-21, AR(1)=6.38e-21 — conclusion unchanged",
+PAM Fv/Fm,random slope of time by coral (LRT vs intercept-only),24.8508,2,4.015e-6,random slope improves fit (individual trajectories differ),AIC int=-1237.6 slope=-1258.5
+PAM Fv/Fm,"nonlinearity of time (quadratic vs linear, LRT)",1.7333,2,0.4204,linear time adequate,AIC linear=-1191.0 quad=-1188.7
+Color (D-scale),AR(1) temporal autocorrelation (LRT vs no-corr),0,1,1,no significant residual autocorrelation,phi=0.000; AIC base=68.7 AR1=70.7
+Color (D-scale),treatment×time robustness to AR(1),16.659300000000002,NA,2.681e-41,"treatment×time p: base=2.68e-41, AR(1)=2.68e-41 — conclusion unchanged",
+Color (D-scale),random slope of time by coral (LRT vs intercept-only),58.6853,2,1.806e-13,random slope improves fit (individual trajectories differ),AIC int=68.7 slope=14.0
+Color (D-scale),"nonlinearity of time (quadratic vs linear, LRT)",1.2331,2,0.5398,linear time adequate,AIC linear=188.3 quad=191.1
 log symbionts (cross-sectional),"nonlinearity of time (quadratic vs linear, LRT)",8.7012,2,0.0129,trajectory is NONLINEAR — linear slope is an approximation,AIC linear=311.4 quad=306.7
