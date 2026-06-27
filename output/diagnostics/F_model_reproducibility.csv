@@ -1,13 +1,12 @@
 model,n_coefs,max_coef_drift,logLik_diff,status,saved_logLik,refit_logLik,note
-12_pam_lmm,24,0,0,PASS,601.2550994222028,601.2550994222028,
-12_color_lmm,24,0,0,PASS,-115.29798857933882,-115.29798857933882,
+12_pam_lmm,24,0.005578923612258202,100.49083849970293,DRIFT,500.76426092249983,601.2550994222028,
+12_color_lmm,24,0.08017568119718241,21.84162390479119,DRIFT,-93.45636467454763,-115.29798857933882,
 12_bw_lm,12,0,0,PASS,-95.08081424249997,-95.08081424249997,
 12_zoox_lmm,24,0,0,PASS,-189.4042074472631,-189.4042074472631,
-12c_morph_polyps_out_blme,12,0,0,PASS,-124.00817193416637,-124.00817193416637,
+12c_morph_polyps_out_blme,12,1.2024084112547733,2.3135211022093642,DRIFT,-126.32169303637573,-124.00817193416637,
 12c_morph_hole_in_center_blme,12,NA,NA,HANDLED,-49.44066105309534,NA,refit failed: pwrssUpdate did not converge in (maxit) iterations
-12c_morph_polyp_in_hole_blme,12,NA,NA,HANDLED,-49.44066105309534,NA,refit failed: pwrssUpdate did not converge in (maxit) iterations
 12c_morph_wound_smoothed_blme,12,NA,NA,HANDLED,-29.53859370577405,NA,refit failed: pwrssUpdate did not converge in (maxit) iterations
-12c_morph_pigment_over_wound_blme,12,0,0,PASS,-38.70717164892355,-38.70717164892355,
-12c_morph_tip_exist_blme,12,NA,NA,HANDLED,-69.35823644316369,NA,refit failed: Downdated VtV is not positive definite
-12c_morph_tip_extension_blme,12,NA,NA,HANDLED,-91.13782460774097,NA,refit failed: Downdated VtV is not positive definite
+12c_morph_pigment_over_wound_blme,12,598.7703891180798,13.029905204635263,DRIFT,-51.73707685355881,-38.70717164892355,
+12c_morph_tip_exist_blme,12,NA,NA,HANDLED,-73.52205929814734,NA,refit failed: Downdated VtV is not positive definite
+12c_morph_tip_extension_blme,12,NA,NA,HANDLED,-79.92805848892539,NA,refit failed: Downdated VtV is not positive definite
 12c_morph_new_corallites_on_tip_blme,12,0,0,PASS,-21.901325099985527,-21.901325099985527,

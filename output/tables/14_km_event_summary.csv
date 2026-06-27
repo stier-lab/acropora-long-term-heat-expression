@@ -17,12 +17,6 @@ pigment_over_wound,28C,d,4,3,3,3,3.5
 pigment_over_wound,31C,a,4,2,3.5,3.25,3.75
 pigment_over_wound,31C,c,4,4,15,15,15
 pigment_over_wound,31C,d,4,0,NA,NA,NA
-polyp_in_hole,28C,a,4,4,3.5,3,4
-polyp_in_hole,28C,c,4,4,3.5,3,5.25
-polyp_in_hole,28C,d,4,4,3.5,3,4.5
-polyp_in_hole,31C,a,4,4,3,3,3.25
-polyp_in_hole,31C,c,4,4,3,3,4.5
-polyp_in_hole,31C,d,4,4,3.5,3,4
 tip_exist,28C,a,4,4,6,6,6
 tip_exist,28C,c,4,4,8,7.5,8
 tip_exist,28C,d,4,4,6,6,6

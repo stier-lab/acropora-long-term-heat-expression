@@ -1,6 +1,5 @@
 trait,term,n,n_event,time_ratio_31_vs28,ratio_lo,ratio_hi,z,p,model,event_interpretation,note
 hole_in_center,treatment2,24,24,0.8946622617946574,0.6683006080579453,1.197695397892158,-0.7478899297681336,0.4545265521902344,interval-censored Weibull AFT,first observed hole closure,time ratio >1 means later first expression at 31C
-polyp_in_hole,treatment2,24,24,0.8946622617946574,0.6683006080579453,1.197695397892158,-0.7478899297681336,0.4545265521902344,interval-censored Weibull AFT,first observed polyp within wound,time ratio >1 means later first expression at 31C
 wound_smoothed,treatment2,24,24,0.8314015111730911,0.7095397933868378,0.9741926798516357,-2.283329367482945,0.022410974388966463,interval-censored Weibull AFT,first observed smoothed wound surface,time ratio >1 means later first expression at 31C
 pigment_over_wound,treatment2,24,10,0.8345837072002427,0.28675078384903485,2.429042930500937,-0.3317467829444965,0.7400804715724669,interval-censored Weibull AFT,first observed pigment over wound; expression can be non-monotonic,time ratio >1 means later first expression at 31C
 tip_exist,treatment2,24,24,1.1178612830304806,1.007557734705357,1.2402404398830609,2.102051703305651,0.03554874692704379,interval-censored Weibull AFT,first observed visible tip; expression can be non-monotonic,time ratio >1 means later first expression at 31C

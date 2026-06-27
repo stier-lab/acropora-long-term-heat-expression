@@ -69,6 +69,15 @@ parse_apex_hourly <- function(path) {
     nms <- xml_text(xml_find_first(probes, "./name"))
     # Probe values arrive as text; as.numeric coerces, with non-numeric -> NA.
     vals <- suppressWarnings(as.numeric(xml_text(xml_find_first(probes, "./value"))))
+    # Convert °F -> °C at the RAW reading level, for TEMPERATURE probes only. The
+    # Apex ran US firmware and logged °F on some units (switched mid-deployment);
+    # a seawater temperature reading > 60 can only be Fahrenheit. Doing this BEFORE
+    # hourly/daily aggregation is what matters: averaging first would mix °F and °C
+    # on any firmware-switch day and corrupt that day's mean. We restrict to Temp
+    # probes so non-temp channels (ORP/pH, whose values can legitimately exceed 60)
+    # are never mis-converted.
+    is_temp <- grepl("^Temp\\d+$", trimws(nms))
+    vals <- if_else(is_temp & !is.na(vals) & vals > 60, (vals - 32) * 5 / 9, vals)
     out_list[[i]] <- tibble(datetime = dates[i], probe = nms, value = vals)
   }
 
@@ -115,17 +124,12 @@ temp_daily <- daily |>
   mutate(
     # Pull the trailing number out of the probe name to recover the tank ID.
     tank = as.integer(str_extract(probe, "\\d+")),
-    # The Apex ran US firmware and logs °F by default. A reading > 60 can only be
-    # Fahrenheit (seawater is never 60 °C), so convert those; leave already-°C
-    # values (firmware was switched mid-deployment on some units) untouched.
-    value_c = if_else(value_mean > 60, (value_mean - 32) * 5 / 9, value_mean),
-    # Map tank -> treatment by plumbing layout (same assignment as YSI script 09):
-    # 3,6,9,12 = ambient 28 °C; 4,5,10,11 = heated 31 °C; all else -> NA (dropped).
-    treatment = case_when(
-      tank %in% c(3, 6, 9, 12)  ~ "28C",
-      tank %in% c(4, 5, 10, 11) ~ "31C",
-      TRUE ~ NA_character_
-    )
+    # value_mean is ALREADY in °C — the °F->°C conversion happens at the raw-
+    # reading level inside parse_apex_hourly(), so the daily means never mix units.
+    value_c = value_mean,
+    # Map tank -> treatment via the shared plumbing layout (tank_treatment() in
+    # 00_setup.R; same assignment used by 09 (YSI) and 16 (Fig 1 panel A)).
+    treatment = tank_treatment(tank)
   ) |>
   # Keep experimental tanks only, and drop physically impossible temperatures
   # (sensor dropouts/air exposure) by bounding to a plausible 15-40 °C window.

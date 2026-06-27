@@ -1,5 +1,5 @@
 # Continuous-response model diagnostics
-Generated: 2026-06-25 10:23:38.370372
+Generated: 2026-06-26 12:19:07.318859
 
 Models reviewed: 12_pam_lmm, 12_color_lmm, 12_zoox_lmm, 12_bw_lm
 
@@ -12,23 +12,23 @@ Models reviewed: 12_pam_lmm, 12_color_lmm, 12_zoox_lmm, 12_bw_lm
 
 ## 12_pam_lmm
 - **isSingular** [PASS]: stat=0 Singular fit means a variance component is at/near zero
-- **variance_components_near_zero** [PASS]: stat=0 VarCorr (grp:var): id:3.84e-05; tank:1.92e-04; Residual:6.60e-04
+- **variance_components_near_zero** [PASS]: stat=0 VarCorr (grp:var): id:5.78e-05; tank:2.31e-04; Residual:6.31e-04
 - **optimizer_convergence_messages** [PASS]: stat=0 
-- **DHARMa_KS_uniformity** [PASS]: stat=0.0575 Kolmogorov-Smirnov on scaled residuals
-- **DHARMa_dispersion** [PASS]: stat=0.9074 Ratio of obs/sim residual variance
+- **DHARMa_KS_uniformity** [PASS]: stat=0.06558 Kolmogorov-Smirnov on scaled residuals
+- **DHARMa_dispersion** [PASS]: stat=0.8966 Ratio of obs/sim residual variance
 - **DHARMa_outliers** [PASS]: stat=2 Excess outliers vs expected
-- **cooks_distance_max** [WARN]: stat=0.1763 Top-3 obs idx: 325,29,331; cd: 0.176,0.047,0.039
-- **emmeans_direction_pam_fvfm** [PASS]: stat=0.08351 contrast 28C - 31C = 0.0835 (p=6.76e-05); observed heated decrease
+- **cooks_distance_max** [WARN]: stat=1.077 Top-3 obs idx: 325,317,320; cd: 1.077,0.804,0.758
+- **emmeans_direction_pam_fvfm** [PASS]: stat=0.08747 contrast 28C - 31C = 0.0875 (p=0.000112); observed heated decrease
 
 ## 12_color_lmm
 - **isSingular** [PASS]: stat=0 Singular fit means a variance component is at/near zero
-- **variance_components_near_zero** [PASS]: stat=0 VarCorr (grp:var): id:2.45e-02; tank:2.39e-02; Residual:5.78e-02
+- **variance_components_near_zero** [PASS]: stat=0 VarCorr (grp:var): id:3.53e-02; tank:3.34e-02; Residual:4.86e-02
 - **optimizer_convergence_messages** [PASS]: stat=0 
-- **DHARMa_KS_uniformity** [HANDLED]: stat=0.1828 Kolmogorov-Smirnov on scaled residuals; handled by ordinal CLMM robustness model 12b_color_clmm
-- **DHARMa_dispersion** [PASS]: stat=0.89 Ratio of obs/sim residual variance
-- **DHARMa_outliers** [PASS]: stat=4 Excess outliers vs expected
-- **cooks_distance_max** [WARN]: stat=0.05734 Top-3 obs idx: 37,1,296; cd: 0.057,0.052,0.038
-- **emmeans_direction_color_dscale** [PASS]: stat=1.153 contrast 28C - 31C = 1.1526 (p=3.33e-05); observed heated decrease
+- **DHARMa_KS_uniformity** [HANDLED]: stat=0.2045 Kolmogorov-Smirnov on scaled residuals; handled by ordinal CLMM robustness model 12b_color_clmm
+- **DHARMa_dispersion** [PASS]: stat=0.8499 Ratio of obs/sim residual variance
+- **DHARMa_outliers** [PASS]: stat=3 Excess outliers vs expected
+- **cooks_distance_max** [WARN]: stat=2.764 Top-3 obs idx: 296,274,324; cd: 2.764,2.761,2.739
+- **emmeans_direction_color_dscale** [PASS]: stat=1.212 contrast 28C - 31C = 1.2122 (p=9.06e-05); observed heated decrease
 
 ## 12_zoox_lmm
 - **isSingular** [PASS]: stat=0 Singular fit means a variance component is at/near zero

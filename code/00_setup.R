@@ -88,6 +88,22 @@ PAL_WOUND <- c(no = "#9E9E9E", yes = "#000000")
 PAL_GENO <- c(a = "#E69F00", c = "#009E73", d = "#0072B2")
 SHP_GENO <- c(a = 16, c = 17, d = 15)
 
+# ---- Tank -> treatment map (single source of truth) ------------------------
+# Temperature was plumbed to tanks by a fixed layout: tanks 3/6/9/12 ran ambient
+# (28 °C) and 4/5/10/11 ran heated (31 °C); any other tank number is non-
+# experimental and maps to NA (dropped downstream). This assignment was
+# previously hardcoded identically in 08 (Apex), 09 (YSI), and 16 (Fig 1 panel
+# A); defining it once here keeps those three in lock-step.
+TANK_28C <- c(3, 6, 9, 12)
+TANK_31C <- c(4, 5, 10, 11)
+tank_treatment <- function(tank) {
+  dplyr::case_when(
+    tank %in% TANK_28C ~ "28C",
+    tank %in% TANK_31C ~ "31C",
+    TRUE ~ NA_character_
+  )
+}
+
 # ---- Theme -----------------------------------------------------------------
 # theme_pub(): single source of truth for figure text sizing.
 # base_size is width-dependent — pass appropriate value per figure:

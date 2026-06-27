@@ -1,5 +1,5 @@
 # Morphological GLMM diagnostics
-Generated: 2026-06-25 10:23:38.377991
+Generated: 2026-06-26 12:19:07.326819
 Source data: physio_clean.rds (N=384 rows, wound==yes only)
 
 ## hole_in_center
@@ -32,17 +32,6 @@ Source data: physio_clean.rds (N=384 rows, wound==yes only)
 - DHARMa: KS p=0.789, dispersion p=0.932 (ratio 0.99), outliers p=0.659
 - Residual plot: figures/diagnostics/B_pigment_over_wound.png
 - Predicted P(trait) at day 15: ambient=0.090, hot=0.336, Δ=+0.246
-
-## polyp_in_hole
-- N = 384, n_corals = 24, mean(y) = 0.755
-- Convergence: HANDLED — unable to evaluate scaled gradient; Model failed to converge: degenerate  Hessian with 3 negative eigenvalues
-  See ?lme4::convergence and ?lme4::troubleshooting.
-- Singular fit: FALSE
-- RE variance: id=1.601e+04, tank=16.17
-- Max fixed-effect SE: 1.09e+06 (HANDLED)
-- DHARMa: KS p=0.263, dispersion p=0 (ratio 0.31; handled as saturated closure trait), outliers p=0.669
-- Residual plot: figures/diagnostics/B_polyp_in_hole.png
-- Predicted P(trait) at day 15: ambient=1.000, hot=1.000, Δ=+0.000
 
 ## polyps_out
 - N = 384, n_corals = 24, mean(y) = 0.880
@@ -95,10 +84,9 @@ Source data: physio_clean.rds (N=384 rows, wound==yes only)
 | hole_in_center | 11 | 7 | 4 | 0 | 0 | HANDLED |
 | new_corallites_on_tip | 12 | 6 | 2 | 4 | 0 | HANDLED |
 | pigment_over_wound | 11 | 7 | 2 | 2 | 0 | HANDLED |
-| polyp_in_hole | 11 | 7 | 4 | 0 | 0 | HANDLED |
 | polyps_out | 11 | 8 | 1 | 2 | 0 | HANDLED |
 | tip_exist | 10 | 6 | 2 | 2 | 0 | HANDLED |
 | tip_extension | 10 | 8 | 1 | 1 | 0 | HANDLED |
 | wound_smoothed | 11 | 8 | 3 | 0 | 0 | HANDLED |
 
-Totals: 8 traits × ~10.9 checks; PASS=57, HANDLED=19, WARN=11, FAIL=0
+Totals: 7 traits × ~10.9 checks; PASS=50, HANDLED=15, WARN=11, FAIL=0

@@ -18,8 +18,10 @@
 #     non-essential regrowth).
 #
 # Exploratory (BH-corrected): whether heat alters basic wound CLOSURE or other
-# incidental traits (hole_in_center, polyp_in_hole, wound_smoothed, polyps_out,
-# pigment_over_wound, algae_on_wound) — no strong a-priori prediction.
+# incidental traits (hole_in_center, wound_smoothed, polyps_out,
+# pigment_over_wound, algae_on_wound) — no strong a-priori prediction. (Note:
+# polyp_in_hole is dropped upstream in 12/14 as a duplicate of hole_in_center —
+# see data-quality note in code/04 — so it no longer enters this BH family.)
 #
 # What & why: running many tests inflates the false-positive rate, but blanket
 #   multiple-testing correction is too blunt — it penalizes a hypothesis we set

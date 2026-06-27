@@ -1,14 +1,21 @@
 # E. Design alignment audit
 
-Generated: 2026-06-25 10:24:19 
+Generated: 2026-06-26 12:19:54 
 
 | Status | Count |
 |---|---|
 
-HANDLED    INFO    PASS 
-      2       1      31 
+   FAIL HANDLED    INFO    PASS 
+      4       2       1      25 
 
 ## Status summary
+
+### FAIL (4)
+
+- **12c_morph_pigment_over_wound_blme.rds / fixed structure**: Restricted to wounded corals; wound is a stratification, not a covariate
+- **12c_morph_polyps_out_blme.rds / fixed structure**: Restricted to wounded corals; wound is a stratification, not a covariate
+- **12c_morph_tip_exist_blme.rds / fixed structure**: Restricted to wounded corals; wound is a stratification, not a covariate
+- **12c_morph_tip_extension_blme.rds / fixed structure**: Restricted to wounded corals; wound is a stratification, not a covariate
 
 ### HANDLED (2)
 
@@ -19,7 +26,7 @@ HANDLED    INFO    PASS
 
 - **12_pam_lmm / n observations**: n_corals=48, days=-1,0,3,6,9,12,14
 
-### PASS (31)
+### PASS (25)
 
 - **12_pam_lmm / fixed structure**: 4-way fixed structure required for genet x heat x wound x time
 - **12_pam_lmm / random structure**: tank for tank-level confounds, id for repeated measures on same coral
@@ -37,15 +44,9 @@ HANDLED    INFO    PASS
 - **12c_morph_hole_in_center_blme.rds / Cauchy(0,2.5) prior**: Prior addresses the morphology separation issue
 - **12c_morph_new_corallites_on_tip_blme.rds / fixed structure**: Restricted to wounded corals; wound is a stratification, not a covariate
 - **12c_morph_new_corallites_on_tip_blme.rds / Cauchy(0,2.5) prior**: Prior addresses the morphology separation issue
-- **12c_morph_pigment_over_wound_blme.rds / fixed structure**: Restricted to wounded corals; wound is a stratification, not a covariate
 - **12c_morph_pigment_over_wound_blme.rds / Cauchy(0,2.5) prior**: Prior addresses the morphology separation issue
-- **12c_morph_polyp_in_hole_blme.rds / fixed structure**: Restricted to wounded corals; wound is a stratification, not a covariate
-- **12c_morph_polyp_in_hole_blme.rds / Cauchy(0,2.5) prior**: Prior addresses the morphology separation issue
-- **12c_morph_polyps_out_blme.rds / fixed structure**: Restricted to wounded corals; wound is a stratification, not a covariate
 - **12c_morph_polyps_out_blme.rds / Cauchy(0,2.5) prior**: Prior addresses the morphology separation issue
-- **12c_morph_tip_exist_blme.rds / fixed structure**: Restricted to wounded corals; wound is a stratification, not a covariate
 - **12c_morph_tip_exist_blme.rds / Cauchy(0,2.5) prior**: Prior addresses the morphology separation issue
-- **12c_morph_tip_extension_blme.rds / fixed structure**: Restricted to wounded corals; wound is a stratification, not a covariate
 - **12c_morph_tip_extension_blme.rds / Cauchy(0,2.5) prior**: Prior addresses the morphology separation issue
 - **12c_morph_wound_smoothed_blme.rds / fixed structure**: Restricted to wounded corals; wound is a stratification, not a covariate
 - **12c_morph_wound_smoothed_blme.rds / Cauchy(0,2.5) prior**: Prior addresses the morphology separation issue

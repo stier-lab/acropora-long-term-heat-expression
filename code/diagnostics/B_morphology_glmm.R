@@ -89,7 +89,9 @@ classify_p <- function(p, alpha_warn = 0.05, alpha_fail = 0.001) {
 # "Closure" traits are near-saturated (almost all corals eventually close the
 # wound), so their binomial models are expected to look underdispersed. We don't
 # penalize that — timing for these traits is analyzed by the Cox/interval models.
-saturated_closure_traits <- c("hole_in_center", "polyp_in_hole", "wound_smoothed")
+# (polyp_in_hole is excluded everywhere as a duplicate of hole_in_center — see
+# data-quality note in code/04 — so it is not listed here.)
+saturated_closure_traits <- c("hole_in_center", "wound_smoothed")
 
 # ---- load source data -------------------------------------------------------
 phys_path <- file.path(DATA_PROC, "physio_clean.rds")

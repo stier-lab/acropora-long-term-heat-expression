@@ -39,14 +39,10 @@ ysi <- raw |>
     do_mgl   = as.numeric(do_mg_l),             # dissolved oxygen, mg/L
     sal      = as.numeric(sal),                 # salinity (psu)
     ph       = as.numeric(ph),
-    # Map tank number -> treatment. The eight tanks were assigned to temperature
-    # by their plumbing/heater layout: 3,6,9,12 = ambient (28 °C);
-    # 4,5,10,11 = heated (31 °C). Anything else is unexpected -> NA (dropped).
-    treatment = case_when(
-      tank %in% c(3, 6, 9, 12)  ~ "28C",
-      tank %in% c(4, 5, 10, 11) ~ "31C",
-      TRUE ~ NA_character_
-    )
+    # Map tank number -> treatment via the shared plumbing layout (tank_treatment()
+    # in 00_setup.R; tanks 3,6,9,12 = ambient 28 °C, 4,5,10,11 = heated 31 °C,
+    # anything else -> NA). Same assignment used by 08 (Apex) and 16 (Fig 1).
+    treatment = tank_treatment(tank)
   ) |>
   filter(!is.na(treatment))                     # keep only the experimental tanks
 

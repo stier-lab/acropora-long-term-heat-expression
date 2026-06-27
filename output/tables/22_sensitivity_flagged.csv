@@ -1,7 +1,7 @@
 response,term,F_value,p_value,estimate_28_minus_31,n_tanks
-PAM Fv/Fm (full data),treatment:day,95.28,1.25e-19,NA,NA
-PAM Fv/Fm (flagged dropped),treatment:day,72.34,1.97e-15,NA,NA
-Color D-scale (full data),treatment:day,155.6,4.3000000000000004e-29,NA,NA
-Color D-scale (flagged dropped),treatment:day,139.68,6.57e-26,NA,NA
+PAM Fv/Fm (full data),treatment:day,97.6,1.56e-19,NA,NA
+PAM Fv/Fm (flagged dropped),treatment:day,75.23,1.44e-15,NA,NA
+Color D-scale (full data),treatment:day,185.32,1.1699999999999998e-31,NA,NA
+Color D-scale (flagged dropped),treatment:day,150.6,3.58e-26,NA,NA
 Areal calcification (full data),treatment (tank permutation),NA,0.0571,2.872,8
 Areal calcification (flagged dropped),treatment (tank permutation),NA,0.0571,3.715,7

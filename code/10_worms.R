@@ -41,13 +41,9 @@ worms <- raw |>
     thicket = str_to_lower(str_squish(thicket)),   # normalise label whitespace/case
     tank    = as.integer(tank),
     id      = as.integer(id),
-    # Map tank -> treatment by plumbing layout (same assignment as scripts 08/09):
-    # 3,6,9,12 = ambient 28 °C; 4,5,10,11 = heated 31 °C; all else -> NA (dropped).
-    treatment = case_when(
-      tank %in% c(3, 6, 9, 12)  ~ "28C",
-      tank %in% c(4, 5, 10, 11) ~ "31C",
-      TRUE ~ NA_character_
-    )
+    # Map tank -> treatment via the shared plumbing layout (tank_treatment() in
+    # 00_setup.R; same assignment used by 08 (Apex), 09 (YSI), and 16 (Fig 1)).
+    treatment = tank_treatment(tank)
   ) |>
   # Stack the per-date count columns (worms_06_07, worms_06_08, ...) into one
   # date/count pair so each row is a single coral on a single inspection date.

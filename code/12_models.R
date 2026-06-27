@@ -160,7 +160,9 @@ record_genet_effect <- function(emm_obj, response_name) {
 # under heat is the classic signature of bleaching stress.
 cat("\n=== 1. PAM Fv/Fm ===\n")
 pam <- readRDS(file.path(DATA_PROC, "pam_clean.rds")) |>
-  mutate(thicket = as.factor(thicket))   # genet must be a factor to enter as fixed levels
+  mutate(thicket = as.factor(thicket)) |>   # genet must be a factor to enter as fixed levels
+  filter(day >= 0)   # drop the pre-treatment baseline (day -1): with a single linear
+                     # day term, pooling it in would dilute the treatment × day signal
 
 # Note: with n=3 genets and 4 wounded + 4 unwounded fragments per genet × treatment
 # cell, the full 4-way interaction is supported but high-order terms will have
@@ -194,8 +196,11 @@ record_results(m_pam, "pam_fvfm")
 # "tukey" controls the family-wise error across the set of pairwise comparisons
 # (here a single pair per cell, so Tukey ≈ unadjusted, but kept for consistency
 # with the multi-level contrasts elsewhere).
+# Grid = the actual measured days, so no contrast is reported at a day that was
+# never sampled (PAM days are 0,3,6,9,12,14 — the old c(0,3,7,10,14) interpolated
+# days 7 and 10, which were never measured).
 emm_pam <- emmeans::emmeans(m_pam, ~ treatment | thicket * wound * day,
-                             at = list(day = c(0, 3, 7, 10, 14)))
+                             at = list(day = sort(unique(pam$day))))
 results_emm[["pam_fvfm"]] <- as_tibble(pairs(emm_pam, adjust = "tukey")) |>
   mutate(response = "pam_fvfm")
 # Per-genet treatment effect at Day 14 (the end-of-experiment "thermal tolerance")
@@ -210,7 +215,8 @@ record_genet_effect(emm_pam_end, "pam_fvfm")
 # PART 2 then re-fits it with the proper ordinal likelihood as a robustness check.
 cat("\n=== 2. Color score ===\n")
 color <- readRDS(file.path(DATA_PROC, "color_clean.rds")) |>
-  mutate(thicket = as.factor(thicket))
+  mutate(thicket = as.factor(thicket)) |>
+  filter(day >= 0)   # drop the pre-treatment baseline (color day -4), as for PAM
 
 # Same fixed/random structure and rationale as the PAM model above.
 m_color <- lmerTest::lmer(
@@ -222,7 +228,7 @@ saveRDS(m_color, file.path(MOD_DIR, "12_color_lmm.rds"))
 record_results(m_color, "color_dscale")
 
 emm_color <- emmeans::emmeans(m_color, ~ treatment | thicket * wound * day,
-                              at = list(day = c(0, 3, 7, 10, 14)))
+                              at = list(day = sort(unique(color$day))))  # measured days only
 results_emm[["color_dscale"]] <- as_tibble(pairs(emm_color, adjust = "tukey")) |>
   mutate(response = "color_dscale")
 emm_color_end <- emmeans::emmeans(m_color, ~ treatment | thicket * wound,
@@ -294,7 +300,7 @@ saveRDS(m_zoox, file.path(MOD_DIR, "12_zoox_lmm.rds"))
 record_results(m_zoox, "log_zoox_density")
 
 emm_zoox <- emmeans::emmeans(m_zoox, ~ treatment | thicket * wound * biopsy_day_c,
-                             at = list(biopsy_day_c = c(0, 2, 9, 14)))
+                             at = list(biopsy_day_c = sort(unique(phys$biopsy_day_c))))  # measured biopsy days only
 results_emm[["log_zoox_density"]] <- as_tibble(pairs(emm_zoox, adjust = "tukey")) |>
   mutate(response = "log_zoox_density")
 emm_zoox_end <- emmeans::emmeans(m_zoox, ~ treatment | thicket * wound,
@@ -314,6 +320,15 @@ ph <- readRDS(file.path(DATA_PROC, "physio_clean.rds")) |>
 traits <- c("polyps_out", "hole_in_center", "polyp_in_hole",
             "wound_smoothed", "pigment_over_wound", "tip_exist",
             "tip_extension", "new_corallites_on_tip", "algae_on_wound")
+# Exclude any trait that is a byte-identical duplicate of an earlier one (in the
+# raw data `polyp_in_hole` duplicates `hole_in_center`; see data-quality note in
+# code/04). Modelling it twice would also double-count it in the BH family (28).
+dup_drop <- traits[duplicated(lapply(traits, \(t) ph[[t]]))]
+if (length(dup_drop)) {
+  message("12_models: dropping duplicate trait(s) from morphology models: ",
+          paste(dup_drop, collapse = ", "))
+  traits <- setdiff(traits, dup_drop)
+}
 
 # fit_trait(): fit one binomial GLMM per trait. Returns NULL (skips) when the
 # trait is invariant (all 0s or all 1s → nothing to model) or sample size is tiny.
@@ -439,7 +454,10 @@ color_ord_df <- readRDS(file.path(DATA_PROC, "color_clean.rds")) |>
          # Convert split scores (e.g. 3.5) to the next-higher D category.
          # base::round() uses bankers rounding, so 2.5 would become 2 while
          # 3.5 becomes 4; floor(x + 0.5) is deterministic half-up rounding.
-         color_ord = factor(pmin(pmax(as.integer(floor(color_num + 0.5)), 1), 5),
+         # Clamp to the full D1-D6 Siebeck range (the data currently spans D1-D5,
+         # but capping at 6 — not 5 — avoids silently merging a real D6 into D5
+         # if a darker score ever enters; unused top levels are dropped by clmm).
+         color_ord = factor(pmin(pmax(as.integer(floor(color_num + 0.5)), 1), 6),
                             ordered = TRUE))
 
 # The full 4-way fixed × 2 random structure is too rich for clmm to estimate (the
@@ -543,12 +561,19 @@ fit_blme <- function(tr) {
   # coefficients and their now-finite SEs.
   contrasts(d$treatment) <- contr.treatment(nlevels(d$treatment))
   contrasts(d$thicket) <- contr.treatment(nlevels(d$thicket))
-  # Cauchy(0, 2.5) prior on all fixed effects — Gelman 2008 default for
-  # logistic regression with separation. Same structure as PART 1.
+  # The Gelman (2008) Cauchy(0, 2.5) prior assumes inputs are STANDARDIZED — it is
+  # calibrated for predictors centred at 0 and scaled to ~0.5 SD (binary inputs to
+  # ±0.5). `day` runs 0-15 raw, so the un-scaled prior would over-shrink its slope.
+  # Rescale day to mean 0, SD 0.5 (Gelman's "divide by 2 SD") so the prior carries
+  # the weight it was designed to. Coefficient SIGN/significance (the robustness
+  # check) is unaffected; only the day coefficient's scale changes.
+  d$day_z <- (d$day - mean(d$day)) / (2 * stats::sd(d$day))
+  # Cauchy(0, 2.5) prior on all (now standardized) fixed effects — Gelman 2008
+  # default for logistic regression with separation. Same structure as PART 1.
   m <- tryCatch(
     suppressMessages(suppressWarnings(
       blme::bglmer(
-        y ~ treatment * day * thicket + (1 | tank) + (1 | id),
+        y ~ treatment * day_z * thicket + (1 | tank) + (1 | id),
         family   = binomial,
         data     = d,
         fixef.prior = "t(scale = 2.5, df = 1)",   # Cauchy(0, 2.5) — Gelman 2008

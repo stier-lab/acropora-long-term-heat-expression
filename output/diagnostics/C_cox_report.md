@@ -2,7 +2,7 @@
 
 Source script: `code/14_morphology_kaplan.R`  
 Data: `data/processed/physio_clean.rds`  
-Generated: 2026-06-25 10:24:18
+Generated: 2026-06-26 12:19:53
 
 Checks per fitted model:
 - **PH_*** — `survival::cox.zph()` per covariate and GLOBAL. p < 0.05 = PH violated.
@@ -14,51 +14,17 @@ Checks per fitted model:
 
 ## Summary
 
-- Models tested: 27 (one PH_GLOBAL row per fitted coxph).
-- PH assumption: **18 PASS / 9 HANDLED / 0 FAIL** (p < 0.05 on GLOBAL test).
+- Models tested: 23 (one PH_GLOBAL row per fitted coxph).
+- PH assumption: **14 PASS / 9 HANDLED / 0 FAIL** (p < 0.05 on GLOBAL test).
 - PH tests untestable/failed numerically: **8**
-- EPV warnings (events/covariate < 10): **0 WARN / 20 HANDLED**
-- Handled diagnostic failures with explicit refits: **32**
+- EPV warnings (events/covariate < 10): **0 WARN / 17 HANDLED**
+- Handled diagnostic failures with explicit refits: **29**
 - Total FAIL rows: **0**
 
 Recommended fixes for PH violations:
 1. Stratify on the violating covariate (already done for `thicket` in the overall model).
 2. If `treatment` itself violates PH, add a time-varying coefficient (`tt()` term in `coxph`).
 3. For per-genet models with violation, report as a limitation — small n constrains alternatives.
-
-### scope: overall_strata_thicket
-
-- **[PASS] PH_treatment** — stat=0.085, p=0.7712. cox.zph chisq=0.08, df=1
-- **[PASS] PH_GLOBAL** — stat=0.085, p=0.7712. cox.zph chisq=0.08, df=1
-- **[PASS] EPV** — stat=24, p=NA. n_event=24, n_covariates=1 (rule of thumb: EPV >= 10)
-- **[PASS] HR_direction** — stat=1.378, p=0.4468. HR(31C vs 28C)=1.38 — faster onset under 31C
-
-### scope: by_wound
-
-- **[PASS] applicability** — stat=NA, p=NA. N/A — only wounded corals at risk in source script
-
-### scope: genet_a
-
-- **[PASS] PH_treatment** — stat=0.143, p=0.7057. cox.zph chisq=0.14, df=1
-- **[PASS] PH_GLOBAL** — stat=0.143, p=0.7057. cox.zph chisq=0.14, df=1
-- **[HANDLED] EPV** — stat=8, p=NA. n_event=8, n_covariates=1 (rule of thumb: EPV >= 10); handled as descriptive per-genet limitation; primary overall Cox model uses strata(thicket)
-- **[PASS] HR_direction** — stat=1.44, p=0.6097. HR(31C vs 28C)=1.44 — faster onset under 31C
-
-### scope: genet_c
-
-- **[PASS] PH_treatment** — stat=0.401, p=0.5264. cox.zph chisq=0.4, df=1
-- **[PASS] PH_GLOBAL** — stat=0.401, p=0.5264. cox.zph chisq=0.4, df=1
-- **[HANDLED] EPV** — stat=8, p=NA. n_event=8, n_covariates=1 (rule of thumb: EPV >= 10); handled as descriptive per-genet limitation; primary overall Cox model uses strata(thicket)
-- **[PASS] HR_direction** — stat=1.209, p=0.7894. HR(31C vs 28C)=1.21 — faster onset under 31C
-
-### scope: genet_d
-
-- **[PASS] PH_treatment** — stat=0.415, p=0.5196. cox.zph chisq=0.41, df=1
-- **[PASS] PH_GLOBAL** — stat=0.415, p=0.5196. cox.zph chisq=0.41, df=1
-- **[HANDLED] EPV** — stat=8, p=NA. n_event=8, n_covariates=1 (rule of thumb: EPV >= 10); handled as descriptive per-genet limitation; primary overall Cox model uses strata(thicket)
-- **[PASS] HR_direction** — stat=1.523, p=0.5844. HR(31C vs 28C)=1.52 — faster onset under 31C
-
-## polyp_in_hole
 
 ### scope: overall_strata_thicket
 

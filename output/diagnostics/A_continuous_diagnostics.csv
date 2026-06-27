@@ -1,20 +1,20 @@
 model,check,statistic,p_value,threshold,status,notes
 12_pam_lmm,isSingular,0,NA,FALSE,PASS,Singular fit means a variance component is at/near zero
-12_pam_lmm,variance_components_near_zero,0,NA,0,PASS,VarCorr (grp:var): id:3.84e-05; tank:1.92e-04; Residual:6.60e-04
+12_pam_lmm,variance_components_near_zero,0,NA,0,PASS,VarCorr (grp:var): id:5.78e-05; tank:2.31e-04; Residual:6.31e-04
 12_pam_lmm,optimizer_convergence_messages,0,NA,0,PASS,
-12_pam_lmm,DHARMa_KS_uniformity,0.05750000000000001,0.21655128882752686,p>=0.05,PASS,Kolmogorov-Smirnov on scaled residuals
-12_pam_lmm,DHARMa_dispersion,0.907364555747556,0.524,p>=0.05,PASS,Ratio of obs/sim residual variance
-12_pam_lmm,DHARMa_outliers,2,0.52,p>=0.05,PASS,Excess outliers vs expected
-12_pam_lmm,cooks_distance_max,0.17625285512571717,NA,< 0.0119 (4/n),WARN,"Top-3 obs idx: 325,29,331; cd: 0.176,0.047,0.039"
-12_pam_lmm,emmeans_direction_pam_fvfm,0.08351137901185723,6.762696713397034e-5,expected: heated decrease vs control,PASS,contrast 28C - 31C = 0.0835 (p=6.76e-05); observed heated decrease
+12_pam_lmm,DHARMa_KS_uniformity,0.06558333333333334,0.16781036093391702,p>=0.05,PASS,Kolmogorov-Smirnov on scaled residuals
+12_pam_lmm,DHARMa_dispersion,0.8965941830130892,0.506,p>=0.05,PASS,Ratio of obs/sim residual variance
+12_pam_lmm,DHARMa_outliers,2,0.5,p>=0.05,PASS,Excess outliers vs expected
+12_pam_lmm,cooks_distance_max,1.0773086979725812,NA,< 0.0119 (4/n),WARN,"Top-3 obs idx: 325,317,320; cd: 1.077,0.804,0.758"
+12_pam_lmm,emmeans_direction_pam_fvfm,0.08746943781783702,1.1206282321337641e-4,expected: heated decrease vs control,PASS,contrast 28C - 31C = 0.0875 (p=0.000112); observed heated decrease
 12_color_lmm,isSingular,0,NA,FALSE,PASS,Singular fit means a variance component is at/near zero
-12_color_lmm,variance_components_near_zero,0,NA,0,PASS,VarCorr (grp:var): id:2.45e-02; tank:2.39e-02; Residual:5.78e-02
+12_color_lmm,variance_components_near_zero,0,NA,0,PASS,VarCorr (grp:var): id:3.53e-02; tank:3.34e-02; Residual:4.86e-02
 12_color_lmm,optimizer_convergence_messages,0,NA,0,PASS,
-12_color_lmm,DHARMa_KS_uniformity,0.1828333333333334,3.509113508275159e-10,p>=0.05,HANDLED,Kolmogorov-Smirnov on scaled residuals; handled by ordinal CLMM robustness model 12b_color_clmm
-12_color_lmm,DHARMa_dispersion,0.890000347878702,0.522,p>=0.05,PASS,Ratio of obs/sim residual variance
-12_color_lmm,DHARMa_outliers,4,0.1,p>=0.05,PASS,Excess outliers vs expected
-12_color_lmm,cooks_distance_max,0.057335120587274406,NA,< 0.0119 (4/n),WARN,"Top-3 obs idx: 37,1,296; cd: 0.057,0.052,0.038"
-12_color_lmm,emmeans_direction_color_dscale,1.152569680231233,3.326905922818359e-5,expected: heated decrease vs control,PASS,contrast 28C - 31C = 1.1526 (p=3.33e-05); observed heated decrease
+12_color_lmm,DHARMa_KS_uniformity,0.2045277777777778,6.865952377688723e-11,p>=0.05,HANDLED,Kolmogorov-Smirnov on scaled residuals; handled by ordinal CLMM robustness model 12b_color_clmm
+12_color_lmm,DHARMa_dispersion,0.8499072450646056,0.434,p>=0.05,PASS,Ratio of obs/sim residual variance
+12_color_lmm,DHARMa_outliers,3,0.22,p>=0.05,PASS,Excess outliers vs expected
+12_color_lmm,cooks_distance_max,2.76371745510621,NA,< 0.0119 (4/n),WARN,"Top-3 obs idx: 296,274,324; cd: 2.764,2.761,2.739"
+12_color_lmm,emmeans_direction_color_dscale,1.2122093023256155,9.060745450563467e-5,expected: heated decrease vs control,PASS,contrast 28C - 31C = 1.2122 (p=9.06e-05); observed heated decrease
 12_zoox_lmm,isSingular,0,NA,FALSE,PASS,Singular fit means a variance component is at/near zero
 12_zoox_lmm,variance_components_near_zero,0,NA,0,PASS,VarCorr (grp:var): tank:3.31e-02; Residual:2.05e-01
 12_zoox_lmm,optimizer_convergence_messages,0,NA,0,PASS,

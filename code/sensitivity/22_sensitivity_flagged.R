@@ -52,17 +52,20 @@ grab <- function(model, label, term) {
 # ---- PAM Fv/Fm: treatment × day --------------------------------------------
 # Photosynthetic efficiency, measured repeatedly on each coral over time. The
 # key effect is the treatment×day interaction: does the heated group's Fv/Fm
-# decline differ from the ambient group's over the experiment? Random intercepts
-# for tank, thicket (genet/source colony), and id (coral) absorb the nested,
-# repeated-measures structure. REML = FALSE (ML) is used so the same model fits
-# the full vs dropped data comparably. pam_drop is the same data minus the flags.
+# decline differ from the ambient group's over the experiment? This MIRRORS the
+# primary model (02/12): genet (thicket) is a FIXED blocking term (only 3 genets),
+# random intercepts for tank and id absorb the nested repeated-measures structure,
+# and the pre-treatment baseline (day < 0) is excluded so the comparison is
+# apples-to-apples with the reported model. REML = FALSE (ML) is used so the same
+# model fits the full vs dropped data comparably. pam_drop is the data minus flags.
 pam <- readRDS(file.path(DATA_PROC, "pam_clean.rds")) |>
-  mutate(thicket = factor(thicket))
+  mutate(thicket = factor(thicket)) |>
+  filter(day >= 0)
 pam_drop <- pam |> filter(!id %in% FLAGGED_IDS, tank != FLAGGED_TANK)
 
-f_full <- lmerTest::lmer(fv_fm ~ treatment * wound * day + (1|tank) + (1|thicket) + (1|id),
+f_full <- lmerTest::lmer(fv_fm ~ treatment * wound * day + thicket + (1|tank) + (1|id),
                          data = pam, REML = FALSE)
-f_drop <- lmerTest::lmer(fv_fm ~ treatment * wound * day + (1|tank) + (1|thicket) + (1|id),
+f_drop <- lmerTest::lmer(fv_fm ~ treatment * wound * day + thicket + (1|tank) + (1|id),
                          data = pam_drop, REML = FALSE)
 # Same model, two datasets -> compare the treatment:day F/p side by side.
 results$pam_full <- grab(f_full, "PAM Fv/Fm (full data)",     "treatment:day")
@@ -73,12 +76,13 @@ results$pam_drop <- grab(f_drop, "PAM Fv/Fm (flagged dropped)","treatment:day")
 # paling proxy), again repeated over time. Identical model structure and
 # full-vs-dropped logic as PAM above.
 col <- readRDS(file.path(DATA_PROC, "color_clean.rds")) |>
-  mutate(thicket = factor(thicket))
+  mutate(thicket = factor(thicket)) |>
+  filter(day >= 0)
 col_drop <- col |> filter(!id %in% FLAGGED_IDS, tank != FLAGGED_TANK)
 
-c_full <- lmerTest::lmer(color_num ~ treatment * wound * day + (1|tank) + (1|thicket) + (1|id),
+c_full <- lmerTest::lmer(color_num ~ treatment * wound * day + thicket + (1|tank) + (1|id),
                          data = col, REML = FALSE)
-c_drop <- lmerTest::lmer(color_num ~ treatment * wound * day + (1|tank) + (1|thicket) + (1|id),
+c_drop <- lmerTest::lmer(color_num ~ treatment * wound * day + thicket + (1|tank) + (1|id),
                          data = col_drop, REML = FALSE)
 results$col_full <- grab(c_full, "Color D-scale (full data)",     "treatment:day")
 results$col_drop <- grab(c_drop, "Color D-scale (flagged dropped)","treatment:day")

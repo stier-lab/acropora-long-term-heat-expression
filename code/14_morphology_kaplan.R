@@ -89,26 +89,34 @@ contrasts(ph$treatment) <- contr.treatment(nlevels(ph$treatment))
 # sequence from wound closure (early) to skeletal regeneration (late). The
 # headline contrast is wound_smoothed (closure) vs new_corallites_on_tip
 # (regeneration) — heat blocks the latter but not the former.
-traits <- c("hole_in_center", "polyp_in_hole", "wound_smoothed",
-            "pigment_over_wound", "tip_exist", "tip_extension",
-            "new_corallites_on_tip")
-
-# Plain-language gloss for each event, carried into the output tables so a reader
-# of the CSV knows what "reaching the milestone" means for each trait. Several
-# traits can flicker on and off between visits (non-monotonic), which is exactly
-# why we anchor on the FIRST observed "1" rather than the final state.
-trait_interpretation <- tibble(
-  trait = traits,
-  event_interpretation = c(
-    "first observed hole closure",
-    "first observed polyp within wound",
-    "first observed smoothed wound surface",
-    "first observed pigment over wound; expression can be non-monotonic",
-    "first observed visible tip; expression can be non-monotonic",
-    "first observed tip extension; expression can be non-monotonic",
-    "first observed new corallites on tip"
-  )
+# Trait -> (facet label, plain-language event gloss). Single source of truth: the
+# display labels and the CSV glosses both derive from this, so they can never
+# drift out of order. The gloss is carried into the output tables so a reader of
+# the CSV knows what "reaching the milestone" means. Several traits can flicker on
+# and off between visits (non-monotonic), which is exactly why we anchor on the
+# FIRST observed "1" rather than the final state.
+trait_meta <- tibble::tribble(
+  ~trait,                  ~label,                  ~event_interpretation,
+  "hole_in_center",        "Hole in center",        "first observed hole closure",
+  "polyp_in_hole",         "Polyp in hole",         "first observed polyp within wound",
+  "wound_smoothed",        "Wound smoothed",        "first observed smoothed wound surface",
+  "pigment_over_wound",    "Pigment over wound",    "first observed pigment over wound; expression can be non-monotonic",
+  "tip_exist",             "Tip exists",            "first observed visible tip; expression can be non-monotonic",
+  "tip_extension",         "Tip extension",         "first observed tip extension; expression can be non-monotonic",
+  "new_corallites_on_tip", "New corallites on tip", "first observed new corallites on tip"
 )
+# Drop any trait that is a byte-identical duplicate of an earlier one. In the raw
+# data `polyp_in_hole` duplicates `hole_in_center` (data-entry error; see the
+# data-quality note in code/04). Analysing it as a second milestone would also
+# double-count it in the BH multiple-testing family (code/sensitivity/28).
+dup_drop <- trait_meta$trait[duplicated(lapply(trait_meta$trait, \(t) ph[[t]]))]
+if (length(dup_drop)) {
+  message("14_morphology: dropping duplicate trait(s): ",
+          paste(dup_drop, collapse = ", "))
+  trait_meta <- dplyr::filter(trait_meta, !trait %in% dup_drop)
+}
+traits <- trait_meta$trait
+trait_interpretation <- trait_meta |> select(trait, event_interpretation)
 
 # ---- Turn repeated 0/1 scores into one survival record per coral -----------
 # This is the heart of the censoring logic. For each (coral, trait) we collapse
@@ -171,6 +179,14 @@ contrasts(events$treatment) <- contr.treatment(nlevels(events$treatment))
 # Descriptive median time-to-event per trait × genet × treatment. Medians/IQRs
 # are computed only over corals that ACTUALLY reached the milestone (event == 1);
 # a median of a censored sample is undefined, hence the NA guards.
+# Sample sizes for the figure subtitles, computed from the data (one record per
+# coral × trait, so collapse to distinct corals first).
+n_km_per_trt  <- events |> distinct(id, treatment) |> count(treatment) |>
+  pull(n) |> (\(x) if (length(unique(x)) == 1) unique(x) else paste(range(x), collapse = "–"))()
+n_km_per_cell <- events |> distinct(id, treatment, thicket) |>
+  count(treatment, thicket) |>
+  pull(n) |> (\(x) if (length(unique(x)) == 1) unique(x) else paste(range(x), collapse = "–"))()
+
 km_summary <- events |>
   group_by(trait, treatment, thicket) |>
   summarise(
@@ -526,11 +542,8 @@ km_curves <- events |>
   }) |>
   ungroup() |>
   mutate(trait = factor(trait,
-                        levels = traits,
-                        labels = c("Hole in center", "Polyp in hole",
-                                   "Wound smoothed", "Pigment over wound",
-                                   "Tip exists", "Tip extension",
-                                   "New corallites on tip")))
+                        levels = trait_meta$trait,
+                        labels = trait_meta$label))
 
 # geom_step draws the proper KM staircase (the curve only changes on event days);
 # one panel per trait, blue = 28 °C, orange = 31 °C.
@@ -545,7 +558,8 @@ p_km <- ggplot(km_curves, aes(day, cum_event,
   labs(x = "Days after wounding",
        y = "Cumulative % corals expressing trait",
        title = "Heat delays the regenerative-tip program but not wound closure",
-       subtitle = "Kaplan-Meier curves for each wound-healing milestone (n = 24 corals × treatment)") +
+       subtitle = sprintf("Kaplan-Meier curves for each wound-healing milestone (n = %s corals per treatment)",
+                          n_km_per_trt)) +
   theme_pub(9)
 
 save_fig(p_km, "14_morphology_KM", width = 200, height = 130)
@@ -567,11 +581,8 @@ km_curves_genet <- events |>
   }) |>
   ungroup() |>
   mutate(trait = factor(trait,
-                        levels = traits,
-                        labels = c("Hole in center", "Polyp in hole",
-                                   "Wound smoothed", "Pigment over wound",
-                                   "Tip exists", "Tip extension",
-                                   "New corallites on tip")))
+                        levels = trait_meta$trait,
+                        labels = trait_meta$label))
 
 p_km_genet <- ggplot(km_curves_genet,
                       aes(day, cum_event, colour = treatment,
@@ -588,7 +599,8 @@ p_km_genet <- ggplot(km_curves_genet,
   labs(x = "Days after wounding",
        y = "Cumulative % corals expressing trait",
        title = "Genet-specific healing trajectories",
-       subtitle = "Kaplan-Meier curves by treatment × genet (n ≈ 8 per cell)") +
+       subtitle = sprintf("Kaplan-Meier curves by treatment × genet (n = %s per cell)",
+                          n_km_per_cell)) +
   theme_pub(9)
 
 save_fig(p_km_genet, "14b_morphology_KM_by_genet", width = 210, height = 135)

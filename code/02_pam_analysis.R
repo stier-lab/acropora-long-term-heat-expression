@@ -1,7 +1,12 @@
 # =============================================================================
 # Purpose: PAM Fv/Fm × treatment × wound × day
-#          - Mixed model: Fv/Fm ~ treatment * wound * day + (1|tank) + (1|thicket)
+#          - Mixed model: Fv/Fm ~ treatment * wound * day + thicket + (1|tank) + (1|id)
+#          - Genet (thicket) is a FIXED blocking term (only 3 genets — too few to
+#            estimate a random-effect variance; same choice as the canonical
+#            models in 12_models.R, Bolker 2008 / Gelman 2005)
 #          - Within-coral repeated measures via random effect of id
+#          - Pre-treatment baseline (day < 0) is shown in the figure but EXCLUDED
+#            from the model, which fits a single linear day trend post-wounding
 #          - Figure: trajectories with 95% CI, faceted by treatment, color by wound
 #
 # What & why: Fv/Fm is the dark-adapted maximum photochemical efficiency of
@@ -130,23 +135,31 @@ if ("location" %in% names(pam) &&
 # The headline model. Day is continuous (a linear time trend), treatment and
 # wound are factors, and they are fully crossed so we can read off whether heat
 # and wounding interact and whether their effects change through time.
-# Random intercepts soak up the non-independence in the design:
+# Genet (thicket) enters as a FIXED blocking term: with only 3 genets a random
+# "genet variance" is near-unidentified, so we estimate the genet means directly
+# (matches 12_models.R; Bolker et al. 2008, Gelman 2005).
+# Random intercepts soak up the remaining non-independence in the design:
 #   (1|tank)    — corals sharing a tank share its micro-environment
-#   (1|thicket) — fragments from the same genet share genotype/colony history
 #   (1|id)      — repeated measures on the same fragment across days
+# Pre-treatment baseline (day < 0) is dropped here so the single linear day term
+# describes the POST-wounding trajectory only; pooling the baseline into one
+# slope would dilute/bias the treatment × day heat signal. The figure below
+# still plots the baseline point for context.
 # REML = TRUE here (unlike the ML sensitivity model): this is the FINAL model, so
 # we want the less-biased REML estimates of the variance components.
+pam_mod <- pam_avg |> filter(day >= 0)
 mod <- lme4::lmer(
-  fv_fm ~ treatment * wound * day + (1 | tank) + (1 | thicket) + (1 | id),
-  data = pam_avg, REML = TRUE
+  fv_fm ~ treatment * wound * day + thicket + (1 | tank) + (1 | id),
+  data = pam_mod, REML = TRUE
 )
 saveRDS(mod, file.path(MOD_DIR, "02_pam_lmer.rds"))
 
 # Estimated marginal means: model-predicted Fv/Fm for every treatment×wound cell
-# at each observed day, then pairwise contrasts. adjust = "tukey" controls the
-# family-wise error rate across the multiple pairwise comparisons within each day.
+# at each observed (post-wounding) day, then pairwise contrasts. adjust = "tukey"
+# controls the family-wise error rate across the pairwise comparisons within each
+# day. Grid is the measured days, not a hardcoded set, so no day is interpolated.
 emm <- emmeans::emmeans(mod, ~ treatment * wound | day,
-                        at = list(day = sort(unique(pam_avg$day))))
+                        at = list(day = sort(unique(pam_mod$day))))
 contrasts_tbl <- as_tibble(pairs(emm, adjust = "tukey"))
 write_csv(contrasts_tbl, file.path(TBL_DIR, "02_pam_treatment_contrasts.csv"))
 

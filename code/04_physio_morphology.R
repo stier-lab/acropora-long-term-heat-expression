@@ -68,14 +68,46 @@ ph <- raw |>
            ~ as.integer(str_to_lower(str_squish(.x)) == "yes"))
   )
 
-# Save the cleaned, one-row-per-observation table for downstream scripts.
+# ---- Data-quality check: duplicate trait columns ---------------------------
+# In the raw spreadsheet, `polyp_in_hole` is byte-identical to `hole_in_center`
+# (same 0/1 values AND the same NA pattern in every row) — a data-entry
+# duplication, since these are biologically distinct milestones (initial hole
+# closure vs a polyp re-forming inside the wound) that should NOT coincide.
+# We keep the column in the saved table (don't silently destroy raw data) but
+# EXCLUDE it from every analysis below so it is not modelled, plotted, or counted
+# as a second independent trait — which would also double-count it in the
+# Benjamini-Hochberg exploratory family (code/sensitivity/28). Re-check
+# data/raw/physio_morphology/data.csv; once the true polyp_in_hole scores are
+# restored, drop `DUP_TRAITS` to bring it back into the analysis.
+DUP_TRAITS <- character(0)
+if (identical(ph$hole_in_center, ph$polyp_in_hole)) {
+  warning("polyp_in_hole is identical to hole_in_center in the raw data; ",
+          "excluding polyp_in_hole from analysis (see data-quality note in 04). ",
+          "Re-check data/raw/physio_morphology/data.csv.")
+  DUP_TRAITS <- "polyp_in_hole"
+}
+
+# Save the cleaned, one-row-per-observation table for downstream scripts (all
+# raw trait columns retained, including the flagged duplicate).
 saveRDS(ph, file.path(DATA_PROC, "physio_clean.rds"))
 
 # ---- Long-form for plotting ------------------------------------------------
-# The nine trait columns, in the order they should appear in the facets below.
-traits <- c("polyps_out", "hole_in_center", "polyp_in_hole",
-            "wound_smoothed", "pigment_over_wound", "tip_exist",
-            "tip_extension", "new_corallites_on_tip", "algae_on_wound")
+# Trait columns paired with their display labels (single source of truth for both
+# the modelled trait order and the facet labels). The flagged duplicate trait
+# (DUP_TRAITS) is removed here so it propagates to neither the figures nor models.
+trait_labels <- c(
+  polyps_out            = "Polyps out",
+  hole_in_center        = "Hole in center",
+  polyp_in_hole         = "Polyp in hole",
+  wound_smoothed        = "Wound smoothed",
+  pigment_over_wound    = "Pigment over wound",
+  tip_exist             = "Tip exists",
+  tip_extension         = "Tip extension",
+  new_corallites_on_tip = "New corallites on tip",
+  algae_on_wound        = "Algae on wound"
+)
+trait_labels <- trait_labels[setdiff(names(trait_labels), DUP_TRAITS)]
+traits <- names(trait_labels)
 
 # Restrict to WOUNDED corals (unwounded controls have no wound to heal), then
 # stack the nine traits into one long trait/expressed column for faceting.
@@ -90,12 +122,15 @@ long <- ph |>
 prop_df <- long |>
   group_by(day, treatment, trait) |>
   summarise(prop = mean(expressed), n = n(), .groups = "drop") |>
-  mutate(trait = factor(trait, levels = traits,
-                        labels = c("Polyps out", "Hole in center",
-                                   "Polyp in hole", "Wound smoothed",
-                                   "Pigment over wound", "Tip exists",
-                                   "Tip extension", "New corallites on tip",
-                                   "Algae on wound")))
+  mutate(trait = factor(trait, levels = traits, labels = unname(trait_labels)))
+
+# Sample sizes for the figure subtitle, computed from the data (not hardcoded):
+# wounded corals per treatment and per genet × treatment cell.
+n_wound_per_trt  <- long |> distinct(id, treatment) |> count(treatment) |>
+  pull(n) |> (\(x) if (length(unique(x)) == 1) unique(x) else paste(range(x), collapse = "–"))()
+n_wound_per_cell <- long |> distinct(id, treatment, thicket) |>
+  count(treatment, thicket) |>
+  pull(n) |> (\(x) if (length(unique(x)) == 1) unique(x) else paste(range(x), collapse = "–"))()
 
 # ---- Pooled trajectory figure (one panel per trait) ------------------------
 # Lines coloured by temperature; one panel per healing trait. Blue = 28 °C,
@@ -113,7 +148,8 @@ p_traits <- ggplot(prop_df, aes(day, prop,
   labs(x = "Day relative to wounding (D0)",
        y = "Wounded corals expressing trait",
        title = "Morphological wound-healing characteristics",
-       subtitle = "Wounded corals only (n = 24 per treatment)") +
+       subtitle = sprintf("Wounded corals only (n = %s per treatment)",
+                          n_wound_per_trt)) +
   theme_pub(9)
 
 save_fig(p_traits, "04_morphology_trajectories", width = 200, height = 130)
@@ -124,12 +160,7 @@ save_fig(p_traits, "04_morphology_trajectories", width = 200, height = 130)
 prop_genet_df <- long |>
   group_by(day, treatment, thicket, trait) |>
   summarise(prop = mean(expressed), n = n(), .groups = "drop") |>
-  mutate(trait = factor(trait, levels = traits,
-                        labels = c("Polyps out", "Hole in center",
-                                   "Polyp in hole", "Wound smoothed",
-                                   "Pigment over wound", "Tip exists",
-                                   "Tip extension", "New corallites on tip",
-                                   "Algae on wound")))
+  mutate(trait = factor(trait, levels = traits, labels = unname(trait_labels)))
 
 # Temperature -> colour, genet -> linetype; group by their interaction so each
 # temperature×genet combination is drawn as its own line.
@@ -151,7 +182,8 @@ p_traits_genet <- ggplot(prop_genet_df,
   labs(x = "Day relative to wounding (D0)",
        y = "Wounded corals expressing trait",
        title = "Morphological wound-healing trajectories by genet",
-       subtitle = "Wounded corals only (n ≈ 8 per genet × treatment cell)") +
+       subtitle = sprintf("Wounded corals only (n = %s per genet × treatment cell)",
+                          n_wound_per_cell)) +
   theme_pub(9)
 
 save_fig(p_traits_genet, "04b_morphology_trajectories_by_genet",

@@ -39,6 +39,13 @@ pam    <- readRDS(file.path(DATA_PROC, "pam_clean.rds"))
 physio <- readRDS(file.path(DATA_PROC, "physio_clean.rds"))
 wide   <- readRDS(file.path(DATA_PROC, "coral_physio_wide.rds"))
 
+# Design n for the figure summary line, computed from the data (the old hardcoded
+# "192 fragments" matched neither the 48 corals nor the 768 coral-day records).
+n_corals <- dplyr::n_distinct(physio$id)
+n_wound  <- physio |> filter(wound == "yes") |> distinct(id) |> nrow()
+n_genet  <- dplyr::n_distinct(physio$thicket)
+n_tank   <- dplyr::n_distinct(physio$tank)
+
 # ---- Panel A: tank temperature (treatment validation) ---------------------
 # Reduce the logger probes to the eight experimental tanks, fix unit drift, and
 # tag each tank with its treatment so the trace shows 28 vs 31 °C separation.
@@ -48,13 +55,10 @@ temp_pa <- apex |>
          is.finite(value_mean), value_mean > 0) |>
   mutate(
     tank = as.integer(str_extract(probe, "\\d+")),
-    # some probes logged °F, some °C; anything > 60 must be °F -> convert to °C
-    value_c = if_else(value_mean > 60, (value_mean - 32) * 5 / 9, value_mean),
-    treatment = case_when(
-      tank %in% c(3, 6, 9, 12)  ~ "28C",
-      tank %in% c(4, 5, 10, 11) ~ "31C",
-      TRUE ~ NA_character_
-    )
+    # apex_temperature_daily.rds is already in °C (the °F->°C conversion happens at
+    # the raw-reading level in code/08, before aggregation), so no conversion here.
+    value_c = value_mean,
+    treatment = tank_treatment(tank)   # shared tank->treatment map (00_setup.R)
   ) |>
   filter(!is.na(treatment), value_c > 15, value_c < 40,
          between(date, as_date("2025-05-25"), as_date("2025-06-22")))
@@ -259,7 +263,8 @@ fig1    <- (top_row / bot_row) +
   patchwork::plot_layout(heights = c(0.9, 1.1), guides = "collect") +
   patchwork::plot_annotation(
     title = expression("Heat compromises photochemistry, growth, and regeneration in"~italic(A.~pulchra)),
-    subtitle = "n = 192 fragments, 3 genets, 8 tanks, 14 days post-wounding",
+    subtitle = sprintf("n = %d corals (%d wounded) · %d genets · %d tanks · 28 vs 31 °C",
+                       n_corals, n_wound, n_genet, n_tank),
     theme = theme(
       plot.title    = element_text(size = 11, face = "bold",
                                    margin = margin(b = 4, t = 4)),

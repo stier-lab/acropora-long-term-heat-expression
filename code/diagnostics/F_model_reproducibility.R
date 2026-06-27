@@ -193,6 +193,10 @@ ph <- readRDS(file.path(DATA_PROC, "physio_clean.rds")) |>
 traits <- c("polyps_out", "hole_in_center", "polyp_in_hole",
             "wound_smoothed", "pigment_over_wound", "tip_exist",
             "tip_extension", "new_corallites_on_tip")
+# Drop the duplicate trait (polyp_in_hole == hole_in_center; see data-quality note
+# in code/04). 12_models no longer fits it, so its saved .rds does not exist —
+# keeping it here would make the reproducibility loop chase a missing model.
+traits <- traits[!duplicated(lapply(traits, \(t) ph[[t]]))]
 for (tr in traits) {
   d <- ph |> mutate(y = .data[[tr]]) |> filter(!is.na(y))
   # Skip degenerate traits: an all-0/all-1 outcome or <30 rows can't fit a GLMM.
