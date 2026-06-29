@@ -18,7 +18,7 @@
 #   depressed Fv/Fm over the experiment, and whether wounding and the genotype of
 #   the host coral modified that response. This is the physiological evidence for
 #   the headline result — that heat impairs the symbiosis (and thus the energy
-#   budget needed for regeneration), even when the wound itself still closes.
+#   budget needed for regeneration), even when the wound still closes.
 # Input:   data/raw/pam/PAM_data.csv
 #          data/processed/coral_metadata.rds
 # Output:  data/processed/pam_clean.rds
@@ -41,10 +41,10 @@ pam_raw <- read_csv(file.path(DATA_RAW, "pam", "PAM_data.csv"),
 meta <- readRDS(file.path(DATA_PROC, "coral_metadata.rds"))
 
 # ---- Clean -----------------------------------------------------------------
-# Coerce every column to its proper type and recover Fv/Fm. The Fv/Fm column was
-# a live spreadsheet formula in some rows ("=L2/100"), so it reads back as text;
-# where that happens we recompute it from the raw "Y" reading using the PAM
-# convention (Y / 1000) rather than trusting the broken cell.
+# Coerce every column to its type and recover Fv/Fm. The Fv/Fm column was a live
+# spreadsheet formula in some rows ("=L2/100"), so it reads back as text; where
+# that happens we recompute it from the raw "Y" reading using the PAM convention
+# (Y / 1000) rather than trusting the broken cell.
 pam <- pam_raw |>
   rename(thicket = matches("^thicket"),
          fv_fm   = matches("^fv_fm")) |>
@@ -76,8 +76,8 @@ pam <- pam_raw |>
 
 # Average the two within-coral probe readings (top + bottom) into one value per
 # coral per day. These are technical replicates of the same fragment, not
-# independent observations, so they are collapsed before modelling (the
-# justification for this is tested in the sensitivity block below).
+# independent observations, so they are collapsed before modelling (this is
+# tested in the sensitivity block below).
 pam_avg <- pam |>
   group_by(date, day, treatment, tank, thicket, wound, id) |>
   summarise(fv_fm = mean(fv_fm, na.rm = TRUE), .groups = "drop")
@@ -88,9 +88,9 @@ saveRDS(pam_avg, file.path(DATA_PROC, "pam_clean.rds"))
 # ---- Location (top vs bottom) sensitivity check ----------------------------
 # Molly's original analysis (code/archive/molly_original/LTH_PAM.R) noted that
 # top vs bottom probe placement appeared to differ. The primary pipeline
-# averages the two as technical replicates (above). Here we test that decision
-# directly: fit the model on the UN-averaged data with location as a fixed
-# factor and report the location terms. If location and its interactions are
+# averages the two as technical replicates (above). Here we test that decision:
+# fit the model on the UN-averaged data with location as a fixed factor and
+# report the location terms. If location and its interactions are
 # non-significant, averaging is justified.
 if ("location" %in% names(pam) &&
     length(unique(na.omit(pam$location))) > 1) {
@@ -100,7 +100,7 @@ if ("location" %in% names(pam) &&
   # location terms): likelihood-ratio / ML F-tests on fixed effects are only
   # valid under ML, whereas REML is reserved for the final variance estimates.
   # check.conv.singular = "ignore": this saturated 4-way model can drive a
-  # variance component to 0; we tolerate that since we only need the fixed-effect
+  # variance component to 0; we tolerate that since we need the fixed-effect
   # tests, not the random-effect estimates.
   mod_loc <- lmerTest::lmer(
     fv_fm ~ treatment * wound * day * location + (1 | tank) + (1 | id),
@@ -116,8 +116,8 @@ if ("location" %in% names(pam) &&
   cat("\n=== PAM location (top/bottom) sensitivity — terms involving location ===\n")
   print(loc_anova)
   # The decision that matters is whether location INTERACTS with the
-  # experimental factors. A pure main-effect offset is averaged out harmlessly; an
-  # interaction would mean averaging distorts the treatment/wound/day effects.
+  # experimental factors. A main-effect offset is averaged out; an interaction
+  # would mean averaging distorts the treatment/wound/day effects.
   pcol <- intersect(c("Pr(>F)"), names(loc_anova))
   interaction_terms <- loc_anova[grepl(":", loc_anova$term), , drop = FALSE]
   inter_sig <- length(pcol) == 1 &&
@@ -165,7 +165,7 @@ write_csv(contrasts_tbl, file.path(TBL_DIR, "02_pam_treatment_contrasts.csv"))
 
 # ---- Figure ----------------------------------------------------------------
 # Collapse to one mean (± standard error) per day × treatment × wound cell for
-# plotting. This shows the raw cell means, not the model-adjusted means.
+# plotting. These are the raw cell means, not the model-adjusted means.
 plot_df <- pam_avg |>
   group_by(day, treatment, wound) |>
   summarise(

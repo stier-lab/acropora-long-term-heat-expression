@@ -106,7 +106,7 @@ contrasts(events$treatment) <- contr.treatment(nlevels(events$treatment))
 save_schoenfeld <- function(zph_obj, fig_path) {
   # Use raw Schoenfeld residual scatter (plot.cox.zph's spline smoother is
   # often singular for the small per-genet datasets here; raw points are
-  # always interpretable). One panel per non-GLOBAL covariate.
+  # interpretable). One panel per non-GLOBAL covariate.
   cov_names <- setdiff(rownames(zph_obj$table), "GLOBAL")
   n_panels  <- max(1, length(cov_names))
   png(fig_path, width = 800 * n_panels, height = 800, res = 180)
@@ -291,7 +291,7 @@ for (tr in traits) {
 }
 
 diag_df <- bind_rows(results)
-# Reconcile statuses (numbers untouched): the one real PH violation (pigment,
+# Reconcile statuses (numbers untouched): the one PH violation (pigment,
 # genet C) is HANDLED by a time-varying coxph refit saved in 14c_*.csv, and the
 # per-genet small-sample warnings are HANDLED as documented descriptive limits.
 tt_path <- file.path(ROOT, "output", "tables", "14c_cox_tt_pigment_genetC.csv")

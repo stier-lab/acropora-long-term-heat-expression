@@ -8,13 +8,13 @@
 #   Chart" — a laminated reference card with six brown/tan shades (D1 = palest,
 #   D6 = darkest). Shade tracks symbiont density and chlorophyll, so a DROP on
 #   the D-scale ("paling") is an early, visible sign of bleaching stress before
-#   the coral goes fully white. The question here is whether the 31 °C heat
-#   treatment (and wounding) caused corals to pale over the experiment. This
-#   script does the data prep, an end-of-experiment summary, and the trajectory
-#   figure; the formal ordinal model (clmm) that respects the discrete, ranked
-#   nature of the scale is in code/12b_color_clmm_robustness.R. Pigmentation
-#   is the whole-colony stress signal that complements the symbiont/chlorophyll
-#   lab assays (code/06) and the Fv/Fm photochemistry (code/02).
+#   the coral goes white. The question here is whether the 31 °C heat treatment
+#   (and wounding) caused corals to pale over the experiment. This script does
+#   the data prep, an end-of-experiment summary, and the trajectory figure; the
+#   ordinal model (clmm) that respects the discrete, ranked nature of the scale
+#   is in code/12b_color_clmm_robustness.R. Pigmentation is the whole-colony
+#   stress signal that complements the symbiont/chlorophyll lab assays (code/06)
+#   and the Fv/Fm photochemistry (code/02).
 # Input:   data/raw/color_card/data.csv
 #          data/processed/coral_metadata.rds
 # Output:  data/processed/color_clean.rds
@@ -30,8 +30,8 @@ source(here::here("code", "00_setup.R"))
 # Convert a Siebeck D-scale text entry to numeric. Single scores ("D5") map to
 # their integer; split scores ("D3/D4") are averaged to the midpoint (3.5),
 # following Molly's original convention (code/archive/molly_original/). This
-# matters for 40 of ~962 scored observations (D1/D2, D2/D3, D3/D4); taking only
-# the first digit would bias those downward by 0.5.
+# affects 40 of ~962 scored observations (D1/D2, D2/D3, D3/D4); taking only the
+# first digit would bias those downward by 0.5.
 # Mechanics: str_extract_all pulls every run of digits from the string; vapply
 # returns one numeric per entry (NA when no digit was found, e.g. blank cells).
 convert_color <- function(x) {
@@ -48,7 +48,7 @@ cc_raw <- read_csv(file.path(DATA_RAW, "color_card", "data.csv"),
 
 # ---- Clean -----------------------------------------------------------------
 # Type-coerce every column, tidy the categorical fields, and turn the D-scale
-# text into the numeric color_num used everywhere downstream.
+# text into the numeric color_num used downstream.
 cc <- cc_raw |>
   # The raw header is "wounded"; rename to the project-wide "wound". thicket may
   # have varied capitalisation, so match it by prefix.
@@ -82,7 +82,7 @@ saveRDS(cc, file.path(DATA_PROC, "color_clean.rds"))
 # ---- End-of-experiment proportions ----------------------------------------
 # Snapshot of the final timepoint: how many corals in each treatment×wound cell
 # were still alive / had paled, and the mean color score. This is the summary
-# underlying the trajectory plot and the formal model (12b).
+# underlying the trajectory plot and the model (12b).
 end_day <- max(cc$day, na.rm = TRUE)             # last day with color data
 end_props <- cc |>
   filter(day == end_day) |>
@@ -121,8 +121,8 @@ p_color <- ggplot(traj, aes(day, mean_color,
   geom_vline(xintercept = 0, linetype = "dotted", colour = "grey50") +
   facet_wrap(~ treatment, ncol = 2) +
   # Reverse the y-axis so the DARKEST score (D6, healthy) sits at the bottom and
-  # PALING reads as a downward movement — the intuitive direction for "losing
-  # color / bleaching". Limits padded slightly beyond 1-6 for visual margin.
+  # PALING reads as a downward movement — the direction for "losing color /
+  # bleaching". Limits padded beyond 1-6 for visual margin.
   scale_y_reverse(breaks = 1:6, limits = c(6.2, 0.8)) +  # darker = higher D, plot 1 on top
   scale_colour_manual(values = PAL_WOUND,
                       name = "Wound") +

@@ -32,8 +32,8 @@
 #   them all back in and recast each into the one shared row schema described
 #   above, so that every effect size, test statistic, df, p-value and CI cited
 #   in the paper can be traced to exactly one row — and to the script that made
-#   it (the source_script / source_artifact columns). Each "Block" below is a
-#   small adapter with the same job: read one upstream table, rename/compute its
+#   it (the source_script / source_artifact columns). Each "Block" below is an
+#   adapter with the same job: read one upstream table, rename/compute its
 #   columns into the common schema, and tag its domain. The blocks are then
 #   row-bound into `master` and written out twice — a tidy machine-readable CSV
 #   and a paper-ready formatted CSV. Nothing here fits a model; it only
@@ -49,7 +49,7 @@
 source(here::here("code", "00_setup.R"))
 
 # ---- Helpers --------------------------------------------------------------
-# Small formatters and lookups shared by the blocks below.
+# Formatters and lookups shared by the blocks below.
 
 # Render a p-value in journal format: "<0.001" below that threshold, else 3 dp.
 fmt_p   <- function(p) {
@@ -658,7 +658,7 @@ bw_means_rows <- bw_raw |>
   )
 
 # Derived headline number: the % reduction in mass gain at 31C relative to 28C
-# (a key reported number), computed straight from the two means.
+# (a reported number), computed straight from the two means.
 bw_pct_drop <- bw_raw |>
   summarise(
     pct_drop_31C_vs_28C = (mean_pct[treatment == "31C"] -
@@ -864,7 +864,7 @@ mt_rows <- if (file.exists(file.path(TBL_DIR, "28_multiple_testing.csv"))) {
 # ===========================================================================
 # Back-transforms the binary morphology GLMMs to the probability scale so the
 # heat effect reads as an absolute difference in the probability of trait
-# expression (delta_prob = P(28C) - P(31C)) — far more interpretable than the
+# expression (delta_prob = P(28C) - P(31C)) — more interpretable than the
 # log-odds in Block 4. Also carries the odds ratio for cross-reference.
 probc_rows <- if (file.exists(file.path(TBL_DIR, "29_morphology_prob_contrasts.csv"))) {
   read_csv(file.path(TBL_DIR, "29_morphology_prob_contrasts.csv"),

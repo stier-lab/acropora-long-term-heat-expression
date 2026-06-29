@@ -8,11 +8,11 @@
 #   (A) photosynthetic efficiency (PAM Fv/Fm), (B) colony colour score (a visual
 #   bleaching proxy), (C) calcification rate from buoyant weighing (growth), and
 #   (D) symbiont cell density. Each panel reads its own cleaned dataset (produced
-#   by earlier scripts), builds a standalone plot, and patchwork tiles them into a
-#   2×2 grid with one shared legend. The recurring design choice — colour by
-#   WOUND in A-C, faceted by treatment, but colour by TREATMENT in D — reflects
-#   what varies within each dataset. Edit the upstream scripts to change the
-#   data; edit here only to change the figure layout.
+#   by earlier scripts), builds a plot, and patchwork tiles them into a
+#   2×2 grid with one shared legend. Colour is by WOUND in A-C, faceted by
+#   treatment, and by TREATMENT in D — reflecting what varies within each
+#   dataset. Edit the upstream scripts to change the data; edit here to change
+#   the figure layout.
 # Input:   data/processed/{pam_clean,color_clean,buoyant_weight_clean,
 #                          symbiont_chl_clean}.rds
 # Output:  figures/11_main_response_panel.{pdf,png}
@@ -69,7 +69,7 @@ pB <- ggplot(B_df, aes(day, m, colour = wound, fill = wound)) +
 # ---- C: Growth ------------------------------------------------------
 # End-of-experiment calcification (growth) rate by treatment × wound. Unlike the
 # time series above, this is a single value per colony, so a box-and-jitter plot
-# shows the distribution; is.finite() drops colonies with no valid growth rate.
+# shows the distribution; is.finite() drops colonies with no growth rate.
 pC <- ggplot(filter(bw, is.finite(pct_growth)),
              aes(treatment, pct_growth, fill = wound)) +
   geom_boxplot(width = 0.55, outlier.shape = NA, alpha = 0.7,   # hide outlier pts; raw pts added next

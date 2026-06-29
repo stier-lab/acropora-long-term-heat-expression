@@ -11,8 +11,8 @@
 #
 # What & why: synthesis script. Other analyses test whether heat affects a
 #   given response; this one addresses the cross-cutting question of which
-#   genet best tolerates heat overall. To put effects measured in completely
-#   different units on one axis (Fv/Fm, a colour score, calcification rate,
+#   genet best tolerates heat overall. To put effects measured in different
+#   units on one axis (Fv/Fm, a colour score, calcification rate,
 #   symbiont counts, and wound-healing hazard ratios), each effect is rescaled
 #   WITHIN its own response so the largest-magnitude effect = 1 (the "z"
 #   column — a row-max standardization, not a statistical z-score). Positive

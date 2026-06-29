@@ -104,7 +104,7 @@ report_lines <- c(report_lines,
           paste(pca_vars, collapse = ", ")))
 
 # center + scale. = standardize each variable to mean 0, SD 1 before rotating —
-# essential because Fv/Fm, % color, % growth and log-cells have very different
+# needed because Fv/Fm, % color, % growth and log-cells have different
 # scales; an unscaled PCA would track whichever variable has the largest values.
 pca <- prcomp(pca_input, center = TRUE, scale. = TRUE)
 var_exp <- summary(pca)$importance[2, ] * 100   # % variance per component
@@ -169,7 +169,7 @@ for (pc in colnames(load_mat)) {
 
 # Biological interpretation of PC1: if PC1 is a "coral health" axis, the health
 # metrics (Fv/Fm, color) should load with the SAME sign. Mixed signs would mean
-# PC1 is not cleanly interpretable as overall health => WARN.
+# PC1 is not interpretable as overall health => WARN.
 pc1 <- load_mat[, "PC1"]
 hp_load <- pc1[c("pam_end", "color_end")]
 hp_sym <- if (all(hp_load > 0) | all(hp_load < 0)) "PASS" else "WARN"

@@ -21,11 +21,10 @@ source(here::here("code", "00_setup.R"))
 
 # ---- Load ------------------------------------------------------------------
 # Read the raw field spreadsheet and trim it to real records. guess_max = 5000
-# forces readr to inspect many rows before deciding each column's type (so a
-# column that is blank for the first few hundred rows isn't mis-typed).
-# clean_names() snake_cases the headers; the final filter drops the ~800 empty
-# trailing rows Google Sheets exports by requiring both species and id present.
-# Sheet has ~800 trailing empty rows from Google Sheets — drop them up front.
+# makes readr inspect many rows before deciding each column's type (so a column
+# that is blank for the first few hundred rows isn't mis-typed). clean_names()
+# snake_cases the headers; the final filter drops the ~800 empty trailing rows
+# Google Sheets exports by requiring both species and id present.
 meta_raw <- suppressWarnings(
   read_csv(file.path(DATA_RAW, "metadata", "metadata.csv"),
            show_col_types = FALSE,
@@ -36,14 +35,14 @@ meta_raw <- suppressWarnings(
 
 # ---- Tidy ------------------------------------------------------------------
 # Coerce every column to a predictable type and encode the experimental design
-# as proper factors. The CSV reads many fields as text, and consistent factor
-# levels here are what guarantee the contrasts (set in 00_setup.R) behave the
-# same way in every downstream model.
+# as factors. The CSV reads many fields as text, and consistent factor levels
+# here guarantee the contrasts (set in 00_setup.R) behave the same way in every
+# downstream model.
 # Drop trailing whitespace in `thicket ` column; harmonize types
 meta <- meta_raw |>
   # The header is "thicket " with a trailing space; matches() finds it
-  # regardless so we get a clean `thicket` column. thicket = the genet / field
-  # colony of origin (a, c, d) — modelled as a FIXED effect later (only 3 levels).
+  # regardless so we get a `thicket` column. thicket = the genet / field colony
+  # of origin (a, c, d) — modelled as a FIXED effect later (only 3 levels).
   rename(thicket = matches("^thicket")) |>
   mutate(
     species        = str_squish(species),            # collapse stray whitespace
@@ -74,20 +73,20 @@ meta <- meta_raw |>
   select(-treatment_c, -ends_with("_cm_2"))
 
 # Sanity: expected 192 destructive + 16 microscope + a small set of replicates
-# (print the row count so the run log flags any obvious load problem early).
+# (print the row count so the run log flags any load problem early).
 n_total <- nrow(meta)
 message(glue::glue("Loaded metadata: {n_total} rows"))
 
 # ---- Summary tally ---------------------------------------------------------
 # Cross-tabulate the full factorial design (temperature × wound × genet) to
-# eyeball the sample sizes per cell — a quick check that the design is balanced.
+# show the sample sizes per cell — a check that the design is balanced.
 summary_tbl <- meta |>
   count(treatment, wound, thicket, name = "n") |>
   arrange(treatment, wound, thicket)
 
 # ---- Save ------------------------------------------------------------------
-# Write the canonical lookup as .rds (fast, type-preserving — what other scripts
-# read) and .csv (human-readable), plus the sample-size tally table.
+# Write the canonical lookup as .rds (type-preserving — what other scripts read)
+# and .csv (human-readable), plus the sample-size tally table.
 dir.create(DATA_PROC, recursive = TRUE, showWarnings = FALSE)
 dir.create(TBL_DIR,   recursive = TRUE, showWarnings = FALSE)
 saveRDS(meta, file.path(DATA_PROC, "coral_metadata.rds"))

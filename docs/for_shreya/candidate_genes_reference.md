@@ -3,7 +3,7 @@
 > **Optional candidate-gene reference** · Updated 2026-06-26 · Index: [`README.md`](../../README.md) · companion to `analysis_proposal.md` and `gene_expression_integration_map.md` · machine-readable twin: [`candidate_genes_reference.csv`](candidate_genes_reference.csv).
 
 **Read this as a resource to mine, not a prescribed panel.** The rest of `docs/for_shreya/`
-deliberately frames the RNA-seq as *hypothesis-led, not candidate-gene-led* (see
+frames the RNA-seq as *hypothesis-led, not candidate-gene-led* (see
 `analysis_proposal.md`). This table names genes — so treat it as **prior context for
 interpretation**, not a target list that should bias the differential-expression analysis. Keep
 discovery genome-wide; use this to *interpret* and *cross-check* the output, and to seed a

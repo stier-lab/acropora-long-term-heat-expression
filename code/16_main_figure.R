@@ -13,8 +13,8 @@
 #   assembles them into a 2×2 grid at the end. The narrative reads left-to-right,
 #   top-to-bottom: (A) show the treatment worked — the tanks held 28 vs 31 °C;
 #   (B) show whole-colony physiological stress diverge over time (Fv/Fm); (C) the
-#   key mechanism — heat lets wounds close (left KM) but blocks new-corallite
-#   regeneration (right KM); (D) summarize in multivariate space. Key assembly
+#   mechanism — heat lets wounds close (left KM) but blocks new-corallite
+#   regeneration (right KM); (D) summarize in multivariate space. Assembly
 #   conventions used throughout:
 #   each panel carries a letter via labs(tag = ...) (NOT a subtitle — panel
 #   descriptions live in the caption); legends are suppressed per-panel with
@@ -135,7 +135,7 @@ pB <- ggplot(pam_df, aes(day, m, colour = treatment,
   theme_pub(9)
 
 # ---- Panel C: KM curves for the two diagnostic traits --------------------
-# The key mechanism, reduced from the full code/14 analysis to the two
+# The mechanism, reduced from the full code/14 analysis to the two
 # contrasting milestones: closure (wound_smoothed) vs regeneration
 # (new_corallites_on_tip). Recompute first-observed event days and Kaplan-
 # Meier curves inline here (same logic as code/14) so this figure is

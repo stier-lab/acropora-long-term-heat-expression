@@ -54,7 +54,7 @@ sc_clean <- sc |>
     diameter = as.numeric(diameter_mm),
     dry_g    = as.numeric(dry_weight_g),
     wax_g    = as.numeric(wax_weight_g),
-    # `wax_dry_g` is a spreadsheet formula string; compute directly.
+    # `wax_dry_g` is a spreadsheet formula string; compute it.
     # Wax that adhered = dipped weight minus the bare dry weight.
     wax_minus_dry = wax_g - dry_g,
     # Lateral surface area of a cylinder = circumference x height = 2π(d/2)·h.

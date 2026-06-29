@@ -4,22 +4,22 @@
 # What & why: every numbered analysis script starts with
 #   `source(here::here("code", "00_setup.R"))`. It loads the shared packages,
 #   fixes the random seed so results are reproducible, sets the project-wide
-#   statistical contrast convention, and defines the folder paths, colour
-#   palettes, and plotting theme so figures are consistent across the
-#   manuscript. Nothing here is specific to one response variable; it is shared
-#   infrastructure for the downstream LTH (heat × wound × genet) scripts.
+#   contrast convention, and defines the folder paths, colour palettes, and
+#   plotting theme so figures are consistent across the manuscript. Nothing here
+#   is specific to one response variable; it is shared infrastructure for the
+#   downstream LTH (heat × wound × genet) scripts.
 # Input:   none
 # Output:  attaches packages, defines theme_pub() and PAL_*, sets here() root
 # Author:  Stier Lab
 # =============================================================================
 
 # ---- Packages --------------------------------------------------------------
-# suppressPackageStartupMessages() hides the "attaching" banners so the
-# console log stays readable. Grouped roughly by job: data wrangling/plotting
-# (tidyverse, lubridate, janitor, readxl, patchwork, scales), tidy model output
-# (broom, broom.mixed), mixed models (lme4 + lmerTest for p-values via
-# Satterthwaite df), estimated marginal means / contrasts (emmeans), and
-# simulation-based residual diagnostics for GLMMs (DHARMa).
+# suppressPackageStartupMessages() hides the "attaching" banners. Grouped by
+# job: data wrangling/plotting (tidyverse, lubridate, janitor, readxl,
+# patchwork, scales), tidy model output (broom, broom.mixed), mixed models
+# (lme4 + lmerTest for p-values via Satterthwaite df), estimated marginal means
+# / contrasts (emmeans), and simulation-based residual diagnostics for GLMMs
+# (DHARMa).
 suppressPackageStartupMessages({
   library(here)
   library(tidyverse)
@@ -38,22 +38,22 @@ suppressPackageStartupMessages({
 
 # Fix the RNG so anything stochastic (e.g. DHARMa's simulated residuals,
 # bootstrap/permutation steps in later scripts) returns the same numbers on
-# every run — essential for a reproducible analysis.
+# every run.
 set.seed(42)
 
 # Sum-to-zero contrasts keep Type-III tests independent of reference levels.
 # By default R uses treatment ("dummy") contrasts, where each main effect is
-# tested against an arbitrary reference level — which makes the main-effect
-# tests in a model WITH interactions depend on which level is
-# the baseline. contr.sum codes factors so each level is compared to the grand
-# mean instead, so the Type-III ANOVA tables in the downstream models are
-# interpretable regardless of factor ordering. Set once here for all scripts.
+# tested against a reference level — which makes the main-effect tests in a
+# model WITH interactions depend on which level is the baseline. contr.sum codes
+# factors so each level is compared to the grand mean instead, so the Type-III
+# ANOVA tables in the downstream models are interpretable regardless of factor
+# ordering. Set once here for all scripts.
 options(contrasts = c("contr.sum", "contr.poly"))
 
 # ---- Paths -----------------------------------------------------------------
 # here() anchors every path to the project root (the folder with the .Rproj /
 # .git), so scripts work no matter the working directory. Defining the folders
-# once as constants means downstream scripts never hardcode relative paths.
+# once as constants means downstream scripts do not hardcode relative paths.
 DATA_RAW  <- here("data", "raw")
 DATA_PROC <- here("data", "processed")
 DATA_META <- here("data", "metadata")
@@ -65,22 +65,22 @@ MOD_DIR   <- here("output", "models")
 # ---- Palettes --------------------------------------------------------------
 # Define the experiment's colour code in one place so every figure maps the
 # same treatment/wound/genet to the same colour. Centralising the hex codes
-# here is what lets later scripts call scale_*_manual(values = PAL_*) instead of
+# here lets later scripts call scale_*_manual(values = PAL_*) instead of
 # re-typing colours (and risking drift between figures).
 # Okabe-Ito (colorblind-friendly qualitative)
 PAL_OKABE <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442",
                "#0072B2", "#D55E00", "#CC79A7", "#000000")
 
-# Treatment palette: ambient (28C) vs heated (31C) — the actual 2-level design.
-# These exact hex codes are what every figure already draws, so this is the
-# single source of truth: prefer `scale_*_manual(values = PAL_TEMP)` over
-# re-typing the hexes in each script.
+# Treatment palette: ambient (28C) vs heated (31C) — the 2-level design.
+# These hex codes are what every figure draws, so this is the single source of
+# truth: prefer `scale_*_manual(values = PAL_TEMP)` over re-typing the hexes in
+# each script.
 PAL_TEMP <- c(`28C` = "#56B4E9",   # blue — ambient (28 °C)
               `31C` = "#D55E00")   # red  — heated  (31 °C)
 
-# Wound palette: unwounded vs wounded. Deliberately neutral grey/black — NOT
-# blue/red — so wound is never visually confused with the temperature axis
-# (28C blue / 31C red), which previously shared #D55E00 with "wounded".
+# Wound palette: unwounded vs wounded. Neutral grey/black — NOT blue/red — so
+# wound is not confused with the temperature axis (28C blue / 31C red), which
+# previously shared #D55E00 with "wounded".
 PAL_WOUND <- c(no = "#9E9E9E", yes = "#000000")
 
 # Genotype/thicket palette + point shapes: lowercase a, c, d (raw-data convention).
@@ -91,8 +91,8 @@ SHP_GENO <- c(a = 16, c = 17, d = 15)
 # Temperature was plumbed to tanks by a fixed layout: tanks 3/6/9/12 ran ambient
 # (28 °C) and 4/5/10/11 ran heated (31 °C); any other tank number is non-
 # experimental and maps to NA (dropped downstream). This assignment was
-# previously hardcoded identically in 08 (Apex), 09 (YSI), and 16 (Fig 1 panel
-# A); defining it once here keeps those three in lock-step.
+# previously hardcoded in 08 (Apex), 09 (YSI), and 16 (Fig 1 panel A); defining
+# it once here keeps those three in lock-step.
 TANK_28C <- c(3, 6, 9, 12)
 TANK_31C <- c(4, 5, 10, 11)
 tank_treatment <- function(tank) {
@@ -137,9 +137,9 @@ theme_pub <- function(base_size = 10) {
 
 # ---- Save helper -----------------------------------------------------------
 # save_fig() writes each figure twice: a vector .pdf (what goes in the
-# manuscript) and a raster .png (quick preview / slides), both at the same
-# physical size and 300 dpi. Looping over the two extensions means downstream
-# scripts call save_fig() once and get both files, always sized consistently.
+# manuscript) and a raster .png (preview / slides), both at the same physical
+# size and 300 dpi. Looping over the two extensions means downstream scripts
+# call save_fig() once and get both files at the same size.
 save_fig <- function(plot, name, width = 170, height = 110, units = "mm",
                      dpi = 300, dir = FIG_DIR) {
   dir.create(dir, recursive = TRUE, showWarnings = FALSE)
@@ -158,9 +158,9 @@ save_fig <- function(plot, name, width = 170, height = 110, units = "mm",
 }
 
 # ---- Session log -----------------------------------------------------------
-# log_session() dumps sessionInfo() (R version + every package version) to a
-# text file. Recording the exact software environment is part of making the
-# analysis reproducible — a reader can recreate the package versions used.
+# log_session() writes sessionInfo() (R version + every package version) to a
+# text file, recording the software environment so a reader can recreate the
+# package versions used.
 log_session <- function(path = file.path(OUT_DIR, "session_info.txt")) {
   dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
   writeLines(capture.output(sessionInfo()), path)

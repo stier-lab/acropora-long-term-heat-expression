@@ -2,8 +2,8 @@
 # Purpose: Coral growth from buoyant weight.
 #
 #          PRIMARY metric: % mass change over the 15-day window
-#          (100 · (dry_final - dry_initial) / dry_initial). Reported alongside
-#          for robustness: specific growth rate (SGR, % d^-1). The heat effect is
+#          (100 · (dry_final - dry_initial) / dry_initial). Reported alongside:
+#          specific growth rate (SGR, % d^-1). The heat effect is
 #          the same under both metrics; see output/tables/05b_growth_metric_comparison.csv.
 #
 #          NOTE on areal calcification: an areal rate (mg CaCO3 cm^-2 d^-1) is NOT
@@ -113,7 +113,7 @@ saveRDS(bw, file.path(DATA_PROC, "buoyant_weight_clean.rds"))
 # ---- Primary model: % mass change ------------------------------------------
 # Fit on corals with a finite % mass change.
 bw_a <- bw |> filter(is.finite(pct_growth))
-# Coral-level coefficients are useful effect-size summaries, but temperature is
+# Coral-level coefficients are effect-size summaries, but temperature is
 # assigned at the tank level. The inferential heat-effect p-value below is
 # therefore a tank-level permutation test.
 # Model: treatment * wound interaction (does wounding change the heat effect?)
@@ -169,7 +169,7 @@ metric_compare <- purrr::map_dfr(   # map over metrics, stack results into one d
   function(v) {
     d <- bw |> filter(is.finite(.data[[v]]))   # .data[[v]] selects the metric by name
     # car::Anova type 2 = each main effect tested after the other main effect but
-    # ignoring the interaction; appropriate here and order-invariant (unlike base
+    # ignoring the interaction; order-invariant (unlike base
     # anova()'s type-1 sequential sums of squares).
     a <- car::Anova(lm(reformulate("treatment * wound + thicket", v), data = d),
                     type = 2)
@@ -203,7 +203,7 @@ p_bw <- ggplot(bw_a, aes(interaction(treatment, wound, sep = " · "),
 save_fig(p_bw, "05_buoyant_weight_growth", width = 150, height = 95)
 
 # ---- Console summary -------------------------------------------------------
-# Echo the key tables so a quick run shows the main result without opening CSVs.
+# Echo the tables so a run shows the main result without opening CSVs.
 cat("\n=== % mass change LM (coral-level descriptive) ===\n")
 print(res)
 cat("\n=== % mass change tank-level temperature test ===\n")

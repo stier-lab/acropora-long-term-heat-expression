@@ -8,7 +8,7 @@
 #          model is left without a diagnostic.
 #
 # What & why: a reviewer may ask whether the assumptions of every fitted model
-#   were checked, or only the convenient ones. This script documents that. It
+#   were checked, or only some of them. This script documents that. It
 #   walks the folder of saved model objects, and for each one confirms a
 #   residual/assumption diagnostic exists — reusing one already made by an earlier
 #   script, or building a fresh DHARMa plot if not. The output is an audit table:

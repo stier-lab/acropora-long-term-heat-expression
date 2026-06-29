@@ -62,7 +62,7 @@ CSV_PATH <- file.path(DIAG_OUT, "B_morphology_glmm_diagnostics.csv")
 MD_PATH  <- file.path(DIAG_OUT, "B_morphology_report.md")
 
 # ---- helpers ----------------------------------------------------------------
-# add_row_safe: append one tidy result row (coerces stat/p to numeric quietly).
+# add_row_safe: append one result row (coerces stat/p to numeric quietly).
 # classify_p: shared p-value -> status grader so every test reads the same way.
 add_row_safe <- function(df, trait, check, statistic = NA_real_,
                          p_value = NA_real_, status = "PASS", notes = "") {
@@ -126,7 +126,7 @@ mod_files <- list.files(MOD_DIR, pattern = "^12_morph_.*_glmm\\.rds$",
 cat(sprintf("\nFound %d morphology GLMM files\n", length(mod_files)))
 
 # ---- diagnose one model -----------------------------------------------------
-# Runs the full battery on a single trait's GLMM and returns both a tidy rows
+# Runs the full battery on a single trait's GLMM and returns both a rows
 # table (for the CSV) and a markdown block (for the human-readable report).
 diagnose_one <- function(mfile) {
   trait <- sub("^12_morph_(.*)_glmm\\.rds$", "\\1", basename(mfile))

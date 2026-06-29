@@ -1,6 +1,6 @@
 # =============================================================================
 # Purpose: Sensitivity analysis for the samples/tanks Molly flagged in QA/QC
-#          (see notes/QAQC_flagged_samples.md). Re-runs the key treatment-effect
+#          (see notes/QAQC_flagged_samples.md). Re-runs the treatment-effect
 #          tests with the flagged colonies (116, 121) and the slow ambient tank
 #          (tank 3) removed, and compares the treatment effect to the full-data
 #          model. If the conclusions hold, the flags are documented but
@@ -24,7 +24,7 @@
 source(here::here("code", "00_setup.R"))
 
 # ---- The flagged samples ---------------------------------------------------
-# The exact colonies and tank Molly flagged in QA/QC. Defined once here so the
+# The colonies and tank Molly flagged in QA/QC. Defined once here so the
 # same removal rule (drop these IDs, drop this tank) is applied to every response.
 FLAGGED_IDS  <- c(116, 121)   # two coral colonies that behaved anomalously
 FLAGGED_TANK <- 3             # ambient tank that warmed/equilibrated slowly
@@ -51,7 +51,7 @@ grab <- function(model, label, term) {
 
 # ---- PAM Fv/Fm: treatment × day --------------------------------------------
 # Photosynthetic efficiency, measured repeatedly on each coral over time. The
-# key effect is the treatment×day interaction: whether the heated group's Fv/Fm
+# effect of interest is the treatment×day interaction: whether the heated group's Fv/Fm
 # decline differs from the ambient group's over the experiment. This mirrors the
 # primary model (02/12): genet (thicket) is a fixed blocking term (only 3 genets),
 # random intercepts for tank and id absorb the nested repeated-measures structure,

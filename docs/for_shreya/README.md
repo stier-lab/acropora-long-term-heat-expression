@@ -6,7 +6,7 @@ This folder is the entry point to everything the Stier lab
 has built on the LTH project (#17: heat × wound × *A. pulchra*, Mo'orea 2025). In short:
 
 > **You lead the paper and the gene-expression analysis. We've finished and handed over the
-> phenotype half — the experiment's Methods and Results — as a clean, reproducible, drop-in
+> phenotype half — the experiment's Methods and Results — as a reproducible, drop-in
 > foundation, with every number traceable. The narrative (Introduction, Discussion, Abstract) is
 > yours.**
 

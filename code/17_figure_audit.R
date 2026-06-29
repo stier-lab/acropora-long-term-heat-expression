@@ -13,7 +13,7 @@
 #   size so the whole figure set can be confirmed present and intact.
 #   It is NOT a statistical analysis and it does not inspect the
 #   pixels (no palette/legend/clipping checks here — those live in the
-#   pub-figure-pipeline). The working diagnostic PNGs in figures/12_diagnostics/
+#   pub-figure-pipeline). The diagnostic PNGs in figures/12_diagnostics/
 #   are excluded: they are model-check plots, not manuscript figures, and have
 #   their own size expectations.
 # Input:   figures/**/*.png   (all PNGs under FIG_DIR, searched recursively)
@@ -25,7 +25,7 @@
 source(here::here("code", "00_setup.R"))
 
 # ---- Find candidate figures ------------------------------------------------
-# List every PNG under figures/ (recursive), then remove the working diagnostic
+# List every PNG under figures/ (recursive), then remove the diagnostic
 # plots in figures/12_diagnostics/ via setdiff() so only manuscript figures are
 # held to the size rules below.
 fig_files <- list.files(FIG_DIR, pattern = "\\.png$", full.names = TRUE,

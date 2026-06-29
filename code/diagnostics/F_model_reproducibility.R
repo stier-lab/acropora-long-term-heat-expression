@@ -11,7 +11,7 @@
 #   converging to a different mode), and HANDLED when the model can't be refit
 #   (file missing or fit errors) so the suite doesn't crash. This guards against
 #   silent non-determinism and accidental edits to the upstream fitting scripts.
-#   It is deliberately NARROW: it re-fits models, it does not re-run the whole
+#   It is NARROW: it re-fits models, it does not re-run the whole
 #   data-cleaning pipeline.
 # Input:   output/models/*.rds  (saved fits to verify)
 #          data/processed/*.rds (the data to re-fit on)
@@ -32,7 +32,7 @@ dir.create(DIAG_OUT, recursive = TRUE, showWarnings = FALSE)
 # One result row per model accumulates here, keyed by model name.
 results <- list()
 
-# compare_lmm(): core comparison helper. Loads a saved fit, re-fits the same model on the
+# compare_lmm(): comparison helper. Loads a saved fit, re-fits the same model on the
 # same data with the matching engine (lm / lmer / glmer / blme::bglmer), and
 # records the coefficient drift + logLik difference. Wrapped in tryCatch so a
 # single failed refit becomes a HANDLED row instead of aborting the whole script.
@@ -55,8 +55,8 @@ compare_lmm <- function(name, saved_path, formula, data, family = NULL,
   }
   saved <- readRDS(saved_path)
   # Re-fit with the function that matches how the model was originally built. Same
-  # bobyqa optimizer + maxfun settings as the source scripts so the comparison is
-  # directly comparable; warnings/messages are silenced to keep the console readable.
+  # bobyqa optimizer + maxfun settings as the source scripts so the two fits are
+  # comparable; warnings/messages are silenced to keep the console readable.
   refit <- tryCatch({
     if (use_blme) {
       suppressWarnings(suppressMessages(

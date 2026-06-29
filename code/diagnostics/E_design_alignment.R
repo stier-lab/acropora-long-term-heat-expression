@@ -14,7 +14,7 @@
 #     - 24 wounded corals per temperature for morphology traits
 #   This is a structural sanity check, not a goodness-of-fit test. It catches the
 #   silent mistakes — wrong random term, unbalanced cells, a miscoded factor —
-#   that would quietly invalidate the inference downstream.
+#   that would invalidate the inference downstream.
 # Input:   output/models/*.rds  (fitted models: 12_pam_lmm, 12_color_lmm,
 #            12_bw_lm, 12_zoox_lmm, 12c_morph_*_blme)
 #          data/processed/*.rds (the cleaned data each model was fit to)
@@ -91,7 +91,7 @@ add_row("12_pam_lmm", "(1|tank) sufficient?",
         "PASS",
         "tanks are uniquely IDed; no need for tank:treatment crossed term")
 # Check 6: random slope decision, logged as HANDLED. A random day slope (day|id)
-# was considered but deliberately dropped — too few reads per coral would make it
+# was considered but dropped — too few reads per coral would make it
 # singular/overfit. Recording the decision documents it wasn't an oversight.
 add_row("12_pam_lmm", "random slope on day?",
         "(1|id) only — no random slope",
@@ -166,7 +166,7 @@ add_row("12_zoox_lmm", "fixed structure", form,
         "treatment * wound * biopsy_day_c * thicket",
         if (grepl("treatment \\* wound \\* biopsy_day_c \\* thicket", form)) "PASS" else "FAIL",
         "biopsy_day_c is centered at Day 1; 4-way as for PAM")
-# Confirm (1|id) was correctly dropped: each coral is biopsied once, so coral-ID
+# Confirm (1|id) was dropped: each coral is biopsied once, so coral-ID
 # has no within-group replication to model.
 add_row("12_zoox_lmm", "drop (1|id) — destructive",
         paste(names(lme4::ranef(m)), collapse = "+"),
@@ -222,7 +222,7 @@ add_row("14_cox_*", "wounded-only at risk",
 
 # ---- PCA -------------------------------------------------------------------
 # Multivariate ordination of the phenotype. Centering+scaling is mandatory here
-# because the input variables are on wildly different units.
+# because the input variables are on different units.
 add_row("15_pca", "centering + scaling",
         "prcomp(..., center=TRUE, scale.=TRUE)",
         "required because units differ (Fv/Fm, D-scale, %, log-cells)",

@@ -68,7 +68,7 @@ suppressPackageStartupMessages({
 })
 
 # ---- Load + set factor levels ---------------------------------------------
-# Set the reference level deliberately: 28C is the baseline, so every model's
+# Set the reference level: 28C is the baseline, so every model's
 # "treatment31C" term reads as "31 °C relative to 28 °C". thicket = coral genet
 # (A/C/D). contr.treatment makes the contrasts explicit dummy coding rather than
 # relying on R's session default (keeps results reproducible across machines).
@@ -83,7 +83,7 @@ contrasts(ph$treatment) <- contr.treatment(nlevels(ph$treatment))
 # ---- Define the wound-healing milestones ----------------------------------
 # Each trait is a binary 0/1 scored at each visit. They span the healing
 # sequence from wound closure (early) to skeletal regeneration (late). The
-# key contrast is wound_smoothed (closure) vs new_corallites_on_tip
+# contrast is wound_smoothed (closure) vs new_corallites_on_tip
 # (regeneration) — heat blocks the latter but not the former.
 # Trait -> (facet label, plain-language event gloss). Single source of truth: the
 # display labels and the CSV glosses both derive from this, so they can never
@@ -164,7 +164,7 @@ contrasts(events$treatment) <- contr.treatment(nlevels(events$treatment))
 
 # ---- KM summary tables ----------------------------------------------------
 # Descriptive median time-to-event per trait × genet × treatment. Medians/IQRs
-# are computed only over corals that ACTUALLY reached the milestone (event == 1);
+# are computed only over corals that reached the milestone (event == 1);
 # a median of a censored sample is undefined, hence the NA guards.
 # Sample sizes for the figure subtitles, computed from the data (one record per
 # coral × trait, so collapse to distinct corals first).
@@ -259,8 +259,8 @@ interval_survreg <- map_dfr(traits, fit_interval_survreg)
 write_csv(interval_survreg, file.path(TBL_DIR, "14_interval_survreg.csv"))
 
 # ---- Inter-milestone lag: wound closure -> regeneration -------------------
-# The key result is "heat impairs regeneration, not closure." Quantify it
-# directly per coral: the LAG (days) from achieving wound closure
+# The result is "heat impairs regeneration, not closure." Quantify it
+# per coral: the LAG (days) from achieving wound closure
 # (`wound_smoothed`) to forming new skeleton at the tip
 # (`new_corallites_on_tip`). Corals that close but never regenerate within the
 # experiment are right-censored (no lag) and counted separately — heat is
@@ -349,7 +349,7 @@ print(as.data.frame(lag_test))
 # ---- Cox PH per trait (overall + per genet) -------------------------------
 # Supporting (not primary) analysis: Cox models the HAZARD (rate of reaching the
 # milestone) and reports a HAZARD RATIO. It uses event_day (the first-observed
-# day), so it ignores the interval — a deliberate approximation that pairs with
+# day), so it ignores the interval — an approximation that pairs with
 # the KM figures. strata(thicket) lets each genet keep its own baseline hazard
 # shape while sharing one treatment effect (i.e. control for genet without
 # assuming the genets share a baseline hazard shape). HR < 1 = 31 °C reaches the
@@ -419,7 +419,7 @@ cox_results   <- bind_rows(cox_overall, cox_per_genet) |>
 write_csv(cox_results, file.path(TBL_DIR, "14_cox_hazard_ratios.csv"))
 
 # ---- Proportional-hazards diagnostics for EVERY overall Cox model ----------
-# Cox's key assumption: the hazard ratio is CONSTANT over time (proportional
+# Cox's assumption: the hazard ratio is CONSTANT over time (proportional
 # hazards). cox.zph tests this by checking whether the scaled Schoenfeld
 # residuals (per-event-time deviations of the covariate from its risk-set mean)
 # TREND with time. No trend -> flat residuals -> PH holds; a slope -> the effect
@@ -478,7 +478,7 @@ print(as.data.frame(cox_ph |> mutate(across(where(is.numeric), \(x) round(x, 4))
 #   add   = treatment + genet      -> LRT(base, add)  tests a genet main effect
 #   inter = treatment * genet      -> LRT(add, inter) tests whether the heat
 #                                     effect DEPENDS on genet (the interaction)
-# Need >=10 events for the interaction model to be remotely estimable.
+# Need >=10 events for the interaction model to be estimable.
 fit_lrt <- function(tr) {
   d <- events |> filter(trait == tr)
   if (sum(d$event) < 10) return(NULL)
@@ -532,7 +532,7 @@ km_curves <- events |>
                         levels = trait_meta$trait,
                         labels = trait_meta$label))
 
-# geom_step draws the proper KM staircase (the curve only changes on event days);
+# geom_step draws the KM staircase (the curve only changes on event days);
 # one panel per trait, blue = 28 °C, orange = 31 °C.
 p_km <- ggplot(km_curves, aes(day, cum_event,
                               colour = treatment, group = treatment)) +

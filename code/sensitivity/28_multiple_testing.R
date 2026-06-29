@@ -49,7 +49,7 @@ source(here::here("code", "00_setup.R"))
 # hypothesis, so these are CONFIRMATORY wherever they appear below.
 APRIORI_REGEN <- c("tip_exist", "tip_extension", "new_corallites_on_tip")
 
-# Collect each test into a growing list; `add()` appends one tidy row. The `<<-`
+# Collect each test into a growing list; `add()` appends one row. The `<<-`
 # writes to the `rows` list defined in this (parent) scope, not a local copy.
 rows <- list()
 add <- function(test, p_value, hypothesis, rationale) {

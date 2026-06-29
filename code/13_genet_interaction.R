@@ -6,9 +6,9 @@
 #          Note: the BROADER genet analysis (per-response interaction tests,
 #          per-genet emmeans contrasts, full ANOVA) is integrated into the
 #          primary statistics in code/12_models.R. This script is the
-#          focused formal test that the Progress Notes asked for (2026-04-29:
+#          formal test that the Progress Notes asked for (2026-04-29:
 #          "Add in genet effects and see if there is a difference"), kept as
-#          a separate file so reviewers can replicate the comparison directly.
+#          a separate file so reviewers can replicate the comparison.
 #
 #          For each response we compare:
 #            null:  response ~ treatment * wound * day + thicket
@@ -117,7 +117,7 @@ genet_tests <- bind_rows(
                  fixed_extra = "biopsy_day_c", include_id = FALSE)
 )
 # Growth is handled separately because it has NO time dimension (one calcification
-# rate per coral), so the null/genet pair drops the `day` terms entirely. Retain
+# rate per coral), so the null/genet pair drops the `day` terms. Retain
 # (1|tank) as the experimental block for the treatment assignment; same ML fit so
 # the LRT is valid.
 bw_a       <- bw |> filter(is.finite(pct_growth))
@@ -155,7 +155,7 @@ write_csv(genet_tests, file.path(TBL_DIR, "13_genet_anova.csv"))
 # state, where treatment divergence is largest) and compute the genet × treatment
 # mean ± SE. These raw cell means are what the reaction-norm figure plots; they
 # visualize the same G × E that the LRT above tests formally. Raw summaries, not
-# model-adjusted emmeans, so the figure shows the data directly.
+# model-adjusted emmeans, so the figure shows the data.
 make_react_norm <- function(data, response_col, label) {
   last_day <- if ("day" %in% names(data)) {
     data |> filter(day == max(day, na.rm = TRUE))

@@ -13,7 +13,7 @@
 #   "wound smoothed", "pigment over wound", "hole in center" disappearing) and
 #   REGENERATION (rebuilding lost skeletal structure — e.g. "tip exists", "tip
 #   extension", "new corallites on tip"). This distinction underlies the
-#   paper's headline result: heat (31 °C) blocks REGENERATION but not basic wound
+#   paper's headline result: heat (31 °C) blocks REGENERATION but not wound
 #   CLOSURE. Because the three genets (A/C/D) differ in heat resilience
 #   (C > D > A), genet is modelled as a FIXED treatment × genet interaction —
 #   we WANT to estimate each genotype's heat response, not average it away into
@@ -73,7 +73,7 @@ ph <- raw |>
 # AND the same NA pattern in every row). M. Brzezinski (pers. comm., 2026)
 # confirmed this is not a data-entry slip but how the trait was scored: the
 # central "hole" IS the axial polyp hole, which forms around the regenerating
-# axial polyp, so the two co-occur (a hole without a polyp was seen only once or
+# axial polyp, so the two co-occur (a hole without a polyp was seen once or
 # twice). They are therefore one observable, combined here into a single trait,
 # `axial_polyp_formation` (the axial corallite/calyx + polyp). We keep the two
 # original columns in the saved table for provenance and assert they still match
@@ -88,7 +88,7 @@ saveRDS(ph, file.path(DATA_PROC, "physio_clean.rds"))
 # ---- Long-form for plotting ------------------------------------------------
 # Trait columns paired with their display labels (single source of truth for both
 # the modelled trait order and the facet labels). hole_in_center/polyp_in_hole are
-# represented by the single combined trait axial_polyp_formation (see above).
+# represented by the combined trait axial_polyp_formation (see above).
 trait_labels <- c(
   polyps_out            = "Polyps out",
   axial_polyp_formation = "Axial polyp formation",
@@ -193,7 +193,7 @@ fit_one <- function(trait_name) {
     filter(trait == trait_name, day >= 0) |>    # post-wounding days only (healing window)
     mutate(thicket = factor(thicket))
   # Skip traits that are all-0 or all-1: a binary model needs both outcomes to
-  # estimate anything (avoids complete separation / a degenerate fit).
+  # estimate anything (avoids complete separation).
   if (length(unique(d$expressed)) < 2) return(NULL)
   fit <- tryCatch(
     suppressMessages(suppressWarnings(
@@ -213,7 +213,7 @@ fit_one <- function(trait_name) {
     mutate(trait = trait_name, n = nrow(d))
   # Type-II Wald ANOVA — reports significance of treatment, day, thicket and
   # their interactions. Type II respects marginality (tests each main effect
-  # after the others but before its own higher-order interactions).
+  # after the others but before its higher-order interactions).
   av <- as.data.frame(car::Anova(fit, type = 2)) |>
     tibble::rownames_to_column("term") |>
     mutate(trait = trait_name)

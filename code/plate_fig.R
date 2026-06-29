@@ -14,7 +14,7 @@
 # What & why: this figure is BOTH a design tool and a documentation figure — it
 #   shows where every RNA-seq sample physically sits in two 96-well plates. Batch
 #   effects (plate, position) can masquerade as biology, so the design is
-#   deliberately balanced: each Temp×Day×Wound combination is split evenly across
+#   balanced: each Temp×Day×Wound combination is split evenly across
 #   the two plates (exactly 6 per plate, enforced by a fail-fast check), and
 #   extraction/PCR controls plus replicate "anchor" wells are reserved at fixed
 #   positions so technical variation can be measured and removed later.
@@ -25,7 +25,7 @@
 #   the balanced experimental design and randomly (seeded) assign each sample to
 #   plate 1 or 2; (4) lay the samples into the free wells around the reserved
 #   ones; (5) precompute every per-well aesthetic (fill colour, border colour and
-#   width, two-line text labels); (6) draw it. The key plotting detail: each
+#   width, two-line text labels); (6) draw it. The plotting detail: each
 #   well is a filled geom_tile for temperature PLUS a separate hollow geom_rect
 #   whose BORDER colour encodes wound status — two visual channels per well. Each
 #   geom_* is fed a vector of per-well colours/sizes directly (e.g.

@@ -4,7 +4,7 @@
 
 **Shreya — you lead this paper. The recommended spine is yours and should lead with the
 transcriptomics.** This file is *not* the manuscript text and *not* a recommendation about how to
-frame the paper. It is the Stier lab's phenotype-side thinking: candidate framings (deliberately left
+frame the paper. It is the Stier lab's phenotype-side thinking: candidate framings (left
 in tension, not resolved into one) and a verified citation bank you can draw on if any of them is
 useful. Take a framing, combine them, or set them all aside once the gene-expression results are in.
 
@@ -34,7 +34,7 @@ paper is led by the transcriptomics, so none of these is "the" framing — they'
   independent acute CBASS assay on the same population (Cunning et al. 2024) and with candidate
   thermal-tolerance genes from the expression contrast.
 - Tension with A/B: foregrounds heritable variation and the acute↔chronic validation rather than the
-  within-coral phase story; could be the lead, a major thread, or a Discussion section.
+  within-coral phase story; could be the lead, a thread, or a Discussion section.
 
 **Note:** A and B make different *claims* about the same data; C can sit under either. They are listed
 in tension on purpose — resolving them is a framing decision that is yours to make with the expression

@@ -31,7 +31,7 @@
 #   which makes p-values look more significant than they should; and (2) the
 #   trajectory may curve rather than rise/fall at a constant rate. This script
 #   tests both assumptions and checks whether the treatment×time conclusion still
-#   holds under the more careful model. Nothing here replaces the primary models;
+#   holds under the more complex model. Nothing here replaces the primary models;
 #   it documents that they are defensible.
 # Input:   data/processed/{pam_clean,color_clean,symbiont_chl_clean}.rds
 # Output:  output/tables/23_timeseries_diagnostics.csv
@@ -136,7 +136,7 @@ ts_repeated <- function(data, response, time = "day", label) {
   # random part can be swapped while the fixed part stays identical. (The first
   # m_int fit is immediately overwritten by the explicit string-built version
   # below — only the explicit ones are compared.) The singular-fit check is set
-  # to "ignore" because these rich random structures often hit boundaries.
+  # to "ignore" because these random structures often hit boundaries.
   m_int <- tryCatch(lme4::lmer(
     update(fixed, . ~ . - .t + .t),   # keep formula; randoms differ below
     data = data, REML = FALSE,
@@ -155,7 +155,7 @@ ts_repeated <- function(data, response, time = "day", label) {
     control = lme4::lmerControl(check.conv.singular = .makeCC("ignore", 1e-4))),
     error = function(e) NULL)
   if (!is.null(m_int) && !is.null(m_slp)) {
-    # Small p => corals really do follow different trajectories and the random
+    # Small p => corals do follow different trajectories and the random
     # slope is warranted; otherwise the intercept-only model is adequate.
     lr <- anova(m_int, m_slp)
     p_rs <- lr$`Pr(>Chisq)`[2]
@@ -174,7 +174,7 @@ ts_repeated <- function(data, response, time = "day", label) {
   # --- ACF figure ----------------------------------------------------------
   # Visual companion to test 1: autocorrelation-function plots of the normalized
   # residuals, baseline vs AR(1). Bars beyond the dashed bounds = leftover
-  # autocorrelation; a good AR(1) fit should flatten them.
+  # autocorrelation; an AR(1) fit should flatten them.
   if (!is.null(base)) {
     png(file.path(DIAG_DIR, paste0("I_", gsub("[^a-z]", "", tolower(label)), "_acf.png")),
         width = 1100, height = 500, res = 150)

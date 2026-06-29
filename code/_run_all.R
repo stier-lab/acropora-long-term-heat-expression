@@ -8,7 +8,7 @@
 #   source()s each analysis script in turn. The ONLY thing that matters here is
 #   the ORDER: many scripts read .rds/.csv files that an EARLIER script wrote, so
 #   running them out of order would read stale (or missing) inputs. The list
-#   below is therefore a dependency order, not an alphanumeric one. A few key
+#   below is therefore a dependency order, not an alphanumeric one. A few
 #   examples (see also the inline notes):
 #     - 01 (load/clean metadata) runs first: nearly everything downstream reads
 #       the cleaned data it produces.

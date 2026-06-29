@@ -5,14 +5,14 @@
 #
 #            PART 1 — Primary models (was 12_extended_stats.R)
 #                     LMM/GLMM with treatment × wound × day × thicket fixed
-#                     structure; genet (thicket) is a first-class fixed effect
+#                     structure; genet (thicket) is a fixed effect
 #                     because only 3 genets were collected (Bolker 2008,
 #                     Gelman 2005: few grouping levels → fixed beats random).
 #                     Produces type-III ANOVA, emmeans contrasts, R²m/R²c,
 #                     per-genet treatment effects, and DHARMa diagnostics.
 #
 #            PART 2 — Color ordinal-CLMM robustness (was 12b)
-#                     Refit the 5-level color D-scale under the correct ordinal
+#                     Refit the 5-level color D-scale under the ordinal
 #                     likelihood; confirms the Gaussian LMM's inferences hold.
 #
 #            PART 3 — Penalized morphology refit (was 12c)
@@ -30,12 +30,12 @@
 #   question is any term containing `thicket`. We keep the FULL interaction and
 #   report every term rather than stepwise-dropping. Two follow-up refits (Parts 2
 #   and 3) re-run the two responses whose residual diagnostics flagged a likelihood
-#   mismatch, confirming the main inferences hold under a more appropriate model.
+#   mismatch, confirming the main inferences hold.
 #
 # Why genet (thicket) is a FIXED effect, not random: a random effect estimates a
 #   *variance* across the levels of a grouping factor, which needs many levels
 #   (rule of thumb ~5+, ideally >8) to estimate with any precision. We have only
-#   3 genets, so a random "genet variance" would be near-unidentified and badly
+#   3 genets, so a random "genet variance" would be near-unidentified and
 #   biased. With few levels the recommended choice is to treat the factor as fixed
 #   — we estimate the 3 genet means directly and can ask which genet is most/least
 #   heat-tolerant (Bolker et al. 2008 TREE; Gelman 2005 Ann. Stat.). Tank and coral
@@ -77,7 +77,7 @@ dir.create(DIAG_DIR, recursive = TRUE, showWarnings = FALSE)
 # =============================================================================
 
 # Accumulators: each response appends its results to these lists, which are
-# bound into one tidy table per output (ANOVA / contrasts / R² / genet effects)
+# bound into one table per output (ANOVA / contrasts / R² / genet effects)
 # at the end of Part 1.
 results_anova        <- list()
 results_emm          <- list()
@@ -86,7 +86,7 @@ results_genet_effect <- list()
 
 # ---- Helpers ---------------------------------------------------------------
 # save_dharma(): simulate scaled (quantile) residuals via DHARMa and write the
-# standard QQ + residual-vs-predicted diagnostic panel. DHARMa works for GLMMs
+# QQ + residual-vs-predicted diagnostic panel. DHARMa works for GLMMs
 # where ordinary residuals are uninformative; it simulates from the fitted model
 # and compares observed vs expected, so deviations flag a wrong likelihood or
 # missing structure. Wrapped in tryCatch so a single failure never halts the run.
@@ -154,7 +154,7 @@ record_genet_effect <- function(emm_obj, response_name) {
 }
 
 # ---- 1. PAM Fv/Fm -----------------------------------------------------------
-# Fv/Fm = dark-adapted maximum quantum yield of photosystem II; the standard
+# Fv/Fm = dark-adapted maximum quantum yield of photosystem II; a
 # non-destructive proxy for the photosynthetic health of the symbionts. A drop
 # under heat indicates bleaching stress.
 cat("\n=== 1. PAM Fv/Fm ===\n")
@@ -176,7 +176,7 @@ pam <- readRDS(file.path(DATA_PROC, "pam_clean.rds")) |>
 #     (1 | id)   — each fragment is measured repeatedly across days; an id
 #                  intercept models the within-fragment correlation of repeats.
 # REML = TRUE: restricted maximum likelihood gives less-biased variance-component
-#   estimates and is the right choice when the goal is inference on a FIXED model
+#   estimates and suits inference on a FIXED model
 #   (we are not comparing different fixed structures here, so ML is not needed).
 # check.conv.singular "ignore": with this many parameters a variance component can
 #   land near zero (singular fit); we suppress the warning rather than simplify,
@@ -195,7 +195,7 @@ record_results(m_pam, "pam_fvfm")
 # "tukey" controls the family-wise error across the set of pairwise comparisons
 # (here a single pair per cell, so Tukey ≈ unadjusted, but kept for consistency
 # with the multi-level contrasts elsewhere).
-# Grid = the actual measured days, so no contrast is reported at a day that was
+# Grid = the measured days, so no contrast is reported at a day that was
 # never sampled (PAM days are 0,3,6,9,12,14 — the old c(0,3,7,10,14) interpolated
 # days 7 and 10, which were never measured).
 emm_pam <- emmeans::emmeans(m_pam, ~ treatment | thicket * wound * day,
@@ -211,7 +211,7 @@ record_genet_effect(emm_pam_end, "pam_fvfm")
 # Color = visual paling on the CoralWatch-style D1-D6 health chart (lower =
 # paler = more bleached). It is ordinal, but we first fit it as a Gaussian LMM
 # so it sits on the same footing as the other continuous metrics;
-# PART 2 then re-fits it with the proper ordinal likelihood as a robustness check.
+# PART 2 then re-fits it with the ordinal likelihood as a robustness check.
 cat("\n=== 2. Color score ===\n")
 color <- readRDS(file.path(DATA_PROC, "color_clean.rds")) |>
   mutate(thicket = as.factor(thicket)) |>
@@ -246,11 +246,11 @@ bw <- readRDS(file.path(DATA_PROC, "buoyant_weight_clean.rds")) |>
   mutate(thicket = as.factor(thicket))
 bw_a <- bw |> filter(is.finite(pct_growth))
 
-# Note there is NO `day` term here: growth is a single start-to-end measure per
+# There is NO `day` term here: growth is a single start-to-end measure per
 # coral, not a repeated time series, so the model is a 3-way factorial
 # (treatment × wound × thicket) only.
 # n<=48 corals with 1 obs each — drop (1|id) because with one observation per
-# fragment a fragment-level intercept is not identifiable (it would perfectly
+# fragment a fragment-level intercept is not identifiable (it would
 # alias the residual). We retain (1|tank) as the experimental-unit random effect
 # for the temperature treatment.
 m_bw <- lmerTest::lmer(
@@ -313,7 +313,7 @@ record_genet_effect(emm_zoox_end, "log_zoox_density")
 # Regeneration traits: each binary trait (polyps emerged, hole closed, new
 # corallites on the tip, ...) is a yes/no milestone scored on each WOUNDED
 # fragment over time. These are the traits that distinguish wound CLOSURE
-# (smoothing/pigment) from true REGENERATION (new polyps/corallites/tip growth).
+# (smoothing/pigment) from REGENERATION (new polyps/corallites/tip growth).
 cat("\n=== 5. Morphological traits (binomial GLMM with genet) ===\n")
 ph <- readRDS(file.path(DATA_PROC, "physio_clean.rds")) |>
   filter(wound == "yes", !is.na(day), day >= 0) |>   # only wounded corals have these traits
@@ -326,7 +326,7 @@ traits <- c("polyps_out", "axial_polyp_formation",
             "tip_extension", "new_corallites_on_tip", "algae_on_wound")
 
 # fit_trait(): fit one binomial GLMM per trait. Returns NULL (skips) when the
-# trait is invariant (all 0s or all 1s → nothing to model) or sample size is tiny.
+# trait is invariant (all 0s or all 1s → nothing to model) or sample size is small.
 fit_trait <- function(tr) {
   d <- ph |> mutate(y = .data[[tr]]) |> filter(!is.na(y))
   if (length(unique(d$y)) < 2 || nrow(d) < 30) return(NULL)  # guard: no variation / too few obs
@@ -334,9 +334,9 @@ fit_trait <- function(tr) {
   # out of the formula). family = binomial → logistic link for a 0/1 outcome.
   # Include coral ID because morphology is repeatedly scored on the same fragments
   # over time (repeated-measures), plus tank as the treatment block. bobyqa with a
-  # high iteration cap is a more robust optimizer for these sparse binary fits.
+  # high iteration cap is a more stable optimizer for these sparse binary fits.
   # Wrapped in tryCatch + suppress* because separation/convergence warnings are
-  # expected for these milestone traits and are handled properly in PART 3.
+  # expected for these milestone traits and are handled in PART 3.
   m <- tryCatch(
     suppressMessages(suppressWarnings(
       lme4::glmer(y ~ treatment * day * thicket + (1 | tank) + (1 | id),
@@ -403,7 +403,7 @@ write_csv(all_genet, file.path(TBL_DIR, "12_genet_treatment_effects.csv"))
 
 # ---- Console summary -------------------------------------------------------
 # Print the highlights to the log: the treatment/genet ANOVA rows, the R² table,
-# and the per-genet end-of-experiment treatment effects — a quick sanity read of
+# and the per-genet end-of-experiment treatment effects — a sanity read of
 # the main results without opening the CSVs.
 cat("\n=== Type-III ANOVA: continuous responses (genet terms highlighted) ===\n")
 print(all_anova |>
@@ -432,13 +432,13 @@ cat("\nWrote: 12_anova_summary.csv, 12_emmeans_contrasts.csv,",
 # Residual diagnostics flagged the Gaussian color LMM as KS-non-uniform (the
 # D-scale is a 5-level ordinal). We keep the Gaussian model for presentation
 # (it matches the other physiology metrics) but confirm here that every
-# qualitative inference holds under the correct ordinal likelihood.
+# qualitative inference holds under the ordinal likelihood.
 #
 # What & why: a Gaussian LMM treats the color score as a continuous number with
 #   equal spacing and symmetric errors. The D-scale is 5 ordered bins, so
 #   the Gaussian residuals fail the uniformity (KS) check. A cumulative-link mixed
 #   model (CLMM, ordinal::clmm) models P(color ≤ k) with a logit link and a set of
-#   estimated thresholds — the appropriate likelihood for ordered categories. If
+#   estimated thresholds — the likelihood for ordered categories. If
 #   the heat/genet signals appear under BOTH likelihoods, they are not an artefact
 #   of forcing an ordinal scale into a Gaussian model.
 # =============================================================================
@@ -449,15 +449,15 @@ color_ord_df <- readRDS(file.path(DATA_PROC, "color_clean.rds")) |>
          # Convert split scores (e.g. 3.5) to the next-higher D category.
          # base::round() uses bankers rounding, so 2.5 would become 2 while
          # 3.5 becomes 4; floor(x + 0.5) is deterministic half-up rounding.
-         # Clamp to the full D1-D6 Siebeck range (the data currently spans D1-D5,
-         # but capping at 6 — not 5 — avoids silently merging a real D6 into D5
+         # Clamp to the D1-D6 Siebeck range (the data currently spans D1-D5,
+         # but capping at 6 — not 5 — avoids merging a D6 into D5
          # if a darker score ever enters; unused top levels are dropped by clmm).
          color_ord = factor(pmin(pmax(as.integer(floor(color_num + 0.5)), 1), 6),
                             ordered = TRUE))
 
 # The full 4-way fixed × 2 random structure is too rich for clmm to estimate (the
 # Hessian goes singular and SEs diverge). Robustness check, not the primary model:
-# same data and the proper ordinal likelihood, but a trimmed fixed structure (the
+# same data and the ordinal likelihood, but a trimmed fixed structure (the
 # 2- and 3-way interactions that carry the heat/genet signal)
 # and a single (1|id) random intercept. Hess = TRUE stores the Hessian so we can
 # get standard errors / Wald tests.
@@ -522,7 +522,7 @@ cat("Robustness conclusion: see report (overall direction of every term should m
 # PART 3 — PENALIZED MORPHOLOGY REFIT  (formerly 12c_morph_blme.R)
 #
 # The raw glmer fits in PART 1 give finite predictions (the random-effect
-# penalty regularizes them) and correct omnibus type-II Wald χ², but the
+# penalty regularizes them) and omnibus type-II Wald χ², but the
 # *individual coefficient* Wald z's diverge when any treatment × day × thicket
 # cell reaches 0 or 1 observed events (7/8 traits hit this). Refit with
 # blme::bglmer + Cauchy(0, 2.5) priors (Gelman et al. 2008 default) so the
@@ -530,8 +530,8 @@ cat("Robustness conclusion: see report (overall direction of every term should m
 #
 # What & why (separation): with binary milestones, a cell where the trait is
 #   always present (or always absent) drives the maximum-likelihood coefficient
-#   to ±infinity — the "complete separation" problem. lme4 returns a very large
-#   estimate with a very large SE, so individual coefficient tests are
+#   to ±infinity — the "complete separation" problem. lme4 returns a large
+#   estimate with a large SE, so individual coefficient tests are
 #   uninterpretable. The fix is a weakly-informative prior on the fixed effects: a
 #   Cauchy(0, 2.5) on the (centred, scaled) logit coefficients shrinks them toward
 #   0 while still letting strong effects through. This is the Gelman et al. (2008)
@@ -551,8 +551,8 @@ ph_blme <- readRDS(file.path(DATA_PROC, "physio_clean.rds")) |>
 fit_blme <- function(tr) {
   d <- ph_blme |> mutate(y = .data[[tr]]) |> filter(!is.na(y))
   if (length(unique(d$y)) < 2 || nrow(d) < 30) return(NULL)   # same invariance/size guard
-  # Set explicit treatment (dummy) contrasts so each coefficient is a clean
-  # "level vs reference" comparison — important when interpreting the penalized
+  # Set explicit treatment (dummy) contrasts so each coefficient is a
+  # "level vs reference" comparison when interpreting the penalized
   # coefficients and their now-finite SEs.
   contrasts(d$treatment) <- contr.treatment(nlevels(d$treatment))
   contrasts(d$thicket) <- contr.treatment(nlevels(d$thicket))

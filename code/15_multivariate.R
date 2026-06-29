@@ -81,9 +81,9 @@ keep_rows <- complete.cases(wide[, pca_vars])
 groups <- wide[keep_rows, c("treatment", "wound", "thicket")]
 
 # center + scale. = TRUE → standardize each variable to mean 0, SD 1 before the
-# rotation. Essential here: the variables are on different units (yield, D-score,
+# rotation. Needed here: the variables are on different units (yield, D-score,
 # mg cm⁻² d⁻¹, log10 cells), and without scaling the largest-variance variable
-# would dominate PC1 purely because of its units. pca$rotation = the loadings
+# would dominate PC1 because of its units. pca$rotation = the loadings
 # (how each original variable maps onto each PC).
 pca <- prcomp(pca_input, center = TRUE, scale. = TRUE)
 loadings <- as.data.frame(pca$rotation) |>
@@ -102,7 +102,7 @@ scores <- as.data.frame(pca$x) |>
 
 # ---- Biplot (overall) -----------------------------------------------------
 # A biplot overlays the loading vectors (arrows) on the score cloud. The ×2.8 is
-# a purely cosmetic scaling so the unit-length loading arrows are visible against
+# a cosmetic scaling so the unit-length loading arrows are visible against
 # the spread of the scores — it does not change any inference.
 loading_arrows <- as.data.frame(pca$rotation) |>
   tibble::rownames_to_column("variable") |>

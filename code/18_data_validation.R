@@ -187,7 +187,7 @@ check_tanks("morphology", ph)
 
 # ---- YSI ------------------------------------------------------------------
 # Daily handheld water-quality spot checks (from 09). na.rm = TRUE because some
-# readings may be missing; the temperature range just confirms tanks held a
+# readings may be missing; the temperature range confirms tanks held a
 # plausible 27–33 °C window.
 ysi <- readRDS(file.path(DATA_PROC, "ysi_clean.rds"))
 add("ysi", "n daily readings", if (nrow(ysi) > 50) "PASS" else "WARN",
@@ -198,7 +198,7 @@ add("ysi", "temperature (°C) range", "INFO",
     "[27, 33] reasonable")
 
 # ---- Apex -----------------------------------------------------------------
-# Continuous logger temperature (thousands of records). INFO only — just report
+# Continuous logger temperature (thousands of records). INFO only — report
 # the count, no pass/fail threshold.
 apex <- readRDS(file.path(DATA_PROC, "apex_temperature_daily.rds"))
 add("apex", "n daily probe-records", "INFO", nrow(apex),

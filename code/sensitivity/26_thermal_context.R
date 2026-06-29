@@ -53,7 +53,7 @@ ed50 <- read_csv(file.path(here::here("data", "external"),
 
 # ---- (#2) Acute ED50 summary + treatment placement ------------------------
 # Summarise the acute benchmark, then measure how far our treatments sit below
-# it. A large positive "below ED50" gap = our heat is well under the acute limit.
+# it. A large positive "below ED50" gap = our heat is below the acute limit.
 ed50_mean <- mean(ed50$ed50); ed50_sd <- sd(ed50$ed50)
 ed50_min  <- min(ed50$ed50);  ed50_max <- max(ed50$ed50)
 ed50_cv   <- 100 * ed50_sd / ed50_mean   # CV = SD/mean, a scale-free spread metric
@@ -73,7 +73,7 @@ write_csv(ctx, file.path(TBL_DIR, "26_thermal_context.csv"))
 # ---- (#1) Among-genotype variation: acute vs chronic ----------------------
 # Side-by-side concordance check: does each method detect genotype variation?
 # We are NOT correlating individual genets (labels aren't matched across studies)
-# — only comparing whether both approaches find a meaningful spread.
+# — only comparing whether both approaches find a spread.
 res <- read_csv(file.path(TBL_DIR, "19_genet_resilience_summary.csv"),
                 show_col_types = FALSE)
 # Chronic among-thicket variation: spread (max - min) of the standardized

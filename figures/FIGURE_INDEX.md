@@ -12,10 +12,10 @@ Catalog of the 23 PNG figures in `figures/` (each has a matching PDF), the
 
 Six figures that tell the core story end to end:
 
-1. **`08_apex_temperature.png`** — *(a) treatment validation:* tank temperatures held cleanly at 28 vs 31 °C (the heat ramp + steady state).
+1. **`08_apex_temperature.png`** — *(a) treatment validation:* tank temperatures held at 28 vs 31 °C (the heat ramp + steady state).
 2. **`11_main_response_panel.png`** — *(b) whole-colony physiology decline:* PAM, color, growth, and symbionts all collapse under heat in one panel.
 3. **`14_morphology_KM.png`** — *(c) healing-vs-regeneration:* Kaplan–Meier curves showing tissue healing is preserved but skeletal regeneration is impaired by heat.
-4. **`16_manuscript_fig1.png`** — *(b+c integrative summary:* the 4-panel publication figure — temperature, Fv/Fm, KM healing-vs-regeneration, PCA — the single best one-figure overview.
+4. **`16_manuscript_fig1.png`** — *(b+c integrative summary:* the 4-panel publication figure — temperature, Fv/Fm, KM healing-vs-regeneration, PCA — a one-figure overview.
 5. **`19_genet_dashboard.png`** — *(d) genet variation:* forest plot of standardized heat sensitivity across all responses, identifying the resilient genet (c) vs sensitive (a, d).
 6. **`26_thermal_context.png`** — *(e) chronic-sublethal thermal context:* places 28/31 °C against Cunning et al. 2024 acute CBASS ED50s for the same species/island — 31 °C is chronic-sublethal.
 

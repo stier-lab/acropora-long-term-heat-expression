@@ -18,7 +18,7 @@ phenotype" layer).
 
 144 libraries = **3 genets (A, C, D) × 2 wound (U, W) × 2 temp (28, 31 °C) × 4 tanks × 3 days**,
 **wound-margin tissue only**, **Days 1, 3, 10** post-wound (Day 1 = 24 h). Fully balanced, plates
-interleaved so no factor is confounded with plate/lane. That timecourse lines up almost perfectly
+interleaved so no factor is confounded with plate/lane. That timecourse lines up
 with the phenotype trajectory:
 
 | Day | Phenotype state (from our data) | What the expression snapshot likely captures |
@@ -58,7 +58,7 @@ et al. 2013 frontloading pattern).
 **Contrast.** Genet (c vs a, d) × temperature, **prioritizing the unwounded margins** (where the
 phenotype genet difference is sharpest) at each day. This is the most direct route to candidate
 genes underlying heritable thermal tolerance in *A. pulchra*. A WGCNA module that tracks the
-per-genet resilience score (`19_genet_resilience_summary.csv`) would be a clean way in.
+per-genet resilience score (`19_genet_resilience_summary.csv`) would be a way in.
 
 ### 3. Wounding homogenizes the genet response
 **Phenotype.** The genet spread in heat sensitivity is large when unwounded (a = 0.99, d = 0.87,
@@ -73,7 +73,7 @@ the wound response is concentrated locally at the site.
 **Hypothesis (expression can confirm, extend, or revise).** At the *margin*, a strong wound main effect should be present at every day even
 though bulk physiology shows almost none — confirming that the margin captures the local program
 the colony-level metrics average away.
-**Contrast.** Wound main effect at the margin (per day). A robust wound signature here is a good
+**Contrast.** Wound main effect at the margin (per day). A wound signature here is a
 positive control that the sampling worked.
 
 ### 5. Expect a chronic/constitutive signature, not an acute heat-shock spike
@@ -90,7 +90,7 @@ genotyped CBASS genets (same Mahana population; ED50 34.3–36.6 °C, range 2.2 
 **Action.** Call SNPs from these RNA-seq libraries, match thickets A/C/D to Cunning's genotype
 reference, then test whether **acute CBASS ED50 predicts our chronic, wound-context resilience
 ranking (c > d > a)**. A positive result links a rapid acute assay to chronic regenerative capacity —
-a clean, citable cross-method validation. (Details in `analysis_proposal.md`.)
+a citable cross-method validation. (Details in `analysis_proposal.md`.)
 
 ---
 

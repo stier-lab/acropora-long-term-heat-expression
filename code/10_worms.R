@@ -54,7 +54,7 @@ worms <- raw |>
     # parse the remaining m_d_y). mdy() is lubridate's month-day-year parser.
     date    = mdy(str_remove(date_raw, "^worms_")),
     # Collapse count -> presence/absence (1 if any worms seen, else 0). The raw
-    # counts are noisy; presence is the robust indicator of tank infestation.
+    # counts are noisy; presence is the indicator of tank infestation.
     present = as.integer(n_worms > 0)
   ) |>
   filter(!is.na(treatment))                          # keep experimental tanks only
@@ -75,7 +75,7 @@ summary_tbl <- worms |>
 write_csv(summary_tbl, file.path(TBL_DIR, "10_worm_summary.csv"))
 
 # ---- Figure ----------------------------------------------------------------
-# One small panel per tank; within each, bars show worm-positive coral counts by
+# One panel per tank; within each, bars show worm-positive coral counts by
 # date, dodged and coloured by treatment. Empty panels (all zeros) indicate no
 # infestation; any persistent bar flags a tank as a possible confound.
 p_worm <- ggplot(summary_tbl,

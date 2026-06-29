@@ -96,7 +96,7 @@ Doc, slides) lives in Google Drive:
 
 ## Research question & design
 
-Branching corals like *A. pulchra* regenerate readily after damage to the apical (growing) tip, and
+Branching corals like *A. pulchra* regenerate after damage to the apical (growing) tip, and
 elevated temperatures slow growth and bleach symbionts. **How do those two stressors interact?** Does
 mild long-term heating (+3 °C above ambient) compromise wound regeneration, and what gene-expression
 machinery underlies the response?
@@ -132,7 +132,7 @@ cm⁻² d⁻¹). *How asked:* linear mixed model per response (`response ~ treat
 divergence). All significant — Fv/Fm F = 106.6, color F = 239.3, symbionts F = 94.0; all p < 0.001
 (type-III ANOVA).
 
-**2 — Heat blocks *regeneration*, not *healing* (the key phenotype result).** Wounds *sealed* at the
+**2 — Heat blocks *regeneration*, not *healing* (the phenotype result).** Wounds *sealed* at the
 same rate in both temperatures, but new corallites formed in 100 % of ambient wounded corals vs only
 33 % of heated ones — and at 28 °C every coral that healed went on to regenerate, while at 31 °C 67 %
 healed but never rebuilt skeleton. *How asked:* each binary recovery trait → a time-to-event interval;
@@ -258,14 +258,14 @@ see `notes/LTH_*_Photos.md`. **RNA-seq reads** are processed at UC Davis (Bay la
 ## Regeneration-staging terminology
 
 The **biphasic** framework above is the lab's working vocabulary, broadly aligned with the sibling
-wound-type project so they read together. Use it as a sensible default for the *staging* descriptors,
+wound-type project so they read together. Use it as a default for the *staging* descriptors,
 but it is **not** binding on this paper — the lead author sets the framing, and interpretive labels
 (e.g. "energetic triage") are hers to choose. In prose (not data/column names, which stay fixed):
 
 - Say "tissue healing / coenosarc coverage", not just "wound closure".
 - Use **"wound bed"** for the active region; **"algal colonization of the wound bed"** (or "algal
   plug" when dense) rather than "algae on wound".
-- State the geometric caveat explicitly: LTH wounds are apical-**tip excisions** (regeneration =
+- State the geometric caveat: LTH wounds are apical-**tip excisions** (regeneration =
   new skeleton at the branch tip), unlike a surface wound bed — don't imply identical assays.
 
 ## Pending work

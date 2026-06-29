@@ -109,7 +109,7 @@ zoox <- zoox_meta |>
          cells_per_cm2, count_source, n_reps)
 
 # Pull chlorophyll from master metadata (carried for provenance; assay not run,
-# so in practice this is empty for this project).
+# so this is empty for this project).
 chl <- meta |>
   filter(!is.na(chlorophyll_ug_cm2)) |>
   select(id, chlorophyll_ug_cm2)
@@ -149,8 +149,8 @@ p_zoox <- ggplot(phys, aes(factor(biopsy_day), cells_per_cm2 / 1e6,
        subtitle = expression(italic(A.~pulchra)~"biopsies, n = 192 corals across 5 timepoints")) +
   theme_pub(10)
 
-# Build the second panel only if chlorophyll data actually exist; otherwise emit
-# a placeholder panel so the two-panel layout still renders with a clear note.
+# Build the second panel only if chlorophyll data exist; otherwise emit
+# a placeholder panel so the two-panel layout still renders with a note.
 has_chl <- any(is.finite(phys$chlorophyll_ug_cm2))
 if (has_chl) {
   p_chl <- ggplot(phys, aes(factor(biopsy_day), chlorophyll_ug_cm2,

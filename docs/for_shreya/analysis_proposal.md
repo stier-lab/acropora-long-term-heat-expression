@@ -50,7 +50,7 @@ source of truth). Sampling design: `notes/sequencing-plan-keck-LTH.md`.
   4 tanks/temperature; fully interleaved across 2 plates / 1 NovaSeq run
   (temperature, wound, day, tank, genotype all orthogonal to plate/lane).
 
-This balance means the design cleanly supports the contrasts below without
+This balance means the design supports the contrasts below without
 batch confounding.
 
 ## 3. Questions the differential-expression analysis could address (phenotype-anchored)
@@ -58,7 +58,7 @@ batch confounding.
 These are **goals/questions**, not a prescribed model or pipeline — the design (factors, normalization,
 fixed/random structure, tool) is yours to specify. The phenotype results raise the questions below; the
 expression data can **test, extend, or revise** each one. Predicted *processes* are listed as
-hypotheses to confirm or overturn — we deliberately do **not** name candidate gene symbols, so the gene
+hypotheses to confirm or overturn — we do **not** name candidate gene symbols, so the gene
 sets you interrogate are your call.
 
 - **Does heat suppress the regeneration program while sparing the healing program?** Phenotype: wounds
@@ -100,7 +100,7 @@ from Mahana, Mo'orea** (range 34.4–36.6 °C; ED50 predicts classic bleaching,
 R = 0.74). Our experiment measured **chronic** resilience for 3 thickets from the
 same site. If we can match thickets A/C/D to Cunning genets, we can ask a novel
 question: **does an 18-hour acute assay predict chronic, wound-context
-resilience?** That would be a strong, publishable cross-method validation.
+resilience?** That would be a publishable cross-method validation.
 
 **The obstacle.** The LTH thicket labels A, C, D are **arbitrary** — there is no
 a priori link to Cunning's numbered genets.
@@ -135,10 +135,10 @@ that to the genet × temperature expression signal. The *how* (reference genome,
 relatedness/identity metric, how much to lean on the spatial check) is yours to decide; we have no
 prescription here.
 
-**The one thing that requires us / an external request.** The pivotal, repo-external dependency
+**The one thing that requires us / an external request.** The repo-external dependency
 is **Cunning's per-genet host SNP genotypes** (not just ED50 + genet number). Likely held by
 Cunning / Putnam — the CBASS_methods repo / associated genomic archive, or a direct request (co-authors
-Detmer & Moeller are in the UCSB/Mo'orea network — an easy intro). We can chase this for you. Everything
+Detmer & Moeller are in the UCSB/Mo'orea network — an intro). We can chase this for you. Everything
 downstream of obtaining comparable genotype data is analysis you own.
 
 **Supporting data already in hand.** The GPS table above places all three thickets in the same named
@@ -166,7 +166,7 @@ label.
 - The **gene-expression analysis** (DE design, SNP-calling, matching) is yours to lead and structure
   however you see fit — Sections 3–4 are suggestions, not a checklist.
 - **We can help with:** requesting Cunning/Putnam host genotype data + exact genet collection coords
-  and confirming the reference genome (the pivotal external ask); and confirming the LTH collection
+  and confirming the reference genome (the external ask); and confirming the LTH collection
   site label with the Gump/field team (coords say Mahana/Tiahura).
 - **Anything you need from us** to make your side easier — a per-library phenotype covariate table,
   the cached Cunning ED50 data, clarification on the design — just ask.

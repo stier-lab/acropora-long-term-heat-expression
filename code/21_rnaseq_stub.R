@@ -9,11 +9,11 @@
 #
 # What & why: this is a PLACEHOLDER. The RNA-seq count matrix does not exist in
 #   the repo yet (it is Shreya's to generate), so there is nothing to analyze.
-#   The script deliberately stops early — and does nothing — until the counts
+#   The script stops early — and does nothing — until the counts
 #   arrive. We keep it in the repo so that (a) the README's "pending work" has a
 #   concrete home, and (b) whoever picks up the expression analysis has a tested
 #   example of how to read counts + sample metadata using this project's path
-#   helpers (DATA_RAW, etc.) and column conventions. It is intentionally NOT a
+#   helpers (DATA_RAW, etc.) and column conventions. It is NOT a
 #   differential-expression model: choosing the DE design here would pre-empt a
 #   decision that belongs to the lead author (see the NOTE below).
 #
@@ -35,7 +35,7 @@ source(here::here("code", "00_setup.R"))
 
 # ---- Early exit if the counts are not here yet -----------------------------
 # Stub behavior: if the count matrix is absent (the normal state of
-# the repo today), report it and quit cleanly with status 0 (a SUCCESS exit, so it
+# the repo today), report it and quit with status 0 (a SUCCESS exit, so it
 # never breaks _run_all.R or a CI run). Everything below this block only runs
 # once Shreya has dropped real count data into data/raw/sequencing/.
 if (!file.exists(file.path(DATA_RAW, "sequencing", "counts.csv"))) {
@@ -44,12 +44,12 @@ if (!file.exists(file.path(DATA_RAW, "sequencing", "counts.csv"))) {
 }
 
 # ---- Import example only: read counts + sample metadata into the repo ------
-# NOTE: this is deliberately just an *import* example. We do NOT fit a DE model
+# NOTE: this is an *import* example. We do NOT fit a DE model
 # here — the differential-expression design (factors, normalization, fixed/
 # random structure, tool) is Shreya's (Bay lab) to specify. There is no single
 # pre-decided model in this repo; the open design *questions* (not a formula)
 # are written out in docs/for_shreya/analysis_proposal.md §3. Picking the model
-# here would just hard-code one of those choices, so we don't.
+# here would hard-code one of those choices, so we don't.
 
 # Read the gene x library count matrix (genes in rows, one column per library).
 counts   <- read_csv(file.path(DATA_RAW, "sequencing", "counts.csv"),

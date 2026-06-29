@@ -30,7 +30,7 @@ master <- read_csv(file.path(TBL_DIR, "20_master_results.csv"),
 
 # ---- Coverage per source CSV -----------------------------------------------
 # The result CSVs we expect to be represented in the master. Infrastructure /
-# bookkeeping CSVs are intentionally left off this list.
+# bookkeeping CSVs are left off this list.
 src_tables <- c(
   "12_anova_summary.csv",
   "12_genet_treatment_effects.csv",
@@ -67,7 +67,7 @@ for (src in src_tables) {
     src_rows   = nrow(d),
     master_rows = n_master,
     # MISSING: nothing copied. COVERED: at least half the source rows present
-    # (some source rows are intentionally summarized, so 50% is the threshold, not 100%).
+    # (some source rows are summarized, so 50% is the threshold, not 100%).
     # PARTIAL: present but under that threshold.
     coverage_status = if (n_master == 0) "MISSING"
                        else if (n_master >= nrow(d) * 0.5) "COVERED"
@@ -85,7 +85,7 @@ dups <- master |>
   filter(n_rows > 1)
 
 # Domain sanity: any response named morph_* must be tagged "Morphology". Catches
-# morphology results accidentally filed under Physiology.
+# morphology results filed under Physiology.
 domain_audit <- master |>
   filter(grepl("^morph_", response, ignore.case = FALSE) &
          domain != "Morphology")

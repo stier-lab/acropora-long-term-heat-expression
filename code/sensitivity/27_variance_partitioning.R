@@ -15,9 +15,9 @@
 #   tank ICC would be a concern — it would mean tank identity, not treatment,
 #   drives the response (pseudoreplication risk); a low tank ICC indicates the
 #   treatment effect isn't a tank artifact. (2) a high colony/id ICC means corals
-#   are consistently different from one another (a genotype/individual signal
-#   worth noting). For the Gaussian (continuous) LMMs the residual variance is
-#   estimated directly. For binomial GLMMs there is no single residual variance on
+#   are consistently different from one another (a genotype/individual signal).
+#   For the Gaussian (continuous) LMMs the residual variance is
+#   estimated. For binomial GLMMs there is no single residual variance on
 #   the 0/1 scale, so we use the standard logistic latent-scale approach: fix the
 #   residual at pi^2/3 (the variance of the standard logistic distribution) and
 #   compute the ICC on that underlying continuous scale (Nakagawa & Schielzeth 2010).
@@ -33,7 +33,7 @@ source(here::here("code", "00_setup.R"))
 # of the standard logistic distribution. Used as the fixed "residual" below.
 PI2_3 <- pi^2 / 3
 
-# Helper: read one fitted model and return a tidy ICC table for it. `scale`
+# Helper: read one fitted model and return an ICC table for it. `scale`
 # picks how the residual variance is obtained (estimated vs fixed logistic).
 icc_from_model <- function(path, label, scale = c("gaussian", "latent")) {
   scale <- match.arg(scale)                         # validate the scale argument

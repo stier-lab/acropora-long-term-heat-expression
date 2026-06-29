@@ -184,7 +184,7 @@ p_full <- ggplot(temp_daily, aes(date, value_c, group = tank,
 save_fig(p_full, "08b_apex_temperature_full", width = 200, height = 100)
 
 # ---- Console report --------------------------------------------------------
-# Print the most-logged probes as a quick sanity check that the expected Temp
+# Print the most-logged probes as a sanity check that the expected Temp
 # probes dominate the file (and to spot any unexpected probe names).
 cat("\nProbes detected (top 20 by record count):\n")
 hourly |> count(probe, sort = TRUE) |> head(20) |> print()

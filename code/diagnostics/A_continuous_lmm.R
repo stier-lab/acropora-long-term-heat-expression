@@ -60,7 +60,7 @@ dir.create(DIAG_OUT, recursive = TRUE, showWarnings = FALSE)
 dir.create(DIAG_FIG, recursive = TRUE, showWarnings = FALSE)
 
 # ---- Result accumulator ----------------------------------------------------
-# Every check appends one tidy row (model, check, statistic, p, threshold,
+# Every check appends one row (model, check, statistic, p, threshold,
 # status, notes) to `rows`; they are stacked into one table at the end. Building
 # a single long table keeps the CSV/report machine-readable and consistent.
 rows <- list()
@@ -165,7 +165,7 @@ check_lmer_convergence <- function(model, model_name) {
 
   # Pull out the estimated random-effect variances and count any that are
   # effectively zero (< 1e-6) — the same problem isSingular flags, reported
-  # explicitly so the report shows WHICH grouping factor collapsed.
+  # so the report shows WHICH grouping factor collapsed.
   vc <- as.data.frame(VarCorr(model))
   zero_vc <- vc[vc$vcov < 1e-6 & !is.na(vc$vcov), , drop = FALSE]
   add_row(model_name, "variance_components_near_zero",
@@ -177,7 +177,7 @@ check_lmer_convergence <- function(model, model_name) {
                                collapse = "; ")))
 
   # Any warning the optimizer left behind (e.g. "max|grad|" or
-  # "failed to converge"). Zero messages = clean convergence = PASS.
+  # "failed to converge"). Zero messages = converged = PASS.
   msg <- model@optinfo$conv$lme4$messages
   if (is.null(msg)) msg <- character(0)
   add_row(model_name, "optimizer_convergence_messages",
@@ -207,7 +207,7 @@ top_cooks_lmer <- function(model, model_name, k = 3) {
     return(NULL)
   }
   # Cook's D per observation; threshold = 4/n. We keep the top-k most influential
-  # row indices so they can be inspected for genuine influence vs data-entry error.
+  # row indices so they can be inspected for influence vs data-entry error.
   cd <- as.numeric(cooks.distance(inf))
   n <- length(cd)
   thresh <- 4 / n
@@ -223,7 +223,7 @@ top_cooks_lmer <- function(model, model_name, k = 3) {
   invisible(cd)
 }
 
-# Plain-lm version: cooks.distance() works directly, no leave-one-out refitting.
+# Plain-lm version: cooks.distance() works without leave-one-out refitting.
 top_cooks_lm <- function(model, model_name, k = 3) {
   cd <- cooks.distance(model)
   n  <- length(cd)
@@ -323,7 +323,7 @@ check_direction(m_zoox, "12_zoox_lmm", "log_zoox",
 # number of extreme observations. Refit after dropping the four largest
 # standardized residuals and require the day-14 treatment direction to match.
 # If the conclusion survives deleting its most extreme points, those outliers
-# are not driving the result, so the primary finding is robust.
+# are not driving the result.
 zoox_sensitivity <- tryCatch({
   phys <- readRDS(file.path(DATA_PROC, "symbiont_chl_clean.rds")) |>
     filter(is.finite(cells_per_cm2), cells_per_cm2 > 0) |>
@@ -370,7 +370,7 @@ m_bw <- readRDS(file.path(MOD_DIR, "12_bw_lm.rds"))
 check_lmer_convergence(m_bw, "12_bw_lm")
 run_dharma(m_bw, "12_bw_lm", "A_bw")
 
-# Classic base-R residual diagnostics in addition to DHARMa: residual-vs-fitted
+# Base-R residual diagnostics in addition to DHARMa: residual-vs-fitted
 # should show no pattern (flat cloud around 0 = constant variance, no curvature),
 # and the Q-Q plot should hug the line (residuals ~ normal).
 png(file.path(DIAG_FIG, "A_bw_lmm_base.png"),

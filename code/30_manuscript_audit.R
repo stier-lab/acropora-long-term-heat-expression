@@ -5,13 +5,13 @@
 #          source tables (themselves regenerated upstream) and asserts the
 #          manuscript text contains it. If a number has drifted, this script
 #          emits a WARNING and writes a report — it does NOT stop the pipeline
-#          (no build-fail), so the run still completes and regenerates cleanly.
+#          (no build-fail), so the run still completes and regenerates.
 #
 #          SCOPE: this only covers the Stier-lab-authored **phenotype Methods
 #          and Results** (physiology, morphology, growth, genet variation,
 #          thermal context). It does NOT police the Introduction, Discussion,
 #          Abstract, or the transcriptomics — those are the lead author's
-#          (S. Banerjee) narrative and are intentionally not gated here.
+#          (S. Banerjee) narrative and are not gated here.
 #
 #          To keep a new phenotype number checkable: add a check below. The
 #          rule is one-directional — PASS = the manuscript contains the current
@@ -27,7 +27,7 @@
 #   sentence," not a failure — so a number that is mid-edit cannot block the
 #   pipeline. It only covers the Stier-lab phenotype sections;
 #   the lead author's narrative (Intro/Discussion/Abstract/transcriptomics) is
-#   deliberately out of scope. Currently 15/15 checks pass.
+#   out of scope. Currently 15/15 checks pass.
 #
 # Input:   manuscript/Manuscript_LTH.md
 #          output/tables/{12_anova_summary,14_interval_survreg,
@@ -58,7 +58,7 @@ ms <- gsub("−", "-", ms)
 # manuscript's display precision (e.g. 106.57 written as "106.6").
 fmt1 <- function(v, d) formatC(round(v, d), format = "f", digits = d)  # scalar
 fmt_cands <- function(x, digits) {
-  # Match at the registered precision and one decimal finer. We deliberately do
+  # Match at the registered precision and one decimal finer. We do
   # NOT go coarser: "3.7" would substring-match inside a stale "3.74" and hide
   # real drift. Register `digits` = the precision the manuscript actually uses.
   ds <- unique(c(digits, digits + 1L))

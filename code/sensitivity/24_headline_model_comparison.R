@@ -5,7 +5,7 @@
 #          random slopes improve fit, AR(1) autocorrelation in PAM). Here we
 #          fit the upgraded "maximum-rigor" specification and compare it
 #          head-to-head with the current primary model on the quantities the
-#          manuscript actually reports:
+#          manuscript reports:
 #            - model fit (AIC from ML fits, because fixed effects differ)
 #            - significance of the treatment × time interaction
 #            - the day-14 heat effect (28C - 31C marginal contrast, with CI)
@@ -36,8 +36,8 @@
 source(here::here("code", "00_setup.R"))
 suppressPackageStartupMessages({ library(nlme); library(emmeans) })
 
-# Solver settings shared by every lmer fit: tolerate singular fits (the rich
-# random structures push boundaries) and give bobyqa a high iteration budget.
+# Solver settings shared by every lmer fit: tolerate singular fits (the random
+# structures push boundaries) and give bobyqa a high iteration budget.
 ctrl <- lme4::lmerControl(check.conv.singular = .makeCC("ignore", 1e-4),
                           optimizer = "bobyqa",
                           optCtrl = list(maxfun = 2e5))
