@@ -3,7 +3,7 @@
 #          model from scratch and confirm the coefficients land in the same place.
 #
 # What & why: a saved model is only trustworthy if re-running the fit on the same
-#   data gives the same answer. For every headline model this script reloads the
+#   data gives the same answer. For every primary model this script reloads the
 #   saved fit, re-fits the identical fixed/random structure on the identical
 #   processed data, and compares the two: the largest fixed-effect coefficient
 #   shift (max_coef_drift) and the difference in log-likelihood. A run is PASS
@@ -32,7 +32,7 @@ dir.create(DIAG_OUT, recursive = TRUE, showWarnings = FALSE)
 # One result row per model accumulates here, keyed by model name.
 results <- list()
 
-# compare_lmm(): the workhorse. Loads a saved fit, re-fits the same model on the
+# compare_lmm(): core comparison helper. Loads a saved fit, re-fits the same model on the
 # same data with the matching engine (lm / lmer / glmer / blme::bglmer), and
 # records the coefficient drift + logLik difference. Wrapped in tryCatch so a
 # single failed refit becomes a HANDLED row instead of aborting the whole script.
@@ -54,9 +54,9 @@ compare_lmm <- function(name, saved_path, formula, data, family = NULL,
     return(invisible(NULL))
   }
   saved <- readRDS(saved_path)
-  # Re-fit with the engine that matches how the model was originally built. Same
+  # Re-fit with the function that matches how the model was originally built. Same
   # bobyqa optimizer + maxfun settings as the source scripts so the comparison is
-  # apples-to-apples; warnings/messages are silenced to keep the console readable.
+  # directly comparable; warnings/messages are silenced to keep the console readable.
   refit <- tryCatch({
     if (use_blme) {
       suppressWarnings(suppressMessages(
@@ -121,10 +121,10 @@ compare_lmm <- function(name, saved_path, formula, data, family = NULL,
     lme4::fixef(refit)
   }
   # Largest absolute coefficient shift, matching by name so term order can't
-  # cause a spurious mismatch. This is the headline reproducibility number.
+  # cause a spurious mismatch. This is the primary reproducibility number.
   max_drift <- max(abs(saved_coef - refit_coef[names(saved_coef)]),
                    na.rm = TRUE)
-  # Second, model-wide check: did the overall fit (log-likelihood) land identically?
+  # Second, model-wide check: whether the overall fit (log-likelihood) reproduces.
   ll_diff <- abs(as.numeric(logLik(saved)) - as.numeric(logLik(refit)))
   # PASS only if BOTH coefficients and logLik reproduce to within 1e-3.
   status <- if (max_drift < 1e-3 && ll_diff < 1e-3) "PASS" else "DRIFT"
@@ -193,7 +193,7 @@ ph <- readRDS(file.path(DATA_PROC, "physio_clean.rds")) |>
   filter(wound == "yes", !is.na(day), day >= 0) |>
   mutate(thicket = factor(thicket))
 # hole_in_center + polyp_in_hole are combined into axial_polyp_formation upstream
-# (code/04), matching the trait that 12_models actually fits and saves.
+# (code/04), matching the trait that 12_models fits and saves.
 traits <- c("polyps_out", "axial_polyp_formation",
             "wound_smoothed", "pigment_over_wound", "tip_exist",
             "tip_extension", "new_corallites_on_tip")

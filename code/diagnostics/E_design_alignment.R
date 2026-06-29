@@ -1,9 +1,9 @@
 # =============================================================================
 # Purpose: Design-alignment audit (diagnostic suite E) — confirm each primary
-#          model's fixed/random structure actually matches the experiment.
+#          model's fixed/random structure matches the experiment.
 #
 # What & why: before any p-value can be trusted, the model has to mirror how the
-#   experiment was run. For every headline model this script compares the fitted
+#   experiment was run. For every primary model this script compares the fitted
 #   formula, the random-effects structure, observation counts, and cell balance
 #   against what the design demands, then flags each check PASS / FAIL / WARN /
 #   HANDLED / INFO. The design we are matching against:
@@ -48,7 +48,7 @@ add_row <- function(model, design_feature, observed, expected, status, note) {
 }
 
 # cells(): count the number of distinct combinations of the grouping columns,
-# i.e. how many non-empty design cells the data actually contains. Used to test
+# i.e. how many non-empty design cells the data contains. Used to test
 # balance (e.g. 8 tank x treatment cells expected).
 cells <- function(d, ...) d |> count(...) |> nrow()
 
@@ -65,7 +65,7 @@ add_row("12_pam_lmm", "fixed structure", form,
         "treatment * wound * day * thicket",
         if (grepl("treatment \\* wound \\* day \\* thicket", form)) "PASS" else "FAIL",
         "4-way fixed structure required for genet x heat x wound x time")
-# Check 2: both random effects present? `tank` soaks up tank-level confounds;
+# Check 2: both random effects present? `tank` captures tank-level confounds;
 # `id` accounts for the non-independence of repeated reads on the same coral.
 add_row("12_pam_lmm", "random structure",
         paste(names(lme4::ranef(m)), collapse = "+"),
@@ -101,7 +101,7 @@ add_row("12_pam_lmm", "random slope on day?",
 
 # ---- Color D-scale (same fixed structure as PAM) ---------------------------
 # Coral-bleaching color score, modeled with the same 4-way LMM as PAM. The
-# wrinkle: the response is a 1-5 ordinal scale fit on a Gaussian model (see below).
+# response is a 1-5 ordinal scale fit on a Gaussian model (see below).
 m <- readRDS(file.path(MOD_DIR, "12_color_lmm.rds"))
 form <- paste(format(formula(m)), collapse = " ")
 # Same 4-way fixed-structure check as PAM.
@@ -138,7 +138,7 @@ add_row("12_bw_lm", "random effects",
         if (identical(names(lme4::ranef(m)), "tank")) "PASS" else "FAIL",
         "coral ID omitted because each coral has one endpoint growth observation")
 # Sample size: 48 corals (24 per temperature). The note also reports how many of
-# the 12 design cells (2 trt x 2 wound x 3 genet) are actually populated.
+# the 12 design cells (2 trt x 2 wound x 3 genet) are populated.
 add_row("12_bw_lm", "n",
         nrow(d), "48 (24 per temperature)",
         if (nrow(d) == 48) "PASS" else "WARN",
@@ -173,7 +173,7 @@ add_row("12_zoox_lmm", "drop (1|id) — destructive",
         "tank only (each coral 1 biopsy)",
         if (identical(names(lme4::ranef(m)), "tank")) "PASS" else "WARN",
         "Correct — destructive sampling means each id has 1 obs")
-# Verify the centering actually puts day 1 at zero (min of biopsy_day_c == 0).
+# Verify the centering puts day 1 at zero (min of biopsy_day_c == 0).
 # Centering makes the intercept interpretable as the day-1 baseline.
 add_row("12_zoox_lmm", "biopsy_day_c centering",
         sprintf("range = [%g, %g]", min(d$biopsy_day_c, na.rm=TRUE),
@@ -184,7 +184,7 @@ add_row("12_zoox_lmm", "biopsy_day_c centering",
 
 # ---- Morphology GLMMs (using blme version) ---------------------------------
 # Binary wound-healing traits, fit only on wounded corals (so `wound` drops out
-# of the model). blme adds a weakly-informative prior to tame separation. Loop
+# of the model). blme adds a weakly-informative prior to address separation. Loop
 # over every saved 12c trait fit and apply the same two checks to each.
 trait_files <- list.files(MOD_DIR, pattern = "^12c_morph_.*_blme\\.rds$",
                           full.names = TRUE)

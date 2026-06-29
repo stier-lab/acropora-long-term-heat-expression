@@ -1,7 +1,7 @@
 # =============================================================================
 # Purpose: OPTIONAL starting scaffold for importing the RNA-seq counts — NOT a
 #          prescribed pipeline. The gene-expression analysis is Shreya's (Bay
-#          lab) to design and lead; this just shows one way to read counts +
+#          lab) to design and lead; this shows one way to read counts +
 #          sample metadata into the repo conventions, if useful. Replace freely.
 #
 #          Not in code/_run_all.R. Optional suggestions live in
@@ -34,8 +34,8 @@ source(here::here("code", "00_setup.R"))
 # data/raw/plate_layout/Plate_2.csv      — already present
 
 # ---- Early exit if the counts are not here yet -----------------------------
-# The whole point of a stub: if the count matrix is absent (the normal state of
-# the repo today), say so and quit cleanly with status 0 (a SUCCESS exit, so it
+# Stub behavior: if the count matrix is absent (the normal state of
+# the repo today), report it and quit cleanly with status 0 (a SUCCESS exit, so it
 # never breaks _run_all.R or a CI run). Everything below this block only runs
 # once Shreya has dropped real count data into data/raw/sequencing/.
 if (!file.exists(file.path(DATA_RAW, "sequencing", "counts.csv"))) {
@@ -63,12 +63,12 @@ sample_md <- read_csv(file.path(DATA_RAW, "sequencing", "sample_metadata.csv"),
 # A per-library phenotype covariate table, already harmonized to the phenotype
 # coding, is at output/tables/31_rnaseq_phenotype_covariates.csv (built by
 # code/31). A RAW, un-recoded design lookup is alongside it
-# (31_rnaseq_library_lookup_raw.csv) so factor levels / reference are yours to set.
+# (31_rnaseq_library_lookup_raw.csv) so factor levels / reference categories can be set by the analyst.
 
 # Basic sanity check that libraries line up between the two files: every library
 # named in the metadata must appear as a column in the count matrix, or the two
 # files are out of sync and any downstream join would silently mis-pair samples.
-# stopifnot() halts with an error if the condition is FALSE — fail loud, fail early.
+# stopifnot() halts with an error if the condition is FALSE.
 stopifnot(all(sample_md$library_id %in% colnames(counts)))
 
 # Report what we read. ncol(counts) - 1L subtracts the leading gene-ID column so

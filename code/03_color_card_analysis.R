@@ -12,7 +12,7 @@
 #   treatment (and wounding) caused corals to pale over the experiment. This
 #   script does the data prep, an end-of-experiment summary, and the trajectory
 #   figure; the formal ordinal model (clmm) that respects the discrete, ranked
-#   nature of the scale lives in code/12b_color_clmm_robustness.R. Pigmentation
+#   nature of the scale is in code/12b_color_clmm_robustness.R. Pigmentation
 #   is the whole-colony stress signal that complements the symbiont/chlorophyll
 #   lab assays (code/06) and the Fv/Fm photochemistry (code/02).
 # Input:   data/raw/color_card/data.csv
@@ -81,8 +81,8 @@ saveRDS(cc, file.path(DATA_PROC, "color_clean.rds"))
 
 # ---- End-of-experiment proportions ----------------------------------------
 # Snapshot of the final timepoint: how many corals in each treatment×wound cell
-# were still alive / had paled, and the mean color score. This is the simple
-# summary that the trajectory plot and the formal model (12b) dress up.
+# were still alive / had paled, and the mean color score. This is the summary
+# underlying the trajectory plot and the formal model (12b).
 end_day <- max(cc$day, na.rm = TRUE)             # last day with color data
 end_props <- cc |>
   filter(day == end_day) |>
@@ -122,7 +122,7 @@ p_color <- ggplot(traj, aes(day, mean_color,
   facet_wrap(~ treatment, ncol = 2) +
   # Reverse the y-axis so the DARKEST score (D6, healthy) sits at the bottom and
   # PALING reads as a downward movement — the intuitive direction for "losing
-  # color / bleaching". Limits padded slightly beyond 1-6 for breathing room.
+  # color / bleaching". Limits padded slightly beyond 1-6 for visual margin.
   scale_y_reverse(breaks = 1:6, limits = c(6.2, 0.8)) +  # darker = higher D, plot 1 on top
   scale_colour_manual(values = PAL_WOUND,
                       name = "Wound") +

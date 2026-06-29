@@ -2,16 +2,16 @@
 # Purpose: Load + tidy the master metadata (one row per coral fragment) and
 #          export a canonical lookup that all other scripts can join against.
 #
-# What & why: this is the experiment's "spine". Every fragment that went into
-#   the LTH heat × wound × genet experiment has one row here recording who it is
-#   (id), which field colony / genet it came from (thicket = a/c/d), its
+# What & why: this is the experiment's master table. Every fragment that went
+#   into the LTH heat × wound × genet experiment has one row here recording its
+#   identity (id), which field colony / genet it came from (thicket = a/c/d), its
 #   temperature treatment (28 °C ambient vs 31 °C heated), whether it was
-#   wounded (apical tip clipped) or sham, which tank it lived in, and its
+#   wounded (apical tip clipped) or sham, which tank it was in, and its
 #   biopsy schedule. Standardising these identifiers and factor levels ONCE here
 #   means every downstream response script (PAM, colour, growth, symbionts, …)
-#   can join back to a single trustworthy lookup instead of re-parsing the messy
-#   field spreadsheet. Getting the factor codings right here is what makes the
-#   models in later scripts comparable.
+#   can join back to a single canonical lookup instead of re-parsing the raw
+#   field spreadsheet. Consistent factor codings here make the models in later
+#   scripts comparable.
 # Input:   data/raw/metadata/metadata.csv
 # Output:  data/processed/coral_metadata.rds
 #          output/tables/01_metadata_summary.csv  (sample-size tally)
@@ -41,7 +41,7 @@ meta_raw <- suppressWarnings(
 # same way in every downstream model.
 # Drop trailing whitespace in `thicket ` column; harmonize types
 meta <- meta_raw |>
-  # The header is literally "thicket " with a trailing space; matches() finds it
+  # The header is "thicket " with a trailing space; matches() finds it
   # regardless so we get a clean `thicket` column. thicket = the genet / field
   # colony of origin (a, c, d) — modelled as a FIXED effect later (only 3 levels).
   rename(thicket = matches("^thicket")) |>

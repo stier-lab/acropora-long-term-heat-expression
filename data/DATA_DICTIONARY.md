@@ -1,6 +1,6 @@
 # Data Dictionary — LTH Expression by Temperature (Project #17, 2025)
 
-> 🗂️ **Variable definitions for all raw streams** · Updated 2026-06-12 · Index: [`README.md`](../README.md) · decodes `data/raw/`; per-stream codebooks in `data/metadata/`; loaded by `code/01`.
+> **Variable definitions for all raw streams** · Updated 2026-06-12 · Index: [`README.md`](../README.md) · decodes `data/raw/`; per-stream codebooks in `data/metadata/`; loaded by `code/01`.
 
 **Experiment:** Heat (28 °C vs 31 °C) × wounding (unwounded vs wounded) factorial on the
 coral *Acropora pulchra*, Mo'orea (Gump Station), 2025. Three genets/thickets (a, c, d),
@@ -44,7 +44,7 @@ palettes; each ingest script harmonizes types the same way.
 | `sample` | `gene` / `gene/physio` (`physio/gene`) / `photo` | `chr` | Fragment's intended use: `gene`=transcriptomics only (144), `gene/physio`=transcriptomics + destructive physiology (48), `photo`=microscope imaging (16). |
 | `species` | `a. pulchra` | `chr` | Constant; *Acropora pulchra* throughout. |
 
-**Tank → treatment map (hard-coded in scripts; memorize this):**
+**Tank → treatment map (hard-coded in scripts):**
 
 | Treatment | Tanks |
 |---|---|
@@ -163,7 +163,7 @@ Verified from `Selected_Samples.csv`: every (Temp × Wound × Day × Genotype) c
 3. The design factors are also embedded in `Sample_ID` and as explicit columns
    (`Temp_C`, `Day`, `Wound` U/W, `Tank`, `Genotype` A/C/D, `WoundOrder`), so you can rebuild
    the model matrix directly from the plate file if `id`-level metadata is incomplete.
-4. **Factor-coding heads-up:** plate files use `U`/`W` for wound and uppercase `A`/`C`/`D`
+4. **Factor-coding note:** plate files use `U`/`W` for wound and uppercase `A`/`C`/`D`
    for genet, whereas the cleaned phenotype `.rds` use `no`/`yes` and lowercase `a`/`c`/`d`.
    Harmonize on join (the stub `code/21_rnaseq_stub.R` sets `wound = factor(c("U","W"))`,
    `treatment = factor(c("28C","31C"))`, `day = factor(c(1,3,10))`).

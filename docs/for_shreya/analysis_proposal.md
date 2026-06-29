@@ -67,7 +67,7 @@ sets you interrogate are your call.
   early-healing processes (re-epithelialization, immune, ECM remodeling, proliferation) are induced
   similarly in both temperatures while skeletal/biomineralization and corallite-patterning processes
   are specifically suppressed under heat — **or** whether heat suppresses healing too, which would
-  *revise* the phase-decoupling story. This is the crux and could go either way.
+  *revise* the phase-decoupling story. This question could go either way.
 - **What distinguishes the resilient genet (C) from the sensitive ones (A, D)?** Phenotype: genet C
   defends photochemistry, pigmentation, and symbiont retention far better than A/D, with the spread
   sharpest in unwounded corals. The expression data can ask whether genet C shows a smaller heat-induced
@@ -135,7 +135,7 @@ that to the genet × temperature expression signal. The *how* (reference genome,
 relatedness/identity metric, how much to lean on the spatial check) is yours to decide; we have no
 prescription here.
 
-**The one thing that actually requires us / an external request.** The pivotal, repo-external dependency
+**The one thing that requires us / an external request.** The pivotal, repo-external dependency
 is **Cunning's per-genet host SNP genotypes** (not just ED50 + genet number). Likely held by
 Cunning / Putnam — the CBASS_methods repo / associated genomic archive, or a direct request (co-authors
 Detmer & Moeller are in the UCSB/Mo'orea network — an easy intro). We can chase this for you. Everything
@@ -147,7 +147,7 @@ forms clonal thickets, so adjacent colonies can be the same genet and distant on
 cached per-genet ED50 is at `data/external/cunning2024_apulchra_ed50.csv`; our per-thicket chronic
 resilience scores are in `output/tables/19_genet_resilience_summary.csv`.
 
-### Honest fallback
+### Fallback
 
 If genotype data can't be obtained or the panels aren't comparable, we fall back
 to a **population-level** statement (already in the manuscript): both acute
@@ -160,7 +160,7 @@ is the upside if matching succeeds.
 ## 5. A possible division of labor (yours to redraw)
 
 This is just a sketch of how the pieces *could* split — please adjust to match how you want to run
-the analysis. The only items that are genuinely ours to chase are the data requests and the site
+the analysis. The only items that are ours to chase are the data requests and the site
 label.
 
 - The **gene-expression analysis** (DE design, SNP-calling, matching) is yours to lead and structure

@@ -1,5 +1,5 @@
 # Morphological GLMM diagnostics
-Generated: 2026-06-29 13:29:58.374765
+Generated: 2026-06-29 14:13:42.29405
 Source data: physio_clean.rds (N=384 rows, wound==yes only)
 
 ## axial_polyp_formation

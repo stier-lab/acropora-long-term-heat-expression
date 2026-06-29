@@ -8,13 +8,13 @@ half the fragments, held corals at **28 °C (ambient)** or **31 °C (heated, +3 
 they healed and regrew over 15 days — alongside photochemistry, pigmentation, symbionts, and growth.
 Tissue was also taken for gene expression (RNA-seq, in progress).
 
-**The paper's headline is the transcriptomic mechanism** (S. Banerjee, lead author; RNA-seq pending).
+**The paper's lead result is the transcriptomic mechanism** (S. Banerjee, lead author; RNA-seq pending).
 The phenotype experiment in this repo supplies the **organismal context** for it. **The phenotype
 result:** heat does *not* slow wound recovery uniformly — corals seal the wound (tissue healing) at
 the same rate whether hot or not, but heated corals fail to rebuild skeleton at the tip
-(regeneration). Heat hits one phase of recovery, not the other.
+(regeneration). Heat affects one phase of recovery, not the other.
 
-This README is the single front door to the repo. For the full results narrative see **`RESULTS.md`**;
+This README is the entry point to the repo. For the full results narrative see **`RESULTS.md`**;
 for the RNA-seq / lead-author brief see **`docs/for_shreya/`**.
 
 ## Contents

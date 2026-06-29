@@ -8,7 +8,7 @@
 # What & why: corals get most of their energy from symbiotic algae
 #   (zooxanthellae) living in their tissue; bleaching is the loss of these
 #   symbionts under heat stress. We measured symbiont density as cells per cm^2
-#   of coral surface. To get it, tissue was blasted off a known surface area into
+#   of coral surface. To get it, tissue was removed from a known surface area into
 #   a slurry of known volume, and cells in that slurry were counted on a
 #   hemocytometer (a gridded counting chamber). This sampling is DESTRUCTIVE, so
 #   there is exactly one observation per coral — no repeated measures within a

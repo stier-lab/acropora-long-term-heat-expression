@@ -1,21 +1,21 @@
 # =============================================================================
-# Purpose: Sensitivity analysis for the samples/tanks Molly flagged as odd
+# Purpose: Sensitivity analysis for the samples/tanks Molly flagged in QA/QC
 #          (see notes/QAQC_flagged_samples.md). Re-runs the key treatment-effect
 #          tests with the flagged colonies (116, 121) and the slow ambient tank
 #          (tank 3) removed, and compares the treatment effect to the full-data
 #          model. If the conclusions hold, the flags are documented but
 #          inconsequential.
 #
-# What & why: during the experiment Molly noticed a few suspect data points —
-#   two coral colonies (IDs 116 and 121) that behaved oddly, and one ambient
-#   tank (tank 3) that ran noticeably colder/slower than its siblings. A fair
-#   worry is that the headline results are driven by these few oddballs rather
-#   than by the real heat treatment. This script answers that worry the honest
-#   way: re-fit each main model TWICE — once on the full data and once with the
-#   flagged samples removed — and put the two treatment effects side by side. If
-#   the effect (its size, sign, and significance) barely moves when the flagged
-#   points are dropped, the conclusions are robust and the flags are just
-#   footnotes. This is a sensitivity analysis, not a new hypothesis test.
+# What & why: during the experiment Molly flagged a few suspect data points —
+#   two coral colonies (IDs 116 and 121) that behaved anomalously, and one ambient
+#   tank (tank 3) that ran colder/equilibrated slower than the others. This raises
+#   the concern that the headline results are driven by these few points rather
+#   than by the heat treatment. To address it, re-fit each main model twice —
+#   once on the full data and once with the flagged samples removed — and compare
+#   the two treatment effects. If the effect (size, sign, and significance) changes
+#   little when the flagged points are dropped, the conclusions are robust and the
+#   flags are inconsequential. This is a sensitivity analysis, not a new hypothesis
+#   test.
 # Input:   data/processed/{pam_clean,color_clean,buoyant_weight_clean}.rds
 # Output:  output/tables/22_sensitivity_flagged.csv
 # =============================================================================
@@ -51,13 +51,13 @@ grab <- function(model, label, term) {
 
 # ---- PAM Fv/Fm: treatment × day --------------------------------------------
 # Photosynthetic efficiency, measured repeatedly on each coral over time. The
-# key effect is the treatment×day interaction: does the heated group's Fv/Fm
-# decline differ from the ambient group's over the experiment? This MIRRORS the
-# primary model (02/12): genet (thicket) is a FIXED blocking term (only 3 genets),
+# key effect is the treatment×day interaction: whether the heated group's Fv/Fm
+# decline differs from the ambient group's over the experiment. This mirrors the
+# primary model (02/12): genet (thicket) is a fixed blocking term (only 3 genets),
 # random intercepts for tank and id absorb the nested repeated-measures structure,
-# and the pre-treatment baseline (day < 0) is excluded so the comparison is
-# apples-to-apples with the reported model. REML = FALSE (ML) is used so the same
-# model fits the full vs dropped data comparably. pam_drop is the data minus flags.
+# and the pre-treatment baseline (day < 0) is excluded so the comparison matches
+# the reported model. REML = FALSE (ML) is used so the same model fits the full
+# and dropped data comparably. pam_drop is the data minus flags.
 pam <- readRDS(file.path(DATA_PROC, "pam_clean.rds")) |>
   mutate(thicket = factor(thicket)) |>
   filter(day >= 0)
@@ -91,9 +91,9 @@ results$col_drop <- grab(c_drop, "Color D-scale (flagged dropped)","treatment:da
 # Growth (areal calcification, mg CaCO3 per cm2 per day, from buoyant weight).
 # Unlike PAM/colour this is a single end-of-experiment value per coral, and the
 # temperature treatment was applied at the TANK level (not the coral level), so
-# the tank — not the coral — is the true unit of replication. With only ~4 tanks
-# per treatment, a mixed model is overkill and fragile. Instead we average each
-# tank to one number and run an exact permutation test on the tank means.
+# the tank — not the coral — is the unit of replication. With only ~4 tanks
+# per treatment, a mixed model is overparameterized and unstable. Instead we
+# average each tank to one value and run an exact permutation test on the tank means.
 bw <- readRDS(file.path(DATA_PROC, "buoyant_weight_clean.rds")) |>
   mutate(thicket = factor(thicket)) |>
   filter(is.finite(pct_growth))                 # drop NA/Inf growth values
@@ -129,7 +129,7 @@ tank_perm <- function(dat, label) {
     mean(vals[idx]) - mean(vals[-idx])
   }, numeric(1))
   # Two-sided exact p: fraction of relabelings with an effect at least as
-  # extreme (in absolute value) as the one actually observed.
+  # extreme (in absolute value) as the one observed.
   p <- mean(abs(null) >= abs(obs))
 
   tibble(response = label, term = "treatment (tank permutation)",
@@ -142,7 +142,7 @@ results$bw_drop <- tank_perm(bw_drop, "Growth % (flagged dropped)")
 
 # ---- Collect + write -------------------------------------------------------
 # Stack the full and dropped rows for every response into one table. Read it in
-# full/dropped PAIRS: if F, p, and the growth estimate barely change, the
+# full/dropped pairs: if F, p, and the growth estimate change little, the
 # conclusions are robust to the flagged samples.
 out <- bind_rows(results)
 write_csv(out, file.path(TBL_DIR, "22_sensitivity_flagged.csv"))

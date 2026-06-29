@@ -1,14 +1,14 @@
 # For Shreya — collaboration brief
 
-> 🗂️ **Lead-author landing page** · Updated 2026-06-12 · Index: [`README.md`](../../README.md) · front door to everything in `docs/for_shreya/`.
+> **Lead-author landing page** · Updated 2026-06-12 · Index: [`README.md`](../../README.md) · entry point to everything in `docs/for_shreya/`.
 
-Welcome, and thanks for leading this one. This folder is your front door to everything the Stier lab
-has built on the LTH project (#17: heat × wound × *A. pulchra*, Mo'orea 2025). The short version:
+This folder is the entry point to everything the Stier lab
+has built on the LTH project (#17: heat × wound × *A. pulchra*, Mo'orea 2025). In short:
 
 > **You lead the paper and the gene-expression analysis. We've finished and handed over the
 > phenotype half — the experiment's Methods and Results — as a clean, reproducible, drop-in
 > foundation, with every number traceable. The narrative (Introduction, Discussion, Abstract) is
-> yours.** Nothing here is meant to box you in.
+> yours.**
 
 ## Who owns what
 
@@ -64,9 +64,9 @@ call) in **`gene_expression_integration_map.md`**, mapped onto your actual Day 1
 design. Each link runs both ways — the expression data can confirm, extend, **or revise** the
 phenotype-side hypothesis. The manuscript Results marks the integration points with ⟶ tags.
 
-## A few honest things worth knowing
+## A few things worth knowing
 
-- **The regeneration result has a soft spot:** it is strongest for interval-censored new-corallite
+- **The regeneration result is qualified:** it is strongest for interval-censored new-corallite
   onset (p = 1.4e-7); tip-exist is also delayed, while tip-extension remains n.s. The
   censored fraction (67% closed-but-never-regenerated vs 0%) and the per-coral lag are the strongest
   framing. See `RESULTS.md` §10.
@@ -80,4 +80,4 @@ phenotype-side hypothesis. The manuscript Results marks the integration points w
 A per-library phenotype covariate table is **already done** —
 `output/tables/31_rnaseq_phenotype_covariates.csv` (one row per RNA-seq library, joined by
 `Fragment_ID`; design factors + symbiont density + per-genet resilience covariates). Built by
-`code/31_rnaseq_covariate_table.R`. Beyond that, anything that lowers friction — just ask.
+`code/31_rnaseq_covariate_table.R`. Beyond that, anything that lowers friction — ask.

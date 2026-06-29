@@ -4,15 +4,15 @@
 #          this script tallies worm-positive corals per tank/treatment to flag
 #          any tank-level contamination that could confound treatment effects.
 #
-# What & why: Acropora-eating flatworms (AEFW) are a notorious pest of staghorn
-#   corals — an infested tank can lose tissue fast, which would look exactly like
-#   a heat/wound effect and bias the whole experiment. So during the trial we
+# What & why: Acropora-eating flatworms (AEFW) are a known pest of staghorn
+#   corals — an infested tank can lose tissue fast, which would mimic
+#   a heat/wound effect and bias the experiment. During the trial we
 #   inspected every coral on three dates and recorded the worm count. This is
-#   pure surveillance, not a hypothesis test: we just want to confirm worms were
-#   absent (or at most isolated), so any treatment differences we report later
-#   are about temperature and wounding, not a hidden pest outbreak in one tank.
-#   The headline output is a per-tank tally of worm-positive corals over time —
-#   all zeros is the "all clear" we hope to see.
+#   surveillance, not a hypothesis test: we confirm worms were
+#   absent (or at most isolated), so any treatment differences reported later
+#   reflect temperature and wounding, not a pest outbreak in one tank.
+#   The output is a per-tank tally of worm-positive corals over time;
+#   all zeros indicates no contamination.
 # Input:   data/raw/worm_presence/Sheet1.csv
 # Output:  data/processed/worm_clean.rds
 #          figures/10_worm_presence.{pdf,png}
@@ -54,7 +54,7 @@ worms <- raw |>
     # parse the remaining m_d_y). mdy() is lubridate's month-day-year parser.
     date    = mdy(str_remove(date_raw, "^worms_")),
     # Collapse count -> presence/absence (1 if any worms seen, else 0). The raw
-    # counts are noisy; presence is the robust signal for "is this tank infested?".
+    # counts are noisy; presence is the robust indicator of tank infestation.
     present = as.integer(n_worms > 0)
   ) |>
   filter(!is.na(treatment))                          # keep experimental tanks only
@@ -76,8 +76,8 @@ write_csv(summary_tbl, file.path(TBL_DIR, "10_worm_summary.csv"))
 
 # ---- Figure ----------------------------------------------------------------
 # One small panel per tank; within each, bars show worm-positive coral counts by
-# date, dodged and coloured by treatment. The hoped-for result is empty panels
-# (all zeros); any persistent bar flags a tank to watch as a possible confound.
+# date, dodged and coloured by treatment. Empty panels (all zeros) indicate no
+# infestation; any persistent bar flags a tank as a possible confound.
 p_worm <- ggplot(summary_tbl,
                  aes(as.factor(date), n_with_worms,           # date as discrete axis (only 3 dates)
                      fill = treatment, group = treatment)) +

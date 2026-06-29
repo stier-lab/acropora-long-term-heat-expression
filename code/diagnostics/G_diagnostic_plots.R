@@ -158,8 +158,8 @@ for (f in blme_fits) {
 
 # ---- Observed-distribution plot: color CLMM --------------------------------
 # DHARMa doesn't support ordinal::clmm, so instead of simulated residuals we draw
-# the raw D-class distribution by treatment. If the CLMM is doing its job, the
-# heated group's mass should sit at lower (paler) D-classes than ambient.
+# the raw D-class distribution by treatment. If the CLMM is capturing the effect,
+# the heated group's mass should sit at lower (paler) D-classes than ambient.
 clmm_path <- file.path(models_dir, "12b_color_clmm.rds")
 if (file.exists(clmm_path)) {
   cat("\n=== Building residual plot for color CLMM ===\n")
@@ -195,7 +195,7 @@ extra_plots <- list.files(here("figures", "12_diagnostics"),
 all_plots <- c(all_plots, extra_plots)
 inventory <- make_inventory()
 
-# Relabel anything we just produced this run as BUILT (rather than CURRENT or a
+# Relabel anything produced this run as BUILT (rather than CURRENT or a
 # leftover MISSING) so the report distinguishes pre-existing from freshly drawn plots.
 inventory <- inventory |>
   mutate(status = case_when(

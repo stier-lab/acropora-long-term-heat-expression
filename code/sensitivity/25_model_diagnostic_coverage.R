@@ -7,16 +7,15 @@
 #          visualizes its fitted result. Fails loudly (non-zero summary) if any
 #          model is left without a diagnostic.
 #
-# What & why: a reviewer's fair question is "did you actually check the
-#   assumptions of EVERY model you fit, or just the convenient ones?" This script
-#   makes that impossible to fudge. It walks the folder of saved model objects,
-#   and for each one confirms a residual/assumption diagnostic exists — reusing
-#   one already made by an earlier script, or building a fresh DHARMa plot on the
-#   spot if not. The output is an audit table: every model paired with its
-#   diagnostic plot and with the manuscript figure that shows its result. If any
-#   model slips through without a diagnostic, the script ends with a loud WARNING
-#   and a non-zero gap count. This is bookkeeping for reproducibility, not new
-#   statistics.
+# What & why: a reviewer may ask whether the assumptions of every fitted model
+#   were checked, or only the convenient ones. This script documents that. It
+#   walks the folder of saved model objects, and for each one confirms a
+#   residual/assumption diagnostic exists — reusing one already made by an earlier
+#   script, or building a fresh DHARMa plot if not. The output is an audit table:
+#   every model paired with its diagnostic plot and with the manuscript figure
+#   that shows its result. If any model lacks a diagnostic, the script ends with a
+#   WARNING and a non-zero gap count. This is bookkeeping for reproducibility, not
+#   new statistics.
 # Input:   output/models/*.rds  (+ Cox PH plots from script 14)
 # Output:  output/tables/25_model_diagnostic_coverage.csv
 #          output/diagnostics/K_model_coverage_report.md
@@ -145,7 +144,7 @@ for (f in model_files) {
       diag_fig <- "figures/diagnostics/G_12b_color_clmm_observed.png"
       status <- "covered (ordinal: observed-vs-fitted)"
     } else {
-      # Anything else genuinely lacks a diagnostic -> counts as a gap.
+      # Anything else lacks a diagnostic -> counts as a gap.
       status <- "no diagnostic"
     }
   }

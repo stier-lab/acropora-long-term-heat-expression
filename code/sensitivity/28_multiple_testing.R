@@ -24,13 +24,13 @@
 # trait axial_polyp_formation, so each enters this BH family only once.)
 #
 # What & why: running many tests inflates the false-positive rate, but blanket
-#   multiple-testing correction is too blunt — it penalizes a hypothesis we set
-#   out to test exactly as harshly as a fishing-expedition test we ran "just to
-#   look." Standard practice (and what reviewers expect) is to split the tests
-#   into two families. CONFIRMATORY tests are directed, pre-registered-in-spirit
-#   predictions backed by specific prior literature (e.g. "heat lowers Fv/Fm",
-#   Warner et al. 1999); each is a single planned comparison, so we report its
-#   RAW p-value. EXPLORATORY tests have no strong prior; we treat them as a
+#   multiple-testing correction is too blunt — it penalizes a directed hypothesis
+#   as harshly as an exploratory test with no prior prediction. Standard practice
+#   (and what reviewers expect) is to split the tests into two families.
+#   CONFIRMATORY tests are directed, pre-registered-in-spirit predictions backed
+#   by specific prior literature (e.g. "heat lowers Fv/Fm", Warner et al. 1999);
+#   each is a single planned comparison, so we report its RAW p-value. EXPLORATORY
+#   tests have no strong prior; we treat them as a
 #   family and apply Benjamini-Hochberg (BH) false-discovery-rate correction so
 #   that, across that family, the expected proportion of false positives is
 #   controlled. This script gathers p-values from the physiology, morphology, and
@@ -122,8 +122,8 @@ for (i in seq_len(nrow(surv))) {
 }
 
 # ---- BH correction within the EXPLORATORY family only ---------------------
-# Crucial design choice: BH is applied ONLY across the exploratory tests, so the
-# confirmatory tests keep their raw p (they are not "charged" for the others).
+# Design choice: BH is applied only across the exploratory tests, so the
+# confirmatory tests keep their raw p and are not penalized for the exploratory ones.
 out <- bind_rows(rows)                          # stack all collected test rows
 out$p_BH <- NA_real_                            # confirmatory rows stay NA here
 expl <- out$hypothesis == "exploratory"         # logical mask for the exploratory family

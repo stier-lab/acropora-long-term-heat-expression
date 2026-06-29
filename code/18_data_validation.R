@@ -17,8 +17,8 @@
 #   treatment plumbing intact, plausible value ranges, and no fragment IDs that
 #   appear in a response stream but are missing from the master metadata
 #   ("orphans"). Each check is logged PASS / FAIL / WARN / HANDLED / INFO so a
-#   reviewer can see at a glance whether the data are sound — a FAIL means stop
-#   and fix before publishing.
+#   reviewer can see whether the data are sound — a FAIL means stop and fix
+#   before publishing.
 # Output:  output/tables/18_validation_summary.csv  — one row per check
 # =============================================================================
 
@@ -45,8 +45,8 @@ EXPECTED_28C_TANKS <- c(3L, 6L, 9L, 12L)
 EXPECTED_31C_TANKS <- c(4L, 5L, 10L, 11L)
 EXPECTED_GENETS    <- c("a", "c", "d")
 
-# Reusable check: for a given dataset, confirm the tanks actually observed in
-# each treatment exactly match the expected plumbing layout. identical() is
+# Reusable check: for a given dataset, confirm the tanks observed in each
+# treatment exactly match the expected plumbing layout. identical() is
 # strict (same values AND order, hence the sort() above) — a mismatch means a
 # tank was mislabelled or a fragment landed in the wrong treatment. Each
 # treatment is only checked if that dataset contains rows for it (length() > 0).
@@ -175,7 +175,7 @@ add("wax_dipping", "caliper-curve SA correlation",
     "below threshold; standard curve retained and plotted in figure 07 for transparency")
 
 # ---- Physio morphology ----------------------------------------------------
-# The repeated non-destructive morphology measurements (the headline
+# The repeated non-destructive morphology measurements (the primary
 # wound-healing data). One row per coral × timepoint, so the count is large.
 # Confirm wounded corals are being tracked.
 ph <- readRDS(file.path(DATA_PROC, "physio_clean.rds"))

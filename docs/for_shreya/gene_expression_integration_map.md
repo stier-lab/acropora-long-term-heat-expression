@@ -1,6 +1,6 @@
 # Gene-expression ↔ phenotype integration map (suggestions)
 
-> 🗂️ **Phenotype → expression hypotheses (bidirectional)** · Updated 2026-06-12 · Index: [`README.md`](../../README.md) · covariates → `output/tables/31_rnaseq_phenotype_covariates.csv`.
+> **Phenotype → expression hypotheses (bidirectional)** · Updated 2026-06-12 · Index: [`README.md`](../../README.md) · covariates → `output/tables/31_rnaseq_phenotype_covariates.csv`.
 
 **Shreya — these are suggestions, not a plan you have to follow.** You own the gene-expression
 analysis and the paper's framing. This file just lays out where the phenotype results we've finished
@@ -45,7 +45,7 @@ corallite-patterning developmental signaling on the regeneration side; ECM/immun
 proliferation on the early-healing side) are hypotheses to confirm or overturn — the specific gene sets
 you interrogate are your call.
 **Refutes the decoupling story if:** heat also suppresses the Day 1–3 healing program — then the
-impairment is uniform, not phase-specific. (Worth checking honestly; it's the crux, and the expression
+impairment is uniform, not phase-specific. (Worth checking; the expression
 data, not the phenotype, settles it.)
 
 ### 2. Genet-c resilience → candidate thermal-tolerance genes

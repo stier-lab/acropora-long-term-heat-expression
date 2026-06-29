@@ -5,7 +5,7 @@
 #          from 13_genet_interaction.R — REML status, degrees of freedom,
 #          convergence, and effect direction vs. emmeans.
 #
-# What & why: two of the paper's claims rest on machinery that is easy to get
+# What & why: two of the paper's claims rest on methods that are easy to get
 #   subtly wrong, so this script independently re-derives both and checks them.
 #     PCA: collapses the four end-of-experiment health metrics (Fv/Fm, color,
 #     growth, log symbionts) into a few axes. We confirm the inputs were CENTERED
@@ -15,8 +15,8 @@
 #     on PC1 with a consistent sign (the biological-interpretation sanity check).
 #     LRT: a likelihood-ratio test compares two NESTED models — here a model with
 #     genet as an additive term vs. one where genet interacts with everything
-#     (treatment x wound x day x thicket). The LRT asks "does letting the heat
-#     response differ by genet improve fit more than chance?" (a test for G x E).
+#     (treatment x wound x day x thicket). The LRT tests whether letting the heat
+#     response differ by genet improves fit more than chance (a test for G x E).
 #     Two things MUST be true for an LRT on fixed effects to be valid: both models
 #     are fit by ML (REML = FALSE), and the degrees of freedom equal the
 #     difference in parameters. This script refits the nested pair, confirms
@@ -43,7 +43,7 @@ DIAG_FIG <- here::here("figures", "diagnostics")
 dir.create(DIAG_OUT, recursive = TRUE, showWarnings = FALSE)
 dir.create(DIAG_FIG, recursive = TRUE, showWarnings = FALSE)
 
-# One tidy row per check. Note: D uses INFO (descriptive, no pass/fail) alongside
+# One tidy row per check. D uses INFO (descriptive, no pass/fail) alongside
 # PASS/WARN/FAIL because several PCA outputs (variance, loadings) are reported,
 # not graded.
 results <- list()
@@ -104,8 +104,8 @@ report_lines <- c(report_lines,
           paste(pca_vars, collapse = ", ")))
 
 # center + scale. = standardize each variable to mean 0, SD 1 before rotating —
-# essential because Fv/Fm, % color, % growth and log-cells have wildly different
-# scales and an unscaled PCA would just track whichever has the biggest numbers.
+# essential because Fv/Fm, % color, % growth and log-cells have very different
+# scales; an unscaled PCA would track whichever variable has the largest values.
 pca <- prcomp(pca_input, center = TRUE, scale. = TRUE)
 var_exp <- summary(pca)$importance[2, ] * 100   # % variance per component
 cum_var <- summary(pca)$importance[3, ] * 100   # cumulative %
@@ -142,7 +142,7 @@ report_lines <- c(report_lines,
   sprintf("- Kaiser: %d PCs with eigenvalue > 1 (eigenvals %s)", n_kaiser,
           paste(sprintf("%.2f", eigen), collapse = ", ")))
 
-# Confirm prcomp actually stored centering/scaling constants (it returns the
+# Confirm prcomp stored centering/scaling constants (it returns the
 # means/SDs it used). Both must be present or the PCA is invalid => FAIL.
 centered <- !is.null(pca$center) && length(pca$center) > 0
 scaled   <- !is.null(pca$scale) && !isFALSE(pca$scale)
@@ -311,7 +311,7 @@ check_lmer_pair <- function(name, response, data, fixed_term = "day",
 
   # Reproducibility: re-run the LRT here and confirm its p-value matches the one
   # script 13 saved to within 1e-6. A mismatch (WARN) would mean the reported
-  # number can't be regenerated from the data — exactly what diagnostics catch.
+  # number cannot be regenerated from the data.
   lrt <- anova(m0, m1)
   recomputed_p <- lrt$`Pr(>Chisq)`[2]
   reported_p <- anova_tab$lrt_p[anova_tab$response == name]
@@ -378,12 +378,12 @@ report_lines <- c(report_lines, "",
   sprintf("- Fixed params: null=%d, full=%d (Δ=%d, reported df=%d)",
           p_bw0, p_bw1, ddf_bw, reported_df_bw))
 
-# Effect direction — does a significant genet interaction actually look like
-# G x E? For each response we compute the heat effect (31C - 28C) within each
-# genet. If the sign FLIPS across genets ("crossing"), that is genuine
+# Effect direction: check whether a significant genet interaction looks like
+# G x E. For each response we compute the heat effect (31C - 28C) within each
+# genet. If the sign FLIPS across genets ("crossing"), that is a
 # genotype-by-environment interaction; if all genets move the same way, the
-# interaction is just a difference in magnitude (additive/parallel). Descriptive
-# (INFO) — it interprets the LRT result rather than re-testing it.
+# interaction is a difference in magnitude (additive/parallel). Descriptive
+# (INFO): it interprets the LRT result rather than re-testing it.
 report_lines <- c(report_lines, "", "## Effect direction vs. emmeans\n")
 for (resp in unique(emm_tab$response)) {
   sub <- emm_tab |> filter(response == resp)

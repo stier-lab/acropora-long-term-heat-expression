@@ -4,12 +4,12 @@
 #          the proportional-hazards assumption (cox.zph / Schoenfeld residuals),
 #          check events-per-variable, and sanity-check the hazard-ratio direction.
 #
-# What & why: scripts 14 ask "how fast does each healing trait appear, and does
-#   heat speed it up?" using Cox proportional-hazards regression. A Cox model's
-#   central assumption is PROPORTIONAL HAZARDS — that the heat-vs-ambient hazard
-#   ratio is constant over time (heat doesn't help early then hurt late). If that
-#   assumption is violated, the single reported HR is misleading, so every Cox
-#   fit has to be tested before we believe it. This script:
+# What & why: the survival models in script 14 estimate how fast each healing
+#   trait appears and whether heat accelerates it, using Cox proportional-hazards
+#   regression. A Cox model's central assumption is PROPORTIONAL HAZARDS — that
+#   the heat-vs-ambient hazard ratio is constant over time (heat doesn't help
+#   early then hurt late). If that assumption is violated, the single reported HR
+#   is misleading, so every Cox fit is tested before it is trusted. This script:
 #     1. Recomputes time-to-event per coral (first day the trait = 1, else
 #        censored at the last observed day), mirroring code/14_morphology_kaplan.R.
 #     2. Refits three scopes: overall (stratified by genet), a documented N/A
@@ -63,7 +63,7 @@ ph <- readRDS(DATA) |>
 contrasts(ph$treatment) <- contr.treatment(nlevels(ph$treatment))
 
 # hole_in_center + polyp_in_hole combined into axial_polyp_formation (code/04),
-# mirroring the milestones actually analysed in 14.
+# mirroring the milestones analysed in 14.
 traits <- c("axial_polyp_formation", "wound_smoothed",
             "pigment_over_wound", "tip_exist", "tip_extension",
             "new_corallites_on_tip")
@@ -187,8 +187,8 @@ diagnose_fit <- function(fit, trait, scope) {
                           ", df=", tab$df[i])
       )
     }
-    # Only bother saving the residual plot when there is something to see — i.e.
-    # the GLOBAL test or any covariate fails the PH assumption.
+    # Save the residual plot only when the GLOBAL test or any covariate fails
+    # the PH assumption.
     any_violation <- any(tab$p < 0.05, na.rm = TRUE)
     if (any_violation) {
       fig_name <- paste0("C_", trait, "_",

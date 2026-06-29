@@ -8,14 +8,14 @@
 #                   preserved, regeneration impaired)
 #          Panel D: PCA biplot (multivariate summary)
 #
-# What & why: this is the manuscript's single multi-panel "story" figure. Each
-#   panel is built as its own self-contained ggplot object (pA, pB, pC, pD), then
-#   patchwork stitches them into a 2×2 grid at the very end. The narrative reads
-#   left-to-right, top-to-bottom: (A) prove the treatment worked — the tanks
-#   really sat at 28 vs 31 °C; (B) show whole-colony physiological stress diverge
-#   over time (Fv/Fm); (C) the headline mechanism — heat lets wounds close
-#   (left KM) but blocks new-corallite regeneration (right KM); (D) tie it all
-#   together in multivariate space. Key assembly conventions used throughout:
+# What & why: this is the manuscript's single multi-panel figure. Each panel is
+#   built as its own self-contained ggplot object (pA, pB, pC, pD), then patchwork
+#   assembles them into a 2×2 grid at the end. The narrative reads left-to-right,
+#   top-to-bottom: (A) show the treatment worked — the tanks held 28 vs 31 °C;
+#   (B) show whole-colony physiological stress diverge over time (Fv/Fm); (C) the
+#   key mechanism — heat lets wounds close (left KM) but blocks new-corallite
+#   regeneration (right KM); (D) summarize in multivariate space. Key assembly
+#   conventions used throughout:
 #   each panel carries a letter via labs(tag = ...) (NOT a subtitle — panel
 #   descriptions live in the caption); legends are suppressed per-panel with
 #   guide = "none" and groups are instead DIRECT-LABELLED inside the panel
@@ -64,7 +64,7 @@ temp_pa <- apex |>
          between(date, as_date("2025-05-25"), as_date("2025-06-22")))
 
 # With only two groups we direct-label instead of using a legend (CLAUDE.md
-# tiered legend rule). Grab one anchor point per treatment — the last date of one
+# tiered legend rule). Take one anchor point per treatment — the last date of one
 # tank — to position the "28 °C"/"31 °C" text annotations placed below.
 last_28 <- temp_pa |> filter(treatment == "28C") |>
   group_by(tank) |> slice_max(date, n = 1) |> ungroup() |>
@@ -135,9 +135,9 @@ pB <- ggplot(pam_df, aes(day, m, colour = treatment,
   theme_pub(9)
 
 # ---- Panel C: KM curves for the two diagnostic traits --------------------
-# The mechanistic punchline, distilled from the full code/14 analysis to just the
-# two contrasting milestones: closure (wound_smoothed) vs regeneration
-# (new_corallites_on_tip). We recompute first-observed event days and Kaplan-
+# The key mechanism, reduced from the full code/14 analysis to the two
+# contrasting milestones: closure (wound_smoothed) vs regeneration
+# (new_corallites_on_tip). Recompute first-observed event days and Kaplan-
 # Meier curves inline here (same logic as code/14) so this figure is
 # self-contained. See code/14 for the censoring/KM explanation.
 focus_traits <- c(wound_smoothed = "Wound smoothed (closure)",
@@ -162,7 +162,7 @@ ph_events <- map_dfr(names(focus_traits), function(tr) {
     mutate(trait = unname(focus_traits[tr]))
 })
 
-# Kaplan-Meier by hand: cumprod of (1 - events/at-risk) over event days, plotted
+# Kaplan-Meier computed manually: cumprod of (1 - events/at-risk) over event days, plotted
 # as cumulative % expressing (1 - survival), seeded at day 0 = 0% expressed.
 km_curves <- ph_events |>
   group_by(trait, treatment) |>
@@ -254,7 +254,7 @@ pD <- ggplot(scores, aes(PC1, PC2, colour = treatment, shape = wound)) +
 # ---- Compose ---------------------------------------------------------------
 # Assemble the four panels with patchwork. `+` places panels side by side, `/`
 # stacks rows. Top row A|B is equal width; bottom row gives the two-facet KM
-# panel C extra room (1.4 vs 1) so its facets don't get squeezed by the biplot.
+# panel C extra room (1.4 vs 1) so its facets are not compressed by the biplot.
 # heights = c(0.9, 1.1) makes the bottom row a bit taller; guides = "collect"
 # gathers every surviving legend (the wound shapes) into ONE shared legend.
 top_row <- pA + pB + patchwork::plot_layout(widths = c(1, 1))

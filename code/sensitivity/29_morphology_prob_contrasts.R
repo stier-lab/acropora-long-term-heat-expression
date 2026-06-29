@@ -6,18 +6,18 @@
 #          want "how much lower is the probability of regeneration under heat."
 #
 # What & why: the morphology GLMMs are fit on the logit (log-odds) scale, where a
-#   coefficient like -1.4 is mathematically clean but biologically opaque — no
-#   reader thinks in log-odds. This script translates each treatment effect into
-#   two scales a reader can actually picture, evaluated at day 10 (where the
-#   Kaplan-Meier curves diverge most): (1) the Δ-probability — literally "the
-#   probability of the trait under ambient minus under heat" (e.g. 0.30 = heat
-#   lowers the chance by 30 percentage points); and (2) the odds ratio (31C vs
-#   28C), where <1 means heat reduces the odds. We use emmeans to get model-based
-#   marginal means averaged over genet. One numerical hazard: with binary data a
-#   trait can be perfectly "separated" (probability pinned at 0 or 1 in a group),
-#   which makes the log-odds — and thus the OR and its CI — blow up to absurd
-#   values (~1e19). The bounded Δ-probability is still meaningful in that case,
-#   so we keep it but null out the garbage OR/CI/p (see the separation guard).
+#   coefficient like -1.4 is precise but biologically opaque — no reader thinks in
+#   log-odds. This script translates each treatment effect into two scales a reader
+#   can interpret, evaluated at day 10 (where the Kaplan-Meier curves diverge most):
+#   (1) the Δ-probability — the probability of the trait under ambient minus under
+#   heat (e.g. 0.30 = heat lowers the chance by 30 percentage points); and (2) the
+#   odds ratio (31C vs 28C), where <1 means heat reduces the odds. We use emmeans to
+#   get model-based marginal means averaged over genet. One numerical hazard: with
+#   binary data a trait can be perfectly "separated" (probability pinned at 0 or 1
+#   in a group), which makes the log-odds — and thus the OR and its CI — inflate to
+#   extreme values (~1e19). The bounded Δ-probability is still meaningful in that
+#   case, so we keep it but null out the meaningless OR/CI/p (see the separation
+#   guard).
 # Input:   output/models/12c_morph_*_blme.rds  (penalized binomial GLMMs)
 # Output:  output/tables/29_morphology_prob_contrasts.csv
 # =============================================================================
@@ -70,7 +70,7 @@ contrast_one <- function(f) {
   bind_cols(prob, orr) |>
     # Separation guard: when either probability sits at the {0,1} boundary, the
     # log-odds contrast (and therefore the odds ratio and its CI) is undefined
-    # and explodes to ~1e19. Keep the bounded Δ-probability; null out the
+    # and diverges to ~1e19. Keep the bounded Δ-probability; null out the
     # meaningless OR/CI/p so these artifacts never reach a table or the paper.
     mutate(
       separated = coalesce(prob_28 <= 1e-6 | prob_28 >= 1 - 1e-6 |

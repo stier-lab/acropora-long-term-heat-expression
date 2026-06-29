@@ -1,6 +1,6 @@
 # =============================================================================
 # Purpose: Master spreadsheet coverage check (diagnostic suite H) — confirm that
-#          every statistic from the per-script result CSVs actually made it into
+#          every statistic from the per-script result CSVs made it into
 #          the single master results table.
 #
 # What & why: each analysis script writes its own results CSV, and script 20
@@ -67,8 +67,8 @@ for (src in src_tables) {
     src_rows   = nrow(d),
     master_rows = n_master,
     # MISSING: nothing copied. COVERED: at least half the source rows present
-    # (some source rows are intentionally summarized, so 50% is the bar, not 100%).
-    # PARTIAL: present but under that threshold — worth a look.
+    # (some source rows are intentionally summarized, so 50% is the threshold, not 100%).
+    # PARTIAL: present but under that threshold.
     coverage_status = if (n_master == 0) "MISSING"
                        else if (n_master >= nrow(d) * 0.5) "COVERED"
                        else "PARTIAL"

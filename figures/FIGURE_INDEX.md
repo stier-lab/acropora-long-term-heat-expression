@@ -1,6 +1,6 @@
 # Figure Index — LTH (Heat × Wound × *A. pulchra*, Mo'orea 2025)
 
-> 🗂️ **Catalog of every figure → its script** · Updated 2026-06-12 · Index: [`README.md`](../README.md) · figures built by `code/11,13–16,19,26`.
+> **Catalog of every figure → its script** · Updated 2026-06-12 · Index: [`README.md`](../README.md) · figures built by `code/11,13–16,19,26`.
 
 Catalog of the 23 PNG figures in `figures/` (each has a matching PDF), the
 `code/NN_*.R` script that generates it, and where it maps to the manuscript

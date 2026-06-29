@@ -1,5 +1,5 @@
 # =============================================================================
-# Purpose: Figure render / sanity audit. Confirms that every figure in
+# Purpose: Figure render check. Confirms that every figure in
 #          figures/ actually rendered to a non-broken PNG, and flags files
 #          that look wrong by size:
 #            - too small (< 5 KB)   => probably a broken / empty render
@@ -8,10 +8,10 @@
 # What & why: a manuscript has many figures, each produced by a different
 #   script, so it is easy for one to silently fail to render (an empty or
 #   truncated PNG) without anyone noticing until submission. This script is the
-#   catch-all build check: it walks the figures/ folder, records each PNG's
-#   size and last-modified time, and assigns a PASS / WARN / FAIL status from
-#   the file size so a single glance confirms the whole figure set is present
-#   and healthy. It is NOT a statistical analysis and it does not inspect the
+#   build check: it walks the figures/ folder, records each PNG's size and
+#   last-modified time, and assigns a PASS / WARN / FAIL status from the file
+#   size so the whole figure set can be confirmed present and intact.
+#   It is NOT a statistical analysis and it does not inspect the
 #   pixels (no palette/legend/clipping checks here — those live in the
 #   pub-figure-pipeline). The working diagnostic PNGs in figures/12_diagnostics/
 #   are excluded: they are model-check plots, not manuscript figures, and have

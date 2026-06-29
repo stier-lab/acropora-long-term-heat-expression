@@ -4,8 +4,8 @@
 #          convergence/singularity checks, near-zero random-effect variance,
 #          a separation test, and a predicted-probability effect-sanity check.
 #
-# What & why: each healing trait (e.g. "is the wound smoothed over?") is scored
-#   yes/no per coral per day and modeled as a binomial GLMM
+# What & why: each healing trait (e.g. whether the wound is smoothed over) is
+#   scored yes/no per coral per day and modeled as a binomial GLMM
 #   (glmer(y ~ treatment * day * thicket + (1|tank), wounded corals only)). These
 #   logistic mixed models have their own failure modes, so the battery here is:
 #     - DHARMa: simulate from the fitted model and rescale residuals to
@@ -17,8 +17,8 @@
 #       random effect estimable, or did its variance collapse to ~0?
 #     - separation: when a predictor perfectly predicts yes/no (common with
 #       all-or-nothing healing traits), logistic coefficients and their standard
-#       errors blow up toward infinity. We flag any fixed-effect SE > 10 (WARN) or
-#       > 50 / non-finite (FAIL) as the tell-tale sign of (quasi-)separation.
+#       errors diverge toward infinity. We flag any fixed-effect SE > 10 (WARN) or
+#       > 50 / non-finite (FAIL) as a sign of (quasi-)separation.
 #     - effect sanity: predicted P(trait) at the last day, 28 vs 31 C, must be a
 #       valid probability in [0,1] and move in a sensible direction.
 #   Traits with a known issue that a companion model fixes (the penalized `blme`
@@ -197,9 +197,9 @@ diagnose_one <- function(mfile) {
                                   paste(sprintf("%s=%.4g", vc$grp, vc$vcov),
                                         collapse = ", ")))
 
-  # 3) separation: the giveaway is a runaway standard error. When a predictor
+  # 3) separation: the signal is a large standard error. When a predictor
   # perfectly (or nearly) separates yes/no outcomes, the logistic coefficient
-  # heads to +/-infinity and its SE explodes. We scan the largest fixed-effect SE:
+  # diverges to +/-infinity and its SE diverges with it. We scan the largest fixed-effect SE:
   # > 50 or non-finite = FAIL (separation), 10-50 = WARN (quasi-separation),
   # <= 10 = plausible. A blme refit, if present, downgrades a FAIL to HANDLED.
   fe <- suppressWarnings(summary(m)$coefficients)

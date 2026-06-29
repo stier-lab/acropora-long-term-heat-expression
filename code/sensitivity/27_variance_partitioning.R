@@ -8,20 +8,19 @@
 #          Binomial GLMMs: LATENT-scale ICC with residual variance = pi^2/3
 #          (Nakagawa & Schielzeth 2010).
 #
-# What & why: every model in this study has random effects — tank (the unit we
-#   actually heated) and colony/id (repeated measures on the same coral). The
-#   ICC (intraclass correlation) answers "of all the unexplained, random-effect
-#   variance, what FRACTION lives in each grouping factor?" Two practical reasons
-#   to report it: (1) a high TANK ICC would be a red flag — it would mean tank
-#   identity, not treatment, drives the response (pseudoreplication risk); a low
-#   tank ICC reassures us the treatment effect isn't a tank artifact. (2) a high
-#   COLONY/id ICC means corals are consistently different from one another (a
-#   genotype/individual signal worth noting). For the Gaussian (continuous) LMMs
-#   the residual variance is estimated directly. For binomial GLMMs there is no
-#   single residual variance on the 0/1 scale, so we use the standard logistic
-#   "latent-scale" trick: fix the residual at pi^2/3 (the variance of the
-#   standard logistic distribution) and compute the ICC on that underlying
-#   continuous scale (Nakagawa & Schielzeth 2010).
+# What & why: every model in this study has random effects — tank (the unit
+#   heated) and colony/id (repeated measures on the same coral). The ICC
+#   (intraclass correlation) gives the fraction of the random-effect variance
+#   attributable to each grouping factor. Two reasons to report it: (1) a high
+#   tank ICC would be a concern — it would mean tank identity, not treatment,
+#   drives the response (pseudoreplication risk); a low tank ICC indicates the
+#   treatment effect isn't a tank artifact. (2) a high colony/id ICC means corals
+#   are consistently different from one another (a genotype/individual signal
+#   worth noting). For the Gaussian (continuous) LMMs the residual variance is
+#   estimated directly. For binomial GLMMs there is no single residual variance on
+#   the 0/1 scale, so we use the standard logistic latent-scale approach: fix the
+#   residual at pi^2/3 (the variance of the standard logistic distribution) and
+#   compute the ICC on that underlying continuous scale (Nakagawa & Schielzeth 2010).
 # Input:   output/models/12_{pam,color,zoox}_lmm.rds,
 #          output/models/12c_morph_*_blme.rds
 # Output:  output/tables/27_variance_partitioning.csv

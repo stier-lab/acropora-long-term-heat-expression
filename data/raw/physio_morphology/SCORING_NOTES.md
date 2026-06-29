@@ -9,8 +9,8 @@ issue. Compiled from the lab's own records:
   healing timeline below) — Stier Lab Drive
 - The live master sheet **"physio characterization log - complete"** (Google Sheets)
 
-> Note: the Drive files `MORPHOLOGY_RUBRIC.md` / `MORPHOLOGY_RELIABILITY.md`
-> describe a **different** study (the Tiahura massive-*Porites* colony-shape blitz:
+> The Drive files `MORPHOLOGY_RUBRIC.md` / `MORPHOLOGY_RELIABILITY.md`
+> describe a **different** study (the Tiahura massive-*Porites* colony-shape survey:
 > `bumpy` / `nobby` / `columnar` …) and do **not** apply to these traits.
 
 ## Trait definitions (from the spreadsheet `READ.ME` tab)

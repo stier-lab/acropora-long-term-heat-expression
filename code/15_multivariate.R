@@ -14,7 +14,7 @@
 #   heat effect) and (b) which original variables load on which axis (the arrows).
 #   This is descriptive/visual, not a hypothesis test — it complements, not
 #   replaces, the per-response models. We standardize before PCA (see below)
-#   because the four variables are on wildly different units and scales.
+#   because the four variables are on different units and scales.
 # Input:   data/processed/{pam_clean,color_clean,buoyant_weight_clean,
 #                          symbiont_chl_clean}.rds
 # Output:  data/processed/coral_physio_wide.rds
@@ -49,7 +49,7 @@ color_last <- color |>
 zoox_last <- phys |>
   group_by(id, treatment, wound, thicket) |>
   filter(biopsy_day == max(biopsy_day, na.rm = TRUE)) |>
-  summarise(zoox_end = log10(mean(cells_per_cm2)), .groups = "drop")  # log10 to tame the skew
+  summarise(zoox_end = log10(mean(cells_per_cm2)), .groups = "drop")  # log10 to reduce skew
 
 bw_summary <- bw |>
   group_by(id, treatment, wound, thicket) |>
@@ -143,7 +143,7 @@ save_fig(p_pca, "15_physio_PCA_biplot", width = 150, height = 130)
 # ---- Per-genet faceted biplot — does each genet move the same way? --------
 # Same biplot split into one panel per genet. If the 28C→31C shift is larger in
 # one genet's panel than another's, that genet is more thermally plastic/sensitive
-# — the multivariate echo of the genet effects in code/12 and code/13.
+# — the multivariate counterpart of the genet effects in code/12 and code/13.
 p_pca_facet <- ggplot(scores, aes(PC1, PC2,
                                    colour = treatment, shape = wound)) +
   geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.25) +

@@ -25,11 +25,11 @@
 #   and end of the experiment; because seawater buoys the skeleton, the buoyant
 #   weight can be converted to dry skeletal (aragonite) mass with Archimedes'
 #   principle (Davies 1989). The mass gained over the 15-day window, expressed as
-#   a percentage of the coral's starting mass, is the growth metric. The headline
-#   result — heating cuts growth by ~34% — is what this script estimates and
-#   tests. One subtlety drives the analysis design: temperature was applied to
+#   a percentage of the coral's starting mass, is the growth metric. This script
+#   estimates and tests the main result: heating reduces growth by ~34%. The
+#   design has one consequence: temperature was applied to
 #   whole TANKS, not to individual corals, so the coral-level linear model gives
-#   honest effect-size estimates but cannot give an honest p-value (corals in a
+#   valid effect-size estimates but not a valid p-value (corals in a
 #   tank are not independent). The inferential test for the heat effect is
 #   therefore a tank-level permutation test that treats the 8 tanks (not the 48
 #   corals) as the units that were randomized.
@@ -125,7 +125,7 @@ res <- broom::tidy(m_growth, conf.int = TRUE) |>   # coefficient table with 95% 
   relocate(model_scope, .after = term)
 write_csv(res, file.path(TBL_DIR, "05_buoyant_weight_lm.csv"))
 
-# ---- Tank-level permutation test (the honest heat-effect p-value) ----------
+# ---- Tank-level permutation test for the heat effect ----------
 # Collapse to one mean per tank so each randomized unit contributes one number.
 tank_growth <- bw_a |>
   group_by(tank, treatment) |>
@@ -203,7 +203,7 @@ p_bw <- ggplot(bw_a, aes(interaction(treatment, wound, sep = " · "),
 save_fig(p_bw, "05_buoyant_weight_growth", width = 150, height = 95)
 
 # ---- Console summary -------------------------------------------------------
-# Echo the key tables so a quick run shows the headline result without opening CSVs.
+# Echo the key tables so a quick run shows the main result without opening CSVs.
 cat("\n=== % mass change LM (coral-level descriptive) ===\n")
 print(res)
 cat("\n=== % mass change tank-level temperature test ===\n")

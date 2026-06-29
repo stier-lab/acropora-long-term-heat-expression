@@ -21,14 +21,14 @@
 #             We therefore compare the STRUCTURE/MAGNITUDE of variation, not
 #             individual genets.
 #
-# What & why: a reviewer's first question about a chronic-heat experiment is
-#   "how hot is hot?" — was 31 °C a gentle nudge or a lethal cook? To answer it
-#   we borrow an independent, calibrated yardstick: Cunning et al. (2024) ran an
-#   acute CBASS assay (a standardized 18-h heat ramp) on 20 genotypes of THIS
-#   species from the SAME reef (Mahana, Mo'orea) and fitted an ED50 — the
+# What & why: a reviewer's first question about a chronic-heat experiment is how
+#   severe the heat was — whether 31 °C was a mild increase or acutely lethal. To
+#   answer it we use an independent, calibrated benchmark: Cunning et al. (2024)
+#   ran an acute CBASS assay (a standardized 18-h heat ramp) on 20 genotypes of
+#   THIS species from the SAME reef (Mahana, Mo'orea) and fitted an ED50 — the
 #   temperature where photosynthetic efficiency (Fv/Fm) collapses to half. Their
 #   mean ED50 is ~35.4 °C, so our 31 °C treatment sits ~4 °C *below* the acute
-#   breaking point: chronic-but-sublethal, not an acute kill. The script does two
+#   threshold: chronic but sublethal, not acutely lethal. The script does two
 #   things: (#2) drops 28/31 °C onto that ED50 number line, and (#1) checks that
 #   both methods — acute CBASS and our chronic LTH design — agree that there is
 #   substantial heritable variation in heat tolerance among genotypes. This is
@@ -93,7 +93,7 @@ write_csv(concordance, file.path(TBL_DIR, "26_genotype_variation_concordance.csv
 # ---- Figure: thermal-context number line ----------------------------------
 # A one-dimensional temperature axis: the spread of acute ED50s (20 genets, in
 # orange) and the two chronic treatment triangles (28/31 °C, blue) on the same
-# scale, so the reader sees at a glance that heat stays below the acute threshold.
+# scale, so the reader can see heat stays below the acute threshold.
 ed50_pts <- ed50 |> mutate(y = 0)          # all points on the y = 0 baseline
 band <- tibble(xmin = ed50_min, xmax = ed50_max)   # shaded ED50 genet range
 

@@ -3,13 +3,13 @@
 #          Source this once from the project root: `Rscript code/_run_all.R`
 #          Total runtime ~3 minutes (Apex XML parse dominates first pass).
 #
-# What & why: this is the MASTER pipeline runner — the single entry point that
-#   reproduces every table and figure from the raw data in one command. It just
+# What & why: the MASTER pipeline runner — the single entry point that
+#   reproduces every table and figure from the raw data in one command. It
 #   source()s each analysis script in turn. The ONLY thing that matters here is
 #   the ORDER: many scripts read .rds/.csv files that an EARLIER script wrote, so
 #   running them out of order would read stale (or missing) inputs. The list
-#   below is therefore a dependency order, not an alphanumeric one. A few load-
-#   bearing examples (see also the inline notes):
+#   below is therefore a dependency order, not an alphanumeric one. A few key
+#   examples (see also the inline notes):
 #     - 01 (load/clean metadata) runs first: nearly everything downstream reads
 #       the cleaned data it produces.
 #     - 07 (wax dipping) runs BEFORE 05 (buoyant weight) because 05's areal
@@ -19,8 +19,8 @@
 #       (06) and the genet resilience summary (19), so both must exist first.
 #     - 30 (manuscript audit) runs DEAD LAST: it checks the manuscript against
 #       the freshly regenerated tables, so every table must already be rebuilt.
-#   Bottom line: edit this list with care — reordering can silently feed a script
-#   yesterday's outputs.
+#   Edit this list with care: reordering can silently feed a script stale
+#   outputs.
 # =============================================================================
 
 # Source from project root (resolve via here::here, which uses .Rproj/.here).

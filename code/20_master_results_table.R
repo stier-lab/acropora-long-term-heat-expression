@@ -39,7 +39,7 @@
 #   and a paper-ready formatted CSV. Nothing here fits a model; it only
 #   transcribes and harmonizes results that already exist. Blocks wrapped in
 #   `if (file.exists(...))` are optional sensitivity analyses that may not have
-#   been run; they simply contribute zero rows (an empty tibble) when their
+#   been run; they contribute zero rows (an empty tibble) when their
 #   source CSV is absent, so the table degrades gracefully.
 # Input:   output/tables/*.csv, output/models/*.rds
 # Output:  output/tables/20_master_results.csv             — tidy spreadsheet
@@ -51,7 +51,7 @@ source(here::here("code", "00_setup.R"))
 # ---- Helpers --------------------------------------------------------------
 # Small formatters and lookups shared by the blocks below.
 
-# Render a p-value the journal way: "<0.001" below that threshold, else 3 dp.
+# Render a p-value in journal format: "<0.001" below that threshold, else 3 dp.
 fmt_p   <- function(p) {
   ifelse(is.na(p), NA_character_,
          ifelse(p < 0.001, "<0.001", sprintf("%.3f", p)))
@@ -77,20 +77,18 @@ qual_dir <- function(estimate, p, response_label,
 response_label_map <- c(
   pam_fvfm         = "PAM Fv/Fm",
   color_dscale     = "Color (Siebeck D)",
-  growth_pct     = "Growth (% mass change)",
-  growth_pct       = "Buoyant weight growth (%)",
-  log_zoox_density = "ln symbionts cm-2",
-  pct_growth       = "Buoyant weight growth (%)"
+  growth_pct       = "Growth (% mass change)",   # from 12 (LMM ANOVA, emmeans)
+  pct_growth       = "Growth (% mass change)",   # from 05 (tank-permutation / descriptive lm)
+  log_zoox_density = "ln symbionts cm-2"
 )
 
 # Lookup: internal response_id -> natural (back-transformed) units for display.
 natural_units <- c(
   pam_fvfm         = "Fv/Fm",
   color_dscale     = "D-scale units",
-  growth_pct     = "% over 15 d",
-  growth_pct       = "%",
-  log_zoox_density = "ln cells cm-2",
-  pct_growth       = "%"
+  growth_pct       = "% over 15 d",
+  pct_growth       = "% over 15 d",
+  log_zoox_density = "ln cells cm-2"
 )
 
 baseline_means <- function() {
@@ -116,10 +114,6 @@ baseline_means <- function() {
       summarise(baseline = mean(color_num, na.rm = TRUE), .groups = "drop"),
     growth_pct = bw |>
       filter(treatment == "28C", is.finite(pct_growth)) |>
-      group_by(thicket, wound) |>
-      summarise(baseline = mean(pct_growth, na.rm = TRUE), .groups = "drop"),
-    growth_pct   = bw |>
-      filter(treatment == "28C") |>
       group_by(thicket, wound) |>
       summarise(baseline = mean(pct_growth, na.rm = TRUE), .groups = "drop"),
     log_zoox_density = tibble(
@@ -580,7 +574,7 @@ bw_lm <- read_csv(file.path(TBL_DIR, "05_buoyant_weight_lm.csv"),
   )
 
 # Tank-level randomization test: the experimental unit for temperature is the
-# tank (n = 8), not the coral, so this is the design-honest treatment test that
+# tank (n = 8), not the coral, so this is the design-correct treatment test that
 # avoids pseudoreplication from many corals within a tank.
 bw_tank_test <- if (file.exists(file.path(TBL_DIR, "05_buoyant_weight_tank_test.csv"))) {
   read_csv(file.path(TBL_DIR, "05_buoyant_weight_tank_test.csv"),
@@ -664,7 +658,7 @@ bw_means_rows <- bw_raw |>
   )
 
 # Derived headline number: the % reduction in mass gain at 31C relative to 28C
-# (one of the paper's take-home figures), computed straight from the two means.
+# (a key reported number), computed straight from the two means.
 bw_pct_drop <- bw_raw |>
   summarise(
     pct_drop_31C_vs_28C = (mean_pct[treatment == "31C"] -

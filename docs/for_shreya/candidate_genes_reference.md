@@ -1,6 +1,6 @@
 # Candidate genes — literature + lab-data reference (optional)
 
-> 🗂️ **Optional candidate-gene reference** · Updated 2026-06-26 · Index: [`README.md`](../../README.md) · companion to `analysis_proposal.md` and `gene_expression_integration_map.md` · machine-readable twin: [`candidate_genes_reference.csv`](candidate_genes_reference.csv).
+> **Optional candidate-gene reference** · Updated 2026-06-26 · Index: [`README.md`](../../README.md) · companion to `analysis_proposal.md` and `gene_expression_integration_map.md` · machine-readable twin: [`candidate_genes_reference.csv`](candidate_genes_reference.csv).
 
 **Read this as a resource to mine, not a prescribed panel.** The rest of `docs/for_shreya/`
 deliberately frames the RNA-seq as *hypothesis-led, not candidate-gene-led* (see
@@ -14,8 +14,8 @@ PDFs; Cleves & Tinoco 2020 via NotebookLM). Source tags: a paper name =
 the gene is named *in that paper*; **(lab)** = from the lab's own planning docs/panels (no external
 primary confirmed); ⚠ = a flagged discrepancy.
 
-**Relevance to LTH.** Heat (28 vs 31 °C) × wound × genet, biopsies D0/D1/D3/D10/D15. Headline:
-**heat blocks regeneration, not closure**, with a genet gradient **C > D > A**. Tables split by axis;
+**Relevance to LTH.** Heat (28 vs 31 °C) × wound × genet, biopsies D0/D1/D3/D10/D15. Key result:
+**heat blocks regeneration, not closure**, with a genet gradient **C > D > A**. The tables below split by axis;
 the **heat × wound interaction** is the molecular LTH phenotype, and **per-genet baseline
 ("frontloading," Barshis 2013)** is the molecular version of C > D > A.
 

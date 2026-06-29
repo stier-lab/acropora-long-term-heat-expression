@@ -4,23 +4,24 @@
 #          checks, influence (Cook's distance), and an emmeans direction-sanity
 #          check against the biological expectation.
 #
-# What & why: before we trust any p-value in the paper, each fitted model gets a
-#   "did this fit actually behave?" audit. This script loads the four
-#   already-fitted continuous-outcome models (PAM Fv/Fm, color D-scale, log
-#   symbiont density, areal calcification) and puts each through the same battery:
+# What & why: each fitted model is audited before its p-values are used. This
+#   script loads the four already-fitted continuous-outcome models (PAM Fv/Fm,
+#   color D-scale, log symbiont density, areal calcification) and puts each
+#   through the same battery:
 #     - DHARMa: simulate many new datasets FROM the fitted model, then compare
 #       the simulated residuals to the observed ones. Raw residuals from mixed
 #       models are not expected to look normal, so DHARMa rescales each
 #       observation's residual to a uniform(0,1) "quantile" — a correctly
-#       specified model produces flat, uniform residuals. We then formally test
-#       that uniformity (Kolmogorov-Smirnov), the dispersion (is the spread
-#       right, or over/under-dispersed?), and whether there are more extreme
+#       specified model produces flat, uniform residuals. The script then tests
+#       that uniformity (Kolmogorov-Smirnov), the dispersion (whether the spread
+#       is over- or under-dispersed), and whether there are more extreme
 #       outliers than the model expects. p >= 0.05 = the model passes that test.
-#     - convergence / singularity: did the optimizer find a stable solution, or
-#       did a random-effect variance collapse to ~0 (a "singular" fit)?
-#     - influence: does one coral disproportionately drive the result (Cook's D)?
-#     - direction sanity: does the heated-vs-control contrast point the way
-#       biology predicts (heat should DROP Fv/Fm, symbionts, color, and growth)?
+#     - convergence / singularity: whether the optimizer found a stable solution
+#       and whether a random-effect variance collapsed to ~0 (a "singular" fit).
+#     - influence: whether one coral disproportionately drives the result (Cook's D).
+#     - direction sanity: whether the heated-vs-control contrast points the
+#       direction biology predicts (heat should DROP Fv/Fm, symbionts, color, and
+#       growth).
 #   Every check writes a PASS / WARN / FAIL / HANDLED row. FAILs that are already
 #   addressed by a companion robustness model (e.g. the ordinal color CLMM) are
 #   downgraded to HANDLED in the final reconciliation step.
@@ -97,9 +98,9 @@ run_dharma <- function(model, model_name, fig_prefix) {
     return(invisible(NULL))
   }
 
-  # KS uniformity: are the scaled residuals actually uniform(0,1)? The
+  # KS uniformity: test whether the scaled residuals are uniform(0,1). The
   # Kolmogorov-Smirnov test compares their distribution to a flat line.
-  # Big p = residuals look uniform = model captures the distribution shape.
+  # Large p = residuals look uniform = model captures the distribution shape.
   ks <- testUniformity(sim, plot = FALSE)
   add_row(model_name, "DHARMa_KS_uniformity",
           statistic = unname(ks$statistic), p_value = ks$p.value,
@@ -108,7 +109,7 @@ run_dharma <- function(model, model_name, fig_prefix) {
                           ifelse(ks$p.value >= 0.01, "WARN", "FAIL")),
           notes = "Kolmogorov-Smirnov on scaled residuals")
 
-  # Dispersion: is the residual spread right? testDispersion compares the
+  # Dispersion: check the residual spread. testDispersion compares the
   # variance of observed residuals to the simulated ones. statistic ~ 1 = OK;
   # > 1 = overdispersed (more noise than the model allows), < 1 = underdispersed.
   # Small p flags a mis-modeled variance. Grade: p>=.05 PASS, >=.01 WARN, else FAIL.
@@ -123,9 +124,9 @@ run_dharma <- function(model, model_name, fig_prefix) {
             notes = "Ratio of obs/sim residual variance")
   }
 
-  # Outliers: are there more observations falling outside the simulated range
-  # than expected? type="bootstrap" gives a calibrated p-value (falls back to the
-  # default test if bootstrap errors). Small p = excess outliers worth a look.
+  # Outliers: test whether more observations fall outside the simulated range
+  # than expected. type="bootstrap" gives a calibrated p-value (falls back to the
+  # default test if bootstrap errors). Small p = excess outliers.
   out <- tryCatch(testOutliers(sim, plot = FALSE, type = "bootstrap"),
                   error = function(e) tryCatch(testOutliers(sim, plot = FALSE),
                                                error = function(e) NULL))
@@ -193,7 +194,7 @@ check_lmer_convergence <- function(model, model_name) {
 # lmer (needs influence.ME to refit leaving each obs out) and one for plain lm.
 top_cooks_lmer <- function(model, model_name, k = 3) {
   # influence.ME refits the model dropping each observation in turn; this is the
-  # honest way to get Cook's D for a mixed model. It can fail on tricky fits, so
+  # standard way to get Cook's D for a mixed model. It can fail on some fits, so
   # we trap that and fall back to the saved residual plots / direction checks.
   inf <- tryCatch(
     influence.ME::influence(model, obs = TRUE),
@@ -206,7 +207,7 @@ top_cooks_lmer <- function(model, model_name, k = 3) {
     return(NULL)
   }
   # Cook's D per observation; threshold = 4/n. We keep the top-k most influential
-  # row indices so a human can eyeball whether they are real or data-entry slips.
+  # row indices so they can be inspected for genuine influence vs data-entry error.
   cd <- as.numeric(cooks.distance(inf))
   n <- length(cd)
   thresh <- 4 / n
@@ -270,8 +271,8 @@ check_direction <- function(model, model_name, response_label,
   pv  <- cs$p.value[1]
   # Translate the sign into what HEATED corals did: if control > heated (est > 0)
   # the response went DOWN under heat. We then compare that to `expect` (the
-  # biology-predicted direction). This is a sanity check, not a hypothesis test —
-  # a mismatch is a WARN to investigate, not a hard failure.
+  # biology-predicted direction). This is a sanity check, not a hypothesis test:
+  # a mismatch is a WARN to investigate, not a failure.
   observed_dir <- ifelse(est > 0, "decrease", "increase") # of heated vs control
   ok <- observed_dir == expect
   add_row(model_name, paste0("emmeans_direction_", response_label),
@@ -321,8 +322,8 @@ check_direction(m_zoox, "12_zoox_lmm", "log_zoox",
 # Outlier sensitivity for the zoox model: residual diagnostics flag a small
 # number of extreme observations. Refit after dropping the four largest
 # standardized residuals and require the day-14 treatment direction to match.
-# The logic: if the conclusion survives deleting its most extreme points, those
-# outliers are not driving the result, so the headline finding is robust.
+# If the conclusion survives deleting its most extreme points, those outliers
+# are not driving the result, so the primary finding is robust.
 zoox_sensitivity <- tryCatch({
   phys <- readRDS(file.path(DATA_PROC, "symbiont_chl_clean.rds")) |>
     filter(is.finite(cells_per_cm2), cells_per_cm2 > 0) |>
@@ -436,8 +437,8 @@ check_direction(m_bw, "12_bw_lm", "growth_pct",
 # Stack all the per-check rows into one table, then "reconcile" statuses: a FAIL
 # or WARN that is already addressed elsewhere in the analysis (an ordinal CLMM for
 # color, the explicit residual-sensitivity refit for zoox, the design-based VIF
-# argument for growth) is relabeled HANDLED so the summary isn't alarmist about
-# issues we deliberately dealt with. The numeric statistics are never altered.
+# argument for growth) is relabeled HANDLED so the summary does not over-report
+# issues already dealt with. The numeric statistics are never altered.
 diag_df <- dplyr::bind_rows(rows)
 diag_df <- diag_df |>
   mutate(

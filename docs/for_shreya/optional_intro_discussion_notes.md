@@ -1,6 +1,6 @@
 # Stier-lab phenotype framing angles — Intro/Discussion (optional, not the spine)
 
-> 🗂️ **Optional framing angles + citation bank** · Updated 2026-06-12 · Index: [`README.md`](../../README.md) · references → `manuscript/references.bib`, `literature/CITATIONS_INDEX.md`.
+> **Optional framing angles + citation bank** · Updated 2026-06-12 · Index: [`README.md`](../../README.md) · references → `manuscript/references.bib`, `literature/CITATIONS_INDEX.md`.
 
 **Shreya — you lead this paper. The recommended spine is yours and should lead with the
 transcriptomics.** This file is *not* the manuscript text and *not* a recommendation about how to
@@ -52,7 +52,7 @@ results in hand.
 - Genet C multivariate displacement 1.06 vs 3.72 (A) / 3.34 (D); most likely to regenerate at 31 °C.
 - 31 °C sits ~4.4 °C below the population acute ED50 (35.4 °C; Cunning et al. 2024) — chronic/sublethal.
 
-**Fragility to carry forward (keep honest):** the regeneration result is strongest for interval-censored
+**Fragility to carry forward:** the regeneration result is strongest for interval-censored
 new-corallite onset (p = 1.4e-7); tip-exist is also delayed, while tip-extension points the same way but
 is n.s. The first-observed Cox model for new corallites is close to the PH diagnostic boundary, so the
 interval model and censored-fraction result are the cleaner anchors. Three genets resolve variation but not its architecture.

@@ -21,19 +21,19 @@
 #          → adding genet × treatment significantly improves fit.
 #
 # What & why: code/12 already estimates the genet effects inside each full model.
-#   This script asks one clean, separable question that a reviewer can run on its
-#   own: "does genotype matter at all?" We compare two nested models that differ
-#   ONLY in whether genet interacts with the other predictors. The null lets each
-#   genet have its own intercept (thicket as an additive main effect) but forces
-#   all genets to respond to heat/wound/time the SAME way. The genet model lets
+#   This script asks one separable question that a reviewer can run on its own:
+#   does genotype matter at all? We compare two nested models that differ ONLY in
+#   whether genet interacts with the other predictors. The null lets each genet
+#   have its own intercept (thicket as an additive main effect) but forces all
+#   genets to respond to heat/wound/time the SAME way. The genet model lets
 #   genet × everything vary (genet as a fully crossed fixed effect). A likelihood-
 #   ratio test of null vs genet then tests whether genotypes differ in their
-#   PLASTICITY (their reaction to treatment), which is exactly G × E. Both models
-#   are fit with REML = FALSE (plain ML) because an LRT comparing models with
-#   DIFFERENT fixed effects is only valid under ML — REML likelihoods are not
-#   comparable across different fixed structures. The companion figure draws the
-#   reaction norms (genet means at 28 vs 31 °C): parallel lines = additive
-#   temperature effect; crossing/fanning lines = genotype × environment.
+#   PLASTICITY (their reaction to treatment), i.e. G × E. Both models are fit with
+#   REML = FALSE (ML) because an LRT comparing models with DIFFERENT fixed effects
+#   is only valid under ML — REML likelihoods are not comparable across different
+#   fixed structures. The companion figure draws the reaction norms (genet means
+#   at 28 vs 31 °C): parallel lines = additive temperature effect; crossing/fanning
+#   lines = genotype × environment.
 #
 # Input:   data/processed/{pam_clean,color_clean,buoyant_weight_clean,
 #                          symbiont_chl_clean}.rds
@@ -151,11 +151,11 @@ write_csv(genet_tests, file.path(TBL_DIR, "13_genet_anova.csv"))
 
 # ---- Per-genet means at end of experiment ---------------------------------
 # Reaction norms: response ~ treatment, one slope per genet
-# make_react_norm(): take the LAST timepoint per response (the end-of-experiment
+# make_react_norm(): take the last timepoint per response (the end-of-experiment
 # state, where treatment divergence is largest) and compute the genet × treatment
-# mean ± SE. These raw cell means are what the reaction-norm figure plots — they
-# visualize the same G × E that the LRT above tests formally. (Raw summaries, not
-# model-adjusted emmeans, so the figure shows the data directly.)
+# mean ± SE. These raw cell means are what the reaction-norm figure plots; they
+# visualize the same G × E that the LRT above tests formally. Raw summaries, not
+# model-adjusted emmeans, so the figure shows the data directly.
 make_react_norm <- function(data, response_col, label) {
   last_day <- if ("day" %in% names(data)) {
     data |> filter(day == max(day, na.rm = TRUE))
@@ -198,7 +198,7 @@ write_csv(emm_long, file.path(TBL_DIR, "13_genet_emmeans.csv"))
 # ---- Reaction-norm figure --------------------------------------------------
 # One panel per response; x = temperature, one coloured line per genet. The
 # slope of each line is that genet's heat response; differences in slope between
-# genets are the visual signature of the G × E that the LRT tests.
+# genets are the visual indication of the G × E that the LRT tests.
 p_react <- ggplot(emm_long, aes(treatment, mean,
                                  colour = thicket, group = thicket)) +
   geom_line(linewidth = 0.6) +

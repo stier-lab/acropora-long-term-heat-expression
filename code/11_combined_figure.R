@@ -3,13 +3,12 @@
 #          response variables (PAM, color, growth, symbionts) into one Figure 1
 #          for the manuscript.
 #
-# What & why: this script doesn't analyse anything new — it assembles the study's
-#   four headline coral responses into a single Figure 1 so a reader can see the
-#   whole story at a glance. The panels are: (A) photosynthetic efficiency
-#   (PAM Fv/Fm), (B) colony colour score (a visual bleaching proxy),
-#   (C) calcification rate from buoyant weighing (growth), and (D) symbiont
-#   cell density. Each panel reads its own cleaned dataset (produced by earlier
-#   scripts), builds a small standalone plot, and patchwork tiles them into a
+# What & why: this script does not analyse anything new — it assembles the study's
+#   four main coral responses into a single Figure 1. The panels are:
+#   (A) photosynthetic efficiency (PAM Fv/Fm), (B) colony colour score (a visual
+#   bleaching proxy), (C) calcification rate from buoyant weighing (growth), and
+#   (D) symbiont cell density. Each panel reads its own cleaned dataset (produced
+#   by earlier scripts), builds a standalone plot, and patchwork tiles them into a
 #   2×2 grid with one shared legend. The recurring design choice — colour by
 #   WOUND in A-C, faceted by treatment, but colour by TREATMENT in D — reflects
 #   what varies within each dataset. Edit the upstream scripts to change the
@@ -50,7 +49,7 @@ pA <- ggplot(A_df, aes(day, m, colour = wound, fill = wound)) +
 # ---- B: Color trajectory ---------------------------------------------------
 # Colony colour score over time (same mean ± SE treatment as panel A). Colour is
 # a 1-6 ordinal bleaching proxy where LOWER = paler/more bleached, so the y-axis
-# is reversed below to keep "healthy/darker" at the top, matching intuition.
+# is reversed below to keep healthy/darker at the top.
 B_df <- color |>
   group_by(day, treatment, wound) |>
   summarise(m = mean(color_num, na.rm = TRUE),
@@ -86,9 +85,9 @@ pC <- ggplot(filter(bw, is.finite(pct_growth)),
 
 # ---- D: Symbionts ----------------------------------------------------------
 # Symbiont (zooxanthellae) cell density at each biopsy day, by treatment. Divide
-# by 1e6 so the axis reads in millions of cells (raw counts are unwieldy). Note
-# the deliberate switch: this panel colours by TREATMENT (temperature is the
-# contrast here), whereas A-C coloured by wound.
+# by 1e6 so the axis reads in millions of cells (raw counts are large). This
+# panel colours by TREATMENT (temperature is the contrast here), whereas A-C
+# coloured by wound.
 pD <- ggplot(phys, aes(factor(biopsy_day), cells_per_cm2 / 1e6,   # factor() = discrete biopsy days
                        fill = treatment)) +
   geom_boxplot(width = 0.55, outlier.shape = NA, alpha = 0.7) +

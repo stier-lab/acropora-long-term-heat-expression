@@ -16,7 +16,7 @@
 #   and the value drops as heat stress damages the photosynthetic machinery (the
 #   first step toward bleaching). Here we ask whether the 31 °C heat treatment
 #   depressed Fv/Fm over the experiment, and whether wounding and the genotype of
-#   the host coral modified that response. This is the physiological backbone for
+#   the host coral modified that response. This is the physiological evidence for
 #   the headline result — that heat impairs the symbiosis (and thus the energy
 #   budget needed for regeneration), even when the wound itself still closes.
 # Input:   data/raw/pam/PAM_data.csv
@@ -115,8 +115,8 @@ if ("location" %in% names(pam) &&
   write_csv(loc_anova, file.path(TBL_DIR, "02b_pam_location_sensitivity.csv"))
   cat("\n=== PAM location (top/bottom) sensitivity — terms involving location ===\n")
   print(loc_anova)
-  # The decision that matters: does location INTERACT with the experimental
-  # factors? A pure main-effect offset is averaged out harmlessly; an
+  # The decision that matters is whether location INTERACTS with the
+  # experimental factors. A pure main-effect offset is averaged out harmlessly; an
   # interaction would mean averaging distorts the treatment/wound/day effects.
   pcol <- intersect(c("Pr(>F)"), names(loc_anova))
   interaction_terms <- loc_anova[grepl(":", loc_anova$term), , drop = FALSE]
@@ -132,13 +132,13 @@ if ("location" %in% names(pam) &&
 }
 
 # ---- Mixed model -----------------------------------------------------------
-# The headline model. Day is continuous (a linear time trend), treatment and
+# The primary model. Day is continuous (a linear time trend), treatment and
 # wound are factors, and they are fully crossed so we can read off whether heat
 # and wounding interact and whether their effects change through time.
 # Genet (thicket) enters as a FIXED blocking term: with only 3 genets a random
 # "genet variance" is near-unidentified, so we estimate the genet means directly
 # (matches 12_models.R; Bolker et al. 2008, Gelman 2005).
-# Random intercepts soak up the remaining non-independence in the design:
+# Random intercepts account for the remaining non-independence in the design:
 #   (1|tank)    — corals sharing a tank share its micro-environment
 #   (1|id)      — repeated measures on the same fragment across days
 # Pre-treatment baseline (day < 0) is dropped here so the single linear day term
@@ -165,7 +165,7 @@ write_csv(contrasts_tbl, file.path(TBL_DIR, "02_pam_treatment_contrasts.csv"))
 
 # ---- Figure ----------------------------------------------------------------
 # Collapse to one mean (± standard error) per day × treatment × wound cell for
-# plotting. Note this shows the raw cell means, not the model-adjusted means.
+# plotting. This shows the raw cell means, not the model-adjusted means.
 plot_df <- pam_avg |>
   group_by(day, treatment, wound) |>
   summarise(

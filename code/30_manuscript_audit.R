@@ -1,5 +1,5 @@
 # =============================================================================
-# Purpose: REPRODUCIBILITY CHECK (ADVISORY) — verify that every load-bearing
+# Purpose: REPRODUCIBILITY CHECK (ADVISORY) — verify that every reported
 #          number in the manuscript still matches the freshly-regenerated
 #          analysis outputs. Each check recomputes a canonical value from the
 #          source tables (themselves regenerated upstream) and asserts the
@@ -17,15 +17,15 @@
 #          rule is one-directional — PASS = the manuscript contains the current
 #          value; FLAG = it does not (stale, or formatted off).
 #
-# What & why: numbers in a manuscript drift. You rerun an analysis, an estimate
-#   shifts in the third decimal, but the prose still quotes last month's value.
-#   This script is the safety net, and it runs LAST in the pipeline (after every
+# What & why: numbers in a manuscript drift. An analysis is rerun, an estimate
+#   shifts in the third decimal, but the prose still quotes the old value.
+#   This script checks for that, and it runs LAST in the pipeline (after every
 #   table has been regenerated). For each headline phenotype number it recomputes
 #   the value straight from the fresh outputs, then searches the manuscript text
 #   for that value. If it is there -> PASS; if it is not -> FLAG (and a warning).
-#   Crucially this is ADVISORY: it never errors out the build. A flag is a "go
-#   check this sentence," not a failure — so a number you are mid-edit on cannot
-#   block the whole pipeline. It only polices the Stier-lab phenotype sections;
+#   This is ADVISORY: it never errors out the build. A flag means "check this
+#   sentence," not a failure — so a number that is mid-edit cannot block the
+#   pipeline. It only covers the Stier-lab phenotype sections;
 #   the lead author's narrative (Intro/Discussion/Abstract/transcriptomics) is
 #   deliberately out of scope. Currently 15/15 checks pass.
 #

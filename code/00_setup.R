@@ -2,20 +2,19 @@
 # Purpose: Project-wide setup — packages, paths, theme, palettes
 #
 # What & why: every numbered analysis script starts with
-#   `source(here::here("code", "00_setup.R"))`. This file is the shared
-#   foundation: it loads the packages everyone uses, fixes the random seed so
-#   results are reproducible, sets the statistical contrast convention that the
-#   whole project relies on, and defines the folder paths, colour palettes, and
-#   plotting theme so figures look consistent across the manuscript. Nothing
-#   here is specific to one response variable — it is the scaffolding that makes
-#   the downstream LTH (heat × wound × genet) scripts behave identically.
+#   `source(here::here("code", "00_setup.R"))`. It loads the shared packages,
+#   fixes the random seed so results are reproducible, sets the project-wide
+#   statistical contrast convention, and defines the folder paths, colour
+#   palettes, and plotting theme so figures are consistent across the
+#   manuscript. Nothing here is specific to one response variable; it is shared
+#   infrastructure for the downstream LTH (heat × wound × genet) scripts.
 # Input:   none
 # Output:  attaches packages, defines theme_pub() and PAL_*, sets here() root
 # Author:  Stier Lab
 # =============================================================================
 
 # ---- Packages --------------------------------------------------------------
-# suppressPackageStartupMessages() hides the noisy "attaching" banners so the
+# suppressPackageStartupMessages() hides the "attaching" banners so the
 # console log stays readable. Grouped roughly by job: data wrangling/plotting
 # (tidyverse, lubridate, janitor, readxl, patchwork, scales), tidy model output
 # (broom, broom.mixed), mixed models (lme4 + lmerTest for p-values via
@@ -45,7 +44,7 @@ set.seed(42)
 # Sum-to-zero contrasts keep Type-III tests independent of reference levels.
 # By default R uses treatment ("dummy") contrasts, where each main effect is
 # tested against an arbitrary reference level — which makes the main-effect
-# tests in a model WITH interactions depend on which level you happened to call
+# tests in a model WITH interactions depend on which level is
 # the baseline. contr.sum codes factors so each level is compared to the grand
 # mean instead, so the Type-III ANOVA tables in the downstream models are
 # interpretable regardless of factor ordering. Set once here for all scripts.

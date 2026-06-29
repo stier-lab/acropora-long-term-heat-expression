@@ -17,15 +17,15 @@
 #          destructively biopsied at D1/D3/D10, before the regeneration trajectory.)
 #
 # What & why: a coral fragment that was sequenced is the SAME individual we
-#   measured phenotypes on. To ask "does gene expression track the organism's
-#   physiology?" you need expression and phenotype side by side, keyed to the
+#   measured phenotypes on. Asking whether gene expression tracks the organism's
+#   physiology requires expression and phenotype side by side, keyed to the
 #   same fragment. This script does that bookkeeping ONCE: it takes the list of
 #   RNA-seq libraries and glues on (a) the experimental design each fragment was
 #   under, (b) its symbiont density at biopsy, and (c) its genet-level resilience
 #   scores. It writes TWO files — a harmonized join (recoded to match the rest of
 #   the phenotype analysis) and a raw, un-recoded lookup (so the lead author can
 #   choose her own factor levels / reference categories). It fits no model; it
-#   just hands the expression analyst a ready-to-merge covariate table.
+#   hands the expression analyst a ready-to-merge covariate table.
 #
 # Input:   data/raw/plate_layout/Selected_Samples.csv
 #          data/processed/symbiont_chl_clean.rds
@@ -61,7 +61,7 @@ write_csv(raw_lookup, file.path(TBL_DIR, "31_rnaseq_library_lookup_raw.csv"))
 # ---- RNA-seq library list (144 'gene' libraries), harmonized to phenotype coding
 # transmute() keeps ONLY the columns it names. Here we both rename and recode so
 # the design fields read identically to the rest of the phenotype pipeline (so a
-# later join "just works"). `id` is the integer Fragment_ID — the join key used
+# later join aligns without further recoding). `id` is the integer Fragment_ID — the join key used
 # below to attach per-fragment symbiont density.
 libs <- sel_raw |>
   transmute(

@@ -7,7 +7,7 @@
 #
 # What & why: many coral metrics (calcification, symbiont density) must be
 #   normalized to living surface area, but coral skeletons are too irregular to
-#   measure with calipers alone. Wax dipping is the field-standard fix (Stimson &
+#   measure with calipers alone. Wax dipping is the field-standard method (Stimson &
 #   Kinzie 1991): dip the object in molten wax, and the wax mass that sticks is
 #   proportional to its surface area. We build that proportionality once, from
 #   smooth CYLINDERS whose true SA we can compute geometrically (2π·r·h), by

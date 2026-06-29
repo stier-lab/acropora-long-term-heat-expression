@@ -25,7 +25,7 @@
 #   the balanced experimental design and randomly (seeded) assign each sample to
 #   plate 1 or 2; (4) lay the samples into the free wells around the reserved
 #   ones; (5) precompute every per-well aesthetic (fill colour, border colour and
-#   width, two-line text labels); (6) draw it. The plotting trick to know: each
+#   width, two-line text labels); (6) draw it. The key plotting detail: each
 #   well is a filled geom_tile for temperature PLUS a separate hollow geom_rect
 #   whose BORDER colour encodes wound status — two visual channels per well. Each
 #   geom_* is fed a vector of per-well colours/sizes directly (e.g.
@@ -243,8 +243,8 @@ plates_all <- bind_rows(plate1_filled, plate2_filled) %>%
     lbl_bot_sh = lbl_bot
   )
 
-# Fail-fast balance check: the whole point of the design is that every
-# Temp×Day×Wound cell is split exactly 6 / 6 between the two plates. If any cell
+# Fail-fast balance check: the design requires every
+# Temp×Day×Wound cell to be split exactly 6 / 6 between the two plates. If any cell
 # isn't, stop with the offending rows rather than emit a quietly unbalanced map.
 bad <- plates_all %>%
   filter(SampleType=="Primary") %>%

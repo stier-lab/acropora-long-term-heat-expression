@@ -1,13 +1,12 @@
 # G. Diagnostic plot inventory
 
-**Generated:** 2026-06-29 13:33:52
+**Generated:** 2026-06-29 14:17:40
 
 | Status | Count |
 |---|---|
 | BUILT | 8 |
 | CURRENT | 12 |
-| MISSING | 1 |
-| STALE | 5 |
+| STALE | 6 |
 
 ## Newly built plots (8)
 
@@ -22,4 +21,4 @@
 
 ## Models still missing a plot
 
-- `12_bw_sgr_lm.rds` (mtime 2026-06-29 13:29:00)
+None — full coverage.

@@ -9,12 +9,12 @@
 #          Also produces a composite "thermal resilience score" per genet
 #          — the inverse of mean standardized effect across responses.
 #
-# What & why: this is the synthesis script. Every other analysis asks "does
-#   heat affect response X?"; this one asks the cross-cutting question "which
-#   genet best tolerates heat overall?" To put effects measured in completely
+# What & why: synthesis script. Other analyses test whether heat affects a
+#   given response; this one addresses the cross-cutting question of which
+#   genet best tolerates heat overall. To put effects measured in completely
 #   different units on one axis (Fv/Fm, a colour score, calcification rate,
 #   symbiont counts, and wound-healing hazard ratios), each effect is rescaled
-#   WITHIN its own response so the largest-magnitude effect = 1 (this is the "z"
+#   WITHIN its own response so the largest-magnitude effect = 1 (the "z"
 #   column — a row-max standardization, not a statistical z-score). Positive
 #   means the genet's phenotype is worse at 31 °C than 28 °C, i.e. more heat-
 #   sensitive. Averaging these standardized values per genet yields a single
@@ -153,8 +153,8 @@ resilience <- all_eff |>
             by = "thicket") |>
   mutate(rank_overall = rank(mean_sensitivity))
 
-# This summary table is the headline output: it (and its rank_overall column)
-# is what script 20 reads back in as the "Genet resilience" rows.
+# This summary table is the primary output: script 20 reads it (and its
+# rank_overall column) back in as the "Genet resilience" rows.
 write_csv(resilience, file.path(TBL_DIR, "19_genet_resilience_summary.csv"))
 
 # Bar chart of the composite ranking; each bar is annotated with that genet's

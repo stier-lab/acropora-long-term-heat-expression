@@ -12,8 +12,8 @@
 #   biological phases: WOUND CLOSURE (the tissue sealing the lesion — e.g.
 #   "wound smoothed", "pigment over wound", "hole in center" disappearing) and
 #   REGENERATION (rebuilding lost skeletal structure — e.g. "tip exists", "tip
-#   extension", "new corallites on tip"). This distinction is the heart of the
-#   paper's headline: heat (31 °C) blocks REGENERATION but not basic wound
+#   extension", "new corallites on tip"). This distinction underlies the
+#   paper's headline result: heat (31 °C) blocks REGENERATION but not basic wound
 #   CLOSURE. Because the three genets (A/C/D) differ in heat resilience
 #   (C > D > A), genet is modelled as a FIXED treatment × genet interaction —
 #   we WANT to estimate each genotype's heat response, not average it away into

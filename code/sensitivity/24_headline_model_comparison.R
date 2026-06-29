@@ -19,16 +19,15 @@
 #                             + (1+day|id) + (1|tank)        [random slopes + quad time]
 #            ar1     : (PAM only) nlme lme, linear day, random slope, corAR1
 #
-# What & why: script 23 showed the simple models leave a little on the table
-#   (curved trajectories, coral-specific slopes, autocorrelation). The natural
-#   next question — "so should we switch to the fancier model?" — only matters if
-#   the answer the manuscript reports actually changes. So here we fit both the
-#   current and an upgraded "maximum-rigor" model and compare them on what the
-#   paper claims: the size and significance of the day-14 heat effect and the
-#   treatment×time interaction. If the upgrade barely moves the number and keeps
-#   the same conclusion, we keep the simpler, more interpretable model and cite
-#   this as robustness; if it changes the story, we adopt it. A decision aid, not
-#   a hypothesis test.
+# What & why: script 23 showed the simple models leave some structure unmodeled
+#   (curved trajectories, coral-specific slopes, autocorrelation). Switching to the
+#   more complex model only matters if the answer the manuscript reports changes.
+#   So here we fit both the current and an upgraded "maximum-rigor" model and
+#   compare them on what the paper claims: the size and significance of the day-14
+#   heat effect and the treatment×time interaction. If the upgrade changes the
+#   estimate little and keeps the same conclusion, we keep the simpler, more
+#   interpretable model and cite this as robustness; if it changes the conclusion,
+#   we adopt it. A decision aid, not a hypothesis test.
 # Output:  output/tables/24_headline_model_comparison.csv
 #          output/diagnostics/J_headline_model_comparison.md
 # =============================================================================
@@ -48,10 +47,10 @@ add <- function(...) rows[[length(rows) + 1]] <<- tibble(...)   # one model -> o
 
 # ---- The quantity the manuscript reports -----------------------------------
 # Estimated-marginal-means contrast: ambient minus heated (28C - 31C) Fv/Fm (or
-# colour) at day 14, averaged over wound and genet. emmeans does the heavy
-# lifting of evaluating the fitted model at day = 14 and forming the difference;
-# we return the estimate, its 95% CI, and the p-value. The *.limit args raise
-# emmeans' safety caps so it won't refuse the (large) df calculation.
+# colour) at day 14, averaged over wound and genet. emmeans evaluates the fitted
+# model at day = 14 and forms the difference; we return the estimate, its 95% CI,
+# and the p-value. The *.limit args raise emmeans' safety caps so it won't refuse
+# the (large) df calculation.
 day14_effect <- function(m, dayval = 14) {
   e <- tryCatch(
     emmeans::emmeans(m, ~ treatment, at = list(day = dayval), lmerTest.limit = 1e5,
@@ -73,14 +72,14 @@ compare_response <- function(data, response, label, do_ar1 = FALSE) {
     filter(!is.na(.y), !is.na(day), day >= 0)   # post-wounding only (matches 12_models)
 
   # --- Current primary model ---
-  # What the manuscript actually uses: linear day, random intercepts only.
+  # What the manuscript uses: linear day, random intercepts only.
   m_cur <- lme4::lmer(.y ~ treatment * wound * day * thicket +
                         (1 | tank) + (1 | id),
                       data = data, REML = FALSE, control = ctrl)
 
   # --- Upgraded: random slopes + quadratic time ---
   # The "maximum-rigor" alternative: curvature in time (poly(day,2)) and a
-  # per-coral time slope ((1 + day | id)) — exactly the features script 23 flagged.
+  # per-coral time slope ((1 + day | id)) — the features script 23 flagged.
   m_up <- lme4::lmer(.y ~ treatment * wound * poly(day, 2, raw = TRUE) * thicket +
                        (1 + day | id) + (1 | tank),
                      data = data, REML = FALSE, control = ctrl)
@@ -95,7 +94,7 @@ compare_response <- function(data, response, label, do_ar1 = FALSE) {
   up_terms <- grep("treatment:poly", rownames(a_up), value = TRUE)
   p_up <- if (length(up_terms)) min(a_up[up_terms, "Pr(>Chisq)"], na.rm = TRUE) else NA
 
-  # The headline number from each model, for direct comparison.
+  # The day-14 effect from each model, for direct comparison.
   e_cur <- day14_effect(m_cur)
   e_up  <- day14_effect(m_up)
 
@@ -157,9 +156,9 @@ write_csv(out, file.path(TBL_DIR, "24_headline_model_comparison.csv"))
 # ---- Verdict --------------------------------------------------------------
 # Turn the comparison into a yes/no recommendation per response. "worth_it" is
 # TRUE only if the upgrade moves the day-14 effect by more than 15% OR flips its
-# significance — i.e. the upgrade changes the manuscript's story. Otherwise the
-# simpler model stands and this is logged as a robustness check. pct_diff guards
-# against divide-by-zero when the current effect is essentially zero.
+# significance — i.e. the upgrade changes the manuscript's conclusion. Otherwise
+# the simpler model stands and this is logged as a robustness check. pct_diff
+# guards against divide-by-zero when the current effect is near zero.
 verdict <- out |>
   group_by(response) |>
   summarise(

@@ -28,11 +28,11 @@
 #   `day` with one random intercept per coral. That is easy to interpret, but for
 #   repeated measurements of the same coral it can be wrong in two ways that
 #   matter: (1) measurements close in time are correlated (autocorrelation),
-#   which makes p-values look more significant than they should; and (2) the real
+#   which makes p-values look more significant than they should; and (2) the
 #   trajectory may curve rather than rise/fall at a constant rate. This script
-#   stress-tests both assumptions and asks the only question that counts: does the
-#   treatment×time conclusion still hold under the more careful model? Nothing
-#   here replaces the primary models — it documents that they are defensible.
+#   tests both assumptions and checks whether the treatment×time conclusion still
+#   holds under the more careful model. Nothing here replaces the primary models;
+#   it documents that they are defensible.
 # Input:   data/processed/{pam_clean,color_clean,symbiont_chl_clean}.rds
 # Output:  output/tables/23_timeseries_diagnostics.csv
 #          output/diagnostics/I_timeseries_report.md
@@ -46,7 +46,7 @@ suppressPackageStartupMessages({ library(nlme) })   # nlme::lme handles corAR1
 # ---- Results collector -----------------------------------------------------
 # Every diagnostic appends one tidy row via add(); bind_rows(rows) at the end
 # assembles the full table. Storing a "conclusion" string with each row lets the
-# markdown report read like plain English.
+# markdown report present plain-language conclusions.
 rows <- list()
 add <- function(response, check, statistic, df, p_value, conclusion, detail = "") {
   rows[[length(rows) + 1]] <<- tibble(
@@ -117,9 +117,9 @@ ts_repeated <- function(data, response, time = "day", label) {
       tt[r, c("t-value", "p-value")]
     }
     td_b <- get_td(base); td_a <- get_td(ar1)
-    # The headline robustness check: flag only if significance flips (crosses
-    # 0.05) between the baseline and AR(1) fits — that would mean the conclusion
-    # depended on ignoring autocorrelation.
+    # Robustness check: flag only if significance flips (crosses 0.05) between the
+    # baseline and AR(1) fits — that would mean the conclusion depended on ignoring
+    # autocorrelation.
     add(label, "treatment×time robustness to AR(1)",
         td_a[1], NA, td_a[2],
         sprintf("treatment×time p: base=%.3g, AR(1)=%.3g — %s",
@@ -232,7 +232,7 @@ ts_linearity <- function(data, ycol, tcol, label, has_id) {
 # ---------------------------------------------------------------------------
 cat("=== Time-series diagnostics ===\n")
 
-# Both repeated-measures responses get the full battery (AR(1) + slopes + curvature).
+# Both repeated-measures responses get all checks (AR(1) + slopes + curvature).
 # day >= 0 so the residual diagnostics describe the same post-wounding model that
 # 12_models fits (the pre-treatment baseline is excluded there).
 pam <- readRDS(file.path(DATA_PROC, "pam_clean.rds")) |> filter(day >= 0)

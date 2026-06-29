@@ -10,9 +10,9 @@
 #   readings to XML log files. This is the high-resolution, ground-truth record
 #   of the thermal treatment — it confirms the heated tanks actually held ~+3 °C
 #   (31 vs 28 °C) for the whole experiment, not just at the daily YSI spot check
-#   (code/09). The catch: these logs are huge (a reading every minute or two,
+#   (code/09). These logs are large (a reading every minute or two,
 #   for every probe, for weeks). Loading them all into memory at once would
-#   blow up R, so we parse one file at a time, immediately collapse each file to
+#   exceed available memory, so we parse one file at a time, immediately collapse each file to
 #   hourly means, throw away the raw records, then move to the next file. The
 #   hourly series is rolled up again to daily means for the trend figures.
 # Input:   data/raw/apex/datalog*.xml
@@ -34,7 +34,7 @@ xml_files <- list.files(file.path(DATA_RAW, "apex"),
 stopifnot(length(xml_files) > 0)
 
 # ---- Parser: one XML file -> hourly mean per probe -------------------------
-# This is the memory-bounded workhorse. It reads a single Apex file, pulls out
+# This is the memory-bounded parser. It reads a single Apex file, pulls out
 # every probe reading, then immediately summarises to hourly means so the raw
 # (minute-resolution) records can be discarded before the next file is read.
 # Returns tibble(datetime [hour], probe, value_mean, value_sd, n).
@@ -72,7 +72,7 @@ parse_apex_hourly <- function(path) {
     # Convert °F -> °C at the RAW reading level, for TEMPERATURE probes only. The
     # Apex ran US firmware and logged °F on some units (switched mid-deployment);
     # a seawater temperature reading > 60 can only be Fahrenheit. Doing this BEFORE
-    # hourly/daily aggregation is what matters: averaging first would mix °F and °C
+    # hourly/daily aggregation matters: averaging first would mix °F and °C
     # on any firmware-switch day and corrupt that day's mean. We restrict to Temp
     # probes so non-temp channels (ORP/pH, whose values can legitimately exceed 60)
     # are never mis-converted.
@@ -81,8 +81,8 @@ parse_apex_hourly <- function(path) {
     out_list[[i]] <- tibble(datetime = dates[i], probe = nms, value = vals)
   }
 
-  # Free the parsed document and force garbage collection before returning —
-  # this is what keeps total memory flat across hundreds of large files.
+  # Free the parsed document and force garbage collection before returning;
+  # this keeps total memory flat across hundreds of large files.
   records <- NULL; doc <- NULL; gc()
 
   # Stack all records, drop missing values, bin to the hour, and summarise.
