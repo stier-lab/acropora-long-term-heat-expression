@@ -1,4 +1,16 @@
 trait,check,statistic,p_value,status,notes
+axial_polyp_formation,convergence,0,NA,WARN,"unable to evaluate scaled gradient; Model failed to converge: degenerate  Hessian with 3 negative eigenvalues
+  See ?lme4::convergence and ?lme4::troubleshooting."
+axial_polyp_formation,singular_fit,0,NA,PASS,non-singular
+axial_polyp_formation,re_var_id,16012.370195715428,NA,PASS,variance > 1e-4
+axial_polyp_formation,re_var_tank,16.168210311201033,NA,PASS,variance > 1e-4
+axial_polyp_formation,max_fixed_effect_SE,1089048.7858470406,NA,FAIL,Likely separation (SE >50 or non-finite)
+axial_polyp_formation,DHARMa_uniformity_KS,0.05136746985744685,0.2629995944104947,PASS,KS test on scaled residuals
+axial_polyp_formation,DHARMa_dispersion,0.31110971897081857,0,HANDLED,ratio=0.311 underdispersion expected for saturated closure trait; closure inference uses interval-censored timing/event summaries
+axial_polyp_formation,DHARMa_outliers,2,0.6687289679144193,PASS,binomial outlier test
+axial_polyp_formation,DHARMa_dispersion_refit,NA,NA,HANDLED,skipped refit=TRUE; underdispersion already handled as saturated closure trait
+axial_polyp_formation,pred_p_ambient_end,0.9999999999999998,NA,PASS,"predicted at day 15, 28C"
+axial_polyp_formation,pred_p_hot_end,0.9999999999999998,NA,PASS,"predicted at day 15, 31C"
 hole_in_center,convergence,0,NA,HANDLED,"handled by penalized blme refit in script 12c: unable to evaluate scaled gradient; Model failed to converge: degenerate  Hessian with 3 negative eigenvalues
   See ?lme4::convergence and ?lme4::troubleshooting."
 hole_in_center,singular_fit,0,NA,PASS,non-singular
@@ -6,9 +18,9 @@ hole_in_center,re_var_id,16012.370195715428,NA,PASS,variance > 1e-4
 hole_in_center,re_var_tank,16.168210311201033,NA,PASS,variance > 1e-4
 hole_in_center,max_fixed_effect_SE,1089048.7858470406,NA,HANDLED,Likely separation; handled by penalized blme refit in script 12c
 hole_in_center,DHARMa_uniformity_KS,0.05136746985744685,0.2629995944104947,PASS,KS test on scaled residuals
-hole_in_center,DHARMa_dispersion,0.31110971897081857,0,HANDLED,ratio=0.311 underdispersion expected for saturated closure trait; closure inference uses interval-censored timing/event summaries
+hole_in_center,DHARMa_dispersion,0.31110971897081857,0,FAIL,ratio=0.311
 hole_in_center,DHARMa_outliers,2,0.6687289679144193,PASS,binomial outlier test
-hole_in_center,DHARMa_dispersion_refit,NA,NA,HANDLED,skipped refit=TRUE; underdispersion already handled as saturated closure trait
+hole_in_center,DHARMa_dispersion_refit,NA,NA,WARN,refit=TRUE follow-up
 hole_in_center,pred_p_ambient_end,0.9999999999999998,NA,PASS,"predicted at day 15, 28C"
 hole_in_center,pred_p_hot_end,0.9999999999999998,NA,PASS,"predicted at day 15, 31C"
 new_corallites_on_tip,convergence,0,NA,HANDLED,handled by penalized blme refit in script 12c: boundary (singular) fit: see help('isSingular')

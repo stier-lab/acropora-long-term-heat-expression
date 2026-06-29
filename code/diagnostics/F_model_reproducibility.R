@@ -171,7 +171,7 @@ bw <- readRDS(file.path(DATA_PROC, "buoyant_weight_clean.rds")) |>
   mutate(thicket = factor(thicket))
 compare_lmm("12_bw_lm",
             file.path(MOD_DIR, "12_bw_lm.rds"),
-            areal_calc ~ treatment * wound * thicket + (1|tank),
+            pct_growth ~ treatment * wound * thicket + (1|tank),
             bw)
 
 # ---- Symbionts -------------------------------------------------------------
@@ -192,13 +192,11 @@ compare_lmm("12_zoox_lmm",
 ph <- readRDS(file.path(DATA_PROC, "physio_clean.rds")) |>
   filter(wound == "yes", !is.na(day), day >= 0) |>
   mutate(thicket = factor(thicket))
-traits <- c("polyps_out", "hole_in_center", "polyp_in_hole",
+# hole_in_center + polyp_in_hole are combined into axial_polyp_formation upstream
+# (code/04), matching the trait that 12_models actually fits and saves.
+traits <- c("polyps_out", "axial_polyp_formation",
             "wound_smoothed", "pigment_over_wound", "tip_exist",
             "tip_extension", "new_corallites_on_tip")
-# Drop the duplicate trait (polyp_in_hole == hole_in_center; see data-quality note
-# in code/04). 12_models no longer fits it, so its saved .rds does not exist —
-# keeping it here would make the reproducibility loop chase a missing model.
-traits <- traits[!duplicated(lapply(traits, \(t) ph[[t]]))]
 for (tr in traits) {
   d <- ph |> mutate(y = .data[[tr]]) |> filter(!is.na(y))
   # Skip degenerate traits: an all-0/all-1 outcome or <30 rows can't fit a GLMM.

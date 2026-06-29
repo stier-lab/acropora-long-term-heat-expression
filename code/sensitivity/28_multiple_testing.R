@@ -18,10 +18,10 @@
 #     non-essential regrowth).
 #
 # Exploratory (BH-corrected): whether heat alters basic wound CLOSURE or other
-# incidental traits (hole_in_center, wound_smoothed, polyps_out,
+# incidental traits (axial_polyp_formation, wound_smoothed, polyps_out,
 # pigment_over_wound, algae_on_wound) — no strong a-priori prediction. (Note:
-# polyp_in_hole is dropped upstream in 12/14 as a duplicate of hole_in_center —
-# see data-quality note in code/04 — so it no longer enters this BH family.)
+# hole_in_center + polyp_in_hole are combined upstream in code/04 into the single
+# trait axial_polyp_formation, so each enters this BH family only once.)
 #
 # What & why: running many tests inflates the false-positive rate, but blanket
 #   multiple-testing correction is too blunt — it penalizes a hypothesis we set
@@ -71,13 +71,13 @@ phys <- list(
     rat = "Hoegh-Guldberg 1999 (heat-driven paling)"),
   c(resp = "log_zoox_density", term = "treatment:biopsy_day_c",
     rat = "Hoegh-Guldberg 1999; Jokiel & Coles 1990 (symbiont loss)"),
-  c(resp = "growth_areal",     term = "treatment",
+  c(resp = "growth_pct",     term = "treatment",
     rat = "Jokiel & Coles 1977 (heat reduces calcification); tank-level permutation p")
 )
 for (h in phys) {
   # Growth uses a tank-level permutation p (the only tank-randomized response),
   # so pull it from its own file rather than the model ANOVA table.
-  if (h["resp"] == "growth_areal" && nrow(growth_tank) > 0) {
+  if (h["resp"] == "growth_pct" && nrow(growth_tank) > 0) {
     add(paste0(h["resp"], " : ", h["term"], " (tank permutation)"),
         growth_tank$p_two_sided[1], "a priori (confirmatory)", h["rat"])
     next

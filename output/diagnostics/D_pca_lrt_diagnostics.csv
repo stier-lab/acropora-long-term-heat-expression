@@ -30,10 +30,10 @@ log_zoox,Saved model REML status (on disk),REML=FALSE,PASS,saved object at 13_lo
 log_zoox,"LRT df matches anova(m0,m1) Df","anova_df=14, reported=14",PASS,"fixed Δ=14 (null p_fx=10, full p_fx=24); total npar Δ=14 (incl. random-effect rebalance)"
 log_zoox,Convergence / singular fits,"null sing=FALSE, full sing=FALSE, warns=0",PASS,no warnings
 log_zoox,LRT p-value reproducibility,"recomputed=2.04e-08, reported=2.04e-08",PASS,
-growth_areal,Model type,ML LMM + LRT,INFO,Growth has no time dim; tank retained as random block
-growth_areal,df = diff in fixed-effect parameters,"computed=6, reported=6",PASS,
-growth_areal,LRT p-value,p=0.37,NS,
+growth_pct,Model type,ML LMM + LRT,INFO,Growth has no time dim; tank retained as random block
+growth_pct,df = diff in fixed-effect parameters,"computed=6, reported=6",PASS,
+growth_pct,LRT p-value,p=0.0559,NS,
 emmeans,PAM Fv/Fm — direction of heat effect across genets,"Δ range = 0.111, sign mix = all same",INFO,a: -0.148; c: -0.037; d: -0.131
 emmeans,Color (D-scale) — direction of heat effect across genets,"Δ range = 1.562, sign mix = all same",INFO,a: -1.875; c: -0.312; d: -1.562
-emmeans,Calcification (mg cm⁻² d⁻¹) — direction of heat effect across genets,"Δ range = 2.304, sign mix = all same",INFO,a: -3.685; c: -1.381; d: -3.549
+emmeans,Growth (% mass change) — direction of heat effect across genets,"Δ range = 1.849, sign mix = all same",INFO,a: -2.596; c: -0.884; d: -2.733
 emmeans,log10 symbionts cm⁻² (raw summary) — direction of heat effect across genets,"Δ range = 0.369, sign mix = all same",INFO,a: -0.583; c: -0.214; d: -0.517

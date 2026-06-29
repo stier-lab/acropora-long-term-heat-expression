@@ -68,37 +68,30 @@ ph <- raw |>
            ~ as.integer(str_to_lower(str_squish(.x)) == "yes"))
   )
 
-# ---- Data-quality check: duplicate trait columns ---------------------------
-# In the raw spreadsheet, `polyp_in_hole` is byte-identical to `hole_in_center`
-# (same 0/1 values AND the same NA pattern in every row) — a data-entry
-# duplication, since these are biologically distinct milestones (initial hole
-# closure vs a polyp re-forming inside the wound) that should NOT coincide.
-# We keep the column in the saved table (don't silently destroy raw data) but
-# EXCLUDE it from every analysis below so it is not modelled, plotted, or counted
-# as a second independent trait — which would also double-count it in the
-# Benjamini-Hochberg exploratory family (code/sensitivity/28). Re-check
-# data/raw/physio_morphology/data.csv; once the true polyp_in_hole scores are
-# restored, drop `DUP_TRAITS` to bring it back into the analysis.
-DUP_TRAITS <- character(0)
-if (identical(ph$hole_in_center, ph$polyp_in_hole)) {
-  warning("polyp_in_hole is identical to hole_in_center in the raw data; ",
-          "excluding polyp_in_hole from analysis (see data-quality note in 04). ",
-          "Re-check data/raw/physio_morphology/data.csv.")
-  DUP_TRAITS <- "polyp_in_hole"
-}
+# ---- Combine hole_in_center + polyp_in_hole -> axial_polyp_formation --------
+# In the raw spreadsheet these two columns are byte-identical (same 0/1 values
+# AND the same NA pattern in every row). M. Brzezinski (pers. comm., 2026)
+# confirmed this is not a data-entry slip but how the trait was scored: the
+# central "hole" IS the axial polyp hole, which forms around the regenerating
+# axial polyp, so the two co-occur (a hole without a polyp was seen only once or
+# twice). They are therefore one observable, combined here into a single trait,
+# `axial_polyp_formation` (the axial corallite/calyx + polyp). We keep the two
+# original columns in the saved table for provenance and assert they still match
+# (if a future re-score makes them differ, this stops and prompts a rethink).
+stopifnot(identical(ph$hole_in_center, ph$polyp_in_hole))
+ph <- ph |> mutate(axial_polyp_formation = hole_in_center)
 
-# Save the cleaned, one-row-per-observation table for downstream scripts (all
-# raw trait columns retained, including the flagged duplicate).
+# Save the cleaned, one-row-per-observation table for downstream scripts (the two
+# original columns retained alongside the combined axial_polyp_formation).
 saveRDS(ph, file.path(DATA_PROC, "physio_clean.rds"))
 
 # ---- Long-form for plotting ------------------------------------------------
 # Trait columns paired with their display labels (single source of truth for both
-# the modelled trait order and the facet labels). The flagged duplicate trait
-# (DUP_TRAITS) is removed here so it propagates to neither the figures nor models.
+# the modelled trait order and the facet labels). hole_in_center/polyp_in_hole are
+# represented by the single combined trait axial_polyp_formation (see above).
 trait_labels <- c(
   polyps_out            = "Polyps out",
-  hole_in_center        = "Hole in center",
-  polyp_in_hole         = "Polyp in hole",
+  axial_polyp_formation = "Axial polyp formation",
   wound_smoothed        = "Wound smoothed",
   pigment_over_wound    = "Pigment over wound",
   tip_exist             = "Tip exists",
@@ -106,7 +99,6 @@ trait_labels <- c(
   new_corallites_on_tip = "New corallites on tip",
   algae_on_wound        = "Algae on wound"
 )
-trait_labels <- trait_labels[setdiff(names(trait_labels), DUP_TRAITS)]
 traits <- names(trait_labels)
 
 # Restrict to WOUNDED corals (unwounded controls have no wound to heal), then

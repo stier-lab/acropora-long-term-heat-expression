@@ -53,7 +53,7 @@ zoox_last <- phys |>
 
 bw_summary <- bw |>
   group_by(id, treatment, wound, thicket) |>
-  summarise(growth_areal = areal_calc[1], .groups = "drop")  # one growth rate per coral
+  summarise(growth_pct = pct_growth[1], .groups = "drop")  # one growth rate per coral
 
 # Join the four responses into one wide table (one row per coral). inner_join on
 # PAM/color/growth keeps only corals with that always-present trio; zoox is
@@ -70,7 +70,7 @@ cat("PCA-eligible corals:", nrow(wide),
 
 # PCA on the always-present trio (PAM, color, growth) plus symbiont density when
 # available — so 4 responses here, since zoox_end is populated in this dataset.
-pca_vars <- c("pam_end", "color_end", "growth_areal")
+pca_vars <- c("pam_end", "color_end", "growth_pct")
 if (any(!is.na(wide$zoox_end))) pca_vars <- c(pca_vars, "zoox_end")
 
 # PCA cannot handle missing values, so keep only complete-case corals. keep_rows

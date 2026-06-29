@@ -50,45 +50,29 @@ The healing milestones are **sequential**, not simultaneous:
 | 12 | New corallites begin forming on the axial corallite "like branches on a tree". |
 | 13 | New corallites continue; polyps may be present in these corallites. |
 
-So `hole_in_center` is expected to appear ~D2–3 and `polyp_in_hole` ~D4 — the
-polyp should **lag** the hole by roughly 1–2 days. The "axial polyp hole" is
-where the axial corallite (the branch's growth axis) regenerates, so
-`polyp_in_hole` is an **early regeneration** milestone, not just wound closure.
+## `hole_in_center` and `polyp_in_hole` are one trait → `axial_polyp_formation`
 
-## ⚠️ KNOWN DATA-QUALITY ISSUE: `polyp_in_hole` duplicates `hole_in_center`
+In both `data.csv` and the live master Google Sheet, `polyp_in_hole` is
+**byte-for-byte identical** to `hole_in_center` — same `yes`/`no`/blank/`NA`
+value in every row (290 `yes`, 94 `no`, 384 `NA`; perfect diagonal cross-tab),
+and the two switch to `yes` on the same visit for all 24 wounded corals.
 
-In both `data.csv` and the live master Google Sheet, the `polyp_in_hole` column
-is **byte-for-byte identical** to `hole_in_center` — same `yes`/`no`/blank/`NA`
-value in every row (290 `yes`, 94 `no`, 384 `NA`; perfect diagonal cross-tab).
-Evidence this is a data-entry duplication, not real data:
+**This is not a data-entry error — it is how the trait was scored.** M.
+Brzezinski (pers. comm., 2026) confirmed the central "hole" *is* the axial polyp
+hole, which forms around the regenerating axial polyp, so the two co-occur (a
+hole without a polyp was seen only once or twice). They are a single observable.
+Per Molly's recommendation the two are **combined and renamed
+`axial_polyp_formation`** (the axial corallite/calyx + polyp structure).
 
-- Not a CSV-export artifact (identical in the source `.xlsx`) and not a formula
-  (the `.xlsx` cells store literal values, 0 formula cells in those columns).
-- Specific to this pair — `polyp_in_hole` differs from its other neighbor
-  `wound_smoothed` (28 cells), so it is not a whole-sheet column shift.
-- Biologically impossible given the timeline above: for **all 24** wounded
-  corals the two traits switch to `yes` on the **same visit** (zero lag), and
-  there is **no** `hole=yes, polyp=no` row — i.e. no "hole present but empty"
-  interval, which the D2→D4 sequence requires.
+**In the pipeline:** `04_physio_morphology.R` keeps both original columns in the
+saved data (for provenance), asserts they are still identical, and creates the
+combined trait `axial_polyp_formation = hole_in_center`. All downstream analysis
+(`12_models.R`, `14_morphology_kaplan.R`, `sensitivity/28_multiple_testing.R`,
+diagnostics) uses `axial_polyp_formation`, so the trait is modelled, plotted, and
+entered into the BH multiple-testing family exactly once. No re-scoring is needed.
 
-**Consequence in the pipeline:** the genuine `polyp_in_hole` observations were
-never recorded digitally (not even in the master sheet), so they cannot be
-recovered from the data. Until the column is corrected, the analysis code
-(`04_physio_morphology.R` and downstream `12_models.R`, `14_morphology_kaplan.R`,
-`sensitivity/28_multiple_testing.R`) **detects the duplication at runtime and
-excludes `polyp_in_hole`** so it is not modelled, plotted, or counted twice in
-the multiple-testing family. The guard removes itself automatically once the two
-columns are no longer identical.
-
-**To restore the trait:** re-score `polyp_in_hole` (yes/no, "was a polyp present
-in the central hole?") for each wounded coral × day from the daily color-card
-photos, and write the corrected values into `data.csv` /
-`physio_characterization_log_-_complete.xlsx`. Worth doing because it is a
-regeneration-phase milestone (relevant to the heat-impairs-regeneration result).
-
-A ready-to-fill template is provided: **`polyp_in_hole_RESCORING_TEMPLATE.csv`**
-(384 rows = 24 wounded corals × D0–D15). Each row carries the photo `date`,
-`id`, `treatment`/`tank`/`thicket`, and `hole_in_center_REFERENCE`; open that
-day's color-card photo and enter `yes`/`no` in `polyp_in_hole_RESCORED`. Note:
-`polyp_in_hole` should be a subset of `hole_in_center` (no polyp without a hole),
-so `polyp = yes` is only plausible where the reference column is `yes`.
+> Phase note: Table 1 of the manuscript classifies this trait in the
+> **tissue-healing** phase (consistent with the biphasic framework, which scores
+> *regeneration* at the branch tip via `tip_exist` / `tip_extension` /
+> `new_corallites_on_tip`), even though the axial polyp hole is where the axial
+> corallite ultimately regenerates.

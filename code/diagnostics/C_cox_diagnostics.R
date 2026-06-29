@@ -62,12 +62,11 @@ ph <- readRDS(DATA) |>
   )
 contrasts(ph$treatment) <- contr.treatment(nlevels(ph$treatment))
 
-traits <- c("hole_in_center", "polyp_in_hole", "wound_smoothed",
+# hole_in_center + polyp_in_hole combined into axial_polyp_formation (code/04),
+# mirroring the milestones actually analysed in 14.
+traits <- c("axial_polyp_formation", "wound_smoothed",
             "pigment_over_wound", "tip_exist", "tip_extension",
             "new_corallites_on_tip")
-# Drop the duplicate trait (polyp_in_hole == hole_in_center; see data-quality note
-# in code/04) so the Cox diagnostics mirror the milestones actually analysed in 14.
-traits <- traits[!duplicated(lapply(traits, \(t) ph[[t]]))]
 
 # ---- compute time-to-event (mirrors code/14_morphology_kaplan.R) -----------
 # Collapse the repeated daily yes/no scores per coral into one survival record:

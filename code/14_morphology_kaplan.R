@@ -95,26 +95,18 @@ contrasts(ph$treatment) <- contr.treatment(nlevels(ph$treatment))
 # the CSV knows what "reaching the milestone" means. Several traits can flicker on
 # and off between visits (non-monotonic), which is exactly why we anchor on the
 # FIRST observed "1" rather than the final state.
+# hole_in_center + polyp_in_hole are one observable, combined upstream (code/04)
+# into axial_polyp_formation (M. Brzezinski pers. comm.: the central hole IS the
+# axial polyp hole, scored together); it enters here as a single milestone.
 trait_meta <- tibble::tribble(
   ~trait,                  ~label,                  ~event_interpretation,
-  "hole_in_center",        "Hole in center",        "first observed hole closure",
-  "polyp_in_hole",         "Polyp in hole",         "first observed polyp within wound",
+  "axial_polyp_formation", "Axial polyp formation", "first observed axial polyp / central hole",
   "wound_smoothed",        "Wound smoothed",        "first observed smoothed wound surface",
   "pigment_over_wound",    "Pigment over wound",    "first observed pigment over wound; expression can be non-monotonic",
   "tip_exist",             "Tip exists",            "first observed visible tip; expression can be non-monotonic",
   "tip_extension",         "Tip extension",         "first observed tip extension; expression can be non-monotonic",
   "new_corallites_on_tip", "New corallites on tip", "first observed new corallites on tip"
 )
-# Drop any trait that is a byte-identical duplicate of an earlier one. In the raw
-# data `polyp_in_hole` duplicates `hole_in_center` (data-entry error; see the
-# data-quality note in code/04). Analysing it as a second milestone would also
-# double-count it in the BH multiple-testing family (code/sensitivity/28).
-dup_drop <- trait_meta$trait[duplicated(lapply(trait_meta$trait, \(t) ph[[t]]))]
-if (length(dup_drop)) {
-  message("14_morphology: dropping duplicate trait(s): ",
-          paste(dup_drop, collapse = ", "))
-  trait_meta <- dplyr::filter(trait_meta, !trait %in% dup_drop)
-}
 traits <- trait_meta$trait
 trait_interpretation <- trait_meta |> select(trait, event_interpretation)
 
@@ -287,7 +279,7 @@ ev_wide <- events |>
 lag_pairs <- list(
   c(from = "wound_smoothed", to = "new_corallites_on_tip"),  # closure -> regeneration (primary)
   c(from = "wound_smoothed", to = "tip_extension"),          # closure -> tip extension
-  c(from = "hole_in_center", to = "new_corallites_on_tip")   # initial closure -> regeneration
+  c(from = "axial_polyp_formation", to = "new_corallites_on_tip")  # axial polyp -> regeneration
 )
 
 lag_long <- map_dfr(lag_pairs, function(p) {

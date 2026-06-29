@@ -2,12 +2,12 @@ hypothesis,test,rationale,p_value,p_BH,p_reported,significant
 a priori (confirmatory),pam_fvfm : treatment:day,Warner et al. 1999 (heat lowers Fv/Fm),0,NA,0,TRUE
 a priori (confirmatory),color_dscale : treatment:day,Hoegh-Guldberg 1999 (heat-driven paling),0,NA,0,TRUE
 a priori (confirmatory),log_zoox_density : treatment:biopsy_day_c,Hoegh-Guldberg 1999; Jokiel & Coles 1990 (symbiont loss),0,NA,0,TRUE
-a priori (confirmatory),growth_areal : treatment (tank permutation),Jokiel & Coles 1977 (heat reduces calcification); tank-level permutation p,0.05714,NA,0.05714,FALSE
+a priori (confirmatory),growth_pct : treatment (tank permutation),Jokiel & Coles 1977 (heat reduces calcification); tank-level permutation p,0.05714,NA,0.05714,FALSE
 exploratory,morph:polyps_out : treatment,no a-priori prediction for this closure/incidental trait,0.573,0.7401,0.7401,FALSE
 exploratory,morph:pigment_over_wound : treatment,no a-priori prediction for this closure/incidental trait,0.6474,0.7401,0.7401,FALSE
 a priori (confirmatory),morph:tip_exist : treatment,central hypothesis: heat impairs tip regeneration,0.8822,NA,0.8822,FALSE
 a priori (confirmatory),morph:tip_extension : treatment,central hypothesis: heat impairs tip regeneration,0.2023,NA,0.2023,FALSE
-exploratory,survival_interval:hole_in_center : 31C vs 28C,no a-priori prediction for this closure milestone,0.4545,0.7401,0.7401,FALSE
+exploratory,survival_interval:axial_polyp_formation : 31C vs 28C,no a-priori prediction for this closure milestone,0.4545,0.7401,0.7401,FALSE
 exploratory,survival_interval:wound_smoothed : 31C vs 28C,no a-priori prediction for this closure milestone,0.02241,0.1121,0.1121,FALSE
 exploratory,survival_interval:pigment_over_wound : 31C vs 28C,no a-priori prediction for this closure milestone,0.7401,0.7401,0.7401,FALSE
 a priori (confirmatory),survival_interval:tip_exist : 31C vs 28C,central hypothesis: heat delays/prevents tip regeneration,0.03555,NA,0.03555,TRUE

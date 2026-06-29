@@ -77,7 +77,7 @@ qual_dir <- function(estimate, p, response_label,
 response_label_map <- c(
   pam_fvfm         = "PAM Fv/Fm",
   color_dscale     = "Color (Siebeck D)",
-  growth_areal     = "Areal calcification (mg cm-2 d-1)",
+  growth_pct     = "Growth (% mass change)",
   growth_pct       = "Buoyant weight growth (%)",
   log_zoox_density = "ln symbionts cm-2",
   pct_growth       = "Buoyant weight growth (%)"
@@ -87,7 +87,7 @@ response_label_map <- c(
 natural_units <- c(
   pam_fvfm         = "Fv/Fm",
   color_dscale     = "D-scale units",
-  growth_areal     = "mg cm-2 d-1",
+  growth_pct     = "% over 15 d",
   growth_pct       = "%",
   log_zoox_density = "ln cells cm-2",
   pct_growth       = "%"
@@ -114,10 +114,10 @@ baseline_means <- function() {
       filter(day == max(day, na.rm = TRUE), treatment == "28C") |>
       group_by(thicket, wound) |>
       summarise(baseline = mean(color_num, na.rm = TRUE), .groups = "drop"),
-    growth_areal = bw |>
-      filter(treatment == "28C", is.finite(areal_calc)) |>
+    growth_pct = bw |>
+      filter(treatment == "28C", is.finite(pct_growth)) |>
       group_by(thicket, wound) |>
-      summarise(baseline = mean(areal_calc, na.rm = TRUE), .groups = "drop"),
+      summarise(baseline = mean(pct_growth, na.rm = TRUE), .groups = "drop"),
     growth_pct   = bw |>
       filter(treatment == "28C") |>
       group_by(thicket, wound) |>
@@ -150,7 +150,7 @@ anova12 <- read_csv(file.path(TBL_DIR, "12_anova_summary.csv"),
   transmute(
     domain          = "Physiology",
     response        = response_label_map[response] |> coalesce(response),
-    model_type      = if_else(response_id %in% c("growth_pct", "growth_areal"),
+    model_type      = if_else(response_id %in% c("growth_pct"),
                               "LM", "LMM"),
     term            = term,
     test            = if_else(is.na(`F value`), "Wald chi-sq", "ANOVA F"),
@@ -207,7 +207,7 @@ attach_pct <- function(df, response_key) {
 genet_eff_pct <- bind_rows(
   attach_pct(filter(genet_eff, response == "pam_fvfm"),       "pam_fvfm"),
   attach_pct(filter(genet_eff, response == "color_dscale"),   "color_dscale"),
-  attach_pct(filter(genet_eff, response == "growth_areal"),   "growth_areal"),
+  attach_pct(filter(genet_eff, response == "growth_pct"),   "growth_pct"),
   attach_pct(filter(genet_eff, response == "log_zoox_density"),"log_zoox_density")
 )
 
@@ -218,7 +218,7 @@ genet_rows <- genet_eff_pct |>
   transmute(
     domain          = "Physiology",
     response        = response_label_map[response] |> coalesce(response),
-    model_type      = if_else(response %in% c("growth_pct", "growth_areal"),
+    model_type      = if_else(response %in% c("growth_pct"),
                               "LM", "LMM"),
     term            = sprintf("contrast: 28C - 31C | genet=%s | wound=%s",
                               thicket, wound),
@@ -493,7 +493,7 @@ lrt13 <- read_csv(file.path(TBL_DIR, "13_genet_anova.csv"),
     domain          = "Physiology",
     response        = response_label_map[response] |> coalesce(response),
     model_type      = "LRT (null vs genet x trt)",
-    term            = if_else(response == "growth_areal",
+    term            = if_else(response == "growth_pct",
                               "LRT: adding genet x treatment x wound",
                               "LRT: adding genet x treatment x wound x day"),
     test            = "LRT chi-sq",
@@ -564,13 +564,13 @@ bw_lm <- read_csv(file.path(TBL_DIR, "05_buoyant_weight_lm.csv"),
                   show_col_types = FALSE) |>
   filter(term != "(Intercept)") |>
   transmute(
-    domain="Physiology", response="Areal calcification",
+    domain="Physiology", response="Growth (% mass change)",
     model_type="LM (coral-level descriptive)",
     term=paste0("fixed: ", term),
     test="t",
     statistic=statistic,
     df1=NA_real_, df2=NA_real_, n=NA_real_,
-    estimate=estimate, units="mg cm^-2 d^-1",
+    estimate=estimate, units="% over 15 d",
     pct_change=NA_real_, ci_low=conf.low, ci_high=conf.high,
     p_value=p.value,
     qualitative=sprintf("%s: est=%.2f%% (%s)", term, estimate,
@@ -586,16 +586,16 @@ bw_tank_test <- if (file.exists(file.path(TBL_DIR, "05_buoyant_weight_tank_test.
   read_csv(file.path(TBL_DIR, "05_buoyant_weight_tank_test.csv"),
            show_col_types = FALSE) |>
     transmute(
-      domain="Physiology", response="Areal calcification",
+      domain="Physiology", response="Growth (% mass change)",
       model_type="tank-level randomization",
       term="treatment: 28C - 31C",
       test=test,
       statistic=estimate_28_minus_31,
       df1=NA_real_, df2=NA_real_, n=n_tanks,
-      estimate=estimate_28_minus_31, units="mg cm^-2 d^-1",
+      estimate=estimate_28_minus_31, units="% over 15 d",
       pct_change=NA_real_, ci_low=NA_real_, ci_high=NA_real_,
       p_value=p_two_sided,
-      qualitative=sprintf("Tank-level heat effect %.2f mg cm^-2 d^-1 (p=%.3g)",
+      qualitative=sprintf("Tank-level heat effect %.2f pct-points over 15 d (p=%.3g)",
                           estimate_28_minus_31, p_two_sided),
       source_script="code/05_buoyant_weight.R",
       source_artifact="output/tables/05_buoyant_weight_tank_test.csv"

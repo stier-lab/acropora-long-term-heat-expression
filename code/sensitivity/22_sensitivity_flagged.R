@@ -96,7 +96,7 @@ results$col_drop <- grab(c_drop, "Color D-scale (flagged dropped)","treatment:da
 # tank to one number and run an exact permutation test on the tank means.
 bw <- readRDS(file.path(DATA_PROC, "buoyant_weight_clean.rds")) |>
   mutate(thicket = factor(thicket)) |>
-  filter(is.finite(areal_calc))                 # drop NA/Inf growth values
+  filter(is.finite(pct_growth))                 # drop NA/Inf growth values
 bw_drop <- bw |> filter(!id %in% FLAGGED_IDS, tank != FLAGGED_TANK)
 
 # Exact (combinatorial) permutation test on tank-mean growth.
@@ -104,7 +104,7 @@ tank_perm <- function(dat, label) {
   # Collapse corals to one mean per tank -> tank is the unit of analysis.
   tank_growth <- dat |>
     group_by(tank, treatment) |>
-    summarise(mean_areal_calc = mean(areal_calc, na.rm = TRUE),
+    summarise(mean_pct_growth = mean(pct_growth, na.rm = TRUE),
               n_corals = n(), .groups = "drop")
 
   # Guard: need both treatments present with >=2 tanks each, else the test is
@@ -116,7 +116,7 @@ tank_perm <- function(dat, label) {
                   estimate_28_minus_31 = NA_real_, n_tanks = nrow(tank_growth)))
   }
 
-  vals <- tank_growth$mean_areal_calc
+  vals <- tank_growth$mean_pct_growth
   trt <- tank_growth$treatment
   n28 <- sum(trt == "28C")
   # Observed effect: difference in mean growth, ambient minus heated.
@@ -137,8 +137,8 @@ tank_perm <- function(dat, label) {
          estimate_28_minus_31 = round(obs, 3),
          n_tanks = nrow(tank_growth))
 }
-results$bw_full <- tank_perm(bw, "Areal calcification (full data)")
-results$bw_drop <- tank_perm(bw_drop, "Areal calcification (flagged dropped)")
+results$bw_full <- tank_perm(bw, "Growth % (full data)")
+results$bw_drop <- tank_perm(bw_drop, "Growth % (flagged dropped)")
 
 # ---- Collect + write -------------------------------------------------------
 # Stack the full and dropped rows for every response into one table. Read it in

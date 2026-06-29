@@ -1,7 +1,4 @@
 metric,term,F_value,p_value
-areal_calc,treatment,25.51,9.03e-6
-areal_calc,wound,3.02,0.0897
-areal_calc,thicket,0.58,0.563
 pct_growth,treatment,23.48,1.76e-5
 pct_growth,wound,0.54,0.465
 pct_growth,thicket,0.39,0.68

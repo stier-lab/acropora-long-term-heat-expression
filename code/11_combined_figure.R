@@ -67,12 +67,12 @@ pB <- ggplot(B_df, aes(day, m, colour = wound, fill = wound)) +
   labs(x = "Day", y = "Color (D)", tag = "B") +
   theme_pub(9)
 
-# ---- C: Calcification ------------------------------------------------------
+# ---- C: Growth ------------------------------------------------------
 # End-of-experiment calcification (growth) rate by treatment × wound. Unlike the
 # time series above, this is a single value per colony, so a box-and-jitter plot
 # shows the distribution; is.finite() drops colonies with no valid growth rate.
-pC <- ggplot(filter(bw, is.finite(areal_calc)),
-             aes(treatment, areal_calc, fill = wound)) +
+pC <- ggplot(filter(bw, is.finite(pct_growth)),
+             aes(treatment, pct_growth, fill = wound)) +
   geom_boxplot(width = 0.55, outlier.shape = NA, alpha = 0.7,   # hide outlier pts; raw pts added next
                position = position_dodge(0.7)) +
   geom_point(aes(colour = wound),
@@ -81,7 +81,7 @@ pC <- ggplot(filter(bw, is.finite(areal_calc)),
              size = 1.1, alpha = 0.7) +
   scale_fill_manual(values   = PAL_WOUND, name = "Wound") +
   scale_colour_manual(values = PAL_WOUND, guide = "none") +
-  labs(x = NULL, y = expression(Calcification~(mg~cm^{-2}~d^{-1})), tag = "C") +  # units via plotmath
+  labs(x = NULL, y = "Growth (% skeletal mass change)", tag = "C") +  # units via plotmath
   theme_pub(9)
 
 # ---- D: Symbionts ----------------------------------------------------------

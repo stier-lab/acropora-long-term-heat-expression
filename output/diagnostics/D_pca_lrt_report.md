@@ -1,5 +1,5 @@
 # PCA + Genet LRT Diagnostics
-_Run: 2026-06-26 17:37:06_
+_Run: 2026-06-29 13:33:39_
 
 ## PCA (15_multivariate.R)
 
@@ -34,15 +34,15 @@ _Run: 2026-06-26 17:37:06_
 - Convergence: null singular=FALSE, full singular=FALSE, warnings=0
 - LRT χ²(14) = 64.30, p = 2.04e-08 (recomputed 2.04e-08)
 
-### growth_areal
-- ML LMM LRT (tank random intercept); χ²(6) = 6.50, p = 0.37
+### growth_pct
+- ML LMM LRT (tank random intercept); χ²(6) = 12.29, p = 0.0559
 - Fixed params: null=6, full=12 (Δ=6, reported df=6)
 
 ## Effect direction vs. emmeans
 
 - **PAM Fv/Fm**: Δ(31C-28C) by genet = a=-0.148, c=-0.037, d=-0.131 — additive (parallel)
 - **Color (D-scale)**: Δ(31C-28C) by genet = a=-1.875, c=-0.312, d=-1.562 — additive (parallel)
-- **Calcification (mg cm⁻² d⁻¹)**: Δ(31C-28C) by genet = a=-3.685, c=-1.381, d=-3.549 — additive (parallel)
+- **Growth (% mass change)**: Δ(31C-28C) by genet = a=-2.596, c=-0.884, d=-2.733 — additive (parallel)
 - **log10 symbionts cm⁻² (raw summary)**: Δ(31C-28C) by genet = a=-0.583, c=-0.214, d=-0.517 — additive (parallel)
 
 ## Summary verdicts
@@ -51,4 +51,4 @@ _Run: 2026-06-26 17:37:06_
 - pam_fvfm LRT: **PASS**
 - color_dscale LRT: **PASS**
 - log_zoox LRT: **PASS**
-- growth_areal LMM LRT: **PASS**
+- growth_pct LMM LRT: **PASS**

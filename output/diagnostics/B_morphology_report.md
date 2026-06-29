@@ -1,6 +1,17 @@
 # Morphological GLMM diagnostics
-Generated: 2026-06-26 17:36:22.571526
+Generated: 2026-06-29 13:29:58.374765
 Source data: physio_clean.rds (N=384 rows, wound==yes only)
+
+## axial_polyp_formation
+- N = 384, n_corals = 24, mean(y) = 0.755
+- Convergence: ISSUE — unable to evaluate scaled gradient; Model failed to converge: degenerate  Hessian with 3 negative eigenvalues
+  See ?lme4::convergence and ?lme4::troubleshooting.
+- Singular fit: FALSE
+- RE variance: id=1.601e+04, tank=16.17
+- Max fixed-effect SE: 1.09e+06 (FAIL)
+- DHARMa: KS p=0.263, dispersion p=0 (ratio 0.31; handled as saturated closure trait), outliers p=0.669
+- Residual plot: figures/diagnostics/B_axial_polyp_formation.png
+- Predicted P(trait) at day 15: ambient=1.000, hot=1.000, Δ=+0.000
 
 ## hole_in_center
 - N = 384, n_corals = 24, mean(y) = 0.755
@@ -9,7 +20,7 @@ Source data: physio_clean.rds (N=384 rows, wound==yes only)
 - Singular fit: FALSE
 - RE variance: id=1.601e+04, tank=16.17
 - Max fixed-effect SE: 1.09e+06 (HANDLED)
-- DHARMa: KS p=0.263, dispersion p=0 (ratio 0.31; handled as saturated closure trait), outliers p=0.669
+- DHARMa: KS p=0.263, dispersion p=0 (ratio 0.31), outliers p=0.669
 - Residual plot: figures/diagnostics/B_hole_in_center.png
 - Predicted P(trait) at day 15: ambient=1.000, hot=1.000, Δ=+0.000
 
@@ -81,7 +92,8 @@ Source data: physio_clean.rds (N=384 rows, wound==yes only)
 
 | Trait | Checks | PASS | HANDLED | WARN | FAIL | Overall |
 |-------|--------|------|---------|------|------|---------|
-| hole_in_center | 11 | 7 | 4 | 0 | 0 | HANDLED |
+| axial_polyp_formation | 11 | 7 | 2 | 1 | 1 | FAIL |
+| hole_in_center | 11 | 7 | 2 | 1 | 1 | FAIL |
 | new_corallites_on_tip | 12 | 6 | 2 | 4 | 0 | HANDLED |
 | pigment_over_wound | 11 | 7 | 2 | 2 | 0 | HANDLED |
 | polyps_out | 11 | 8 | 1 | 2 | 0 | HANDLED |
@@ -89,4 +101,4 @@ Source data: physio_clean.rds (N=384 rows, wound==yes only)
 | tip_extension | 10 | 8 | 1 | 1 | 0 | HANDLED |
 | wound_smoothed | 11 | 8 | 3 | 0 | 0 | HANDLED |
 
-Totals: 7 traits × ~10.9 checks; PASS=50, HANDLED=15, WARN=11, FAIL=0
+Totals: 8 traits × ~10.9 checks; PASS=57, HANDLED=15, WARN=13, FAIL=2

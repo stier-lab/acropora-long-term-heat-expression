@@ -1,10 +1,10 @@
 trait,treatment,thicket,n_corals,n_events,median_day,iqr_low,iqr_high
-hole_in_center,28C,a,4,4,3.5,3,4
-hole_in_center,28C,c,4,4,3.5,3,5.25
-hole_in_center,28C,d,4,4,3.5,3,4.5
-hole_in_center,31C,a,4,4,3,3,3.25
-hole_in_center,31C,c,4,4,3,3,4.5
-hole_in_center,31C,d,4,4,3.5,3,4
+axial_polyp_formation,28C,a,4,4,3.5,3,4
+axial_polyp_formation,28C,c,4,4,3.5,3,5.25
+axial_polyp_formation,28C,d,4,4,3.5,3,4.5
+axial_polyp_formation,31C,a,4,4,3,3,3.25
+axial_polyp_formation,31C,c,4,4,3,3,4.5
+axial_polyp_formation,31C,d,4,4,3.5,3,4
 new_corallites_on_tip,28C,a,4,4,12,12,12
 new_corallites_on_tip,28C,c,4,4,14,13.5,14.25
 new_corallites_on_tip,28C,d,4,4,12,12,12

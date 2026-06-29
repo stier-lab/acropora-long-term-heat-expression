@@ -196,10 +196,10 @@ pC <- ggplot(km_curves, aes(day, cum_event,
 # pca_in keeps only complete cases; the parallel `keep`/`groups` carry the
 # matching treatment/wound labels for colouring points. center+scale. = TRUE
 # standardises the variables so no single one dominates by virtue of its units.
-pca_vars <- c("pam_end", "color_end", "growth_areal", "zoox_end")
+pca_vars <- c("pam_end", "color_end", "growth_pct", "zoox_end")
 pretty   <- c(pam_end      = "Fv/Fm",
               color_end    = "Color",
-              growth_areal = "Calcification",
+              growth_pct = "Growth",
               zoox_end     = "Symbionts")
 pca_in   <- wide[, pca_vars, drop = FALSE] |> drop_na()
 keep     <- complete.cases(wide[, pca_vars])

@@ -1,23 +1,21 @@
 # =============================================================================
 # Purpose: Coral growth from buoyant weight.
 #
-#          PRIMARY metric: areal calcification rate (mg CaCO3 cm^-2 d^-1) —
-#          dry-mass gain normalized to the coral's calcifying SURFACE AREA and
-#          to time. Calcification is a surface-mediated process (new aragonite
-#          is deposited under the living tissue veneer), so surface area, not
-#          skeletal mass, is the mechanistically correct denominator, and
-#          mg cm^-2 d^-1 is the field-standard unit (Jokiel et al. 1978).
+#          PRIMARY metric: % mass change over the 15-day window
+#          (100 · (dry_final - dry_initial) / dry_initial). Reported alongside
+#          for robustness: specific growth rate (SGR, % d^-1). The heat effect is
+#          the same under both metrics; see output/tables/05b_growth_metric_comparison.csv.
 #
-#          Surface area comes from the day-15 wax-dipping standard-curve SA
-#          (data/processed/wax_clean.rds). The 48 growth corals were biopsied
-#          only terminally (all biopsy_day == 15), so day-15 SA is the SA at the
-#          end of a clean 15-day growth window; SA is stable across biopsy days
-#          and does not differ by treatment (28C 4.46 vs 31C 4.73 cm2, p=0.27),
-#          so it is an unbiased denominator. See notes/growth_allometry.md.
-#
-#          Reported alongside for robustness: % mass change (delta_M / M_init)
-#          and specific growth rate (SGR, % d^-1). The heat effect is the same
-#          under all three; see output/tables/05b_growth_metric_comparison.csv.
+#          NOTE on areal calcification: an areal rate (mg CaCO3 cm^-2 d^-1) is NOT
+#          reported. It would require the calcifying SURFACE AREA of the whole
+#          weighed fragment, but the wax-dipping SA we have is for the small
+#          sub-fragment taken for the symbiont slurry — the rest of each fragment
+#          was chopped for transcriptomics, so no whole-fragment SA exists (M.
+#          Brzezinski, pers. comm., 2026). Dividing whole-fragment mass gain by a
+#          sub-fragment's SA mixes two objects, so growth is expressed as % mass
+#          change (and SGR), which need no surface-area normalization. (The same
+#          wax SA IS valid for symbiont density in code/06, where the cell count
+#          and the SA come from the same sub-fragment.)
 #
 #          Buoyant-weight algorithm: Davies 1989 / Jokiel et al. 1978; the raw
 #          sheet stores Excel formulas, so we recompute the dry-mass conversion.
@@ -26,19 +24,16 @@
 #   skeleton a coral lays down. A coral is weighed while submerged at the start
 #   and end of the experiment; because seawater buoys the skeleton, the buoyant
 #   weight can be converted to dry skeletal (aragonite) mass with Archimedes'
-#   principle (Davies 1989). The mass gained over the 15-day window is the
-#   calcification. We divide that gain by each coral's calcifying surface area
-#   (from the wax-dip curve in code/07) and by days to get the field-standard
-#   areal calcification rate. The headline result — heating cuts calcification by
-#   ~38% — is what this script is built to estimate and test. One subtlety drives
-#   the analysis design: temperature was applied to whole TANKS, not to individual
-#   corals, so the coral-level linear model gives honest effect-size estimates but
-#   cannot give an honest p-value (corals in a tank are not independent). The
-#   inferential test for the heat effect is therefore a tank-level permutation
-#   test that treats the 8 tanks (not the 48 corals) as the units that were
-#   randomized.
+#   principle (Davies 1989). The mass gained over the 15-day window, expressed as
+#   a percentage of the coral's starting mass, is the growth metric. The headline
+#   result — heating cuts growth by ~34% — is what this script estimates and
+#   tests. One subtlety drives the analysis design: temperature was applied to
+#   whole TANKS, not to individual corals, so the coral-level linear model gives
+#   honest effect-size estimates but cannot give an honest p-value (corals in a
+#   tank are not independent). The inferential test for the heat effect is
+#   therefore a tank-level permutation test that treats the 8 tanks (not the 48
+#   corals) as the units that were randomized.
 # Input:   data/raw/buoyant_weight/data.csv
-#          data/processed/wax_clean.rds  (day-15 surface area)
 # Output:  data/processed/buoyant_weight_clean.rds
 #          figures/05_buoyant_weight_growth.{pdf,png}
 #          output/tables/05_buoyant_weight_lm.csv
@@ -62,8 +57,6 @@ raw <- read_csv(file.path(DATA_RAW, "buoyant_weight", "data.csv"),
 # LEVEL ORDER matters: it fixes the model's reference (baseline) group. wound's
 # baseline is "no" and treatment's baseline is 28C, so model coefficients read as
 # the effect of wounding and of heating relative to the unstressed control.
-# Reference (calibration) measurements — these don't change between weighings
-# so we use the row-level reference columns as supplied.
 bw <- raw |>
   rename(thicket = matches("^thicket")) |>
   mutate(
@@ -96,10 +89,11 @@ bw <- raw |>
 rho_sw_temp <- function(t_c) -5e-6 * t_c^2 + 7e-6 * t_c + 1.0001
 ARAG <- 2.93   # density of aragonite, the CaCO3 polymorph corals build (g/cm^3)
 
-# ---- Derive the three growth metrics ---------------------------------------
-# delta_g (absolute mass gain) is the raw signal; the three rate metrics below
-# normalize it different ways so we can show the heat effect is not an artifact
-# of how growth is expressed (see the metric-comparison table later).
+# ---- Derive the growth metrics ---------------------------------------------
+# delta_g (absolute mass gain) is the raw signal; the two rate metrics below
+# normalize it by starting mass (no surface area required), so we can show the
+# heat effect is not an artifact of how growth is expressed (see the metric-
+# comparison table later).
 bw <- bw |>
   mutate(
     initial_dry = initial_w / (1 - rho_sw_temp(initial_temp) / ARAG),  # g, t0
@@ -107,46 +101,24 @@ bw <- bw |>
     delta_g     = final_dry - initial_dry,    # skeletal mass gained over the window
     days        = pmax(biopsy_day, 1),        # growth-window length; floor at 1 to
                                               # avoid divide-by-zero for any day-0 row
-    pct_growth  = 100 * delta_g / initial_dry,                 # robustness metric
+    pct_growth  = 100 * delta_g / initial_dry,                 # PRIMARY metric (% mass change)
     sgr         = 100 * (log(final_dry) - log(initial_dry)) / days,  # % d^-1,
                                               # size-independent exponential growth rate
     g_per_day   = delta_g / days
   )
 
-# ---- Join surface area & compute areal calcification (PRIMARY) -------------
-# Day-15 wax standard-curve SA, the calcifying-surface denominator.
-sa <- readRDS(file.path(DATA_PROC, "wax_clean.rds")) |>
-  filter(biopsy_day == 15, is.finite(sa_curve_cm2), sa_curve_cm2 > 0) |>  # valid day-15 SA only
-  distinct(id, .keep_all = TRUE) |>          # one SA row per coral before joining
-  select(id, sa_cm2 = sa_curve_cm2)
-
-bw <- bw |>
-  left_join(sa, by = "id") |>   # attach each coral's SA; corals without one get NA
-  mutate(
-    # mg CaCO3 per cm^2 per day:  (delta_g * 1000 mg/g) / SA / days
-    # *1000 converts g -> mg; this is the PRIMARY response variable.
-    areal_calc = 1000 * delta_g / sa_cm2 / days
-  )
-
-# Surface area is destructive (terminal) so a few growth corals may lack one;
-# report how many so the NA areal_calc rows below are expected, not a silent bug.
-n_missing_sa <- sum(is.na(bw$sa_cm2))
-if (n_missing_sa > 0)
-  message("NOTE: ", n_missing_sa, " growth corals lack a day-15 SA; ",
-          "areal_calc is NA for these (pct_growth/sgr still available).")
-
-# Save the cleaned one-row-per-coral table (all three metrics) for downstream use.
+# Save the cleaned one-row-per-coral table for downstream use.
 saveRDS(bw, file.path(DATA_PROC, "buoyant_weight_clean.rds"))
 
-# ---- Primary model: areal calcification ------------------------------------
-# Fit on corals that have a finite areal_calc (i.e. an SA was available).
-bw_a <- bw |> filter(is.finite(areal_calc))
+# ---- Primary model: % mass change ------------------------------------------
+# Fit on corals with a finite % mass change.
+bw_a <- bw |> filter(is.finite(pct_growth))
 # Coral-level coefficients are useful effect-size summaries, but temperature is
 # assigned at the tank level. The inferential heat-effect p-value below is
 # therefore a tank-level permutation test.
 # Model: treatment * wound interaction (does wounding change the heat effect?)
 # plus thicket as an additive blocking term to absorb genet-to-genet differences.
-m_growth <- lm(areal_calc ~ treatment * wound + thicket, data = bw_a)
+m_growth <- lm(pct_growth ~ treatment * wound + thicket, data = bw_a)
 res <- broom::tidy(m_growth, conf.int = TRUE) |>   # coefficient table with 95% CIs
   mutate(model_scope = "coral-level descriptive coefficients",
          across(where(is.numeric), \(x) round(x, 4))) |>
@@ -157,24 +129,24 @@ write_csv(res, file.path(TBL_DIR, "05_buoyant_weight_lm.csv"))
 # Collapse to one mean per tank so each randomized unit contributes one number.
 tank_growth <- bw_a |>
   group_by(tank, treatment) |>
-  summarise(mean_areal_calc = mean(areal_calc, na.rm = TRUE),
+  summarise(mean_pct_growth = mean(pct_growth, na.rm = TRUE),
             n_corals = n(), .groups = "drop")
-# Observed effect: mean tank calcification at 28C minus at 31C.
+# Observed effect: mean tank % growth at 28C minus at 31C.
 obs_diff <- with(tank_growth,
-                 mean(mean_areal_calc[treatment == "28C"]) -
-                   mean(mean_areal_calc[treatment == "31C"]))
+                 mean(mean_pct_growth[treatment == "28C"]) -
+                   mean(mean_pct_growth[treatment == "31C"]))
 # Exact permutation null: re-label which tanks are "28C" in every possible way
 # (combn enumerates all choices of the 28C set), recompute the difference each
 # time, and ask how often a re-labeling is as extreme as what we observed. This
 # needs no distributional assumption — it just uses the randomization itself.
-vals <- tank_growth$mean_areal_calc
+vals <- tank_growth$mean_pct_growth
 assignments <- combn(seq_along(vals), sum(tank_growth$treatment == "28C"),
                      simplify = FALSE)
 perm_diffs <- vapply(assignments, function(idx) {
   mean(vals[idx]) - mean(vals[-idx])
 }, numeric(1))
 tank_test <- tibble(
-  response = "areal_calc",
+  response = "pct_growth",
   test = "tank-level exact permutation",
   n_tanks = nrow(tank_growth),
   n_28_tanks = sum(tank_growth$treatment == "28C"),
@@ -189,11 +161,11 @@ tank_test <- tibble(
 write_csv(tank_test, file.path(TBL_DIR, "05_buoyant_weight_tank_test.csv"))
 
 # ---- Metric comparison (heat effect is robust to metric choice) ------------
-# Refit the same fixed-effects model for each of the three growth metrics and
-# extract the treatment / wound / interaction tests, to show the heat effect
-# does not depend on whether growth is areal, % change, or SGR.
+# Refit the same fixed-effects model for each surface-area-free growth metric and
+# extract the treatment / wound / interaction tests, to show the heat effect does
+# not depend on whether growth is expressed as % mass change or SGR.
 metric_compare <- purrr::map_dfr(   # map over metrics, stack results into one df
-  c(areal_calc = "areal_calc", pct_growth = "pct_growth", sgr = "sgr"),
+  c(pct_growth = "pct_growth", sgr = "sgr"),
   function(v) {
     d <- bw |> filter(is.finite(.data[[v]]))   # .data[[v]] selects the metric by name
     # car::Anova type 2 = each main effect tested after the other main effect but
@@ -210,11 +182,11 @@ metric_compare <- purrr::map_dfr(   # map over metrics, stack results into one d
 )
 write_csv(metric_compare, file.path(TBL_DIR, "05b_growth_metric_comparison.csv"))
 
-# ---- Plot: areal calcification ---------------------------------------------
+# ---- Plot: % mass change ---------------------------------------------------
 # x-axis is the 4 treatment x wound combinations (interaction() pastes them into
 # one factor); boxes coloured by temperature, jittered points coloured by genet.
 p_bw <- ggplot(bw_a, aes(interaction(treatment, wound, sep = " · "),
-                         areal_calc, fill = treatment)) +
+                         pct_growth, fill = treatment)) +
   geom_boxplot(width = 0.55, outlier.shape = NA, alpha = 0.7) +
   geom_jitter(aes(colour = thicket), width = 0.18, height = 0,
               size = 1.6, alpha = 0.85) +
@@ -222,9 +194,9 @@ p_bw <- ggplot(bw_a, aes(interaction(treatment, wound, sep = " · "),
                     name = "Temperature") +
   scale_colour_manual(values = PAL_GENO, name = "Genotype") +
   labs(x = NULL,
-       y = expression("Calcification ("*mg~cm^{-2}~d^{-1}*")"),
-       title = "Coral calcification under heating × wounding",
-       subtitle = "Buoyant-weight mass gain per unit surface area (Jokiel et al. 1978)") +
+       y = "Growth (% skeletal mass change over 15 d)",
+       title = "Coral growth under heating × wounding",
+       subtitle = "Buoyant-weight % mass change (Davies 1989; Jokiel et al. 1978)") +
   theme_pub(10) +
   theme(axis.text.x = element_text(angle = 0))
 
@@ -232,9 +204,9 @@ save_fig(p_bw, "05_buoyant_weight_growth", width = 150, height = 95)
 
 # ---- Console summary -------------------------------------------------------
 # Echo the key tables so a quick run shows the headline result without opening CSVs.
-cat("\n=== Areal calcification LM (coral-level descriptive) ===\n")
+cat("\n=== % mass change LM (coral-level descriptive) ===\n")
 print(res)
-cat("\n=== Areal calcification tank-level temperature test ===\n")
+cat("\n=== % mass change tank-level temperature test ===\n")
 print(tank_test)
 cat("\n=== Heat effect is robust to metric choice ===\n")
 print(metric_compare |> filter(term == "treatment"))

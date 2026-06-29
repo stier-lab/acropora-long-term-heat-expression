@@ -100,12 +100,12 @@ add_check("Cox HR new corallites (HR + 95% CI bounds)",
           "14_cox_hazard_ratios.csv")
 add_check("Cox p new corallites", nc$p[1], 3, "14_cox_hazard_ratios.csv")
 
-# ---- 2. Areal calcification % reduction (38%) ------------------------------
+# ---- 2. Growth (% skeletal mass change) reduction --------------------------
 bw <- readRDS(file.path(DATA_PROC, "buoyant_weight_clean.rds"))
-ac <- bw |> filter(is.finite(areal_calc)) |>
-  group_by(treatment) |> summarise(m = mean(areal_calc), .groups = "drop")
+ac <- bw |> filter(is.finite(pct_growth)) |>
+  group_by(treatment) |> summarise(m = mean(pct_growth), .groups = "drop")
 m28 <- ac$m[ac$treatment == "28C"]; m31 <- ac$m[ac$treatment == "31C"]
-add_check("Areal calcification reduction % and means",
+add_check("Growth (% mass change) reduction % and means",
           c((1 - m31 / m28) * 100, m28, m31), c(0L, 2L, 2L),
           "buoyant_weight_clean.rds")
 
@@ -127,7 +127,7 @@ add_check("PCA displacement genets a / d / c",
 
 # ---- 5. PCA variance on PC1 (recomputed live) ------------------------------
 w  <- as.data.frame(readRDS(file.path(DATA_PROC, "coral_physio_wide.rds")))
-pv <- c("pam_end", "color_end", "growth_areal", "zoox_end")
+pv <- c("pam_end", "color_end", "growth_pct", "zoox_end")
 pcm <- w[complete.cases(w[, pv]), pv]
 ve  <- prcomp(pcm, center = TRUE, scale. = TRUE)$sdev^2
 add_check("PCA variance PC1 (%)", 100 * ve[1] / sum(ve), 0, "coral_physio_wide.rds (prcomp)")

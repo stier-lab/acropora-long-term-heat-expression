@@ -1,2 +1,2 @@
 response,test,n_tanks,n_28_tanks,n_31_tanks,estimate_28_minus_31,p_two_sided,note
-areal_calc,tank-level exact permutation,8,4,4,2.872,0.05714,"Temperature was randomized at the tank level; this p-value treats tanks, not corals, as exchangeable units."
+pct_growth,tank-level exact permutation,8,4,4,2.071,0.05714,"Temperature was randomized at the tank level; this p-value treats tanks, not corals, as exchangeable units."

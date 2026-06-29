@@ -349,29 +349,29 @@ lmer_checks <- list(
 # there is no (1|id); tank is kept as a random block. Singular fits are tolerated
 # (check.conv.singular ignore) because the design can zero out a variance component.
 m_bw_null  <- lme4::lmer(
-  areal_calc ~ treatment * wound + thicket + (1 | tank),
+  pct_growth ~ treatment * wound + thicket + (1 | tank),
   data = bw_d, REML = FALSE,
   control = lme4::lmerControl(check.conv.singular = .makeCC("ignore", tol = 1e-4))
 )
 m_bw_genet <- lme4::lmer(
-  areal_calc ~ treatment * wound * thicket + (1 | tank),
+  pct_growth ~ treatment * wound * thicket + (1 | tank),
   data = bw_d, REML = FALSE,
   control = lme4::lmerControl(check.conv.singular = .makeCC("ignore", tol = 1e-4))
 )
 bw_anova <- anova(m_bw_null, m_bw_genet)
 p_bw0 <- length(lme4::fixef(m_bw_null)); p_bw1 <- length(lme4::fixef(m_bw_genet))
 ddf_bw <- if ("Chi Df" %in% names(bw_anova)) bw_anova$`Chi Df`[2] else bw_anova$Df[2]
-reported_df_bw <- anova_tab$lrt_df[anova_tab$response == "growth_areal"]
-add_check("growth_areal", "Model type", "ML LMM + LRT", "INFO",
+reported_df_bw <- anova_tab$lrt_df[anova_tab$response == "growth_pct"]
+add_check("growth_pct", "Model type", "ML LMM + LRT", "INFO",
           "Growth has no time dim; tank retained as random block")
-add_check("growth_areal", "df = diff in fixed-effect parameters",
+add_check("growth_pct", "df = diff in fixed-effect parameters",
           sprintf("computed=%d, reported=%d", ddf_bw, reported_df_bw),
           if (ddf_bw == reported_df_bw) "PASS" else "FAIL", "")
-add_check("growth_areal", "LRT p-value",
+add_check("growth_pct", "LRT p-value",
           sprintf("p=%.3g", bw_anova$`Pr(>Chisq)`[2]),
           if (bw_anova$`Pr(>Chisq)`[2] < 0.05) "SIG" else "NS", "")
 report_lines <- c(report_lines, "",
-  "### growth_areal",
+  "### growth_pct",
   sprintf("- ML LMM LRT (tank random intercept); χ²(%d) = %.2f, p = %.3g",
           ddf_bw, bw_anova$Chisq[2],
           bw_anova$`Pr(>Chisq)`[2]),
@@ -428,7 +428,7 @@ report_lines <- c(report_lines, "", "## Summary verdicts\n",
   sprintf("- pam_fvfm LRT: **%s**", lrt_verdict("pam_fvfm")),
   sprintf("- color_dscale LRT: **%s**", lrt_verdict("color_dscale")),
   sprintf("- log_zoox LRT: **%s**", lrt_verdict("log_zoox")),
-  sprintf("- growth_areal LMM LRT: **%s**", lrt_verdict("growth_areal")))
+  sprintf("- growth_pct LMM LRT: **%s**", lrt_verdict("growth_pct")))
 
 writeLines(report_lines, file.path(DIAG_OUT, "D_pca_lrt_report.md"))
 
@@ -442,4 +442,4 @@ cat("PCA verdict:", pca_status_overall, "\n")
 cat("pam_fvfm:", lrt_verdict("pam_fvfm"),
     "| color_dscale:", lrt_verdict("color_dscale"),
     "| log_zoox:", lrt_verdict("log_zoox"),
-    "| growth_areal:", lrt_verdict("growth_areal"), "\n")
+    "| growth_pct:", lrt_verdict("growth_pct"), "\n")

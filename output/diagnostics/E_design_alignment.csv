@@ -7,7 +7,7 @@ model,check,observed,expected,status,note
 12_pam_lmm,random slope on day?,(1|id) only — no random slope,"considered (day|id) but n=14 days, few per id; likely overfits",HANDLED,Random slope considered and intentionally omitted; expected singular/overfit with sparse per-id trajectories
 12_color_lmm,fixed structure,color_num ~ treatment * wound * day * thicket + (1 | tank) +      (1 | id),treatment * wound * day * thicket,PASS,same 4-way as PAM
 12_color_lmm,ordinal data on Gaussian,Gaussian LMM on D1-D5 ordinal scale,either CLMM or note in Methods,HANDLED,Addressed by 12b CLMM robustness check; KS-violation noted in Section 10
-12_bw_lm,fixed structure,areal_calc ~ treatment * wound * thicket + (1 | tank),treatment * wound * thicket + (1 | tank),PASS,no day term; tank retained as treatment-assignment block
+12_bw_lm,fixed structure,pct_growth ~ treatment * wound * thicket + (1 | tank),treatment * wound * thicket + (1 | tank),PASS,no day term; tank retained as treatment-assignment block
 12_bw_lm,random effects,tank,tank only,PASS,coral ID omitted because each coral has one endpoint growth observation
 12_bw_lm,n,48,48 (24 per temperature),PASS,Cells in design: 12 (2 trt x 2 wound x 3 genet = 12)
 12_bw_lm,df residual,34,~35-36 for tank-aware 3-way model,PASS,Adequate residual df for 3-way fixed structure

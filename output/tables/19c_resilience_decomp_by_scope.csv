@@ -1,7 +1,7 @@
 thicket,scope,mean_sensitivity,n_responses
-a,heat only (unwounded),1,4
-a,heat while wounded,0.3505065878159055,9
-c,heat only (unwounded),0.4164562870006973,4
-c,heat while wounded,0.29190981333525545,10
-d,heat only (unwounded),0.886798170777302,4
-d,heat while wounded,0.23845629330040946,10
+a,heat only (unwounded),0.988015385740654,4
+a,heat while wounded,0.34475232650050025,9
+c,heat only (unwounded),0.4280336106132539,4
+c,heat while wounded,0.2782602181221924,10
+d,heat only (unwounded),0.8993732833391468,4
+d,heat while wounded,0.2409314050646284,10

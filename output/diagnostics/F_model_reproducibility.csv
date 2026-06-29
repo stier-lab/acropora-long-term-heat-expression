@@ -1,10 +1,10 @@
 model,n_coefs,max_coef_drift,logLik_diff,status,saved_logLik,refit_logLik,note
 12_pam_lmm,24,0,0,PASS,500.76426092249983,500.76426092249983,
 12_color_lmm,24,0,0,PASS,-93.45636467454763,-93.45636467454763,
-12_bw_lm,12,0,0,PASS,-95.08081424249997,-95.08081424249997,
+12_bw_lm,12,0,0,PASS,-79.48531684504114,-79.48531684504114,
 12_zoox_lmm,24,0,0,PASS,-189.4042074472631,-189.4042074472631,
 12c_morph_polyps_out_blme,12,1.2024084112547733,2.3135211022093642,DRIFT,-126.32169303637573,-124.00817193416637,
-12c_morph_hole_in_center_blme,12,NA,NA,HANDLED,-49.44066105309534,NA,refit failed: pwrssUpdate did not converge in (maxit) iterations
+12c_morph_axial_polyp_formation_blme,NA,NA,NA,HANDLED,NA,NA,saved model absent; upstream fitter skipped this trait
 12c_morph_wound_smoothed_blme,12,NA,NA,HANDLED,-29.53859370577405,NA,refit failed: pwrssUpdate did not converge in (maxit) iterations
 12c_morph_pigment_over_wound_blme,12,598.7703891180798,13.029905204635263,DRIFT,-51.73707685355881,-38.70717164892355,
 12c_morph_tip_exist_blme,12,NA,NA,HANDLED,-73.52205929814734,NA,refit failed: Downdated VtV is not positive definite

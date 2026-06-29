@@ -120,14 +120,14 @@ genet_tests <- bind_rows(
 # rate per coral), so the null/genet pair drops the `day` terms entirely. Retain
 # (1|tank) as the experimental block for the treatment assignment; same ML fit so
 # the LRT is valid.
-bw_a       <- bw |> filter(is.finite(areal_calc))
+bw_a       <- bw |> filter(is.finite(pct_growth))
 m_bw_null  <- lme4::lmer(
-  areal_calc ~ treatment * wound + thicket + (1 | tank),
+  pct_growth ~ treatment * wound + thicket + (1 | tank),
   data = bw_a, REML = FALSE,
   control = lme4::lmerControl(check.conv.singular = .makeCC("ignore", tol = 1e-4))
 )
 m_bw_genet <- lme4::lmer(
-  areal_calc ~ treatment * wound * thicket + (1 | tank),
+  pct_growth ~ treatment * wound * thicket + (1 | tank),
   data = bw_a, REML = FALSE,
   control = lme4::lmerControl(check.conv.singular = .makeCC("ignore", tol = 1e-4))
 )
@@ -136,7 +136,7 @@ bw_lrt <- anova(m_bw_null, m_bw_genet)
 # sometimes "Df" — pick whichever is present.
 bw_lrt_df <- if ("Chi Df" %in% names(bw_lrt)) bw_lrt$`Chi Df`[2] else bw_lrt$Df[2]
 genet_tests <- bind_rows(genet_tests, tibble(
-  response  = "growth_areal",
+  response  = "growth_pct",
   n_obs     = nrow(bw_a),
   aic_null  = AIC(m_bw_null),
   aic_genet = AIC(m_bw_genet),
@@ -180,11 +180,11 @@ emm_long <- bind_rows(
   make_react_norm(pam,   "fv_fm",                "PAM Fv/Fm"),
   make_react_norm(color, "color_num",            "Color (D-scale)"),
   bw_a |> group_by(treatment, thicket) |>
-    summarise(mean = mean(areal_calc, na.rm = TRUE),
-              se   = sd(areal_calc, na.rm = TRUE) / sqrt(n()),
+    summarise(mean = mean(pct_growth, na.rm = TRUE),
+              se   = sd(pct_growth, na.rm = TRUE) / sqrt(n()),
               n    = n(),
               .groups = "drop") |>
-    mutate(response = "Calcification (mg cm⁻² d⁻¹)"),
+    mutate(response = "Growth (% mass change)"),
   phys |> mutate(log10_cells = log10(cells_per_cm2)) |>
     group_by(treatment, thicket) |>
     summarise(mean = mean(log10_cells, na.rm = TRUE),

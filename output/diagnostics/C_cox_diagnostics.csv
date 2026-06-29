@@ -1,21 +1,21 @@
 trait,scope,check,statistic,p_value,status,notes
-hole_in_center,overall_strata_thicket,PH_treatment,0.085,0.7712,PASS,"cox.zph chisq=0.08, df=1"
-hole_in_center,overall_strata_thicket,PH_GLOBAL,0.085,0.7712,PASS,"cox.zph chisq=0.08, df=1"
-hole_in_center,overall_strata_thicket,EPV,24,NA,PASS,"n_event=24, n_covariates=1 (rule of thumb: EPV >= 10)"
-hole_in_center,overall_strata_thicket,HR_direction,1.378,0.4468,PASS,HR(31C vs 28C)=1.38 — faster onset under 31C
-hole_in_center,by_wound,applicability,NA,NA,PASS,N/A — only wounded corals at risk in source script
-hole_in_center,genet_a,PH_treatment,0.143,0.7057,PASS,"cox.zph chisq=0.14, df=1"
-hole_in_center,genet_a,PH_GLOBAL,0.143,0.7057,PASS,"cox.zph chisq=0.14, df=1"
-hole_in_center,genet_a,EPV,8,NA,HANDLED,"n_event=8, n_covariates=1 (rule of thumb: EPV >= 10); handled as descriptive per-genet limitation; primary overall Cox model uses strata(thicket)"
-hole_in_center,genet_a,HR_direction,1.44,0.6097,PASS,HR(31C vs 28C)=1.44 — faster onset under 31C
-hole_in_center,genet_c,PH_treatment,0.401,0.5264,PASS,"cox.zph chisq=0.4, df=1"
-hole_in_center,genet_c,PH_GLOBAL,0.401,0.5264,PASS,"cox.zph chisq=0.4, df=1"
-hole_in_center,genet_c,EPV,8,NA,HANDLED,"n_event=8, n_covariates=1 (rule of thumb: EPV >= 10); handled as descriptive per-genet limitation; primary overall Cox model uses strata(thicket)"
-hole_in_center,genet_c,HR_direction,1.209,0.7894,PASS,HR(31C vs 28C)=1.21 — faster onset under 31C
-hole_in_center,genet_d,PH_treatment,0.415,0.5196,PASS,"cox.zph chisq=0.41, df=1"
-hole_in_center,genet_d,PH_GLOBAL,0.415,0.5196,PASS,"cox.zph chisq=0.41, df=1"
-hole_in_center,genet_d,EPV,8,NA,HANDLED,"n_event=8, n_covariates=1 (rule of thumb: EPV >= 10); handled as descriptive per-genet limitation; primary overall Cox model uses strata(thicket)"
-hole_in_center,genet_d,HR_direction,1.523,0.5844,PASS,HR(31C vs 28C)=1.52 — faster onset under 31C
+axial_polyp_formation,overall_strata_thicket,PH_treatment,0.085,0.7712,PASS,"cox.zph chisq=0.08, df=1"
+axial_polyp_formation,overall_strata_thicket,PH_GLOBAL,0.085,0.7712,PASS,"cox.zph chisq=0.08, df=1"
+axial_polyp_formation,overall_strata_thicket,EPV,24,NA,PASS,"n_event=24, n_covariates=1 (rule of thumb: EPV >= 10)"
+axial_polyp_formation,overall_strata_thicket,HR_direction,1.378,0.4468,PASS,HR(31C vs 28C)=1.38 — faster onset under 31C
+axial_polyp_formation,by_wound,applicability,NA,NA,PASS,N/A — only wounded corals at risk in source script
+axial_polyp_formation,genet_a,PH_treatment,0.143,0.7057,PASS,"cox.zph chisq=0.14, df=1"
+axial_polyp_formation,genet_a,PH_GLOBAL,0.143,0.7057,PASS,"cox.zph chisq=0.14, df=1"
+axial_polyp_formation,genet_a,EPV,8,NA,HANDLED,"n_event=8, n_covariates=1 (rule of thumb: EPV >= 10); handled as descriptive per-genet limitation; primary overall Cox model uses strata(thicket)"
+axial_polyp_formation,genet_a,HR_direction,1.44,0.6097,PASS,HR(31C vs 28C)=1.44 — faster onset under 31C
+axial_polyp_formation,genet_c,PH_treatment,0.401,0.5264,PASS,"cox.zph chisq=0.4, df=1"
+axial_polyp_formation,genet_c,PH_GLOBAL,0.401,0.5264,PASS,"cox.zph chisq=0.4, df=1"
+axial_polyp_formation,genet_c,EPV,8,NA,HANDLED,"n_event=8, n_covariates=1 (rule of thumb: EPV >= 10); handled as descriptive per-genet limitation; primary overall Cox model uses strata(thicket)"
+axial_polyp_formation,genet_c,HR_direction,1.209,0.7894,PASS,HR(31C vs 28C)=1.21 — faster onset under 31C
+axial_polyp_formation,genet_d,PH_treatment,0.415,0.5196,PASS,"cox.zph chisq=0.41, df=1"
+axial_polyp_formation,genet_d,PH_GLOBAL,0.415,0.5196,PASS,"cox.zph chisq=0.41, df=1"
+axial_polyp_formation,genet_d,EPV,8,NA,HANDLED,"n_event=8, n_covariates=1 (rule of thumb: EPV >= 10); handled as descriptive per-genet limitation; primary overall Cox model uses strata(thicket)"
+axial_polyp_formation,genet_d,HR_direction,1.523,0.5844,PASS,HR(31C vs 28C)=1.52 — faster onset under 31C
 wound_smoothed,overall_strata_thicket,PH_treatment,0.148,0.7003,PASS,"cox.zph chisq=0.15, df=1"
 wound_smoothed,overall_strata_thicket,PH_GLOBAL,0.148,0.7003,PASS,"cox.zph chisq=0.15, df=1"
 wound_smoothed,overall_strata_thicket,EPV,24,NA,PASS,"n_event=24, n_covariates=1 (rule of thumb: EPV >= 10)"

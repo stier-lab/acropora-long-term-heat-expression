@@ -235,45 +235,48 @@ emm_color_end <- emmeans::emmeans(m_color, ~ treatment | thicket * wound,
                                    at = list(day = 14))
 record_genet_effect(emm_color_end, "color_dscale")
 
-# ---- 3. Coral calcification (areal, mg cm^-2 d^-1) -------------------------
-# PRIMARY growth metric is areal calcification rate (surface-area normalized;
-# see code/05_buoyant_weight.R and notes/growth_allometry.md). % mass change
-# is recorded as a robustness response below.
-cat("\n=== 3. Calcification (areal) ===\n")
+# ---- 3. Coral growth (% skeletal mass change) ------------------------------
+# PRIMARY growth metric is % mass change (100 · Δdry / dry_initial; see
+# code/05_buoyant_weight.R). An AREAL calcification rate is NOT used: it would
+# need the whole-fragment surface area, but the wax SA we have is only for the
+# small symbiont-slurry sub-fragment (the rest was chopped for transcriptomics),
+# so it is not a valid denominator for whole-fragment mass gain. SGR is recorded
+# as a robustness response below; both are surface-area-free.
+cat("\n=== 3. Growth (% mass change) ===\n")
 bw <- readRDS(file.path(DATA_PROC, "buoyant_weight_clean.rds")) |>
   mutate(thicket = as.factor(thicket))
-bw_a <- bw |> filter(is.finite(areal_calc))
+bw_a <- bw |> filter(is.finite(pct_growth))
 
-# Note there is NO `day` term here: growth is a single start-to-end calcification
-# rate per coral, not a repeated time series, so the model is a 3-way factorial
+# Note there is NO `day` term here: growth is a single start-to-end measure per
+# coral, not a repeated time series, so the model is a 3-way factorial
 # (treatment × wound × thicket) only.
 # n<=48 corals with 1 obs each — drop (1|id) because with one observation per
 # fragment a fragment-level intercept is not identifiable (it would perfectly
 # alias the residual). We retain (1|tank) as the experimental-unit random effect
 # for the temperature treatment.
 m_bw <- lmerTest::lmer(
-  areal_calc ~ treatment * wound * thicket + (1 | tank),
+  pct_growth ~ treatment * wound * thicket + (1 | tank),
   data = bw_a, REML = TRUE,
   control = lme4::lmerControl(check.conv.singular = .makeCC("ignore", tol = 1e-4))
 )
 saveRDS(m_bw, file.path(MOD_DIR, "12_bw_lm.rds"))
-record_results(m_bw, "growth_areal")
+record_results(m_bw, "growth_pct")
 
 emm_bw <- emmeans::emmeans(m_bw, ~ treatment | thicket * wound)
-results_emm[["growth_areal"]] <- as_tibble(pairs(emm_bw, adjust = "tukey")) |>
-  mutate(response = "growth_areal", day = NA_integer_)  # day = NA: no time axis
-record_genet_effect(emm_bw, "growth_areal")
+results_emm[["growth_pct"]] <- as_tibble(pairs(emm_bw, adjust = "tukey")) |>
+  mutate(response = "growth_pct", day = NA_integer_)  # day = NA: no time axis
+record_genet_effect(emm_bw, "growth_pct")
 
-# Robustness: % mass change (the previous primary metric). Same model on a
-# non-area-normalized growth measure — if the heat/genet story holds on both, the
-# choice of growth currency is not driving the conclusion.
-m_bw_pct <- lmerTest::lmer(
-  pct_growth ~ treatment * wound * thicket + (1 | tank),
+# Robustness: specific growth rate (SGR, % d^-1). Same model on a second
+# surface-area-free growth currency — if the heat/genet story holds on both, the
+# choice of growth metric is not driving the conclusion.
+m_bw_sgr <- lmerTest::lmer(
+  sgr ~ treatment * wound * thicket + (1 | tank),
   data = bw, REML = TRUE,
   control = lme4::lmerControl(check.conv.singular = .makeCC("ignore", tol = 1e-4))
 )
-saveRDS(m_bw_pct, file.path(MOD_DIR, "12_bw_pct_lm.rds"))
-record_results(m_bw_pct, "growth_pct")
+saveRDS(m_bw_sgr, file.path(MOD_DIR, "12_bw_sgr_lm.rds"))
+record_results(m_bw_sgr, "growth_sgr")
 
 # ---- 4. Symbiont density (cells/cm^2) --------------------------------------
 # Symbiont (Symbiodiniaceae) density per unit skeletal area — the direct census
@@ -317,18 +320,11 @@ ph <- readRDS(file.path(DATA_PROC, "physio_clean.rds")) |>
   filter(wound == "yes", !is.na(day), day >= 0) |>   # only wounded corals have these traits
   mutate(thicket = as.factor(thicket))
 
-traits <- c("polyps_out", "hole_in_center", "polyp_in_hole",
+# hole_in_center + polyp_in_hole are one observable, combined upstream (code/04)
+# into axial_polyp_formation (M. Brzezinski pers. comm.); use the combined trait.
+traits <- c("polyps_out", "axial_polyp_formation",
             "wound_smoothed", "pigment_over_wound", "tip_exist",
             "tip_extension", "new_corallites_on_tip", "algae_on_wound")
-# Exclude any trait that is a byte-identical duplicate of an earlier one (in the
-# raw data `polyp_in_hole` duplicates `hole_in_center`; see data-quality note in
-# code/04). Modelling it twice would also double-count it in the BH family (28).
-dup_drop <- traits[duplicated(lapply(traits, \(t) ph[[t]]))]
-if (length(dup_drop)) {
-  message("12_models: dropping duplicate trait(s) from morphology models: ",
-          paste(dup_drop, collapse = ", "))
-  traits <- setdiff(traits, dup_drop)
-}
 
 # fit_trait(): fit one binomial GLMM per trait. Returns NULL (skips) when the
 # trait is invariant (all 0s or all 1s → nothing to model) or sample size is tiny.
@@ -413,7 +409,7 @@ write_csv(all_genet, file.path(TBL_DIR, "12_genet_treatment_effects.csv"))
 cat("\n=== Type-III ANOVA: continuous responses (genet terms highlighted) ===\n")
 print(all_anova |>
         filter(response_id %in% c("pam_fvfm", "color_dscale",
-                                   "growth_areal", "growth_pct",
+                                   "growth_pct", "growth_sgr",
                                    "log_zoox_density"),
                grepl("thicket|treatment", term, ignore.case = TRUE)) |>
         select(response_id, term, any_of(c("F value", "F", "Pr(>F)",

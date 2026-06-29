@@ -1,6 +1,6 @@
 # E. Design alignment audit
 
-Generated: 2026-06-26 17:37:06 
+Generated: 2026-06-29 13:33:40 
 
 | Status | Count |
 |---|---|

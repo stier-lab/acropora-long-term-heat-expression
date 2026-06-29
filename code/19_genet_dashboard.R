@@ -49,7 +49,7 @@ pca  <- read_csv(file.path(TBL_DIR, "15_genet_pca_displacement.csv"),
 # wound (both wounded and unwounded show heat effects), keeping the
 # standardized effect as estimate / SD_pooled.
 cont_eff <- cont |>
-  filter(response %in% c("pam_fvfm", "color_dscale", "growth_areal",
+  filter(response %in% c("pam_fvfm", "color_dscale", "growth_pct",
                          "log_zoox_density"),
          is.finite(estimate)) |>
   group_by(response, thicket) |>
@@ -94,14 +94,14 @@ all_eff <- bind_rows(
     response_label = case_when(
       response == "pam_fvfm"          ~ "PAM Fv/Fm",
       response == "color_dscale"      ~ "Color (D-scale)",
-      response == "growth_areal"        ~ "Calcification",
+      response == "growth_pct"        ~ "Growth",
       response == "log_zoox_density"  ~ "log symbionts cm⁻²",
       grepl("^morph_", response)      ~ str_to_sentence(
         gsub("_", " ", sub("^morph_", "", response))),
       TRUE                            ~ response
     ),
     domain = case_when(
-      response %in% c("pam_fvfm","color_dscale","growth_areal","log_zoox_density")
+      response %in% c("pam_fvfm","color_dscale","growth_pct","log_zoox_density")
         ~ "Physiology",
       grepl("hole|polyp|smoothed", response_label, ignore.case = TRUE)
         ~ "Wound closure",
@@ -184,7 +184,7 @@ cont_by_wound <- cont |>
   # Drop morphology rows — they have wound=NA (wounded-only by construction)
   # and are captured separately in cox_by_wound.
   filter(!is.na(wound),
-         response %in% c("pam_fvfm", "color_dscale", "growth_areal",
+         response %in% c("pam_fvfm", "color_dscale", "growth_pct",
                           "log_zoox_density")) |>
   group_by(response, thicket, wound) |>
   summarise(estimate = mean(estimate, na.rm = TRUE),
@@ -211,14 +211,14 @@ decomp <- bind_rows(
     response_label = case_when(
       response == "pam_fvfm"         ~ "PAM Fv/Fm",
       response == "color_dscale"     ~ "Color (D)",
-      response == "growth_areal"       ~ "Calcification",
+      response == "growth_pct"       ~ "Growth",
       response == "log_zoox_density" ~ "log symbionts",
       grepl("^morph_", response)     ~ str_to_sentence(
         gsub("_", " ", sub("^morph_", "", response))),
       TRUE                            ~ response
     ),
     domain = case_when(
-      response %in% c("pam_fvfm","color_dscale","growth_areal","log_zoox_density")
+      response %in% c("pam_fvfm","color_dscale","growth_pct","log_zoox_density")
         ~ "Physiology",
       grepl("hole|polyp|smoothed", response_label, ignore.case = TRUE)
         ~ "Wound closure",

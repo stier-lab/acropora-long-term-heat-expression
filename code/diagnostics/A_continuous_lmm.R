@@ -361,9 +361,9 @@ zoox_sensitivity <- tryCatch({
 })
 
 # =============================================================================
-# 4. Areal calcification -- 12_bw_lm.rds (tank-aware LMM)
+# 4. Growth (% mass change) -- 12_bw_lm.rds (tank-aware LMM)
 # =============================================================================
-cat("\n=== Model 4: Areal calcification (LMM) ===\n")
+cat("\n=== Model 4: Growth %% mass change (LMM) ===\n")
 m_bw <- readRDS(file.path(MOD_DIR, "12_bw_lm.rds"))
 
 check_lmer_convergence(m_bw, "12_bw_lm")
