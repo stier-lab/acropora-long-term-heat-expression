@@ -31,7 +31,7 @@ Manuscript figure references and their mapping to files:
 | Fig. 2A | Apex temperature trace | maps to `08_apex_temperature.png` |
 | Fig. 2B | PAM Fv/Fm trajectory | maps to `02_pam_fvfm_trajectory.png` |
 | Fig. 2C | Color (Siebeck D-scale) trajectory | maps to `03_color_trajectory.png` |
-| Fig. 2D | Areal calcification / growth | maps to `05_buoyant_weight_growth.png` |
+| Fig. 2D | Growth (% skeletal mass change) | maps to `05_buoyant_weight_growth.png` |
 | Fig. 2E | Symbiont density by biopsy day | maps to `06_symbiont_density_by_day.png` |
 | Fig. 3A | PCA biplot of end physiology | maps to `15_physio_PCA_biplot.png` |
 | Fig. 3B | Kaplan–Meier morphology (healing vs regeneration) | maps to `14_morphology_KM.png` |
@@ -61,9 +61,9 @@ and supplementary context, not numbered main-text figures.
 |---|---|---|---|
 | `02_pam_fvfm_trajectory.png` | PAM Fv/Fm trajectories by treatment × wound × day, 95% CI | `code/02_pam_analysis.R` | Fig. 2B |
 | `03_color_trajectory.png` | Color-card pigmentation (Siebeck D-scale) trajectory + paling tallies | `code/03_color_card_analysis.R` | Fig. 2C |
-| `04_morphology_trajectories.png` | 9 binary wound-healing traits, cumulative proportion by day × treatment | `code/04_physio_morphology.R` | — |
+| `04_morphology_trajectories.png` | 8 binary wound-healing traits, cumulative proportion by day × treatment | `code/04_physio_morphology.R` | — |
 | `04b_morphology_trajectories_by_genet.png` | Same morphology trajectories, split by genet | `code/04_physio_morphology.R` | — |
-| `05_buoyant_weight_growth.png` | Areal calcification rate (mg CaCO₃ cm⁻² d⁻¹) from buoyant weight | `code/05_buoyant_weight.R` | Fig. 2D |
+| `05_buoyant_weight_growth.png` | Growth (% skeletal mass change) from buoyant weight | `code/05_buoyant_weight.R` | Fig. 2D |
 | `06_symbiont_chl_by_day.png` | Chlorophyll-a (µg/cm²) by biopsy day | `code/06_symbiont_chl.R` | — |
 | `06_symbiont_density_by_day.png` | Symbiont density (cells/cm²) by biopsy day | `code/06_symbiont_chl.R` | Fig. 2E |
 | `07_wax_standard_curve.png` | Wax-dipping surface-area calibration standard curve | `code/07_wax_dipping.R` | — |

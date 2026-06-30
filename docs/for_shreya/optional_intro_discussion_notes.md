@@ -48,7 +48,7 @@ results in hand.
   regeneration is delayed/suppressed under heat in the interval-censored model (time ratio = 1.32,
   95% CI 1.19–1.47, p = 1.4e-7; first-observed Cox HR = 0.22, 95% CI 0.07–0.69).
 - Closed-but-never-regenerated: 67% at 31 °C vs 0% at 28 °C (median healing-to-regeneration lag 10 vs 8 d).
-- Whole-colony physiology responds to temperature, barely to wounding; areal calcification 38% lower at 31 °C.
+- Whole-colony physiology responds to temperature, barely to wounding; skeletal growth (% mass change) 34% lower at 31 °C.
 - Genet C multivariate displacement 1.06 vs 3.72 (A) / 3.34 (D); most likely to regenerate at 31 °C.
 - 31 °C sits ~4.4 °C below the population acute ED50 (35.4 °C; Cunning et al. 2024) — chronic/sublethal.
 

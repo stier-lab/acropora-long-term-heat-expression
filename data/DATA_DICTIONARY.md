@@ -87,20 +87,20 @@ terminal streams on `id` alone.
 - **Columns:** `species`, `date`, `day`, `treatment`, `tank`, `thicket`, `sample`, `id`, `wound`, `health_status`, `color` (text D-scale), `paling` (yes/no), `hole_at_center`, `notes`, `color_num`.
 
 ### `physio_clean` — morphological wound-healing traits
-- **Raw:** `data/raw/physio_morphology/data.csv`. **Script:** `code/04_physio_morphology.R` → **`physio_clean.rds`** (768 × 21).
-- 9 binary (yes/no → 1/0) morphology traits scored over time, mainly for wounded corals: `polyps_out`, `hole_in_center`, `polyp_in_hole`, `wound_smoothed`, `pigment_over_wound`, `tip_exist`, `tip_extension`, `new_corallites_on_tip`, `algae_on_wound`.
+- **Raw:** `data/raw/physio_morphology/data.csv`. **Script:** `code/04_physio_morphology.R` → **`physio_clean.rds`** (768 × 22).
+- 9 binary (yes/no → 1/0) morphology trait columns scored over time, mainly for wounded corals: `polyps_out`, `hole_in_center`, `polyp_in_hole`, `wound_smoothed`, `pigment_over_wound`, `tip_exist`, `tip_extension`, `new_corallites_on_tip`, `algae_on_wound`. `hole_in_center` and `polyp_in_hole` are byte-identical (the central hole is the axial polyp hole, scored together) and are combined into the derived trait `axial_polyp_formation`, which is what the analysis uses — leaving **8 analyzed traits** (see `data/raw/physio_morphology/SCORING_NOTES.md`).
 - Also `health_status`, `disease_status`, plus the shared keys (`id`, `day`, `treatment`, `tank`, `thicket`, `wound`, `sample`).
 
-### `buoyant_weight_clean` — calcification / growth
-- **Raw:** `data/raw/buoyant_weight/data.csv` (stores Excel formulas; dry-mass conversion recomputed via Davies 1989 / Jokiel 1978). **Script:** `code/05_buoyant_weight.R` → **`buoyant_weight_clean.rds`** (48 × 39).
-- **48 growth fragments only**, all terminal at `biopsy_day == 15` (one clean 15-day window).
-- **Primary metric:** `areal_calc` = areal calcification rate (mg CaCO₃ cm⁻² d⁻¹), normalized to day-15 wax SA (`sa_cm2`). Robustness metrics also present: `pct_growth` (% mass change), `sgr` (% d⁻¹), `g_per_day`, `delta_g`.
-- Surface area (`sa_cm2`) comes from `wax_clean`.
+### `buoyant_weight_clean` — growth
+- **Raw:** `data/raw/buoyant_weight/data.csv` (stores Excel formulas; dry-mass conversion recomputed via Davies 1989 / Jokiel 1978). **Script:** `code/05_buoyant_weight.R` → **`buoyant_weight_clean.rds`** (48 × 37).
+- **48 growth fragments only**, all terminal at `biopsy_day == 15` (one 15-day window).
+- **Primary metric:** `pct_growth` = % change in dry skeletal mass over the window. Robustness metric: `sgr` (specific growth rate, % d⁻¹); also `g_per_day`, `delta_g`.
+- **No areal calcification rate.** It would need the whole-fragment surface area, which was not measured — fragments were destructively sampled for transcriptomics, leaving wax SA only for the small symbiont sub-fragment. Both reported metrics are surface-area-free.
 
 ### `wax_clean` — surface area calibration
 - **Raw:** `data/raw/wax_dipping/data.csv` + `Standard_curve.csv` (14-point cylinder curve). **Script:** `code/07_wax_dipping.R` → **`wax_clean.rds`** (192 × 9).
 - Per-fragment surface area from wax mass (`sa_curve_cm2`, primary) cross-checked against caliper geometry (`sa_caliper_cm2`).
-- **Columns:** `id`, `treatment`, `biopsy_day`, `thicket`, `wound`, `dry_g`, `wax_g`, `sa_caliper_cm2`, `sa_curve_cm2`. The denominator for `buoyant_weight_clean$areal_calc` and `symbiont_chl_clean`.
+- **Columns:** `id`, `treatment`, `biopsy_day`, `thicket`, `wound`, `dry_g`, `wax_g`, `sa_caliper_cm2`, `sa_curve_cm2`. The denominator for `symbiont_chl_clean$cells_per_cm2` (the cell count and the SA are from the same sub-fragment). Not used for growth — see `buoyant_weight_clean`.
 
 ### `symbiont_chl_clean` — symbiont density (+ planned chl-a slot)
 - **Raw:** `data/raw/symbiont_counts/Raw_counts.csv` (4 hemocytometer quadrant counts Q1–Q4 per fragment) + `metadata_ordered_merge.csv` (SA, slurry volume). **Script:** `code/06_symbiont_chl.R` → **`symbiont_chl_clean.rds`** (192 rows; columns may expand as provenance fields are added).
@@ -120,7 +120,7 @@ terminal streams on `id` alone.
 - **Columns:** `datetime`/`date`, `probe`, `value_mean`, `value_sd`, `n`. Tank water temps are probes **`Temp1`–`Temp12`** (probe `TempN` = tank N); the file also logs many non-temperature probes (heaters, pumps, pH, ORP) — filter to `Temp1`–`Temp12` for tank temperature. This is the record of the heat ramp and 31 °C steady state.
 
 ### `coral_physio_wide` — endpoint physiology summary (derived)
-- **Script output (no single raw file):** **`coral_physio_wide.rds`** (48 × 8) — one row per growth fragment with terminal/endpoint values: `pam_end`, `color_end`, `growth_areal`, `zoox_end`, keyed by `id` + design factors. Convenience table for multivariate/endpoint analyses.
+- **Script output (no single raw file):** **`coral_physio_wide.rds`** (48 × 8) — one row per growth fragment with terminal/endpoint values: `pam_end`, `color_end`, `growth_pct`, `zoox_end`, keyed by `id` + design factors. Convenience table for multivariate/endpoint analyses.
 
 ### External — `cunning2024_apulchra_ed50.csv`
 - Per-genet acute thermal-tolerance ED50 (°C) for *A. pulchra* from Mahana, Mo'orea (CBASS assay; Cunning et al. 2024 *Coral Reefs*). Used by `code/sensitivity/26_thermal_context.R` to place the chronic 28/31 °C treatments on a calibrated tolerance axis. **Caveat:** acute (18 h) ≠ chronic (weeks); Cunning's numbered genets are **not** matched to LTH thickets a/c/d. See `data/external/README.md`.

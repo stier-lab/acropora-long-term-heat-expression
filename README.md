@@ -125,11 +125,11 @@ paper's lead result. Every number traces to `output/tables/20_master_results.csv
 (with caveats) is in `RESULTS.md`. The summary figure is `figures/16_manuscript_fig1.pdf`.
 
 **1 — Sustained heat broadly compromises physiology.** At 31 °C, photochemistry, pigmentation,
-symbiont density, and calcification all declined progressively while 28 °C held steady. By Day 14
-heated corals had paled (58–67 % vs 0–8 % ambient) and calcified **38 % less** (7.62 → 4.75 mg CaCO₃
-cm⁻² d⁻¹). *How asked:* linear mixed model per response (`response ~ treatment × wound × day × genet`
+symbiont density, and growth all declined progressively while 28 °C held steady. By Day 14
+heated corals had paled (58–67 % vs 0–8 % ambient) and grew **34 % less** (6.10 → 4.03 % skeletal
+mass change). *How asked:* linear mixed model per response (`response ~ treatment × wound × day × genet`
 + random tank & coral); the heat signal is the **treatment × day interaction** (the rate of
-divergence). All significant — Fv/Fm F = 106.6, color F = 239.3, symbionts F = 94.0; all p < 0.001
+divergence). All significant — Fv/Fm F = 111.7, color F = 287.6, symbionts F = 94.0; all p < 0.001
 (type-III ANOVA).
 
 **2 — Heat blocks *regeneration*, not *healing* (the phenotype result).** Wounds *sealed* at the
@@ -162,13 +162,14 @@ Genet (thicket) is treated as a **fixed effect** throughout (only 3 field-collec
 for a reliable variance component; Bolker 2008, Gelman 2005), which also surfaces per-genet effects
 directly. Reference levels: treatment = `28C`, wound = `no`.
 
-- **Continuous responses** (PAM Fv/Fm, color D-scale, log symbiont density, areal calcification):
+- **Continuous responses** (PAM Fv/Fm, color D-scale, log symbiont density, growth):
   LMMs `response ~ treatment * wound * day * thicket + (1|tank) + (1|id)` (`lme4`/`lmerTest`,
   type-III Satterthwaite; `(1|id)` dropped for single-observation responses).
-- **Growth = areal calcification** (mg CaCO₃ cm⁻² d⁻¹, surface-area-normalized via wax SA) is the
-  primary metric; % mass change and SGR are robustness checks (`notes/growth_allometry.md`).
-- **Morphology** (9 binary wound-healing traits): binomial GLMMs; 7 traits refit with Cauchy(0,2.5)
-  priors (`blme`) for separation. **Color** D-scale also refit as an ordinal CLMM (`ordinal`).
+- **Growth = % skeletal mass change** is the primary metric; specific growth rate (SGR) is the
+  robustness check. An areal calcification rate is not used — the whole-fragment surface area was
+  not measured (only the symbiont sub-fragment was wax-dipped), so the SA-free metrics are reported.
+- **Morphology** (8 binary wound-healing traits): binomial GLMMs; traits with separation refit with
+  Cauchy(0,2.5) priors (`blme`). **Color** D-scale also refit as an ordinal CLMM (`ordinal`).
 - **Healing milestones:** interval-censored Weibull AFT for inference; Kaplan–Meier + Cox PH
   first-observed-day summaries with full Schoenfeld PH diagnostics.
 - **Multivariate:** centered/scaled PCA on the four endpoint responses.
@@ -189,7 +190,7 @@ processed data in `data/processed/`, fitted models in `output/models/`. The fina
 master results table and runs the manuscript audit.
 
 **Pipeline order:** `01` metadata → `02` PAM → `03` color → `04` morphology → `07` wax SA → `05`
-calcification → `06` symbionts → `08` APEX temp → `09` YSI → `10` worms → `11` combined figure → `12`
+growth → `06` symbionts → `08` APEX temp → `09` YSI → `10` worms → `11` combined figure → `12`
 models (primary + color-CLMM & morphology-blme robustness) → `13` genet interaction → `14`
 interval/KM/Cox timing → `15` PCA → `16` manuscript figure → `17` figure audit → `18` data validation
 → `19` genet dashboard → `sensitivity/22–29` (flagged-sample, time-series, headline comparison,
@@ -226,8 +227,8 @@ waits on sequencing; not in the run-all. Exact order in `code/_run_all.R`.)
 | Coral metadata (one per fragment) | `data/raw/metadata/metadata.csv` | 208 | thicket, id, tank, treatment, wound, biopsy day/date, **coord_lat/long**, calculated SA, planned chl-a slot, zoox |
 | PAM (Fv/Fm) | `data/raw/pam/PAM_data.csv` | 672 obs | F, M, Y, E, Fv/Fm by date × tank × sample × location (top/bottom) |
 | Color card (Siebeck D-scale) | `data/raw/color_card/data.csv` | 336 obs | health_status, color (split scores averaged), paling, hole_at_center |
-| Morphology (9 binary traits) | `data/raw/physio_morphology/data.csv` | 768 obs | polyps_out, hole_in_center, polyp_in_hole, wound_smoothed, pigment_over_wound, tip_exist, tip_extension, new_corallites_on_tip, algae_on_wound |
-| Buoyant weight (growth) | `data/raw/buoyant_weight/data.csv` | 48 corals | initial + final coral & plug weights, water-density correction → areal calcification |
+| Morphology (9 raw columns → 8 analyzed traits) | `data/raw/physio_morphology/data.csv` | 768 obs | polyps_out, hole_in_center, polyp_in_hole, wound_smoothed, pigment_over_wound, tip_exist, tip_extension, new_corallites_on_tip, algae_on_wound (the byte-identical hole_in_center/polyp_in_hole are combined to `axial_polyp_formation` in analysis — see `data/raw/physio_morphology/SCORING_NOTES.md`) |
+| Buoyant weight (growth) | `data/raw/buoyant_weight/data.csv` | 48 corals | initial + final coral & plug weights, water-density correction → % skeletal mass change |
 | Wax dipping (surface area) | `data/raw/wax_dipping/data.csv` | 192 corals | diameter, height, dry weight, wax weights, SA from standard curve |
 | Standard curve for wax | `data/raw/wax_dipping/Standard_curve.csv` | 19 | wax mass vs SA from cylinders |
 | Symbiont counts | `data/raw/symbiont_counts/Raw_counts.csv` | 768 (4 reps × 192) | hemocytometer counts → cells/cm² via wax SA |
@@ -251,7 +252,7 @@ see `notes/LTH_*_Photos.md`. **RNA-seq reads** are processed at UC Davis (Bay la
 | **genet as a fixed effect** | With only 3 genets, each one's effect is estimated directly rather than as a variance component (more reliable with so few groups). |
 | **type-III ANOVA** | Tests each term adjusting for all others (the correct default for interaction models). |
 | **confirmatory vs exploratory** | A-priori predictions (literature-grounded) reported unadjusted; exploratory tests BH-corrected (`code/sensitivity/28`). |
-| **Tissue-healing phase** | Re-epithelialization / coenosarc coverage that seals the wound (traits `hole_in_center`, `polyp_in_hole`, `wound_smoothed`). |
+| **Tissue-healing phase** | Re-epithelialization / coenosarc coverage that seals the wound (traits `axial_polyp_formation`, `wound_smoothed`). |
 | **Regeneration phase** | Reappearance of polyps + skeletal/calyx/corallite regrowth (traits `tip_exist`, `tip_extension`, `new_corallites_on_tip`). |
 | **Healing-to-regeneration lag** | The gap between sealing the wound and rebuilding skeleton (`code/14`). At 31 °C, two-thirds of corals close the wound but never cross into regeneration. |
 
