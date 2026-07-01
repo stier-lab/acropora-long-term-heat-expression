@@ -1,250 +1,265 @@
 # Literature — *Acropora pulchra* (LTH "expression by temperature" + wound-healing model)
 
-> 🗂️ **Literature overview** · Updated 2026-06-12 · Index: [`README.md`](../README.md) · PDFs in `literature/pdfs/`; refs in `manuscript/references.bib`.
+Consolidated bibliography and knowledge synthesis for the LTH heat × wounding project and for parameterizing *A. pulchra* in the 3-species coral wound-healing model (`~/coral-wound-healing-model`). This file is the union of the former `LITERATURE.md`, `CITATIONS_INDEX.md`, `CITATION_AUDIT.md`, `LIBRARY_MAP.md`, and `KNOWN_UNKNOWN_synthesis.md`. Library holds **98 PDFs** in `pdfs/`; DOIs were tool-verified (Crossref/OpenAlex); PDFs named `AuthorYear_ShortTitle.pdf`.
 
-Curated library for the LTH heat × wounding project and for parameterizing a third
-species (*A. pulchra*) in the coral wound-healing model (`~/coral-wound-healing-model`).
-**Every PDF is mapped to its *A. pulchra* relevance + model/project connection in
-[`LIBRARY_MAP.md`](LIBRARY_MAP.md)** (98 PDFs total — see `LIBRARY_MAP.md` for the Core /
-includes-pulchra / grounding breakdown; sortable companion [`library_map.csv`](library_map.csv)).
-Companion to the **"Acropora pulchra" NotebookLM notebook** (`f9a97210-…`, query for full text)
-and the lab regeneration library `~/coral-regen-review/literature/` (191 PDFs).
+**Species-attribution corrections (verified against source PDFs).** Four papers were over-attributed to *A. pulchra* and are flagged ⚠: **Zhang 2025** = macroalga *Halimeda macroloba* (not a coral); **Almeida 2024** = *Pocillopora* cf. *damicornis* (Kenya); **Denis 2024** = *A. spathulata* (GBR); **Raymundo 2025** = *A. aspera* outplants (Guam). They remain as grounding/framing sources only. Net effect: *A. pulchra* proteomic/metabolomic thermal acclimation is essentially **unstudied**.
 
-> **Manuscript citations** are tracked separately: every work cited in `manuscript/Manuscript_LTH.md`
-> has a Crossref-verified entry in **`manuscript/references.bib`** and a cite→DOI→PDF mapping in
-> **[`CITATIONS_INDEX.md`](CITATIONS_INDEX.md)** (2026-06-09: +5 PDFs acquired — Jokiel & Coles
-> 1977/1990, Cunning 2024, Davies 1989, Siebeck 2006; now **98 PDFs**). Six cited papers remain
-> paywalled and are listed there for acquisition via authenticated Chrome.
-
-**Status (2026-06-09):** discovery complete + **PDF acquisition done (now 98 PDFs in `pdfs/`)**
-+ **NotebookLM ingestion done (notebook 26 sources; new round not yet ingested)**. A backward
-citation-chain audit (`CITATION_AUDIT.md`) added 37 more papers — the wound-healing×temperature
-core (Traylor-Knowles, Bonesso, Burmester, Dias, Meesters 1993/94, Rinkevich…), energetics, the
-expression-by-temperature backbone (Barshis, Bay&Palumbi, Cornwell, Cunning 2021…), Mo'orea
-symbionts/reproduction (Carroll, Rouzé), and symbiont-shuffling (Berkelmans, Jones). See
-`CITATION_AUDIT.md` for the full audit. After a VPN-authenticated CDP round (in-page `fetch()`),
-only **4 audit papers remain unobtained** (Anthony 2009, Edmunds & Yarid 2017, Page 2018,
-Buddemeier 1993) — all with in-library substitutes; plus the original handful of A.-pulchra-index
-papers that are paywalled with no OA route (mostly [NB] in the notebook or congener-substitutable). DOIs were tool-confirmed
-(OpenAlex/Crossref); none guessed. PDFs are named `AuthorYear_ShortTitle.pdf`.
-
-**Acquisition routes that worked (2026-06-07):** Springer `link.springer.com/content/pdf/{DOI}.pdf`
-via plain curl (even for "paywalled" Mar Biol / Coral Reefs); Nature/PLOS/Frontiers/RSOS direct
-PDF URLs; **EuropePMC `?pdf=render`** for OA papers that Cloudflare-blocked bare curl (PeerJ, ASM,
-iScience, Wiley-with-PMC-deposit). int-res.com (MEPS), bepress theses, and `download-papers` CDP
-all failed (JS anti-bot / unauthenticated session) — EuropePMC recovered every OA one of those.
-
-Acquisition legend: **[NB]** already in the A. pulchra notebook · **[LAB]** already in
-`~/coral-regen-review/literature/pdfs` (copy in) · **[OA]** open-access (curl) ·
-**[PW]** paywalled (Chrome CDP) · relevance 1–5 (5 = core).
-
-> ⚠ **Species-attribution corrections (2026-06-08).** A read-through against the source PDFs found
-> four papers over-attributed to *A. pulchra*; rows below are corrected and flagged `⚠`:
-> **Zhang 2025** = the macroalga *Halimeda macroloba* (NOT a coral) — so *A. pulchra* proteomic/
-> metabolomic thermal acclimation is actually unstudied; **Almeida 2024** = *Pocillopora* cf.
-> *damicornis* (Kenya); **Denis 2024** = *A. spathulata* (GBR, *A. pulchra* not in the study);
-> **Raymundo 2025** = *A. aspera* outplants (Guam, *A. pulchra* only the background congener).
-> These remain useful *grounding/framing* sources but are not *A. pulchra*-subject papers.
+Status legend: `pdfs/…` = local PDF held · **[NB]** = NotebookLM corpus only · **[⬇]** = to acquire (needs UCSB auth / paywall / no OA route) · **[method]** = method/software, no article PDF.
 
 ---
 
-## 1. *A. pulchra*-specific papers
+# Bibliography
 
-### Genomics / gene expression / proteomics (core for "expression by temperature")
-| Paper | DOI | Acq | Rel | Note |
+## A. *A. pulchra* — genomics / gene expression / proteomics / microbiome
+
+| Paper | DOI | PDF | Note |
+|---|---|---|---|
+| Conn et al. 2025 — genome assembly & annotation (Mo'orea) | 10.46471/gigabyte.153 | pdfs/Conn_2025_GenomeAssembly.pdf | reference genome; underpins all expression work (bioRxiv preprint 10.1101/2025.03.27.645822 duplicates) |
+| Anthony et al. 2023 — Symbiodiniaceae cellular/phenotypic plasticity | 10.3389/fevo.2023.1288596 | pdfs/Anthony_2023_SymbiontPlasticity.pdf | symbiont expression plasticity; 1.345×10⁶ cells/cm² → `KZ` |
+| de la Vega et al. 2023 — *Endozoicomonas* GU-1 genome from *A. pulchra* | 10.1128/mra.01355-22 | pdfs/delaVega_2023_EndozoicomonasGenome.pdf | microbiome resource |
+| Lock et al. 2025 — Symbiodiniaceae + bacterial microbiome impacts on host | 10.1111/1462-2920.70175 | pdfs/Lock_2025_SymbiontBacterialMicrobiome.pdf | host performance; cell density drops post-transplant, communities stable |
+| Miller & Bentlage 2024 — seasonal tissue/mucus microbiome baseline | 10.7717/peerj.17421 | pdfs/Miller_2024_SeasonalMicrobiome.pdf | microbiome baseline |
+| Alina et al. 2023 — low-tide exposure × microbial abundance (intertidal) | 10.1080/17451000.2023.2169464 | pdfs/Alina_2023_IntertidalMicrobialAbundance.pdf | first author Dining Nika Alina (misfiled earlier as Nuñez Lendo) |
+| ⚠ Zhang et al. 2025 — protein & metabolite thermal acclimation | 10.3389/fmars.2025.1543591 | pdfs/Zhang_2025_ProteinMetaboliteAcclim.pdf | **macroalga *Halimeda macroloba*, not a coral**; calcifier framing only |
+
+## B. *A. pulchra* — thermal tolerance / bleaching / CBASS
+
+| Paper | DOI | PDF | Note |
+|---|---|---|---|
+| Cunning et al. 2024 — rapid acute heat-tolerance assays (CBASS) | 10.1007/s00338-024-02577-7 | pdfs/Cunning_2024_RapidAcuteHeatToleranceAssays.pdf | Fv/Fm ED50 34.3–36.6 °C, 20 Mahana/Mo'orea colonies; ED50↔heatwave R=0.74 |
+| Berg et al. 2020 — persistent photosystem damage (A. cf. *pulchra*, Guam) | 10.1080/17451000.2021.1875245 | [NB] | 58% mortality d34; photodamage needs ~3× stress to repair |
+| Shaw et al. 2016 — intraspecific variability, warming × acidification | 10.1007/s00227-016-2986-8 | pdfs/Shaw_2016_IntraspecificVariability.pdf | genotype variation; growth–tolerance trade-off → `bT_pulse`, `bleach_z` |
+| El-Khaled et al. 2025 — heat & cold bleaching vulnerability | 10.1038/s42003-025-09329-5 | pdfs/ElKhaled_2025_HeatColdBleaching.pdf | incl. *A. pulchra* |
+| Hoadley et al. 2015 — temp × pCO₂ physiology across genera | 10.1038/srep18371 | pdfs/Hoadley_2015_TempCO2Physiology.pdf | incl. *A. pulchra* |
+| Grottoli et al. 2021 — comparability among bleaching experiments | 10.1002/eap.2262 | pdfs/Grottoli_2021_BleachingComparability.pdf | LTH methods/standardization |
+| Puisay et al. 2018 — larval thermal resistance/acclimation | 10.1016/j.marenvres.2018.01.005 | [⬇] | larvae; Elsevier paywall |
+| Babka 2017 — successive bleaching resilience | 10.60950/bgtl.2017.2.babka.sk | [⬇] | Bremen thesis, bot-blocked |
+| ⚠ Denis et al. 2024 — individual thermal-tolerance traits across the GBR | 10.1098/rspb.2024.0587 (preprint 10.1101/2024.01.28.576773) | pdfs/Denis_2024_IndividualThermalTolerance.pdf | **A. spathulata, GBR (not A. pulchra)**; CBASS variation framing |
+
+## C. *A. pulchra* — symbiont community (Mo'orea)
+
+| Paper | DOI | PDF | Note |
+|---|---|---|---|
+| Rouzé et al. 2017 — Symbiodiniaceae of Mo'orea scleractinians | 10.7717/peerj.2856 | pdfs/Rouze_2017_SymbiodiniumMoorea.pdf | Mo'orea symbiont identity → `iZ` context |
+| Rouzé et al. 2019 — quantitative Symbiodiniaceae signature, Mo'orea | 10.1038/s41598-019-44017-5 | pdfs/Rouze_2019_SymbiodiniaceaeSignatureMoorea.pdf | Mo'orea symbiont dynamics → `iZ` |
+
+## D. *A. pulchra* — growth / calcification / skeleton
+
+| Paper | DOI | PDF | Note |
+|---|---|---|---|
+| Yap & Gomez 1984 — growth of *A. pulchra* | 10.1007/BF00393119 | pdfs/Yap_1984_Growth.pdf | 13.1–15.8 cm/yr; 36.4% branch mortality → `v_edge`, `m_d` |
+| Yap 1985 — growth II/III (temp × daylength, transplantation) | 10.1007/BF00539430 | pdfs/Yap_1985_GrowthIII.pdf | warm-season growth suppression → `v_edge` |
+| Yap 1981 — growth, regeneration & transplantation (Bolinao) | — (M.Sc. thesis, UP Quezon City) | [⬇] | rare *A. pulchra* regeneration data; no online copy |
+| Strømgren 1987 — light × growth, intertidal | 10.1007/BF00302211 | pdfs/Stromgren_1987_LightGrowth.pdf | growth response → `maxpd` |
+| Comeau et al. 2014 — irradiance × calcification | 10.1016/j.jembe.2013.12.013 | [NB] | tissue biomass → `E_max`; lib has Comeau 2016 (Elsevier paywall) |
+| Comeau et al. 2016 — calcification vs temp & pCO₂ | 10.1007/s00338-016-1425-0 | pdfs/Comeau_2016_CalcificationTempCO2.pdf | thermal optimum ~28 °C; parameterization |
+| Roche et al. 2010a — skeletal porosity (X-ray microCT) | 10.1016/j.jembe.2010.10.006 | [⬇] | perforate structure → `D_E`, `resid`; Elsevier paywall |
+| Roche et al. 2010b — spatial porosity variation | 10.1007/s00338-010-0679-1 | pdfs/Roche_2010b_SpatialPorosity.pdf | tip porosity 65–80% → `D_E`, `resid` |
+| Tian et al. 2025 — internal skeletal hydrodynamics | 10.1016/j.isci.2025.111742 | pdfs/Tian_2025_SkeletalHydrodynamics.pdf | skeletal flow |
+
+## E. *A. pulchra* — physiology / nutrients / reproduction / ecology / recovery
+
+| Paper | DOI | PDF | Note |
+|---|---|---|---|
+| Conetta 2021 — phenotypic plasticity (URI thesis) | 10.23860/thesis-conetta-dennis-2021 | [NB] | back-reef thickets, restoration workhorse |
+| Munk 2024 — host & symbiont physiology during wound regeneration (thesis) | — (M.Sc. thesis) | [NB] | **KEY**: abrasion vs fragmentation × 27.9/29.5 °C, Mo'orea; +1.65 °C robust, biphasic recovery; confirm exact title/institution with author |
+| Tanaka et al. 2006 — organic-N translocation/conservation | 10.1016/j.jembe.2006.04.011 | [⬇] | translocation → `D_E`; Elsevier paywall |
+| Tanaka et al. 2009 — net DOM release | 10.1016/j.jembe.2009.06.023 | [⬇] | Elsevier paywall |
+| Buckingham et al. 2022 — N+P enrichment, skewed N:P | 10.1007/s00338-022-02223-0 | pdfs/Buckingham_2022_NPEnrichment.pdf | nutrient stoichiometry |
+| Huang 2009 — oocyte development histology (Sanya) | — (no DOI) | [⬇] | only *A. pulchra* reproduction source found |
+| Ladd et al. 2025 — growth–predation tradeoffs, distribution | 10.1038/s41598-025-21028-z | pdfs/Ladd_2025_GrowthPredationTradeoffs.pdf | distribution constraints |
+| ⚠ Almeida et al. 2024 — intertidal vs subtidal recovery/growth/survival | 10.1007/s00227-024-04546-8 | pdfs/Almeida_2024_IntertidalSubtidalRecovery.pdf | **Pocillopora cf. damicornis, Kenya (not A. pulchra)**; recovery framing |
+| ⚠ Raymundo et al. 2025 — restoration in a stressful environment (Guam) | 10.1016/j.isci.2025.112244 | pdfs/Raymundo_2025_RestorationGuam.pdf | **A. aspera outplants (not A. pulchra)**; pulchra only background congener |
+
+## F. Wound healing / regeneration — grounds `kc_mult`
+
+| Paper | DOI | PDF | Note |
+|---|---|---|---|
+| Traylor-Knowles et al. 2016 — wound healing, two temperature regimes | 10.1007/s00227-016-3011-y | pdfs/Traylor-Knowles_2016_WoundHealingTwoTempRegimes.pdf | ⭐ *P. damicornis* & *A. hyacinthus* (model's 2 species) → temp-coupling; DOI corrected (was 10.1186/s12862-016-0791-0 typo) |
+| Bonesso et al. 2017 — sub-bleaching SST impairs regeneration | 10.7717/peerj.3719 | pdfs/Bonesso_2017_SubBleachingImpairsRegen.pdf | 32 °C halts apical-tip regrowth (*A. aspera*) → `kc_mult`(temp) |
+| Burmester et al. 2017 — temperature & symbiosis × lesion recovery | 10.3354/meps12114 | pdfs/Burmester_2017_TempSymbiosisLesionRecovery.pdf | symbiotic state × temp × healing |
+| Burmester et al. 2018 — autotrophy vs heterotrophy in lesion recovery | — | pdfs/Burmester_2018_AutoVsHeteroLesionRecovery.pdf | → `kc_mult`, `h` |
+| Dias et al. 2018 — mortality/growth/regen after fragmentation under heat | 10.1016/j.seares.2018.08.008 | pdfs/Dias_2018_FragmentationRegenThermalStress.pdf | regen often rose to 32 °C → `m_d`, `kc_mult` |
+| Edmunds & Lenihan 2010 — sub-lethal damage to juvenile *Porites* × temp/flow | 10.1007/s00227-009-1372-1 | pdfs/EdmundsLenihan_2010_SublethalDamageJuvenilePorites.pdf | model species damage × temp |
+| Meesters & Bak 1993 — bleaching reduces tissue-regeneration potential | 10.3354/meps096189 | pdfs/Meesters_1993_BleachingTissueRegen.pdf | ⭐ bleaching × regeneration |
+| Meesters et al. 1994 — damage & regeneration ↔ growth (*Montastraea*) | 10.3354/meps112119 | pdfs/Meesters_1994_DamageRegenGrowth.pdf | growth↔regeneration trade-off |
+| Meesters et al. 1997 — partial mortality; lesion-area model | 10.3354/meps146091 | pdfs/Meesters_1997_PredictingRegeneration.pdf | → `kc_mult`, `m_d` |
+| Denis et al. 2011 — lesion regeneration, massive *Porites* populations | — | pdfs/Denis_2011_LesionRegenerationPopulations.pdf | → `kc_mult` |
+| Denis et al. 2013 — fast growth impairs regeneration (*A. muricata*) | 10.1371/journal.pone.0072618 | pdfs/Denis_2013_FastGrowthImpairRegen.pdf | fast-fragile axis, `E_max` |
+| Hall 1997 — interspecific differences in injury regeneration | — | pdfs/Hall_1997_InterspecificRegeneration.pdf | → `kc_mult` |
+| Hall 1998 — injury & regeneration of common reef corals | — | pdfs/Hall_1998_InjuryRegeneration.pdf | → `kc_mult` |
+| Hall 2001 — *A. hyacinthus* injury response | — | pdfs/Hall_2001_AcroporaHyacinthusResponse.pdf | → `kc_mult` |
+| Hall 2015 — lesion recovery under low pH | — | pdfs/Hall_2015_LesionRecovery.pdf | → `kc_mult` |
+| Lirman 2000b — lesion regeneration in branching *A. palmata* | 10.3354/meps197209 | pdfs/Lirman_2000b_LesionRegenAcroporaPalmata.pdf | lesion-area recovery |
+| DeFilippo et al. 2016 — surface lesion recovery (*Astrangia poculata*) | 10.1016/j.jembe.2016.03.016 | pdfs/DeFilippo_2016_SurfaceLesionRecoveryAstrangia.pdf | lesion kinetics |
+| Counsell et al. 2019 — colony size & depth affect wound repair | 10.1007/s00338-019-01807-7 | pdfs/Counsell_2019_ColonySizeDepthWoundRepair.pdf | size-dependent healing |
+| Rice et al. 2019 — N sources speed corallivory recovery + microbiome | 10.7717/peerj.8056 | pdfs/Rice_2019_NitrogenCorallivoryRecovery.pdf | wound healing −66% at 29 °C (browsing axis) |
+| Bak 1983 — neoplasia, regeneration & growth (*A. palmata*) | 10.1007/BF00395810 | pdfs/Bak_1983_NeoplasiaRegenGrowthApalmata.pdf | foundational *Acropora* regeneration |
+| Bak & Steward-Van Es 1980 — regeneration of superficial damage | — (Bull Mar Sci, no DOI) | pdfs/Bak_1980_RegenSuperficialDamage.pdf | foundational regeneration |
+| Henry & Hart 2005 — regeneration & resource allocation (review) | 10.1002/iroh.200410759 | pdfs/Henry_2005_RegenInjuryResourceAllocation.pdf | energy-allocation framing |
+| Van de Water et al. 2015 — elevated temp & immune response after damage | 10.1007/s10750-015-2243-z | pdfs/VanDeWater_2015_ImmuneResponsePhysicalDamage.pdf | immune/healing × temp |
+| Edmunds & Yarid 2017 — ocean acidification & wound repair in *Porites* | 10.1016/j.jembe.2016.10.001 | [⬇] | ScienceDirect blocks automation |
+
+## G. Mechanical damage / breakage / microfragmentation — grounds `m_d`, Tier-3
+
+| Paper | DOI | PDF | Note |
+|---|---|---|---|
+| Madin et al. 2014 — mechanical vulnerability | 10.1111/ele.12306 | pdfs/Madin_2014_MechanicalVulnerability.pdf | size-dependent `m_d` |
+| Madin & Connolly 2006 — hydrodynamic disturbance consequences | 10.1038/nature05328 | pdfs/Madin_2006_HydrodynamicDisturbances.pdf | → `m_d` |
+| Marshall 2000 — skeletal damage vs colony morphology | 10.3354/meps200177 | pdfs/Marshall_2000_SkeletalDamageColonyMorphology.pdf | breakage resistance → `m_d` |
+| Tunnicliffe 1981 — breakage & propagation of *A. cervicornis* | 10.1073/pnas.78.4.2427 | pdfs/Tunnicliffe_1981_BreakagePropagationAcervicornis.pdf | fragmentation → `m_d` |
+| Highsmith 1982 — reproduction by fragmentation | 10.3354/meps007207 | [⬇] | int-res blocks automation |
+| Lirman 2000a — fragmentation in branching *Acropora* | — | pdfs/Lirman_2000a_AcroporaFragmentation.pdf | → `m_d` |
+| Lock et al. 2022 — Ca-homeostasis drives growth after microfragmentation | 10.1002/ece3.9345 | pdfs/Lock_2022_CaHomeostasisMicrofragmentation.pdf | ⭐ *Porites lobata* → Tier-3 microfrag |
+| Page 2018 — microfragmenting slow-growing massive corals | 10.1016/j.ecoleng.2018.08.017 | [⬇] | ScienceDirect blocks automation |
+| Soong & Chen 2003 — regeneration & growth of *Acropora* fragments (incl. pulchra) | 10.1046/j.1526-100x.2003.00100.x | pdfs/Soong_2003_AcroporaFragmentNursery.pdf | fragment regen/growth → `kc_mult` |
+
+## H. Energetics / reserves / heterotrophy — grounds `h`, `E_max`, Tier-3
+
+| Paper | DOI | PDF | Note |
+|---|---|---|---|
+| Conti-Jerpe & Baker 2020 — trophic strategy & bleaching resistance | 10.1126/sciadv.aaz5443 | pdfs/Conti-Jerpe_2020_TrophicStrategyBleaching.pdf | *Acropora* 94% autotroph → `h` (low plasticity) |
+| Houlbrèque & Ferrier-Pagès 2009 — heterotrophy in corals (review) | 10.1111/j.1469-185X.2008.00058.x | [⬇] | Wiley paywall; use Conti-Jerpe + Radice |
+| Radice et al. 2019 — trophic strategy via FA + SIA | 10.1371/journal.pone.0222327 | pdfs/Radice_2019_HeterotrophyFASIA.pdf | → `h` |
+| Grottoli et al. 2006 — heterotrophic plasticity & resilience | 10.1038/nature04565 | pdfs/Grottoli_2006_HeterotrophicPlasticity.pdf | ⭐ foundational `h` buffer |
+| Grottoli et al. 2014 — cumulative annual bleaching, winners→losers | 10.1111/gcb.12658 | pdfs/Grottoli_2014_CumulativeBleachingWinnersLosers.pdf | reserve depletion |
+| Schoepf et al. 2013 — *Acropora* energy reserves & calcification | 10.1371/journal.pone.0075049 | pdfs/Schoepf_2013_AcroporaReserves.pdf | 6.6 vs Poc 8.1 kJ/g → `E_max` |
+| Leinbach et al. 2021 — recovery costs | 10.1038/s41598-021-02807-w | pdfs/Leinbach_2021_RecoveryCosts.pdf | reserve depletion (Mo'orea) → `E0`, `E_max` |
+| Rodrigues & Grottoli 2007 — energy reserves as recovery indicators | 10.4319/lo.2007.52.5.1874 | pdfs/Rodrigues_2007_EnergyReservesRecovery.pdf | → `E_max` |
+| Anthony et al. 2007 — bleaching, energetics & mortality risk | 10.4319/lo.2007.52.2.0716 | pdfs/Anthony_2007_BleachingEnergeticsMortality.pdf | energy-budget mortality |
+| Anthony et al. 2009 — energetics approach to mortality risk | 10.1111/j.1365-2435.2008.01531.x | [⬇] | companion Anthony 2007 covers ground |
+| Levas et al. 2013 — bleaching/recovery physiology (*Porites lobata*) | 10.1371/journal.pone.0063267 | pdfs/Levas_2013_BleachingRecoveryPoritesLobata.pdf | *Porites* recovery |
+| Rinkevich 1996 — reproduction vs regeneration compete for energy | 10.3354/meps143297 | pdfs/Rinkevich_1996_ReproRegenEnergyAllocation.pdf | ⭐ Tier-3 energy budget |
+| Oren et al. 1997 — oriented ¹⁴C transport (perforate) | 10.3354/meps161117 | [⬇] | translocation → `D_E` |
+| Fine & Loya 2002 — bleaching cuts translocation | 10.3354/meps234119 | [⬇] | → `D_E` |
+| Swain et al. 2018 — colony integration | 10.3354/meps12445 | [⬇] | → `D_E` |
+
+## I. Reproduction / size at maturity — grounds `B_mat`
+
+| Paper | DOI | PDF | Note |
+|---|---|---|---|
+| Carroll et al. 2006 — sexual reproduction of *Acropora* at Mo'orea | 10.1007/s00338-005-0057-6 | pdfs/Carroll_2006_AcroporaReproductionMoorea.pdf | ⭐ *Acropora* reproduction AT field site → `B_mat` |
+| Wallace 1985 — reproduction/recruitment/fragmentation, nine *Acropora* | 10.1007/BF00392585 | pdfs/Wallace_1985_AcroporaReproductionRecruitment.pdf | fecundity × size → `B_mat` |
+| Baird et al. 2009 — reproductive biology of scleractinians (review) | 10.1146/annurev.ecolsys.110308.120220 | pdfs/Baird_2009_ReproductiveBiologyScleractinian.pdf | reproduction framing |
+| Soong & Lang 1992 — reproductive integration | — | pdfs/Soong_1992_ReproductiveIntegration.pdf | size effects → `B_mat` |
+| Omori et al. 2001 — drop in *Acropora* fertilization after bleaching | 10.4319/lo.2001.46.3.0704 | pdfs/Omori_2001_AcroporaFertilizationDrop.pdf | repro × bleaching |
+| Álvarez-Noriega et al. 2016 — fecundity × morphology | 10.1002/ecy.1588 | [⬇] | Wiley paywall; use Soong 1992 |
+| Hall & Hughes 1996 — modular reproduction | 10.2307/2265514 | [⬇] | JSTOR paywall; use Soong 1992 |
+
+## J. Symbiont identity / shuffling / recovery threshold — grounds `iZ`
+
+| Paper | DOI | PDF | Note |
+|---|---|---|---|
+| Bay et al. 2016 — *A. millepora* recovery threshold | 10.1098/rsos.160322 | pdfs/Bay_2016_RecoveryThreshold.pdf | symbiont-density threshold → `iZ`, `Z0` |
+| Baker 2003 — flexibility/specificity in coral–algal symbiosis (review) | 10.1146/annurev.ecolsys.34.011802.132417 | pdfs/Baker_2003_CoralAlgalSymbiosisFlexibility.pdf | `iZ` framing |
+| Berkelmans & van Oppen 2006 — zooxanthellae role in thermal tolerance | 10.1098/rspb.2006.3567 | pdfs/Berkelmans_2006_ZooxanthellaeThermalTolerance.pdf | ⭐ symbiont-mediated tolerance |
+| Jones et al. 2008 — endosymbiont community change after bleaching | 10.1098/rspb.2008.0069 | pdfs/Jones_2008_EndosymbiontCommunityChange.pdf | ⭐ symbiont shuffling → `iZ` |
+| Silverstein et al. 2017 — clade D *Symbiodinium* persist at temp extremes | 10.1242/jeb.148239 | [⬇] | thermotolerant symbiont retention |
+| LaJeunesse et al. 2018 — systematic revision of Symbiodiniaceae | 10.1016/j.cub.2018.07.008 | pdfs/LaJeunesse_2018_SymbiodiniaceaeRevision.pdf | symbiont taxonomy |
+| Fitt et al. 2000 — seasonal symbiont density | 10.4319/lo.2000.45.3.0677 | [⬇] | Wiley L&O paywall; use Bay 2016 |
+
+## K. Thermal-tolerance & gene-expression backbone (LTH "expression by temperature")
+
+| Paper | DOI | PDF | Note |
+|---|---|---|---|
+| Voolstra et al. 2020 — standardized acute heat-stress assay (CBASS) | 10.1111/gcb.15148 | pdfs/Voolstra_2020_CBASSAcuteHeatAssay.pdf | ⭐⭐ CBASS standard; LTH assay backbone |
+| Evensen et al. 2023 — CBASS low-cost portable system | 10.1002/lom3.10555 | pdfs/Evensen_2023_CBASSSystem.pdf | CBASS methods |
+| Cunning et al. 2021 — heat-tolerance census, Florida staghorn *Acropora* | 10.1098/rspb.2021.1613 | pdfs/Cunning_2021_HeatToleranceCensusStaghorn.pdf | acute-tolerance variation |
+| Barshis et al. 2013 — genomic basis for coral resilience | 10.1073/pnas.1210224110 | pdfs/Barshis_2013_GenomicBasisResilience.pdf | ⭐⭐ expression basis of resilience |
+| Bay & Palumbi 2015 — rapid acclimation via transcriptome change | 10.1093/gbe/evv085 | pdfs/Bay_2015_RapidAcclimTranscriptome.pdf | expression plasticity |
+| Dixon et al. 2015 — genomic determinants of heat tolerance across latitudes | 10.1126/science.1261224 | pdfs/Dixon_2015_GenomicDeterminantsHeatTolerance.pdf | heritable heat tolerance |
+| Palumbi et al. 2014 — mechanisms of reef-coral resistance | 10.1126/science.1251336 | pdfs/Palumbi_2014_MechanismsResistance.pdf | ⭐ *A. hyacinthus* expression/acclimation |
+| Seneca & Palumbi 2010 — gene expression during natural bleaching | 10.1007/s10126-009-9247-5 | pdfs/Seneca_2010_GeneExpressionNaturalBleaching.pdf | expression × bleaching |
+| Parkinson et al. 2018 — transcriptional variation challenges biomarkers | 10.1111/mec.14517 | pdfs/Parkinson_2018_TranscriptionalVariationBiomarker.pdf | expression variance |
+| Thomas et al. 2019 — transcriptomic resilience + symbiont shuffling | 10.1111/mec.15143 | pdfs/Thomas_2019_TranscriptomicResilienceShuffling.pdf | expression + `iZ`; Mo'orea rebuild ~4 mo |
+| Cornwell et al. 2021 — heat tolerance × symbiont load → growth trade-off | 10.7554/eLife.64790 | pdfs/Cornwell_2021_HeatToleranceSymbiontLoadTradeoff.pdf | ⭐ *A. hyacinthus* growth–tolerance |
+| Fitt et al. 2001 — thermal tolerance limits & thresholds | 10.1007/s003380100146 | pdfs/Fitt_2001_ThermalToleranceLimitsThresholds.pdf | foundational bleaching thresholds |
+| Warner et al. 1996 — elevated temp & photosynthetic efficiency of zooxanthellae | 10.1046/j.1365-3040.1996.d01-12.x | pdfs/Warner_1996_PhotosyntheticEfficiencyZooxanthellae.pdf | foundational photoinhibition |
+| Warner, Fitt & Schmidt 1999 — PSII damage as bleaching determinant | 10.1073/pnas.96.14.8007 | [⬇] | a-priori cite (Fv/Fm decline); PNAS OA, needs browser session; lib has Warner 1996 |
+
+## L. Growth (congener) & recovery dynamics
+
+| Paper | DOI | PDF | Note |
+|---|---|---|---|
+| Lirman et al. 2014 — *A. cervicornis* growth dynamics | 10.1371/journal.pone.0107253 | pdfs/Lirman_2014_AcerGrowth.pdf | → `v_edge` (congener) |
+| Roff et al. 2014 — *Porites* "Phoenix effect" recovery, Rangiroa (FP) | 10.1007/s00227-014-2426-6 | pdfs/Roff_2014_PoritesPhoenixEffectRangiroa.pdf | dramatic FP recovery |
+
+## M. Climate / bleaching context (intro/discussion framing)
+
+| Paper | DOI | PDF | Note |
+|---|---|---|---|
+| Hoegh-Guldberg et al. 2007 — coral reefs under rapid climate change & OA | 10.1126/science.1152509 | pdfs/HoeghGuldberg_2007_CoralReefsClimateChange.pdf | classic intro cite |
+| Hoegh-Guldberg 1999 — climate change, bleaching & the future | 10.1071/MF99078 | [⬇] | a-priori cite (paling, symbiont loss); CSIRO paywall; lib has HG 2007 |
+| Hughes et al. 2017a — coral reefs in the Anthropocene | 10.1038/nature22901 | pdfs/Hughes_2017_CoralReefsAnthropocene.pdf | context |
+| Hughes et al. 2017b — global warming & recurrent mass bleaching | 10.1038/nature21707 | pdfs/Hughes_2017_GlobalWarmingMassBleaching.pdf | context |
+| De'ath et al. 2012 — 27-year decline of GBR coral cover | 10.1073/pnas.1208909109 | pdfs/DeAth_2012_GBRCoralDecline.pdf | context |
+| Buddemeier & Fautin 1993 — bleaching as an adaptive mechanism | 10.2307/1312064 | [⬇] | Adaptive Bleaching Hypothesis; JSTOR captcha |
+| Jokiel & Coles 1977 — temperature, mortality & growth, Hawaiian corals | 10.1007/BF00402312 | pdfs/Jokiel_1977_TemperatureMortalityGrowthHawaiianCorals.pdf | a-priori cite (heat reduces calcification) |
+| Jokiel & Coles 1990 — Indo-Pacific response to elevated temperature | 10.1007/BF00265006 | pdfs/Jokiel_1990_ResponseIndoPacificElevatedTemperature.pdf | a-priori cite (symbiont loss) |
+
+## N. Methods / software
+
+| Paper | DOI | PDF | Note |
+|---|---|---|---|
+| Davies 1989 — buoyant-weight technique | 10.1007/BF00428135 | pdfs/Davies_1989_BuoyantWeightTechnique.pdf | calcification method |
+| Siebeck et al. 2006 — colour reference card for bleaching | 10.1007/s00338-006-0123-8 | pdfs/Siebeck_2006_ColourReferenceCard.pdf | bleaching-score method |
+| Jokiel et al. 1978 — buoyant-weight technique (UNESCO) | — (book chapter) | [method] | method |
+| R Core Team 2025 — R statistical environment | — (software) | [method] | software |
+
+---
+
+# Model-parameter grounding (*A. pulchra* preset)
+
+Fast–fragile–sensitive branching *Acropora*. Values extracted from this library and positioned against the model's *Porites*/*Pocillopora* anchors. Full registry rows (value · units · citation · source PDF · verification) are in `~/coral-wound-healing-model/data/phase2_parameters.csv` (15 *A. pulchra* rows).
+
+| Param | Value | Anchor (Por / Poc) | Key evidence | Confidence |
 |---|---|---|---|---|
-| Conn et al. 2025 — genome assembly & annotation (Mo'orea) | 10.46471/gigabyte.153 | [NB][OA] | 5 | reference genome |
-| ⚠ Zhang et al. 2025 — protein & metabolite acclimation to temp variability | 10.3389/fmars.2025.1543591 | [OA] | 2 | **NOT A. pulchra — macroalga *Halimeda macroloba***; calcifier thermal-acclimation framing only |
-| Anthony et al. 2023 — Symbiodiniaceae cellular plasticity / phenotypic change | 10.3389/fevo.2023.1288596 | [OA] | 5 | symbiont expression plasticity |
-| de la Vega et al. 2023 — *Endozoicomonas* GU-1 genome from *A. pulchra* | 10.1128/mra.01355-22 | [OA] | 4 | microbiome resource |
+| `v_edge` | 0.045 | 0.010 / 0.030 | 13.1–15.8 cm/yr [Yap & Gomez 1984] | HIGH ⭐sp. |
+| `m_d` | 0.0045 | 0.0010 / 0.0030 | 36.4% branch mortality/yr [Yap & Gomez 1984] | HIGH ⭐sp. |
+| `kc_mult` | 1.2 | 0.7 / 1.0 | Acropora>Poc>Por [Hall 1997/2001]; Munk ~92%/19d | MED |
+| `h` | 0.0002 | 0.0004 / 0.00025 | 94% host-symbiont overlap, top autotroph [Conti-Jerpe 2020] | MED-HIGH rank |
+| `E_max` | 0.85 | 2.0 / 1.0 | *A. millepora* 6.6 vs Poc 8.1 kJ/g [Schoepf 2013] | HIGH rank |
+| `E0` | 0.77 | 1.5 / 0.9 | 0.90×E_max; deep depletion [Leinbach 2021] | LOW-MED |
+| `bT_pulse` | 0.010 | 0.0017 / 0.0080 | ED50 ~34–37 °C [Cunning 2024; Denis 2024]; 58% mort d34 [Berg] | LOW-MED |
+| `bleach_z` | 0.15 | 0.55 / 0.20 | obligate autotroph [Shaw 2016; Denis 2024] | LOW-MED |
+| `iZ` | 0.004 | 0.020 / 0.004 | Mo'orea Acropora rebuild ~4 mo [Thomas 2019] | MED (best) |
+| `Z0` | 0.0 | 0.3 / 0.0 | bleaches white, S:H→0.003 [Bay 2016] | MED |
+| `KZ` | 1.0 | 1.0 / 1.0 | normalization; 1.345×10⁶ cells/cm² [Anthony 2023] | HIGH |
+| `D_E` | 0.014 | 0.02 / 0.002 | tip porosity 65–80%, connected interior [Roche 2010b] | HIGH ⭐sp. |
+| `resid` | 0.07 | 0.50 / 0.05 | thin perforate branches [Roche 2010b] | MED |
+| `maxpd` | 1.0 | 3.0 / 1.2 | 16 cm branches, 15–25 mm tips [Yap & Gomez; Strømgren] | LOW-MED |
+| `B_mat` | 4.5 | 8.0 / 4.0 | *A. cervicornis* puberty 17 cm [Soong 1992]; recruits [Wallace] | LOW-MED |
 
-### Thermal tolerance / bleaching / CBASS
-| Paper | DOI | Acq | Rel | Note |
-|---|---|---|---|---|
-| Cunning et al. 2024 — rapid acute heat-tolerance (CBASS), *A. pulchra* | (DOI unconfirmed) | [NB] | 5 | Fv/Fm ED50 34.3–36.6 °C; Mo'orea; used in Pfab 2024 |
-| Berg et al. 2020 — persistent photosystem damage fluorescence (A. cf. pulchra) | 10.1080/17451000.2021.1875245 | [NB][PW] | 5 | 58% mortality d34; recovery 3× stress |
-| Shaw et al. 2016 — intraspecific variability, warming × acidification | 10.1007/s00227-016-2986-8 | [NB][PW] | 5 | genotype variation |
-| Grottoli et al. 2021 — comparability among bleaching experiments | 10.1002/eap.2262 | [NB] | 4 | methods (Ecol. Appl. 31:e02262, 2021) |
-| ⚠ Denis et al. 2024 — individual thermal-tolerance traits across the GBR | 10.1098/rspb.2024.0587 (preprint 10.1101/2024.01.28.576773) | [OA preprint] | 4 | **A. spathulata, GBR (not A. pulchra)**; CBASS intraspecific-variation framing |
-| El-Khaled et al. 2025 — heat & cold bleaching vulnerability | 10.1038/s42003-025-09329-5 | [OA] | 5 | incl. *A. pulchra* |
-| Hoadley et al. 2015 — temp × pCO2 physiology across genera | 10.1038/srep18371 | [OA] | 3 | |
-| Puisay et al. 2018 — larval thermal resistance/acclimation | 10.1016/j.marenvres.2018.01.005 | [PW] | 4 | larvae |
-| Babka 2017 — successive bleaching resilience | 10.60950/bgtl.2017.2.babka.sk | [OA] | 4 | |
+⭐sp. = *A.-pulchra*-specific value; others congener-borrowed. **Weakest-grounded (sweep these):** `E0`, `maxpd`, `bleach_z`/`bT_pulse` (no *A. pulchra* loss-rate or ED50 in local PDFs — inferred from congener thresholds + Cunning 2024 / Berg 2020). Present this table for biology review before committing the `Apulchra` preset to `ext/species_presets.R`.
 
-### Symbiont community / microbiome
-| Paper | DOI | Acq | Rel | Note |
-|---|---|---|---|---|
-| Lock et al. 2025 — Symbiodiniaceae + bacterial microbiome impacts on host | 10.1111/1462-2920.70175 | [OA] | 5 | |
-| Miller et al. 2024 — seasonal tissue/mucus microbiome baseline | 10.7717/peerj.17421 | [OA] | 5 | symbiont/microbiome baseline |
-| Alina et al. 2023 — low-tide exposure × microbial abundance (intertidal) | 10.1080/17451000.2023.2169464 | [PW→CDP] | 4 | intertidal microbiome; first author Dining Nika Alina (was misfiled as Nuñez Lendo); from completeness census |
+---
 
-### Growth / calcification / skeleton
-| Paper | DOI | Acq | Rel | Note |
-|---|---|---|---|---|
-| Yap & Gomez 1984 — growth of *A. pulchra* | 10.1007/bf00393119 | [NB][PW] | 5 | 13.1–15.8 cm/yr; 36.4% branch mortality → `v_edge`,`m_d` |
-| Yap 1985 — growth II (temp × daylength) | 10.1007/bf00539430 | [PW] | 5 | |
-| Strømgren 1987 — light × growth, intertidal | 10.1007/bf00302211 | [PW] | 4 | |
-| Comeau et al. 2014 — irradiance × calcification | 10.1016/j.jembe.2013.12.013 | [NB][PW] | 5 | tissue biomass 1.87–3.15 mg/cm² → `E_max` |
-| Comeau et al. 2016 — calcification vs temp & pCO2 (parameterization) | 10.1007/s00338-016-1425-0 | [NB][PW] | 5 | |
-| Roche et al. 2010a — skeletal porosity (X-ray microCT) | 10.1016/j.jembe.2010.10.006 | [PW] | 4 | perforate structure → `D_E`,`resid` |
-| Roche et al. 2010b — spatial porosity variation | 10.1007/s00338-010-0679-1 | [PW] | 4 | |
-| Tian et al. 2025 — internal skeletal hydrodynamics | 10.1016/j.isci.2025.111742 | [OA] | 3 | |
+# What we know / what we don't
 
-### Physiology / OA / nutrients / reproduction / ecology
-| Paper | DOI | Acq | Rel | Note |
-|---|---|---|---|---|
-| Conetta 2021 — phenotypic plasticity (URI thesis) | 10.23860/thesis-conetta-dennis-2021 | [NB][OA] | 5 | |
-| Tanaka et al. 2006 — organic-N translocation/conservation | 10.1016/j.jembe.2006.04.011 | [PW] | 4 | translocation → `D_E` |
-| Tanaka et al. 2009 — net DOM release | 10.1016/j.jembe.2009.06.023 | [PW] | 3 | |
-| Buckingham et al. 2022 — N+P enrichment, skewed N:P | 10.1007/s00338-022-02223-0 | [OA] | 3 | |
-| Huang 2009 — oocyte development histology (Sanya) | (no DOI) | [PW] | 4 | only A. pulchra reproduction source found |
-| ⚠ Almeida et al. 2024 — intertidal vs subtidal recovery/growth/survival | 10.1007/s00227-024-04546-8 | [OA] | 3 | **Pocillopora cf. damicornis, Kenya (not A. pulchra)**; recovery-dynamics framing |
-| Ladd et al. 2025 — growth–predation tradeoffs, distribution | 10.1038/s41598-025-21028-z | [OA] | 4 | |
-| Raymundo et al. 2025 — restoration in stressful environment (Guam) | 10.1016/j.isci.2025.112244 | [OA] | 4 | |
-| Munk 2024 — host & symbiont physiology during wound regeneration (thesis) | (no DOI) | [NB] | 5 | **KEY**: abrasion vs fragmentation × 27.9/29.5 °C, Mo'orea → maps to model excav × bleaching |
+**One-paragraph version.** The literature agrees heat damages *A. pulchra* physiology, disagrees on whether heat impairs its wound recovery, and has almost never (i) separated tissue healing from skeletal regeneration within the same coral, or (ii) linked recovery capacity to a genotype's measured thermal tolerance. That unresolved core is what LTH targets. The apparent contradiction reads as **dose-dependence**: +1.65 °C → *A. pulchra* recovers fine (Munk 2024); +3 °C / 31 °C → healing proceeds but regeneration stalls (LTH); sub-bleaching +5–6 °C → skeletal regrowth halts in a congener (Bonesso 2017, *A. aspera*).
 
-## 2. *Acropora*-genus trait grounding (for model parameters lacking *A. pulchra* data)
+**Wounding / healing / regeneration — known.** Branches extend 13.1–15.8 cm/yr; broken branches regenerate ~12.6 cm/yr if they survive, but 36.4% die (zero-growth in the warm season) (Yap & Gomez 1984). Biphasic recovery documented (Munk 2024): 92% (13/14) of fragments showed ≥2 of 3 signs by day 19; tissue regeneration faster in abrasion than fragmentation ("phoenix effect"). Restoration workhorse forming back-reef thickets in Mo'orea (Conetta 2021; Soong & Chen 2003). Congener precedent: Bonesso 2017 (*A. aspera*) — 32 °C halted apical-tip regrowth and suppressed wound GFP.
 
-| Trait → param | Paper | DOI | Acq | Rel |
-|---|---|---|---|---|
-| Heterotrophy `h` (low plasticity) | Conti-Jerpe & Baker 2020 (Sci Adv) | 10.1126/sciadv.aaz5443 | [LAB][OA] | 5 |
-| Heterotrophy `h` | Houlbrèque & Ferrier-Pagès 2009 | 10.1111/j.1469-185x.2008.00058.x | [PW] | 5 |
-| Heterotrophy `h` | Radice et al. 2019 (FA+SIA) | 10.1371/journal.pone.0222327 | [OA] | 4 |
-| Reserves `E_max` / fast-fragile | Denis et al. 2013 (*A. muricata* growth↔regen) | 10.1371/journal.pone.0072618 | [LAB][OA] | 5 |
-| Reserves `E_max` | Schoepf et al. 2013 (Acropora reserves) | 10.1371/journal.pone.0075049 | [OA] | 4 |
-| Reserves `E_max` | Leinbach et al. 2021 (recovery costs) | 10.1038/s41598-021-02807-w | [OA] | 4 |
-| Translocation `D_E` (perforate) | Oren et al. 1997 (oriented 14C transport) | 10.3354/meps161117 | [OA] | 5 |
-| Translocation `D_E` | Fine & Loya 2002 (bleaching cuts translocation) | 10.3354/meps234119 | [OA] | 4 |
-| Translocation `D_E` | Swain et al. 2018 (colony integration) | 10.3354/meps12445 | [OA] | 4 |
-| Healing rate `kc_mult` | Meesters et al. 1997 (lesion-area model) | 10.3354/meps146091 | [LAB?][OA] | 5 |
-| Healing rate `kc_mult` | Denis et al. 2011 (lesion regen, populations) | (in lab) | [LAB] | 5 |
-| Healing rate `kc_mult` | Hall 1997/1998/2001/2015 (Acropora regen series) | (in lab) | [LAB] | 5 |
-| Healing rate `kc_mult` | Lirman et al. 2014 (*A. cervicornis* growth) | 10.1371/journal.pone.0107253 | [OA] | 4 |
-| Re-symbiosis `iZ` | Bay et al. 2016 (*A. millepora* recovery threshold) | 10.1098/rsos.160322 | [OA] | 5 |
-| Re-symbiosis `iZ` | Fitt et al. 2000 (seasonal symbiont density) | 10.4319/lo.2000.45.3.0677 | [OA] | 4 |
-| Size at repro `B_mat` | Álvarez-Noriega et al. 2016 (fecundity × morphology) | 10.1002/ecy.1588 | [PW] | 5 |
-| Size at repro `B_mat` | Hall & Hughes 1996 (modular reproduction) | 10.2307/2265514 | [PW] | 5 |
-| Size at repro `B_mat` | Soong & Lang 1992 (reproductive integration) | (in lab) | [LAB] | 4 |
-| Mortality/breakage `m_d` | Madin et al. 2014 (mechanical vulnerability) | 10.1111/ele.12306 | [OA] | 5 |
-| Mortality/breakage `m_d` | Highsmith 1982 (fragmentation) | 10.3354/meps007207 | [OA] | 4 |
-| Mortality/breakage `m_d` | Lirman 2000a (*Acropora* fragmentation; in lab) | (in lab) | [LAB] | 4 |
+**Wounding — not known.** No high-resolution tissue-closure rates (mm²/d) for *A. pulchra*; tissue architecture, reserve thickness, and internal translocation distance unmeasured (the model's weak `D_E`/`resid`); heterotrophic-compensation capacity during repair unquantified; molecular basis of healing vs regeneration pending (LTH RNA-seq).
 
-## 3. *A. pulchra* model parameters — **library-grounded (2026-06-08)**
+**Thermal tolerance — known.** CBASS Fv/Fm ED50 = 34.3–36.6 °C for the exact Mahana/Mo'orea population (Cunning 2024). Photodamage takes ~3× stress duration to repair, worst during recovery (Berg 2020). Calcification optimum ~28 °C; at 29.8 °C net calcification falls 18–50% (Comeau 2014/2016). Heritable growth–tolerance trade-off (Shaw 2016). Symbiont basis: fidelity for thermotolerant *Cladocopium* C40 + *Durusdinium* D1, temporally stable (Anthony 2023; Rouzé 2017/2019; Lock 2025).
 
-Fast–fragile–sensitive branching Acropora. Each value below was extracted from this library
-(5 parallel extraction passes) and positioned against the model's Porites/Pocillopora anchors.
-The cited, full registry rows (literature_value · units · citation · source PDF · verification)
-are in **`~/coral-wound-healing-model/data/phase2_parameters.csv`** (15 `Acropora pulchra` rows).
+**Thermal tolerance — not known.** Proteomic/metabolomic thermal acclimation essentially no data (prior "Zhang 2025" source is a macroalga); landscape-scale ED50 mapping (exists for *A. spathulata*, not *A. pulchra*); whether ED50 predicts anything beyond Fv/Fm (calcification, regeneration under chronic heat).
 
-| Param | Grounded value | vs first-pass | Anchor (Por / Poc) | Key evidence | Confidence |
-|---|---|---|---|---|---|
-| `v_edge` | **0.045** | = | 0.010 / 0.030 | A. pulchra 13.1–15.8 cm/yr [Yap & Gomez 1984] | **HIGH** ⭐sp. |
-| `m_d` | **0.0045** | = | 0.0010 / 0.0030 | A. pulchra 36.4% branch mortality/yr [Yap & Gomez 1984] | **HIGH** ⭐sp. |
-| `kc_mult` | **1.2** | ↑ 1.1 | 0.7 / 1.0 | Acropora>Poc>Por [Hall 1997/2001]; Munk ~92%/19d (upper bd) | MED |
-| `h` | **0.0002** | = | 0.0004 / 0.00025 | Acropora 94% host-symbiont overlap = top autotroph [Conti-Jerpe 2020] | MED-HIGH rank |
-| `E_max` | **0.85** | ↓ 0.9 | 2.0 / 1.0 | A. millepora 6.6 vs Poc 8.1 kJ/g (ratio 0.81) [Schoepf 2013] | HIGH rank |
-| `E0` | **0.77** | new | 1.5 / 0.9 | 0.90×E_max (Poc fill-fraction); deep depletion [Leinbach 2021, Mo'orea] | LOW-MED |
-| `bT_pulse` | **0.010** | = | 0.0017 / 0.0080 | ED50 ~34–37 °C below congeners [Denis 2024; Cunning 2021]; 58% mort d34 [Berg] | LOW-MED |
-| `bleach_z` | **0.15** | = | 0.55 / 0.20 | obligate autotroph; ~29% chl retained at +9 °C [Denis 2024] | LOW-MED |
-| `iZ` | **0.004** | = | 0.020 / 0.004 | Mo'orea Acropora rebuild ~4 mo [Thomas 2019, same site] | **MED (best)** |
-| `Z0` | **0.0** | new | 0.3 / 0.0 | bleaches white, S:H→0.003 [Bay 2016] | MED |
-| `KZ` | **1.0** | new | 1.0 / 1.0 | normalization; A. pulchra 1.345×10⁶ cells/cm² [Anthony 2023] | HIGH |
-| `D_E` | **0.014** | ↑ 0.012 | 0.02 / 0.002 | tip porosity 65–80%, connected interior [Roche 2010b] | HIGH porosity ⭐sp. |
-| `resid` | **0.07** | ↑ 0.05 | 0.50 / 0.05 | thin branches 0.8–1.8 cm but perforate deep tissue [Roche 2010b] | MED |
-| `maxpd` | **1.0** | new | 3.0 / 1.2 | 16 cm branches, 15–25 mm apical tips [Yap & Gomez; Strömgren] | LOW-MED |
-| `B_mat` | **4.5** | ↓ 5.0 | 8.0 / 4.0 | A. cervicornis puberty 17 cm branch [Soong 1992]; recruits 5 cm/2 yr [Wallace] | LOW-MED |
+**The heat × wounding interaction — the unresolved core.**
+- *Heat impairs recovery:* Meesters & Bak 1993 (bleaching blocks translocation); Bonesso 2017 (32 °C halts skeleton); Rice 2019 (*Pocillopora* Mo'orea, healing −66% at 29 °C); Paradis 2019 (*A. cervicornis*, P:R < 1); Kaufman 2021 (*A. cervicornis*, 35% healed at 31.5 °C vs 99% at 28 °C, donor-history effect).
+- *Heat doesn't impair / enhances:* Dias 2018 (regen rose to 32 °C); Burmester 2017 (temperate *Astrangia*, cold is the constraint); Munk 2024 (*A. pulchra* +1.65 °C robust); Traylor-Knowles 2016 (no regime difference, *A. hyacinthus*).
+- *Reconciliation (dose-dependence):* +1.65 °C fine → +3 °C/31 °C healing proceeds, regeneration blocked → +5–6 °C skeleton halts. The threshold between tolerable warming and regeneration-blocking heat for *A. pulchra* is unmapped; the LTH 31 °C treatment sits on that seam.
+- *Mechanistic candidates:* symbiont-loss translocation blockage (Fine 2002; Meesters & Bak 1993); negative energy balance (Paradis 2019); immune/antioxidant/HSP costs (Madeira 2022; Lock 2022); explicit growth-vs-regeneration triage (Rice 2019; Denis 2013).
 
-⭐sp. = A.-pulchra-specific number; others congener-borrowed (flagged in the registry). **Five
-changed from first-pass:** `kc_mult` 1.1→1.2, `E_max` 0.9→0.85, `D_E` 0.012→0.014, `resid` 0.05→0.07,
-`B_mat` 5→4.5; plus four newly set (`E0`, `Z0`, `KZ`, `maxpd`). **Weakest-grounded (sweep these):**
-`E0`, `maxpd`, `bleach_z`/`bT_pulse` (no A. pulchra loss-rate or ED50 in local PDFs — inferred from
-congener thresholds + external Cunning 2024 / Berg 2020 [NB]). **Brainstorming gate:** present this
-table for Adrian's biology review before committing the `Apulchra` preset to `ext/species_presets.R`.
+**What LTH adds.** (1) Phase-specificity — heat decouples healing from regeneration within the same coral (healing on schedule; 67% closed-but-never-regenerated at 31 °C vs 0% at 28 °C; new-corallite Cox HR 0.22). (2) The ED50 ↔ regeneration link — pending SNP-matching of thickets A/C/D to Cunning's genotyped genets. (3) Mechanism (RNA-seq, pending) and field realism (healing under corallivory/competition + heat).
 
-## 4. Gaps (genuinely thin in the literature)
-- **A. pulchra reproduction / fecundity / size-at-maturity** — only Huang 2009 (histology); rely on congeners (Álvarez-Noriega, Hall & Hughes, Soong & Lang).
-- **A. pulchra wounding/regeneration rates** — only Munk 2024 (thesis); rely on Denis 2011/2013, Hall series, Lirman.
-- **Acropora symbiont repopulation RATE after bleaching** — none found (only density thresholds). Least-grounded param; borrow from Symbiodiniaceae division-rate lit or fit.
+*(Papers cited in synthesis but not in the local library: Paradis 2019, Kaufman 2021, Madeira 2022 — no DOI/PDF tracked here.)*
 
-## 4b. Completeness census vs OpenAlex (2026-06-08)
+---
 
-Checked the library against the full published record (OpenAlex). **35 works have "Acropora
-pulchra" in the title.** We now hold or track **all relevant, accessible, English ones**; the
-remainder are out of scope or non-acquirable:
-
-- **Acquired this round:** Alina et al. 2023 (intertidal microbiome, Mar Biol Res) — the one
-  clear English gap the census found; published version pulled via authenticated CDP.
-- **Not chased — out of scope:** 3 natural-product **chemistry** papers (Chinese, 2001/2003); 2 **IUCN
-  Red List** dataset entries (not papers); duplicate **preprints** of papers already held (Miller 2024,
-  Conn 2025).
-- **Not chased — non-English / no DOI / low marginal value:** Japanese calcification & photosynthesis
-  papers (1995 ×2, 2002) + a 1997 Japanese growth thesis + an Indonesian 2003 growth note — all
-  duplicate topics already covered (Yap growth, Comeau calcification, Strømgren light); a 2020 "VOC
-  day/night cycling" note and a Tanaka-2008 DOM paper have **no resolvable DOI** in OpenAlex.
-
-**Caveat on "all A. pulchra papers":** title-search captures papers *about* A. pulchra. OpenAlex also
-shows **92 abstract-mentions** and **396 full-text mentions** — multi-species studies that merely
-include A. pulchra in a species list. The library holds a *curated* subset of those (the model-grounding
-+ LTH papers), **not all 396**, which is intentional. So: complete on A.-pulchra-subject papers
-(accessible English), deliberately selective on multi-species mentions.
-
-## 5. Acquisition results (2026-06-07)
-
-**37 PDFs in `literature/pdfs/`.** 10 copied from the lab library, 20 via curl (Springer
-content/pdf, Nature, PLOS, Frontiers, RSOS, Gigabyte), 7 via EuropePMC render.
-
-**NotebookLM "Acropora pulchra" notebook → 26 sources** (10 prior + 16 new *A. pulchra*-specific
-papers ingested). Genus-grounding papers (Section 2, about other corals) were kept local-only to
-keep the notebook focused on *A. pulchra*; they belong in the regen notebook if needed there.
-
-### Not obtained (paywalled, no OA route; browser unauthenticated)
-| Paper | Why missing | Mitigation |
-|---|---|---|
-| Cunning 2024, Berg 2020, Comeau 2014, Conetta 2021, Munk 2024 | already **[NB]** (in notebook) | content queryable; local PDF not essential |
-| Houlbrèque & Ferrier-Pagès 2009 (Wiley, `h`) | paywall, review article | use Conti-Jerpe 2020 + Radice 2019 (primary, `h`) |
-| Álvarez-Noriega 2016 (Wiley) & Hall & Hughes 1996 (JSTOR), `B_mat` | paywall | use Soong 1992 (LAB) for size-at-repro |
-| Fitt 2000 (Wiley L&O, `iZ`) | paywall | use Bay 2016 (OA) for symbiont threshold |
-| Puisay 2018, Roche 2010a, Tanaka 2006/2009 (Elsevier) | paywall, no PMC | Roche 2010b (OA) covers porosity; lower-rel |
-| Huang 2009 (no DOI), Babka 2017 (Bremen thesis) | not locatable / bot-blocked | — |
-
-### Per-paper one-line summaries (acquired PDFs)
-
-**A. pulchra-specific — expression / genomics / microbiome**
-- **Conn 2025** — reference genome assembly & annotation for Mo'orea *A. pulchra* (anchors all expression work).
-- **⚠ Zhang 2025** — protein + metabolite acclimation to thermal variability in the **macroalga *Halimeda macroloba*** (NOT *A. pulchra*; not a coral). Calcifier thermal-acclimation framing only — *A. pulchra* proteomics remains unstudied.
-- **Anthony 2023** — Symbiodiniaceae cellular/phenotypic plasticity under stress.
-- **de la Vega 2023** — genome of an *Endozoicomonas* strain isolated from *A. pulchra* (microbiome resource).
-- **Lock 2025** — combined Symbiodiniaceae + bacterial microbiome effects on host performance.
-- **Miller 2024** — seasonal tissue/mucus microbiome baseline.
-
-**A. pulchra-specific — thermal tolerance / bleaching**
-- **Berg 2020** — persistent photosystem damage; 58% mortality by day 34, recovery needs ~3× stress duration ([NB], no local PDF).
-- **Shaw 2016** — intraspecific (genotype) variability under warming × acidification.
-- **⚠ Denis 2024** — individual thermal-tolerance traits across the GBR in ***A. spathulata*** (NOT *A. pulchra*); CBASS intraspecific-variation framing. Published RSPB version acquired.
-- **El-Khaled 2025** — heat *and* cold bleaching vulnerability, incl. *A. pulchra*.
-- **Hoadley 2015** — temperature × pCO₂ physiology across genera.
-- **Grottoli 2021** — methods/standardization for cross-experiment bleaching comparability.
-
-**A. pulchra-specific — growth / calcification / skeleton**
-- **Yap & Gomez 1984** — growth 13.1–15.8 cm/yr; 36.4% branch mortality → `v_edge`, `m_d`.
-- **Yap 1985** — growth II, temperature × daylength.
-- **Strømgren 1987** — light × growth in intertidal *A. pulchra*.
-- **Comeau 2016** — calcification response parameterized vs temp & pCO₂.
-- **Roche 2010b** — spatial variation in skeletal porosity → `D_E`, `resid`.
-- **Tian 2025** — internal skeletal hydrodynamics.
-
-**A. pulchra-specific — physiology / nutrients / ecology / recovery**
-- **Buckingham 2022** — N+P enrichment with skewed N:P stoichiometry.
-- **⚠ Almeida 2024** — intertidal vs subtidal recovery, growth, survival in ***Pocillopora* cf. *damicornis*** (Kenya; NOT *A. pulchra*).
-- **Ladd 2025** — growth–predation tradeoffs shaping distribution.
-- **⚠ Raymundo 2025** — restoration outcomes in a stressful (Guam) environment for ***A. aspera*** outplants (*A. pulchra* is only the background congener at the recipient site).
-
-**Acropora-genus grounding (local PDFs only; for params lacking *A. pulchra* data)**
-- **Conti-Jerpe 2020** & **Radice 2019** — heterotrophic vs autotrophic strategy → `h` (low plasticity).
-- **Denis 2013** — fast growth trades off against regeneration in *A. muricata* → fast-fragile axis.
-- **Schoepf 2013** & **Leinbach 2021** — *Acropora* energy reserves / recovery costs → `E_max`.
-- **Denis 2011**, **Hall 1997/1998/2001/2015**, **Meesters 1997**, **Lirman 2014** — lesion/regeneration rates → `kc_mult`.
-- **Bay 2016** — symbiont-density recovery threshold → `iZ`.
-- **Soong 1992** — reproductive integration / size effects → `B_mat`.
-- **Madin 2014** — mechanical vulnerability / colony breakage → `m_d`.
-- **Lirman 2000a** — branching-*Acropora* fragmentation dynamics → `m_d`.
+# Gaps (genuinely thin in the literature)
+- **Reproduction / fecundity / size-at-maturity** — only Huang 2009 (histology) and Munk-adjacent data; rely on congeners (Wallace 1985, Carroll 2006, Soong & Lang 1992, Álvarez-Noriega 2016, Hall & Hughes 1996).
+- **Wounding / regeneration rates** — only Munk 2024 (thesis) and Yap 1981 (thesis, unobtained); rely on Denis 2011/2013, Hall series, Lirman, Bonesso.
+- **Symbiont repopulation RATE after bleaching** — none found (only density thresholds; Bay 2016, Jones 2008). Least-grounded param `iZ`; borrow from Symbiodiniaceae division-rate lit or fit.
+- **Proteomic/metabolomic thermal acclimation** — no *A. pulchra* data.

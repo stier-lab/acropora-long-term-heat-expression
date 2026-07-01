@@ -31,8 +31,8 @@ You lead the paper and the gene-expression analysis. The Stier lab has finished 
 | Per-genet resilience scores | `output/tables/19_genet_resilience_summary.csv` |
 | Cached Cunning 2024 ED50 | `data/external/cunning2024_apulchra_ed50.csv` |
 | Thicket GPS / metadata | `data/raw/metadata/metadata.csv` |
-| Verified references + cite→PDF index | `manuscript/references.bib`, `literature/CITATIONS_INDEX.md` |
-| Literature library (98 PDFs, mapped) | `literature/LIBRARY_MAP.md`, `literature/LITERATURE.md`, `literature/KNOWN_UNKNOWN_synthesis.md` |
+| Verified references + cite→PDF index | `manuscript/references.bib`, `literature/LITERATURE.md` |
+| Literature library (98 PDFs, mapped) | `literature/LITERATURE.md` |
 
 ---
 
@@ -174,7 +174,7 @@ Phenotype-first raw material written before your expression results exist — **
 
 **Fragility to carry forward:** regeneration result strongest for interval-censored new-corallite onset (p = 1.4e-7); tip-exist also delayed, tip-extension same direction but n.s. First-observed Cox model near the PH diagnostic boundary — interval model + censored fraction are the cleaner anchors. Three genets resolve variation but not architecture. Apical-tip excision ≠ surface wound bed (Munk 2024). See `RESULTS.md` §10. Chlorophyll-a was **not** run (metadata slot kept for provenance; analysis uses PAM, color-card scores, symbiont counts).
 
-**Verified citation bank** (DOIs in `manuscript/references.bib`; index `literature/CITATIONS_INDEX.md`):
+**Verified citation bank** (DOIs in `manuscript/references.bib`; index `literature/LITERATURE.md`):
 - *Biphasic healing↔regeneration; growth & injury ecology of *Acropora*:* Henry & Hart 2005 (closure precedes regeneration); Yap & Gomez 1984 (*A. pulchra* extension 13–16 cm yr⁻¹); Highsmith 1982; Madin et al. 2014.
 - *Thermal sensitivity of *Acropora* / *A. pulchra*:* Hoegh-Guldberg 1999; Hughes et al. 2017; Berg et al. 2020 (persistent photosystem damage under sustained heat).
 - *Heat drains the energy budget:* Warner et al. 1999 (PSII damage); Hoegh-Guldberg 1999; Jokiel & Coles 1990; Jokiel & Coles 1977; Comeau et al. 2014 (calcification suppression).
