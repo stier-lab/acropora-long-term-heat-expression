@@ -150,7 +150,7 @@ Every link runs both ways (confirm / extend / revise). Timecourse alignment:
 | Dixon et al. 2015 | Genomic determinants of heat tolerance across latitudes | Science | 10.1126/science.1261224 | ✅ PDF read |
 | Thomas et al. 2019 | Transcriptomic resilience + symbiont shuffling | Mol. Ecol. | 10.1111/mec.15143 | ✅ PDF read |
 | Cornwell et al. 2021 | Heat tolerance × symbiont load → growth tradeoff (phenotypic) | eLife | 10.7554/eLife.64790 | ✅ PDF read (no genes) |
-| Cleves & Tinoco et al. 2020 | CRISPR knockout of a heat-shock TF reduces thermal tolerance | PNAS | 10.1073/pnas.1920779117 | ✅ NotebookLM (no local PDF) |
+| Cleves & Tinoco et al. 2020 | CRISPR knockout of a heat-shock TF reduces thermal tolerance | PNAS | 10.1073/pnas.1920779117 | ✅ PDF read |
 | Hemond, Kaluziak & Vollmer 2014 | Genetics of colony form & function in Caribbean *Acropora* | BMC Genomics | 10.1186/1471-2164-15-1133 | ✅ NotebookLM |
 
 *Lab-internal sources: 2023 *A. pulchra* near/far DEG pilot (76 near / 165 far DEGs at Day 7; 36 TRIzol samples at −80 °C, unprocessed); NSF BIO/OCE Aim-2 candidate panel; Mar-15-2026 Keck signaling notes.*
