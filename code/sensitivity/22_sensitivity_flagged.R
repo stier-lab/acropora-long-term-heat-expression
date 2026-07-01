@@ -1,6 +1,6 @@
 # =============================================================================
 # Purpose: Sensitivity analysis for the samples/tanks Molly flagged in QA/QC
-#          (see notes/QAQC_flagged_samples.md). Re-runs the treatment-effect
+#          (see notes/archive/QAQC_flagged_samples.md). Re-runs the treatment-effect
 #          tests with the flagged colonies (116, 121) and the slow ambient tank
 #          (tank 3) removed, and compares the treatment effect to the full-data
 #          model. If the conclusions hold, the flags are documented but
