@@ -4,18 +4,18 @@
 > · Repo: `stier-lab/17.-LTH_expression_by_temperature_2025` · Last updated 2026-06-30
 
 A heat × wounding experiment on the branching coral *Acropora pulchra*. We clipped the growing tip off
-half the fragments, held corals at **28 °C (ambient)** or **31 °C (heated, +3 °C)**, and tracked how
-they healed and regrew over 15 days — along with photochemistry, pigmentation, symbionts, and growth.
-We also took tissue for gene expression (RNA-seq, in progress).
+half the fragments, held corals at **28 °C (ambient)** or **31 °C (heated, +3 °C)**, and tracked
+healing and regrowth over 15 days — with photochemistry, pigmentation, symbionts, and growth. We also
+took tissue for gene expression (RNA-seq, in progress).
 
-**The paper's lead result is the transcriptomic mechanism** (S. Banerjee, lead author; RNA-seq pending).
-The phenotype experiment in this repo supplies the **organismal context** for it. **The phenotype
-result:** heat does *not* slow wound recovery uniformly — corals seal the wound (tissue healing) at
-the same rate whether hot or not, but heated corals fail to rebuild skeleton at the tip
-(regeneration). Heat affects one phase of recovery, not the other.
+**The paper's lead result is the transcriptomic mechanism** (S. Banerjee, lead author; RNA-seq pending);
+the phenotype experiment here supplies its **organismal context**. **The phenotype result:** heat does
+*not* slow wound recovery uniformly — corals seal the wound (tissue healing) at the same rate hot or
+not, but heated corals fail to rebuild skeleton at the tip (regeneration). Heat affects one phase of
+recovery, not the other.
 
-This README is the entry point to the repo. For the full results narrative see **`RESULTS.md`**;
-for the RNA-seq / lead-author brief see **`docs/for_shreya/`**.
+For the full results narrative see **`RESULTS.md`**; for the RNA-seq / lead-author brief see
+**`docs/for_shreya/`**.
 
 ## Contents
 
@@ -45,9 +45,9 @@ Rscript code/_run_all.R          # full pipeline in dependency order (~4 min); r
 
 Everything is reproducible from `code/_run_all.R`. **Never hand-edit numbers** — every statistic lives
 in `output/tables/20_master_results.csv` (`+ _paper_ready.csv`) and regenerates with the pipeline. The
-last pipeline step (`code/30_manuscript_audit.R`) recomputes every phenotype number and *warns*
-(advisory only — never fails the run) if the manuscript has drifted out of sync. Requires R ≥ 4.3
-(developed on 4.5.2).
+last step (`code/30_manuscript_audit.R`) recomputes every phenotype number and *warns* if the
+manuscript has drifted out of sync (advisory only — never fails the run). Requires R ≥ 4.3 (developed
+on 4.5.2).
 
 ## Who owns what
 
@@ -68,11 +68,11 @@ Byline order: Banerjee, Brzezinski, Diminuco, Seifert, Osenberg, Bay, Stier. Ful
   *suggestions*; phrase every phenotype↔expression link bidirectionally ("expression can test, extend,
   **or revise** this").
 - Interpretive labels (e.g. "energetic triage") are candidates for the lead author, not house vocabulary.
-- The manuscript audit (`code/30_manuscript_audit.R`) is advisory and scoped to the phenotype
+- The manuscript audit (`code/30_manuscript_audit.R`) is advisory and scoped to phenotype
   Methods/Results only — it does not police the narrative.
 
 Still open for PI/institutional decision: target journal & review process; Banerjee's correspondence
-department/address/email (still `[to confirm]` in the masthead); and rehoming/renaming the repo.
+department/address/email (still `[to confirm]`); and rehoming/renaming the repo.
 
 ## How the repo relates to Google Drive
 
@@ -84,22 +84,22 @@ department/address/email (still `[to confirm]` in the masthead); and rehoming/re
 ```
 
 This repo is the **analysis layer**; the **project of record** (raw Sheets, field notes, manuscript
-Doc, slides) lives in Google Drive:
+Doc, slides) lives in Drive:
 
 - **Folder:** `17. LTH_expression_by_temperature_2025` · **Drive ID:** `1sXfnHN-vmSBuwMEfERiYOWDeKRmjFWJP`
 - **Path:** `…/My Drive/Stier Lab/People/Adrian Stier/Projects/In Progress/Coral-Regeneration/Projects/17. LTH_expression_by_temperature_2025/`
 - **Access** via the `gws` CLI (authenticated as astier@ucsb.edu), e.g.
   `gws drive files list --params '{"q":"'\''1sXfnHN-vmSBuwMEfERiYOWDeKRmjFWJP'\'' in parents and trashed=false","fields":"files(id,name,mimeType)"}'`
 - **Mapping:** Drive `data/` Sheets → `data/raw/` here; Drive `notes/` Docs → `notes/` here; Drive
-  `Manuscript_LTH` Doc ↔ `manuscript/Manuscript_LTH.md`. Raw data is exported *from* Drive; the repo
-  never writes back. When Drive data changes, re-export into `data/raw/` and re-run `code/_run_all.R`.
+  `Manuscript_LTH` Doc ↔ `manuscript/Manuscript_LTH.md`. When Drive data changes, re-export into
+  `data/raw/` and re-run `code/_run_all.R`.
 
 ## Research question & design
 
 Branching corals like *A. pulchra* regenerate after damage to the apical (growing) tip. Elevated
-temperatures slow growth and bleach symbionts. **How do those two stressors interact?** Does
-mild long-term heating (+3 °C above ambient) weaken wound regeneration, and what gene-expression
-machinery underlies the response?
+temperatures slow growth and bleach symbionts. **How do those two stressors interact?** Does mild
+long-term heating (+3 °C) weaken wound regeneration, and what gene-expression machinery underlies the
+response?
 
 | Factor | Levels |
 |---|---|
@@ -120,9 +120,9 @@ earlier field and microscope-photo plans in `notes/archive/`.
 
 ## Findings (the phenotype half)
 
-The four take-homes below are the Stier-lab phenotype contribution — the organismal context, not the
+The four take-homes below are the Stier-lab phenotype contribution — organismal context, not the
 paper's lead result. Every number traces to `output/tables/20_master_results.csv`; the full narrative
-(with caveats) is in `RESULTS.md`. The summary figure is `figures/16_manuscript_fig1.pdf`.
+(with caveats) is in `RESULTS.md`. Summary figure: `figures/16_manuscript_fig1.pdf`.
 
 **1 — Sustained heat broadly compromises physiology.** At 31 °C, photochemistry, pigmentation,
 symbiont density, and growth all declined progressively while 28 °C held steady. By Day 14
@@ -138,8 +138,8 @@ same rate in both temperatures, but new corallites formed in 100 % of ambient wo
 healed but never rebuilt skeleton. *How asked:* each binary recovery trait → a time-to-event interval;
 primary test is an **interval-censored Weibull AFT** (new-corallite onset time ratio = 1.32, 95 % CI
 1.19–1.47, p = 1.4e-7), with Kaplan–Meier / Cox as first-observed-day summaries (Cox HR = 0.22,
-p = 0.010). Survival analysis is correct here because many corals never reach the milestone in 15 days
-("censored"). See `figures/14_morphology_KM.pdf`.
+p = 0.010). Survival analysis fits because many corals never reach the milestone in 15 days ("censored"). See
+`figures/14_morphology_KM.pdf`.
 
 **3 — Genotype matters: a resilience gradient C > D > A.** Genet C consistently defended its
 physiology and was likeliest to regenerate under heat; A and D were sensitive. In multivariate
@@ -151,23 +151,23 @@ and the PCA displacement agree. See `figures/19_genet_dashboard.pdf`.
 
 **4 — This is chronic-sublethal stress, not acute bleaching.** Benchmarked against an independent
 acute heat-tolerance assay for the same species and reef (Cunning et al. 2024 CBASS Fv/Fm ED50), the
-mean ED50 is **35.4 °C**, so 31 °C sits **~4.4 °C below** the acute threshold. The declines are
-accumulated sub-bleaching stress over weeks — the realistic regime for recurrent moderate warming —
+mean ED50 is **35.4 °C**, so 31 °C sits **~4.4 °C below** the acute threshold. The declines reflect
+sub-bleaching stress accumulated over weeks — the realistic regime for recurrent moderate warming —
 not acute photoinhibition. See `figures/26_thermal_context.pdf` (or `figures/08_apex_temperature.pdf`
 for treatment validation: tanks held within ~0.3 °C of setpoints).
 
 ## Statistical approach
 
-Genet (thicket) is treated as a **fixed effect** throughout (only 3 field-collected genets — too few
-for a reliable variance component; Bolker 2008, Gelman 2005), which also shows per-genet effects
-directly. Reference levels: treatment = `28C`, wound = `no`.
+Genet (thicket) is a **fixed effect** throughout (only 3 field-collected genets — too few for a
+reliable variance component; Bolker 2008, Gelman 2005), which also exposes per-genet effects directly.
+Reference levels: treatment = `28C`, wound = `no`.
 
 - **Continuous responses** (PAM Fv/Fm, color D-scale, log symbiont density, growth):
   LMMs `response ~ treatment * wound * day * thicket + (1|tank) + (1|id)` (`lme4`/`lmerTest`,
   type-III Satterthwaite; `(1|id)` dropped for single-observation responses).
 - **Growth = % skeletal mass change** is the primary metric; specific growth rate (SGR) is the
-  robustness check. We do not use an areal calcification rate — we did not measure the whole-fragment
-  surface area (only the symbiont sub-fragment was wax-dipped), so we report the SA-free metrics.
+  robustness check. No areal calcification rate — we did not measure whole-fragment surface area (only
+  the symbiont sub-fragment was wax-dipped), so we report SA-free metrics.
 - **Morphology** (8 binary wound-healing traits): binomial GLMMs; traits with separation refit with
   Cauchy(0,2.5) priors (`blme`). **Color** D-scale also refit as an ordinal CLMM (`ordinal`).
 - **Healing milestones:** interval-censored Weibull AFT for inference; Kaplan–Meier + Cox PH
@@ -185,7 +185,7 @@ renv::restore()              # restore pinned packages
 source("code/_run_all.R")    # full pipeline in dependency order (~4 min)
 ```
 
-Figures land in `figures/`, tables in `output/tables/`, diagnostics in `output/diagnostics/`,
+Outputs: figures in `figures/`, tables in `output/tables/`, diagnostics in `output/diagnostics/`,
 processed data in `data/processed/`, fitted models in `output/models/`. The final step rebuilds the
 master results table and runs the manuscript audit.
 
@@ -258,10 +258,10 @@ see `notes/archive/LTH_*_Photos.md`. **RNA-seq reads** are processed at UC Davis
 
 ## Regeneration-staging terminology
 
-The **biphasic** framework above is the lab's working vocabulary, broadly aligned with the sibling
-wound-type project so they read together. Use it as a default for the *staging* descriptors,
-but it is **not** binding on this paper — the lead author sets the framing, and interpretive labels
-(e.g. "energetic triage") are hers to choose. In prose (not data/column names, which stay fixed):
+The **biphasic** framework above is the lab's working vocabulary, aligned with the sibling wound-type
+project so they read together. Use it as a default for the *staging* descriptors, but it is **not**
+binding on this paper — the lead author sets the framing, and interpretive labels (e.g. "energetic
+triage") are hers to choose. In prose (not data/column names, which stay fixed):
 
 - Say "tissue healing / coenosarc coverage", not just "wound closure".
 - Use **"wound bed"** for the active region; **"algal colonization of the wound bed"** (or "algal
@@ -279,7 +279,7 @@ See `docs/for_shreya/` for the lead-author resources. Outstanding items:
   / WGCNA / SNP design is the lead author's. A per-library phenotype covariate table is already built:
   `output/tables/31_rnaseq_phenotype_covariates.csv` (`code/31_rnaseq_covariate_table.R`).
 - **Genet matching:** call SNPs from host RNA-seq → per-thicket genotypes → match A/C/D to Cunning's
-  genotyped CBASS genets, enabling an acute-ED50-vs-chronic-resilience test (`docs/for_shreya/README.md`).
+  CBASS genets, enabling an acute-ED50-vs-chronic-resilience test (`docs/for_shreya/README.md`).
 - **Chlorophyll-a:** tissue slurries frozen but assay not run; the metadata slot remains for provenance.
 - **Validations before submission** (lead PI judgment, not code): Day-1 symbiont gap; the
   non-significant wound × treatment color interaction (type-III F₁,₅₉ = 1.04, p = 0.31); genet-C
@@ -292,7 +292,7 @@ See `docs/for_shreya/` for the lead-author resources. Outstanding items:
 **S. Banerjee leads the paper** (RNA-seq analysis + Introduction/Discussion/Abstract) and is the
 **corresponding author**. **R. A. Bay and A. C. Stier are co-senior authors.** Byline: Banerjee,
 Brzezinski, Diminuco, Seifert, Osenberg, Bay, Stier. (Banerjee's correspondence
-department/address/email are still `[to confirm]` in the masthead.)
+department/address/email are still `[to confirm]`.)
 
 - **Shreya Banerjee** (lead, corresponding) — UC Davis Bay Lab; RNA-seq DE + genet-matching; narrative
 - **Molly Brzezinski** — UCSB Stier Lab; experimental execution, data management, microscope analysis. ORCID 0000-0002-0417-3406

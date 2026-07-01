@@ -3,7 +3,7 @@
 > **Catalog of every figure → its script** · Updated 2026-06-12 · Index: [`README.md`](../README.md) · figures built by `code/11,13–16,19,26`.
 
 Lists all 23 PNG figures in `figures/` (each has a matching PDF), the
-`code/NN_*.R` script that makes each one, and where it appears in the manuscript
+`code/NN_*.R` script that makes each, and where it appears in the manuscript
 (`manuscript/Manuscript_LTH.md`).
 
 ---
@@ -37,7 +37,7 @@ How the manuscript's figure references map to files:
 | Fig. 3B | Kaplan–Meier morphology (healing vs regeneration) | maps to `14_morphology_KM.png` |
 | Fig. 3C | Genet resilience across responses | maps to `19_genet_dashboard.png` / `19b_genet_resilience_ranking.png` |
 
-**Important:** In the manuscript, Fig. 2 and Fig. 3 are *composite* figures. Each lettered panel comes from one of the scripts above, and for the publication build the panels are stitched together in `code/11` (the Fig. 2-style response panel) and `code/16` (the standalone 4-panel `16_manuscript_fig1`). Once you apply this panel-to-script mapping, every manuscript figure reference points to a real file.
+**Important:** In the manuscript, Fig. 2 and Fig. 3 are *composite* figures. Each lettered panel comes from one of the scripts above; for the publication build the panels are stitched together in `code/11` (the Fig. 2-style response panel) and `code/16` (the standalone 4-panel `16_manuscript_fig1`). With this panel-to-script mapping applied, every manuscript figure reference points to a real file.
 
 **Missing-reference flags:** none. Every Fig 1/2/3 reference matches a generated panel.
 

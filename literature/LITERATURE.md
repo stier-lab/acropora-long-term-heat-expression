@@ -1,8 +1,8 @@
 # Literature — *Acropora pulchra* (LTH "expression by temperature" + wound-healing model)
 
-Bibliography and knowledge synthesis for the LTH heat × wounding project, and for setting *A. pulchra* parameters in the 3-species coral wound-healing model (`~/coral-wound-healing-model`). This file merges the former `LITERATURE.md`, `CITATIONS_INDEX.md`, `CITATION_AUDIT.md`, `LIBRARY_MAP.md`, and `KNOWN_UNKNOWN_synthesis.md`. The library holds **101 PDFs** in `pdfs/`; DOIs were checked with tools (Crossref/OpenAlex); PDFs are named `AuthorYear_ShortTitle.pdf`.
+Bibliography and synthesis for the LTH heat × wounding project, and for setting *A. pulchra* parameters in the 3-species coral wound-healing model (`~/coral-wound-healing-model`). Merges the former `LITERATURE.md`, `CITATIONS_INDEX.md`, `CITATION_AUDIT.md`, `LIBRARY_MAP.md`, and `KNOWN_UNKNOWN_synthesis.md`. The library holds **101 PDFs** in `pdfs/`; DOIs checked via Crossref/OpenAlex; PDFs named `AuthorYear_ShortTitle.pdf`.
 
-**Species-attribution corrections (checked against the source PDFs).** Four papers were wrongly assigned to *A. pulchra* and are flagged ⚠: **Zhang 2025** = the macroalga *Halimeda macroloba* (not a coral); **Almeida 2024** = *Pocillopora* cf. *damicornis* (Kenya); **Denis 2024** = *A. spathulata* (GBR); **Raymundo 2025** = *A. aspera* outplants (Guam). We keep them only as background/framing sources. The upshot: proteomic and metabolomic thermal acclimation in *A. pulchra* is essentially **unstudied**.
+**Species-attribution corrections (checked against source PDFs).** Four papers were misassigned to *A. pulchra* and are flagged ⚠: **Zhang 2025** = the macroalga *Halimeda macroloba* (not a coral); **Almeida 2024** = *Pocillopora* cf. *damicornis* (Kenya); **Denis 2024** = *A. spathulata* (GBR); **Raymundo 2025** = *A. aspera* outplants (Guam). We keep them as background/framing only. Upshot: proteomic and metabolomic thermal acclimation in *A. pulchra* is essentially **unstudied**.
 
 Status legend: `pdfs/…` = local PDF held · **[NB]** = in NotebookLM corpus only · **[⬇]** = still to get (needs UCSB login / paywall / no open-access route) · **[method]** = method or software, no article PDF.
 
@@ -213,7 +213,7 @@ Status legend: `pdfs/…` = local PDF held · **[NB]** = in NotebookLM corpus on
 
 # Model-parameter grounding (*A. pulchra* preset)
 
-A fast-growing, fragile, heat-sensitive branching *Acropora*. Values come from this library and are set against the model's *Porites* and *Pocillopora* anchors. The full rows (value · units · citation · source PDF · verification) are in `~/coral-wound-healing-model/data/phase2_parameters.csv` (15 *A. pulchra* rows).
+A fast-growing, fragile, heat-sensitive branching *Acropora*. Values come from this library, set against the model's *Porites* and *Pocillopora* anchors. Full rows (value · units · citation · source PDF · verification) are in `~/coral-wound-healing-model/data/phase2_parameters.csv` (15 *A. pulchra* rows).
 
 | Param | Value | Anchor (Por / Poc) | Key evidence | Confidence |
 |---|---|---|---|---|
@@ -239,30 +239,30 @@ A fast-growing, fragile, heat-sensitive branching *Acropora*. Values come from t
 
 # What we know / what we don't
 
-**One-paragraph version.** The literature agrees that heat harms *A. pulchra* physiology. It disagrees on whether heat blocks wound recovery. And it has almost never (i) separated tissue healing from skeletal regeneration in the same coral, or (ii) tied recovery ability to a genotype's measured thermal tolerance. LTH targets that open core. The disagreement looks like a matter of **dose**: at +1.65 °C, *A. pulchra* recovers fine (Munk 2024); at +3 °C / 31 °C, tissue heals but skeleton fails to regrow (LTH); at a sub-bleaching +5–6 °C, skeletal regrowth stops in a congener (Bonesso 2017, *A. aspera*).
+**One-paragraph version.** The literature agrees heat harms *A. pulchra* physiology but disagrees on whether heat blocks wound recovery. It has almost never (i) separated tissue healing from skeletal regeneration in the same coral, or (ii) tied recovery to a genotype's measured thermal tolerance. LTH targets that open core. The disagreement looks like a matter of **dose**: at +1.65 °C *A. pulchra* recovers fine (Munk 2024); at +3 °C / 31 °C tissue heals but skeleton fails to regrow (LTH); at sub-bleaching +5–6 °C skeletal regrowth stops in a congener (Bonesso 2017, *A. aspera*).
 
-**Wounding / healing / regeneration — known.** Branches grow 13.1–15.8 cm/yr; broken branches regrow ~12.6 cm/yr if they survive, but 36.4% die (no growth in the warm season) (Yap & Gomez 1984). Recovery happens in two phases (Munk 2024): 92% (13/14) of fragments showed at least 2 of 3 signs by day 19, and tissue regrew faster after abrasion than after fragmentation (the "phoenix effect"). It is a restoration workhorse that forms back-reef thickets in Mo'orea (Conetta 2021; Soong & Chen 2003). Congener precedent: Bonesso 2017 (*A. aspera*) — 32 °C stopped tip regrowth and shut down wound GFP.
+**Wounding / healing / regeneration — known.** Branches grow 13.1–15.8 cm/yr; broken branches regrow ~12.6 cm/yr if they survive, but 36.4% die (no warm-season growth) (Yap & Gomez 1984). Recovery is biphasic (Munk 2024): 92% (13/14) of fragments showed ≥2 of 3 signs by day 19, and tissue regrew faster after abrasion than fragmentation (the "phoenix effect"). A restoration workhorse forming back-reef thickets in Mo'orea (Conetta 2021; Soong & Chen 2003). Congener precedent: Bonesso 2017 (*A. aspera*) — 32 °C stopped tip regrowth and shut down wound GFP.
 
-**Wounding — not known.** No fine-scale tissue-closure rates (mm²/d) for *A. pulchra*. Tissue architecture, reserve thickness, and internal translocation distance are unmeasured (the model's weak `D_E`/`resid`). We do not know how much heterotrophic feeding can compensate during repair. The molecular basis of healing vs regeneration is still pending (LTH RNA-seq).
+**Wounding — not known.** No fine-scale tissue-closure rates (mm²/d) for *A. pulchra*. Tissue architecture, reserve thickness, and internal translocation distance are unmeasured (the model's weak `D_E`/`resid`). How much heterotrophic feeding compensates during repair is unknown. The molecular basis of healing vs regeneration is pending (LTH RNA-seq).
 
-**Thermal tolerance — known.** CBASS Fv/Fm ED50 = 34.3–36.6 °C for the exact Mahana/Mo'orea population (Cunning 2024). Photodamage takes about 3× the stress duration to repair, and is worst during recovery (Berg 2020). Calcification peaks near 28 °C; at 29.8 °C net calcification drops 18–50% (Comeau 2014/2016). The growth–tolerance trade-off is heritable (Shaw 2016). Symbiont basis: the coral holds a stable, thermotolerant partnership of *Cladocopium* C40 + *Durusdinium* D1 (Anthony 2023; Rouzé 2017/2019; Lock 2025).
+**Thermal tolerance — known.** CBASS Fv/Fm ED50 = 34.3–36.6 °C for the exact Mahana/Mo'orea population (Cunning 2024). Photodamage takes ~3× the stress duration to repair and is worst during recovery (Berg 2020). Calcification peaks near 28 °C; at 29.8 °C net calcification drops 18–50% (Comeau 2014/2016). The growth–tolerance trade-off is heritable (Shaw 2016). Symbiont basis: a stable, thermotolerant partnership of *Cladocopium* C40 + *Durusdinium* D1 (Anthony 2023; Rouzé 2017/2019; Lock 2025).
 
-**Thermal tolerance — not known.** Almost no data on proteomic/metabolomic thermal acclimation (the earlier "Zhang 2025" source turned out to be a macroalga). No landscape-scale ED50 mapping (it exists for *A. spathulata*, not *A. pulchra*). And we don't know whether ED50 predicts anything beyond Fv/Fm — such as calcification or regeneration under chronic heat.
+**Thermal tolerance — not known.** Almost no data on proteomic/metabolomic thermal acclimation (the earlier "Zhang 2025" source turned out to be a macroalga). No landscape-scale ED50 mapping (it exists for *A. spathulata*, not *A. pulchra*). Whether ED50 predicts anything beyond Fv/Fm — calcification or regeneration under chronic heat — is unknown.
 
 **The heat × wounding interaction — the unresolved core.**
 - *Heat impairs recovery:* Meesters & Bak 1993 (bleaching blocks translocation); Bonesso 2017 (32 °C halts skeleton); Rice 2019 (*Pocillopora* Mo'orea, healing −66% at 29 °C); Paradis 2019 (*A. cervicornis*, P:R < 1); Kaufman 2021 (*A. cervicornis*, 35% healed at 31.5 °C vs 99% at 28 °C, donor-history effect).
 - *Heat doesn't impair / enhances:* Dias 2018 (regen rose to 32 °C); Burmester 2017 (temperate *Astrangia*, cold is the constraint); Munk 2024 (*A. pulchra* +1.65 °C robust); Traylor-Knowles 2016 (no regime difference, *A. hyacinthus*).
-- *How they reconcile (a dose effect):* +1.65 °C is fine → at +3 °C/31 °C tissue still heals but skeleton stops regrowing → at +5–6 °C the skeleton halts. No one has mapped where, for *A. pulchra*, tolerable warming becomes regeneration-blocking heat; the LTH 31 °C treatment sits right on that line.
-- *Possible mechanisms:* losing symbionts blocks translocation (Fine 2002; Meesters & Bak 1993); a negative energy balance (Paradis 2019); the cost of immune, antioxidant, and HSP responses (Madeira 2022; Lock 2022); and an outright growth-vs-regeneration trade-off (Rice 2019; Denis 2013).
+- *How they reconcile (a dose effect):* +1.65 °C is fine → at +3 °C/31 °C tissue still heals but skeleton stops regrowing → at +5–6 °C the skeleton halts. No one has mapped where, for *A. pulchra*, tolerable warming becomes regeneration-blocking heat; the LTH 31 °C treatment sits on that line.
+- *Possible mechanisms:* symbiont loss blocks translocation (Fine 2002; Meesters & Bak 1993); negative energy balance (Paradis 2019); the cost of immune, antioxidant, and HSP responses (Madeira 2022; Lock 2022); and a growth-vs-regeneration trade-off (Rice 2019; Denis 2013).
 
-**What LTH adds.** (1) Phase-specificity — heat splits healing from regeneration in the same coral (tissue heals on schedule, but 67% of wounds closed and never regrew skeleton at 31 °C vs 0% at 28 °C; new-corallite Cox HR 0.22). (2) The ED50-to-regeneration link — waiting on SNP-matching of thickets A/C/D to Cunning's genotyped genets. (3) Mechanism (RNA-seq, pending) and field realism (healing under corallivory and competition as well as heat).
+**What LTH adds.** (1) Phase-specificity — heat splits healing from regeneration in the same coral (tissue heals on schedule, but 67% of wounds closed and never regrew skeleton at 31 °C vs 0% at 28 °C; new-corallite Cox HR 0.22). (2) The ED50-to-regeneration link — pending SNP-matching of thickets A/C/D to Cunning's genotyped genets. (3) Mechanism (RNA-seq, pending) and field realism (healing under corallivory and competition as well as heat).
 
 *(Papers cited in the synthesis but not in the local library: Paradis 2019, Kaufman 2021, Madeira 2022 — no DOI/PDF tracked here.)*
 
 ---
 
 # Gaps (where the literature is genuinely thin)
-- **Reproduction / fecundity / size at maturity** — only Huang 2009 (histology) and Munk-adjacent data, so we lean on congeners (Wallace 1985, Carroll 2006, Soong & Lang 1992, Álvarez-Noriega 2016, Hall & Hughes 1996).
-- **Wounding / regeneration rates** — only Munk 2024 (thesis) and Yap 1981 (thesis, not obtained), so we lean on Denis 2011/2013, the Hall series, Lirman, and Bonesso.
-- **How fast symbionts repopulate after bleaching** — none found (only density thresholds; Bay 2016, Jones 2008). This makes `iZ` the least-supported parameter; borrow from Symbiodiniaceae division-rate studies or fit it.
+- **Reproduction / fecundity / size at maturity** — only Huang 2009 (histology) and Munk-adjacent data; we lean on congeners (Wallace 1985, Carroll 2006, Soong & Lang 1992, Álvarez-Noriega 2016, Hall & Hughes 1996).
+- **Wounding / regeneration rates** — only Munk 2024 (thesis) and Yap 1981 (thesis, not obtained); we lean on Denis 2011/2013, the Hall series, Lirman, and Bonesso.
+- **Symbiont repopulation rate after bleaching** — none found (only density thresholds; Bay 2016, Jones 2008), making `iZ` the least-supported parameter; borrow from Symbiodiniaceae division-rate studies or fit it.
 - **Proteomic/metabolomic thermal acclimation** — no *A. pulchra* data.
