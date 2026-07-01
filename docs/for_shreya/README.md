@@ -32,7 +32,7 @@ You lead the paper and the gene-expression analysis. The Stier lab has finished 
 | Cached Cunning 2024 ED50 | `data/external/cunning2024_apulchra_ed50.csv` |
 | Thicket GPS / metadata | `data/raw/metadata/metadata.csv` |
 | Verified references + cite→PDF index | `manuscript/references.bib`, `literature/LITERATURE.md` |
-| Literature library (100 PDFs, mapped) | `literature/LITERATURE.md` |
+| Literature library (101 PDFs, mapped) | `literature/LITERATURE.md` |
 
 ---
 
@@ -98,7 +98,7 @@ Every link runs both ways (confirm / extend / revise). Timecourse alignment:
 
 ## 5. Candidate genes — literature + lab reference (optional)
 
-**Prior context for interpretation, not a target panel — do not filter the DE analysis to these genes.** Every gene–citation pair below was verified by reading the paper (Cleves & Tinoco 2020 via NotebookLM). Source tags: paper name = gene named *in that paper*; **(lab)** = lab planning docs, no external primary confirmed; ⚠ = flagged discrepancy. Machine-readable twin: `candidate_genes_reference.csv`. Heat × wound interaction is the molecular LTH phenotype; per-genet baseline ("frontloading," Barshis 2013) is the molecular version of C > D > A.
+**Prior context for interpretation, not a target panel — do not filter the DE analysis to these genes.** Every gene–citation pair below was verified by reading the paper. Source tags: paper name = gene named *in that paper*; **(lab)** = lab planning docs, no external primary confirmed; ⚠ = flagged discrepancy. Machine-readable twin: `candidate_genes_reference.csv`. Heat × wound interaction is the molecular LTH phenotype; per-genet baseline ("frontloading," Barshis 2013) is the molecular version of C > D > A.
 
 ### Table 1 — Wound-healing / regeneration candidates
 
@@ -123,7 +123,7 @@ Every link runs both ways (confirm / extend / revise). Timecourse alignment:
 |---|---|---|---|---|
 | **HSP70 (+ HSP75)** | Core heat-shock chaperones | Up acutely; **higher constitutive baseline ("frontloaded") in tolerant** | Thermal axis + genet test: frontloading predicts resilient genet C carries higher baseline | **Barshis 2013** ✓ (HSP70/HSPA5); **Bay & Palumbi 2015** ✓ (HSP75). (HSP90 not named in either — omitted) |
 | **Small HSPs** (HSPB1/Hsp23, Hsp16.2) | Small heat-shock chaperones | Up acute; lower in tolerant genotypes | Acute-stress reporters; contrast with frontloaded HSP70 | **Barshis 2013** ✓ |
-| **HSF (heat-shock transcription factor)** | Master regulator of the HSP response | Activates HSPs under heat | Upstream switch; CRISPR knockout reduces thermal tolerance | **Cleves & Tinoco 2020** ✓ (NotebookLM-verified; no local PDF) |
+| **HSF (heat-shock transcription factor)** | Master regulator of the HSP response | Activates HSPs under heat | Upstream switch; CRISPR knockout reduces thermal tolerance | **Cleves & Tinoco 2020** ✓ (PDF verified; 10.1073/pnas.1920779117) |
 | **Cu/Zn-SOD; catalase; peroxidasin** | Reactive-oxygen-species detox | Catalase up in bleaching; SOD & peroxidasin in tolerant | Sub-bleaching oxidative load — likely cost diverting resources from regeneration at 31 °C | **Barshis 2013** ✓ (Cu/Zn-SOD, peroxidasin); **Seneca & Palumbi 2010** ✓ (catalase, AmCat) |
 | **TNFR; TRAF3 (TNF/apoptosis)** | Programmed cell death + immune signalling | TRAF3 among top up-regulated; frontloaded in tolerant | Cell-fate decisions under heat; links stress to tissue loss | **Barshis 2013** ✓ |
 | **Ubiquitin–proteasome** (E3/RING-finger ligases; proteasome) | Protein quality control | Up acute; elevated pre-stress in tolerant | Proteostasis under thermal load | **Bay & Palumbi 2015** ✓ (ubiquitin/RING-finger); **Dixon 2015** ✓ (proteasome) |
