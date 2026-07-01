@@ -5,8 +5,8 @@
 
 A heat × wounding experiment on the branching coral *Acropora pulchra*. We clipped the growing tip off
 half the fragments, held corals at **28 °C (ambient)** or **31 °C (heated, +3 °C)**, and tracked how
-they healed and regrew over 15 days — alongside photochemistry, pigmentation, symbionts, and growth.
-Tissue was also taken for gene expression (RNA-seq, in progress).
+they healed and regrew over 15 days — along with photochemistry, pigmentation, symbionts, and growth.
+We also took tissue for gene expression (RNA-seq, in progress).
 
 **The paper's lead result is the transcriptomic mechanism** (S. Banerjee, lead author; RNA-seq pending).
 The phenotype experiment in this repo supplies the **organismal context** for it. **The phenotype
@@ -96,15 +96,15 @@ Doc, slides) lives in Google Drive:
 
 ## Research question & design
 
-Branching corals like *A. pulchra* regenerate after damage to the apical (growing) tip, and
-elevated temperatures slow growth and bleach symbionts. **How do those two stressors interact?** Does
-mild long-term heating (+3 °C above ambient) compromise wound regeneration, and what gene-expression
+Branching corals like *A. pulchra* regenerate after damage to the apical (growing) tip. Elevated
+temperatures slow growth and bleach symbionts. **How do those two stressors interact?** Does
+mild long-term heating (+3 °C above ambient) weaken wound regeneration, and what gene-expression
 machinery underlies the response?
 
 | Factor | Levels |
 |---|---|
 | **Temperature** | 28 °C (ambient) vs 31 °C (heated). Ramped 1 °C/day from ambient. |
-| **Wound** | Wounded (~1 cm clipped off growing tip with band-saw + caliper) vs unwounded sham. Applied 7 days after target temperature was reached. |
+| **Wound** | Wounded (~1 cm clipped off growing tip with band-saw + caliper) vs unwounded sham. Applied 7 days after corals reached the target temperature. |
 | **Genotype (thicket)** | A, C, D — modeled as a **fixed effect** (only 3 field-collected genets; too few for a variance component). |
 | **Tank** | 8 total: 4 per temperature (28 °C: 3, 6, 9, 12; 31 °C: 4, 5, 10, 11). Random effect. |
 | **Time** | Daily non-destructive obs. Destructive biopsies at D0, D1, D3, D10, D15. |
@@ -159,15 +159,15 @@ for treatment validation: tanks held within ~0.3 °C of setpoints).
 ## Statistical approach
 
 Genet (thicket) is treated as a **fixed effect** throughout (only 3 field-collected genets — too few
-for a reliable variance component; Bolker 2008, Gelman 2005), which also surfaces per-genet effects
+for a reliable variance component; Bolker 2008, Gelman 2005), which also shows per-genet effects
 directly. Reference levels: treatment = `28C`, wound = `no`.
 
 - **Continuous responses** (PAM Fv/Fm, color D-scale, log symbiont density, growth):
   LMMs `response ~ treatment * wound * day * thicket + (1|tank) + (1|id)` (`lme4`/`lmerTest`,
   type-III Satterthwaite; `(1|id)` dropped for single-observation responses).
 - **Growth = % skeletal mass change** is the primary metric; specific growth rate (SGR) is the
-  robustness check. An areal calcification rate is not used — the whole-fragment surface area was
-  not measured (only the symbiont sub-fragment was wax-dipped), so the SA-free metrics are reported.
+  robustness check. We do not use an areal calcification rate — we did not measure the whole-fragment
+  surface area (only the symbiont sub-fragment was wax-dipped), so we report the SA-free metrics.
 - **Morphology** (8 binary wound-healing traits): binomial GLMMs; traits with separation refit with
   Cauchy(0,2.5) priors (`blme`). **Color** D-scale also refit as an ordinal CLMM (`ordinal`).
 - **Healing milestones:** interval-censored Weibull AFT for inference; Kaplan–Meier + Cox PH

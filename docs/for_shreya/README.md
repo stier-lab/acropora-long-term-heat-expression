@@ -2,20 +2,20 @@
 
 **Project:** LTH #17 — heat × wound × *Acropora pulchra*, Mahana/Tiahura, Mo'orea 2025 (*Expression by Temperature*).
 **For:** Shreya Banerjee (UC Davis, Bay lab) · **From:** Stier lab.
-Consolidated brief. Repo root `README.md` is the run/orientation index.
+This is the consolidated brief. The repo root `README.md` is the index for running things and getting oriented.
 
 ---
 
 ## 1. Purpose & status
 
-You lead the paper and the gene-expression analysis. The Stier lab has finished and handed over the **phenotype half** (Methods + Results — physiology, morphology, growth, genet variation, thermal context) as a one-command reproducible foundation. The narrative (Introduction, Discussion, Abstract) is yours. Everything in this file is a **resource/suggestion**, not a prescribed pipeline.
+You lead the paper and the gene-expression analysis. The Stier lab has finished the **phenotype half** and handed it to you (Methods + Results — physiology, morphology, growth, genet variation, thermal context). It runs from one command and reproduces cleanly. The narrative (Introduction, Discussion, Abstract) is yours to write. Treat everything in this file as a **resource and a set of suggestions**, not a prescribed pipeline.
 
-- **RNA-seq status:** libraries pending sequencing; this is the open genomics piece.
-- **Author order (settled):** you lead + corresponding; R. Bay + A. Stier co-senior. Target journal open (your call).
-- **Phenotype pipeline runs in one command:** `Rscript code/_run_all.R` (~4 min), regenerates every figure/table.
-- **Single source of truth for every statistic:** `output/tables/20_master_results.csv` (effect size + test stat + df + p + CI per row; `_paper_ready.csv` formatted). Never hand-copy — cite the table.
-- **Audit:** `code/30_manuscript_audit.R` recomputes phenotype numbers and warns (advisory) on drift; scoped to phenotype only (15/15 checks pass). Does not police your Intro/Discussion/Abstract or transcriptomics.
-- Phenotype Results already written in `manuscript/Manuscript_LTH.md`.
+- **RNA-seq status:** libraries are waiting to be sequenced; this is the open genomics piece.
+- **Author order (settled):** you lead and are corresponding; R. Bay + A. Stier co-senior. Target journal is open (your call).
+- **Phenotype pipeline runs in one command:** `Rscript code/_run_all.R` (~4 min) rebuilds every figure and table.
+- **Single source of truth for every statistic:** `output/tables/20_master_results.csv` (each row has effect size + test stat + df + p + CI; `_paper_ready.csv` is the formatted version). Don't hand-copy — cite the table.
+- **Audit:** `code/30_manuscript_audit.R` recomputes the phenotype numbers and flags any drift (advisory only); it covers phenotype only (15/15 checks pass). It does not check your Intro/Discussion/Abstract or the transcriptomics.
+- Phenotype Results are already written in `manuscript/Manuscript_LTH.md`.
 
 ### Where things live
 
@@ -47,9 +47,9 @@ You lead the paper and the gene-expression analysis. The Stier lab has finished 
 - **Timepoints:** Days 1 (24 h post-wound), 3, 10. Day 15 samples exist but are **not** analyzed.
 - **Counts:** per temp × day × wound = 4 tanks × 3 genets = 12; per temp × day (W+U) = 24; per day (both temps) = 48; × 3 days = **144 libraries**.
 
-**Plating / batch design.** Two 96-well plates (72 primary coral libraries + 8 fixed controls + up to 8 optional anchors per plate). Each Temp × Day × Wound set of 12 splits 6/6 across plates, so temperature, wound, day, tank, genotype are all orthogonal to plate/lane. Genotype→plate assignment rotated/flipped across days. Both plates pooled on **one NovaSeq run**. Fixed controls/plate: 2 extraction NTCs, 2 library blanks, 2 ERCC/spike-in standards, 2 cross-plate technical-replicate anchors.
+**Plating / batch design.** Two 96-well plates (72 primary coral libraries + 8 fixed controls + up to 8 optional anchors per plate). Each Temp × Day × Wound set of 12 splits 6/6 across the two plates, so temperature, wound, day, tank, and genotype are all orthogonal to plate/lane. The genotype→plate assignment was rotated/flipped across days. Both plates were pooled on **one NovaSeq run**. Fixed controls per plate: 2 extraction NTCs, 2 library blanks, 2 ERCC/spike-in standards, 2 cross-plate technical-replicate anchors.
 
-**Wet-lab.** EZNA Total RNA kit (from DNA/RNA-shield-preserved samples) → NEBNext Ultra Directional RNA Library prep (¼ reactions). Sequence on a single **NovaSeq 25B lane** (3.1 billion read pairs; ~16 M/sample if total = 192). QC targets: RNA input 50–100 ng, RIN ≥ 7 or DV200 > 70%, ≥ 20 M paired-end reads/library, ≥ 50% reads to host; record host:symbiont ratio.
+**Wet-lab.** EZNA Total RNA kit (from DNA/RNA-shield-preserved samples) → NEBNext Ultra Directional RNA Library prep (¼ reactions). Sequenced on a single **NovaSeq 25B lane** (3.1 billion read pairs; ~16 M/sample if total = 192). QC targets: RNA input 50–100 ng, RIN ≥ 7 or DV200 > 70%, ≥ 20 M paired-end reads/library, ≥ 50% of reads mapping to host; record the host:symbiont ratio.
 
 **Sampling timeline (2025):** collect/glue May 18–19; acclimate 28 °C May 19–26; ramp to 32 °C May 27–Jun 2; pre-wound PAM Jun 3; Day 0 wounding + buoyant weight Jun 4; Day 1 Jun 5; Day 3 Jun 7; Day 10 Jun 14; Day 15 Jun 19.
 
@@ -57,19 +57,19 @@ You lead the paper and the gene-expression analysis. The Stier lab has finished 
 
 ## 3. Analysis proposal & genet-matching plan
 
-You specify the model (factors, normalization, fixed/random structure, tool). The phenotype results raise the questions below; the expression data can **test, extend, or revise** each. We name predicted *processes*, not gene symbols — gene sets are your call. Keep discovery genome-wide.
+You choose the model (factors, normalization, fixed/random structure, tool). The phenotype results raise the questions below, and the expression data can **test, extend, or revise** each one. We name predicted *processes*, not gene symbols — the gene sets are your call. Keep discovery genome-wide.
 
 **DE questions (phenotype-anchored):**
-1. **Does heat suppress the regeneration program while sparing healing?** Wounds seal equally at both temps, but new-corallite formation is delayed/suppressed under heat (interval-censored time ratio = 1.32, p = 1.4e-7; first-observed Cox HR = 0.22). Test whether early-healing processes (re-epithelialization, immune, ECM remodeling, proliferation) are induced similarly in both temps while skeletal/biomineralization + corallite-patterning are specifically suppressed under heat — or whether heat suppresses healing too (would revise the phase-decoupling story). Central contrast: **temperature × timepoint, wounded margins**; sharpest at **Day 10** (apical-tip divergence).
-2. **What distinguishes resilient genet C from sensitive A, D?** C defends photochemistry, pigmentation, symbiont retention far better (heat effect 2.7–3.5× weaker than A/D). Test for a smaller heat-induced shift and/or constitutively frontloaded stress-tolerance signature (proteostasis, antioxidant/ROS, symbiosis). Contrast: **genet (C vs A, D) × temperature, prioritizing unwounded margins** (genet spread sharpest there). A WGCNA module tracking `19_genet_resilience_summary.csv` is one route.
-3. **Chronic/constitutive signature, not acute heat-shock spike?** 31 °C sits ~4.4 °C below the acute Fv/Fm ED50 (35.4 °C; Cunning et al. 2024), and wounding came after 7 days at temperature — the transient HSP burst has likely subsided. Expect sustained/frontloaded signatures.
-4. **Does wounding narrow genet differences?** Genet heat-sensitivity spread is large unwounded (A = 0.99, D = 0.87, C = 0.44) but compresses when wounded (A = 0.36, D = 0.26, C = 0.28). Test whether genet (and genet × temp) effect is smaller in wounded margins. Symbiont (*Symbiodiniaceae*) reads, if retained, could corroborate symbiont-density loss and C's retention.
+1. **Does heat suppress the regeneration program while sparing healing?** Wounds seal equally at both temps, but new-corallite formation is delayed or suppressed under heat (interval-censored time ratio = 1.32, p = 1.4e-7; first-observed Cox HR = 0.22). Test whether early-healing processes (re-epithelialization, immune, ECM remodeling, proliferation) turn on similarly at both temps while skeletal/biomineralization + corallite-patterning are specifically shut down under heat — or whether heat suppresses healing too (which would revise the phase-decoupling story). Central contrast: **temperature × timepoint, wounded margins**; sharpest at **Day 10** (apical-tip divergence).
+2. **What distinguishes resilient genet C from sensitive A, D?** C holds onto photochemistry, pigmentation, and symbionts far better (heat effect 2.7–3.5× weaker than A/D). Test for a smaller heat-induced shift and/or a constitutively frontloaded stress-tolerance signature (proteostasis, antioxidant/ROS, symbiosis). Contrast: **genet (C vs A, D) × temperature, prioritizing unwounded margins** (the genet spread is sharpest there). A WGCNA module tracking `19_genet_resilience_summary.csv` is one route.
+3. **Chronic/constitutive signature, not an acute heat-shock spike?** 31 °C sits ~4.4 °C below the acute Fv/Fm ED50 (35.4 °C; Cunning et al. 2024), and wounding came after 7 days at temperature — so the short-lived HSP burst has likely faded. Expect sustained/frontloaded signatures.
+4. **Does wounding narrow genet differences?** The genet heat-sensitivity spread is large in unwounded margins (A = 0.99, D = 0.87, C = 0.44) but shrinks when wounded (A = 0.36, D = 0.26, C = 0.28). Test whether the genet (and genet × temp) effect is smaller in wounded margins. Symbiont (*Symbiodiniaceae*) reads, if retained, could back up the symbiont-density loss and C's retention.
 
-**Genet-matching (A/C/D ↔ Cunning genets) — high-value, near-publishable.** Cunning et al. 2024 (*Coral Reefs*, doi:10.1007/s00338-024-02577-7) measured **acute CBASS Fv/Fm ED50 for 20 genotyped *A. pulchra* genets from Mahana** (range 34.4–36.6 °C; ED50 predicts bleaching, R = 0.74; collected Dec 2022, "mahana"). We measured **chronic** resilience for 3 thickets from the same site. Goal: call genotype-distinguishing SNPs from the host RNA-seq reads, match A/C/D to Cunning's reference, then test whether **acute CBASS ED50 predicts our chronic wound-context ranking (C > D > A)** — a citable cross-method validation, and a link to the genet × temperature expression signal.
+**Genet-matching (A/C/D ↔ Cunning genets) — high-value, near-publishable.** Cunning et al. 2024 (*Coral Reefs*, doi:10.1007/s00338-024-02577-7) measured **acute CBASS Fv/Fm ED50 for 20 genotyped *A. pulchra* genets from Mahana** (range 34.4–36.6 °C; ED50 predicts bleaching, R = 0.74; collected Dec 2022, "mahana"). We measured **chronic** resilience for 3 thickets from the same site. The goal: call genotype-distinguishing SNPs from the host RNA-seq reads, match A/C/D to Cunning's reference, then test whether **acute CBASS ED50 predicts our chronic wound-context ranking (C > D > A)**. That would be a citable cross-method validation and a link to the genet × temperature expression signal.
 
-- **Supporting GPS** (`data/raw/metadata/metadata.csv`, `coord_lat`/`coord_long`): A = 17.49735 °S, 149.91557 °W (72 frags); C = 17.49808, 149.91595 (72); D = 17.49726, 149.91581 (64). ~40–90 m apart, all in the Mahana/Tiahura stand Cunning sampled. Proximity is **suggestive, not conclusive** (*A. pulchra* forms clonal thickets).
-- **External ask we can chase:** Cunning's per-genet host SNP genotypes (not just ED50 + genet number) — CBASS_methods repo (`github.com/jrcunning/CBASS_methods`, `data/reproducibility/genet_map.xlsx`) or direct request to Cunning/Putnam (co-authors Detmer & Moeller are UCSB/Mo'orea network). *How* (reference genome, variant caller, identity metric) is yours.
-- **Fallback:** if genotypes can't be matched, the population-level statement stands (already in manuscript): both acute (CBASS) and chronic (LTH) methods independently detect substantial heritable thermal-tolerance variation in Mahana *A. pulchra*.
+- **Supporting GPS** (`data/raw/metadata/metadata.csv`, `coord_lat`/`coord_long`): A = 17.49735 °S, 149.91557 °W (72 frags); C = 17.49808, 149.91595 (72); D = 17.49726, 149.91581 (64). They sit ~40–90 m apart, all in the Mahana/Tiahura stand Cunning sampled. Being close is **suggestive, not conclusive** (*A. pulchra* forms clonal thickets).
+- **External ask we can chase:** Cunning's per-genet host SNP genotypes (not just ED50 + genet number) — from the CBASS_methods repo (`github.com/jrcunning/CBASS_methods`, `data/reproducibility/genet_map.xlsx`) or by asking Cunning/Putnam directly (co-authors Detmer & Moeller are in the UCSB/Mo'orea network). *How* you do it (reference genome, variant caller, identity metric) is yours.
+- **Fallback:** if the genotypes can't be matched, the population-level statement still holds (it is already in the manuscript): both acute (CBASS) and chronic (LTH) methods independently detect substantial heritable thermal-tolerance variation in Mahana *A. pulchra*.
 
 ---
 
@@ -92,13 +92,13 @@ Every link runs both ways (confirm / extend / revise). Timecourse alignment:
 | 5 | Chronic/constitutive, not acute HSP burst (31 °C is ~4.4 °C below ED50; wound applied after 7 d at temp) | interpretation cue: expect sustained/frontloaded signatures over transient HSP70 |
 | 6 | A/C/D not yet matched to Cunning CBASS genets (ED50 34.3–36.6 °C, range 2.2 °C) | SNP-call → match → test acute ED50 vs chronic ranking C > D > A |
 
-**Suggested entry points (no required order):** QC + wound main effect (Anchor 4, fast positive control) → temp × timepoint wounded (Anchor 1) → genet-C × temperature unwounded (Anchor 2) → WGCNA modules vs phenotype axes → SNP calling + Cunning matching (Anchor 6, parallel). Per-coral covariates for correlation are in `output/tables/31_rnaseq_phenotype_covariates.csv` (joined by `Fragment_ID`).
+**Suggested entry points (no required order):** QC + wound main effect (Anchor 4, a fast positive control) → temp × timepoint wounded (Anchor 1) → genet-C × temperature unwounded (Anchor 2) → WGCNA modules vs phenotype axes → SNP calling + Cunning matching (Anchor 6, in parallel). Per-coral covariates for correlation are in `output/tables/31_rnaseq_phenotype_covariates.csv` (joined by `Fragment_ID`).
 
 ---
 
 ## 5. Candidate genes — literature + lab reference (optional)
 
-**Prior context for interpretation, not a target panel — do not filter the DE analysis to these genes.** Every gene–citation pair below was verified by reading the paper. Source tags: paper name = gene named *in that paper*; **(lab)** = lab planning docs, no external primary confirmed; ⚠ = flagged discrepancy. Machine-readable twin: `candidate_genes_reference.csv`. Heat × wound interaction is the molecular LTH phenotype; per-genet baseline ("frontloading," Barshis 2013) is the molecular version of C > D > A.
+**Prior context for interpretation, not a target panel — do not filter the DE analysis to these genes.** Every gene–citation pair below was checked by reading the paper. Source tags: a paper name means the gene is named *in that paper*; **(lab)** means it comes from lab planning docs with no external primary source confirmed; ⚠ marks a flagged discrepancy. Machine-readable twin: `candidate_genes_reference.csv`. The heat × wound interaction is the molecular LTH phenotype; the per-genet baseline ("frontloading," Barshis 2013) is the molecular version of C > D > A.
 
 ### Table 1 — Wound-healing / regeneration candidates
 
@@ -132,11 +132,11 @@ Every link runs both ways (confirm / extend / revise). Timecourse alignment:
 | **C-type lectin** | Symbiont recognition / innate immunity | Up in bleaching | Host–symbiont signalling under heat (LTH symbiont loss) | **Seneca & Palumbi 2010** ✓ (AmCTL). (Barshis named *mannose-binding* lectin, down — different lectin) |
 | **Signalling / TF network modules** (GPCR signalling, sequence-specific TFs up; ECM modules down) | Co-expressed regulatory modules (WGCNA) | Rapidly modulated; faster recovery in resilient species | Module-level resilience view | **Thomas 2019** ✓ (module-level; no individual gene names) |
 
-**Two interpretation handles for LTH:**
-- **Frontloading (Barshis 2013):** tolerance = *higher constitutive baseline* of stress genes, not bigger acute induction. → Compare **per-genet baselines** (C vs A) at D0 — the molecular test of C > D > A.
-- **Heat-tolerance ↔ growth tradeoff (Cornwell 2021, phenotypic — no genes):** resilient colonies grow less / carry fewer symbionts. → Candidate mechanism for the LTH 34 % growth reduction.
+**Two ways to read the LTH data:**
+- **Frontloading (Barshis 2013):** tolerance means a *higher constitutive baseline* of stress genes, not a bigger acute induction. → Compare **per-genet baselines** (C vs A) at D0 — the molecular test of C > D > A.
+- **Heat-tolerance ↔ growth tradeoff (Cornwell 2021, phenotypic — no genes):** resilient colonies grow less and carry fewer symbionts. → A candidate mechanism for the LTH 34 % growth reduction.
 
-**Caveats.** Prior context, not a target panel. Mostly congeners — wound genes from *A. millepora* (Xu 2023) + lab *A. pulchra* near/far pilot; thermal genes from *Acropora* spp. and *Porites astreoides* (Dixon 2015). Orthology to the *A. pulchra* Conn 2025 genome must be established before mapping to loci (deferred). Pathways, not single loci — expect multiple paralogs/family.
+**Caveats.** This is prior context, not a target panel. Most genes come from congeners — wound genes from *A. millepora* (Xu 2023) plus the lab *A. pulchra* near/far pilot; thermal genes from *Acropora* spp. and *Porites astreoides* (Dixon 2015). You must establish orthology to the *A. pulchra* Conn 2025 genome before mapping these to loci (deferred). Think pathways, not single loci — expect multiple paralogs per family.
 
 ### References (verified)
 
@@ -159,11 +159,11 @@ Every link runs both ways (confirm / extend / revise). Timecourse alignment:
 
 ## 6. Optional Intro/Discussion framing angles
 
-Phenotype-first raw material written before your expression results exist — **not the spine** (recommended spine leads with transcriptomics). Take one, blend, or discard.
+This is phenotype-first raw material, written before your expression results exist — **not the spine** (the recommended spine leads with transcriptomics). Take one, blend them, or discard them.
 
-- **A. Energetic-triage / phase-decoupling (phenotype-first).** Heat spares tissue-healing (coenosarc closure), arrests regeneration (skeletal regrowth). Hook: survival is a poor proxy for structural recovery — a restoration angle (selecting genets on bleaching survival may propagate corals that persist without regenerating). *Tension:* an allocation inference the phenotype alone can't prove.
-- **B. Molecular basis of the healing→regeneration transition (transcriptomics-led).** Phenotype locates *where* recovery fails; expression asks *why*. Leads with mechanism, not allocation — likely the stronger spine.
-- **C. Genotype-dependent thermal tolerance of regeneration (cross-method).** Regenerative capacity is heritable (C vs A/D); pairs with the independent acute CBASS assay (Cunning et al. 2024) and candidate thermal-tolerance genes. Can sit under A or B, or as a Discussion section.
+- **A. Energetic-triage / phase-decoupling (phenotype-first).** Heat spares tissue-healing (coenosarc closure) but stalls regeneration (skeletal regrowth). Hook: survival is a poor proxy for structural recovery — a restoration angle (picking genets on bleaching survival may propagate corals that persist without regenerating). *Tension:* this is an allocation inference the phenotype alone can't prove.
+- **B. Molecular basis of the healing→regeneration transition (transcriptomics-led).** The phenotype locates *where* recovery fails; the expression data ask *why*. Leads with mechanism, not allocation — likely the stronger spine.
+- **C. Genotype-dependent thermal tolerance of regeneration (cross-method).** Regenerative capacity is heritable (C vs A/D); it pairs with the independent acute CBASS assay (Cunning et al. 2024) and the candidate thermal-tolerance genes. Can sit under A or B, or stand as its own Discussion section.
 
 **Phenotype numbers these rest on** (→ `output/tables/20_master_results.csv`):
 - Coenosarc closure indistinguishable 28/31 °C; new-corallite regeneration delayed under heat (time ratio 1.32, 95% CI 1.19–1.47, p = 1.4e-7; first-observed Cox HR 0.22, 95% CI 0.07–0.69).
@@ -172,7 +172,7 @@ Phenotype-first raw material written before your expression results exist — **
 - Genet C multivariate displacement 1.02 vs 3.71 (A) / 3.38 (D); most likely to regenerate at 31 °C.
 - 31 °C sits ~4.4 °C below the population acute ED50 (35.4 °C; Cunning et al. 2024) — chronic/sublethal.
 
-**Fragility to carry forward:** regeneration result strongest for interval-censored new-corallite onset (p = 1.4e-7); tip-exist also delayed, tip-extension same direction but n.s. First-observed Cox model near the PH diagnostic boundary — interval model + censored fraction are the cleaner anchors. Three genets resolve variation but not architecture. Apical-tip excision ≠ surface wound bed (Munk 2024). See `RESULTS.md` §10. Chlorophyll-a was **not** run (metadata slot kept for provenance; analysis uses PAM, color-card scores, symbiont counts).
+**Fragility to carry forward:** the regeneration result is strongest for interval-censored new-corallite onset (p = 1.4e-7); tip-exist is also delayed, and tip-extension points the same way but is n.s. The first-observed Cox model sits near the PH diagnostic boundary, so the interval model + censored fraction are the cleaner anchors. Three genets resolve variation but not architecture. Apical-tip excision ≠ surface wound bed (Munk 2024). See `RESULTS.md` §10. Chlorophyll-a was **not** run (the metadata slot is kept for provenance; the analysis uses PAM, color-card scores, and symbiont counts).
 
 **Verified citation bank** (DOIs in `manuscript/references.bib`; index `literature/LITERATURE.md`):
 - *Biphasic healing↔regeneration; growth & injury ecology of *Acropora*:* Henry & Hart 2005 (closure precedes regeneration); Yap & Gomez 1984 (*A. pulchra* extension 13–16 cm yr⁻¹); Highsmith 1982; Madin et al. 2014.
