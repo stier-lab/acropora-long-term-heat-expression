@@ -28,6 +28,10 @@ Thumbs.db
 .vscode/
 .idea/
 
+# Tool / MCP logs
+*.log
+excalidraw.log
+
 # Sensitive
 .env
 .env.local
