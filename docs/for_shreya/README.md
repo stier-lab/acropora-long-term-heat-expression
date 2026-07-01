@@ -32,7 +32,7 @@ You lead the paper and the gene-expression analysis. The Stier lab has finished 
 | Cached Cunning 2024 ED50 | `data/external/cunning2024_apulchra_ed50.csv` |
 | Thicket GPS / metadata | `data/raw/metadata/metadata.csv` |
 | Verified references + cite→PDF index | `manuscript/references.bib`, `literature/LITERATURE.md` |
-| Literature library (98 PDFs, mapped) | `literature/LITERATURE.md` |
+| Literature library (100 PDFs, mapped) | `literature/LITERATURE.md` |
 
 ---
 

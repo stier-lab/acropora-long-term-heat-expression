@@ -1,6 +1,6 @@
 # Literature — *Acropora pulchra* (LTH "expression by temperature" + wound-healing model)
 
-Consolidated bibliography and knowledge synthesis for the LTH heat × wounding project and for parameterizing *A. pulchra* in the 3-species coral wound-healing model (`~/coral-wound-healing-model`). This file is the union of the former `LITERATURE.md`, `CITATIONS_INDEX.md`, `CITATION_AUDIT.md`, `LIBRARY_MAP.md`, and `KNOWN_UNKNOWN_synthesis.md`. Library holds **98 PDFs** in `pdfs/`; DOIs were tool-verified (Crossref/OpenAlex); PDFs named `AuthorYear_ShortTitle.pdf`.
+Consolidated bibliography and knowledge synthesis for the LTH heat × wounding project and for parameterizing *A. pulchra* in the 3-species coral wound-healing model (`~/coral-wound-healing-model`). This file is the union of the former `LITERATURE.md`, `CITATIONS_INDEX.md`, `CITATION_AUDIT.md`, `LIBRARY_MAP.md`, and `KNOWN_UNKNOWN_synthesis.md`. Library holds **100 PDFs** in `pdfs/`; DOIs were tool-verified (Crossref/OpenAlex); PDFs named `AuthorYear_ShortTitle.pdf`.
 
 **Species-attribution corrections (verified against source PDFs).** Four papers were over-attributed to *A. pulchra* and are flagged ⚠: **Zhang 2025** = macroalga *Halimeda macroloba* (not a coral); **Almeida 2024** = *Pocillopora* cf. *damicornis* (Kenya); **Denis 2024** = *A. spathulata* (GBR); **Raymundo 2025** = *A. aspera* outplants (Guam). They remain as grounding/framing sources only. Net effect: *A. pulchra* proteomic/metabolomic thermal acclimation is essentially **unstudied**.
 
@@ -76,6 +76,8 @@ Status legend: `pdfs/…` = local PDF held · **[NB]** = NotebookLM corpus only 
 | Paper | DOI | PDF | Note |
 |---|---|---|---|
 | Traylor-Knowles et al. 2016 — wound healing, two temperature regimes | 10.1007/s00227-016-3011-y | pdfs/Traylor-Knowles_2016_WoundHealingTwoTempRegimes.pdf | ⭐ *P. damicornis* & *A. hyacinthus* (model's 2 species) → temp-coupling; DOI corrected (was 10.1186/s12862-016-0791-0 typo) |
+| Xu et al. 2023 — wound healing & regeneration in *Acropora millepora* | 10.3389/fevo.2022.979278 | pdfs/Xu_2023_WoundHealingRegenAcroporaMillepora.pdf | ⭐⭐ coral wound/regeneration transcriptomics; backbone of the candidate-gene panel (c-Fos, JNK, Wnt, FGF, ADAMTS, Galaxin) — see `docs/for_shreya/` |
+| Palmer et al. 2011 — corals use similar immune cells & wound-healing processes | 10.1371/journal.pone.0023992 | pdfs/Palmer_2011_CoralsImmuneCellsWoundHealing.pdf | four-phase wound cellular timeline (immune infiltration → proliferation → maturation) |
 | Bonesso et al. 2017 — sub-bleaching SST impairs regeneration | 10.7717/peerj.3719 | pdfs/Bonesso_2017_SubBleachingImpairsRegen.pdf | 32 °C halts apical-tip regrowth (*A. aspera*) → `kc_mult`(temp) |
 | Burmester et al. 2017 — temperature & symbiosis × lesion recovery | 10.3354/meps12114 | pdfs/Burmester_2017_TempSymbiosisLesionRecovery.pdf | symbiotic state × temp × healing |
 | Burmester et al. 2018 — autotrophy vs heterotrophy in lesion recovery | — | pdfs/Burmester_2018_AutoVsHeteroLesionRecovery.pdf | → `kc_mult`, `h` |
@@ -166,6 +168,7 @@ Status legend: `pdfs/…` = local PDF held · **[NB]** = NotebookLM corpus only 
 | Evensen et al. 2023 — CBASS low-cost portable system | 10.1002/lom3.10555 | pdfs/Evensen_2023_CBASSSystem.pdf | CBASS methods |
 | Cunning et al. 2021 — heat-tolerance census, Florida staghorn *Acropora* | 10.1098/rspb.2021.1613 | pdfs/Cunning_2021_HeatToleranceCensusStaghorn.pdf | acute-tolerance variation |
 | Barshis et al. 2013 — genomic basis for coral resilience | 10.1073/pnas.1210224110 | pdfs/Barshis_2013_GenomicBasisResilience.pdf | ⭐⭐ expression basis of resilience |
+| Cleves et al. 2020 — CRISPR HSF mutants reduce coral thermal tolerance | 10.1073/pnas.1920779117 | [NB] no local PDF (PNAS; Crossref-verified) | causal HSF → thermal tolerance; candidate-gene source for HSF |
 | Bay & Palumbi 2015 — rapid acclimation via transcriptome change | 10.1093/gbe/evv085 | pdfs/Bay_2015_RapidAcclimTranscriptome.pdf | expression plasticity |
 | Dixon et al. 2015 — genomic determinants of heat tolerance across latitudes | 10.1126/science.1261224 | pdfs/Dixon_2015_GenomicDeterminantsHeatTolerance.pdf | heritable heat tolerance |
 | Palumbi et al. 2014 — mechanisms of reef-coral resistance | 10.1126/science.1251336 | pdfs/Palumbi_2014_MechanismsResistance.pdf | ⭐ *A. hyacinthus* expression/acclimation |
