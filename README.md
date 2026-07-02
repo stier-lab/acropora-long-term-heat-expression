@@ -1,7 +1,14 @@
 # LTH: Long-Term Heating × Wounding × Gene Expression in *Acropora pulchra*
 
 > Project #17 of the Coral Regeneration program · Gump Station, Mo'orea, French Polynesia · May–July 2025
-> · Repo: `stier-lab/17.-LTH_expression_by_temperature_2025` · Last updated 2026-06-30
+> · Repo: `stier-lab/17.-LTH_expression_by_temperature_2025` · Last updated 2026-07-02
+
+<p align="center">
+  <img src="docs/team_summary/img/healing_ambient_vs_heated.gif" width="720"
+       alt="Wound-healing time-lapse, ambient 28 °C vs heated 31 °C, Day 0 to Day 15"><br>
+  <sub><b>Wound healing over 15 days.</b> <b><span>Ambient&nbsp;28&nbsp;°C</span></b> (left, blue) closes the wound <b>and</b> regrows the tip;
+  <b>Heated&nbsp;31&nbsp;°C</b> (right, orange) closes the wound but never regenerates.</sub>
+</p>
 
 A heat × wounding experiment on the branching coral *Acropora pulchra*. We clipped the growing tip off
 half the fragments, held corals at **28 °C (ambient)** or **31 °C (heated, +3 °C)**, and tracked

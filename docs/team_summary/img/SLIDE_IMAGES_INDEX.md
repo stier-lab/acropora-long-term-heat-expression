@@ -14,6 +14,7 @@
 | `slide15_morphology_timeline.jpg` | Photo time-series grid: ambient (top) vs heated (bottom), D0 → D15 | LTH slide 15 | original `image8.jpg` (2048 × 994) |
 | `morphology_ambient_healing.mp4` | **Animated** ambient healing time-lapse, D0 → D15 (16 frames, autoplay-loop) | LTH slide 13 | `image15.gif` (2048 × 1536, ~21 MB) → 560 px, 2 fps H.264 |
 | `morphology_heated_healing.mp4` | **Animated** heated healing time-lapse, D0 → D15 (16 frames, autoplay-loop) | LTH slide 14 | `image16.gif` (2048 × 1536, ~24 MB) → 560 px, 2 fps H.264 |
+| `healing_ambient_vs_heated.gif` | Side-by-side animated healing: ambient (blue border) vs heated (orange border), D0 → D15 — the repo README hero | LTH slides 13/14 | built from the two `.mp4`s (ffmpeg hstack, 28 °C-blue / 31 °C-orange borders) |
 
 Full-resolution animated originals (`image15–18.gif`, ~20–27 MB each; whole + zoom for ambient and heated) live in the source deck, not this repo.
 
