@@ -1,0 +1,161 @@
+---
+title: "LTH — key results (team summary)"
+subtitle: "Heat × wound × *Acropora pulchra*, Mo'orea 2025"
+date: "Updated 2026-07-02"
+output:
+  html_document:
+    self_contained: true
+    theme: flatly
+    toc: true
+    toc_float: true
+    df_print: kable
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, out.width = "100%", fig.align = "center")
+fig  <- function(f) file.path("..", "..", "figures", f)   # code-generated figures
+img  <- function(f) file.path("img", f)                    # photos pulled from the deck
+```
+
+```{css, echo=FALSE}
+.main-container { max-width: 860px; }
+/* figure cards */
+div.figure { text-align: center; margin: 1.8em auto; }
+div.figure img, .content-img {
+  max-width: min(100%, 700px);
+  border: 1px solid #e4e7eb; border-radius: 6px;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.09); padding: 6px; background: #fff;
+}
+p.caption, figcaption { font-size: 0.85em; color: #667; margin-top: 0.6em; }
+/* treatment chips */
+.t28 { background:#56B4E9; color:#08374f; padding:1px 6px; border-radius:4px; font-weight:600; white-space:nowrap; }
+.t31 { background:#D55E00; color:#fff;    padding:1px 6px; border-radius:4px; font-weight:600; white-space:nowrap; }
+/* draft banner */
+.banner { border-left:6px solid #1F3864; background:#f4f7fb; padding:12px 18px;
+  margin:0 0 1.6em 0; border-radius:0 6px 6px 0; font-size:0.95em; color:#33415c; }
+/* footer */
+.docfooter { margin-top:3em; padding-top:1em; border-top:1px solid #e2e2e2;
+  font-size:0.83em; color:#8a94a6; line-height:1.5; }
+.docfooter code { font-size:0.95em; }
+```
+
+<div class="banner">
+<strong>Internal working draft</strong> — a team summary of the LTH phenotype results (RNA-seq still to come). Not for circulation outside the group.
+</div>
+
+A quick tour of what the phenotype half of LTH shows. We heated *A. pulchra* fragments (<span class="t28">28 °C</span> vs <span class="t31">31 °C</span>), wounded half of them, and tracked healing, growth, physiology, and symbionts for two weeks. The RNA-seq is still to come; this is the picture the phenotypes paint.
+
+Every number here traces to `output/tables/20_master_results.csv`; the full write-up with limitations is in `RESULTS.md`. Coral photos and the design schematic are from the project deck (M. Brzezinski) — see `img/SLIDE_IMAGES_INDEX.md`.
+
+## The experiment
+
+- 8 tanks — four held at <span class="t28">28 °C</span> (ambient), four at <span class="t31">31 °C</span> (chronic heat, weeks)
+- Half the fragments wounded (clipped growing tip), half sham
+- 3 field thickets / genets — A, C, D
+- Tracked at Days 1, 3, 10, 15
+
+```{r, fig.cap="Experimental design: 8 tanks crossing heat × wound × genet, tracked to Day 15."}
+knitr::include_graphics(img("slide05_experimental_design.png"))
+```
+
+We wound a fragment by clipping the growing tip; here is a wounded polyp at Day 0.
+
+```{r, fig.cap="A wounded polyp at Day 0 (heated fragment)."}
+knitr::include_graphics(img("slide14_morphology_heated_D0.png"))
+```
+
+## What we found
+
+### 1. The heat treatment held
+
+Tanks sat cleanly at <span class="t28">28</span> vs <span class="t31">31 °C</span> for the whole run — the +3 °C contrast is real, not noise.
+
+```{r, fig.cap="Per-tank temperature: the two treatments held their target the whole run."}
+knitr::include_graphics(fig("08_apex_temperature.png"))
+```
+
+### 2. Whole-colony physiology drops under heat
+
+Heat, not wounding, drove the colony-wide decline. Under <span class="t31">31 °C</span> corals lost photosynthetic efficiency, paled, grew less, and shed symbionts.
+
+- **Growth: 34% lower** skeletal mass gain at <span class="t31">31 °C</span>
+- Symbiont density collapses over the two weeks
+- Fv/Fm (photosynthetic efficiency) falls; corals pale on the color card
+
+```{r, fig.cap="Growth (% skeletal mass change): 34% lower under heat."}
+knitr::include_graphics(fig("05_buoyant_weight_growth.png"))
+```
+
+```{r, fig.cap="Symbiont density falls under heat across the two weeks."}
+knitr::include_graphics(fig("06_symbiont_density_by_day.png"))
+```
+
+### 3. Heat blocks regeneration but spares healing — the headline
+
+Wounds close at the same rate whether or not corals are heated. What heat breaks is the **next** step: regrowing skeleton and new corallites.
+
+- New-corallite regeneration stalls under heat (interval-censored time ratio **1.32**, *p* = 1.4e-7; Cox HR **0.22**)
+- **67%** of heated corals closed the wound but never regenerated, vs **0%** at ambient
+- You can see it in the photos: both temps seal over, but the heated fragments never rebuild the tip
+
+```{r, fig.cap="Time-to-event by treatment: wounds close equally, but new-corallite regeneration stalls under heat."}
+knitr::include_graphics(fig("14_morphology_KM.png"))
+```
+
+The photo timeline makes it plain — both temperatures seal the wound, but the heated fragments never rebuild the tip.
+
+```{r, fig.cap="Photo timeline — ambient (top) vs heated (bottom), Day 0 → Day 15."}
+knitr::include_graphics(img("slide15_morphology_timeline.jpg"))
+```
+
+Same thing as time-lapse — ambient (left) heals **and** regrows; heated (right) heals but stalls (loops, D0 → D15):
+
+```{r, results='asis'}
+vid <- function(f, cap) sprintf(
+  '<figure style="display:inline-block;width:49%%;margin:0.3em 0;text-align:center;vertical-align:top">
+   <video autoplay loop muted playsinline class="content-img" style="width:100%%">
+   <source src="data:video/mp4;base64,%s" type="video/mp4"></video>
+   <figcaption>%s</figcaption></figure>',
+  xfun::base64_encode(img(f)), cap)
+cat(vid("morphology_ambient_healing.mp4", "Ambient — heals and regrows"),
+    vid("morphology_heated_healing.mp4", "Heated — heals but stalls"))
+```
+
+### 4. Genotype decides how badly
+
+The three genets did not respond alike. Genet **C** held its photochemistry, color, and symbionts far better than A and D.
+
+- Heat hit C about **2.7–3.5× less** than A/D
+- Multivariate displacement under heat: C = 1.02 vs A = 3.71, D = 3.38
+
+```{r, fig.cap="Standardized heat sensitivity per genet across responses — C is the resilient outlier."}
+knitr::include_graphics(fig("19_genet_dashboard.png"))
+```
+
+### 5. Chronic, but sublethal
+
+<span class="t31">31 °C</span> sits about **4.4 °C below** the acute Fv/Fm ED50 (35.4 °C; Cunning et al. 2024) for this species at this site. So this is weeks of sub-bleaching stress, not an acute heat shock — the decline is accumulated, not a spike.
+
+```{r, fig.cap="Our 28/31 °C next to the acute CBASS ED50 (Cunning et al. 2024) — chronic but sublethal."}
+knitr::include_graphics(fig("26_thermal_context.png"))
+```
+
+## Take-homes
+
+- Chronic sub-bleaching heat drives a colony-wide decline — growth down 34%, symbionts and photochemistry down — driven by temperature, not the wound.
+- Wounds still **heal** under heat, but corals stop **regenerating** (67% close but never regrow the tip vs 0% at ambient). Healing and regeneration are separate processes, and heat hits only the second.
+- Genotype matters: genet C is markedly more resilient, so which colonies you pick changes the outcome.
+- At <span class="t31">31 °C</span> this is chronic sub-bleaching stress (~4.4 °C under the acute ED50), not acute shock — a different regime than most heat-stress work.
+
+## Where to find things
+
+- Full results + limitations — `RESULTS.md`
+- Every statistic (source of truth) — `output/tables/20_master_results.csv`
+- Figure catalog — `figures/FIGURE_INDEX.md`
+- Pulled slide photos + provenance — `docs/team_summary/img/SLIDE_IMAGES_INDEX.md`
+- RNA-seq handoff (Shreya) — `docs/for_shreya/`
+
+<div class="docfooter">
+Repo: <code>stier-lab/17.-LTH_expression_by_temperature_2025</code> · branch <code>docs/annotate-code</code> · source <code>docs/team_summary/LTH_results_summary.Rmd</code><br>
+Questions → Adrian Stier / Molly Brzezinski. Analysis figures from the code pipeline; coral photos and design schematic by the LTH field team (M. Brzezinski).
+</div>
