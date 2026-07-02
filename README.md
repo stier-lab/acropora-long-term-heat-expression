@@ -15,7 +15,7 @@ half the fragments, held corals at **28 °C (ambient)** or **31 °C (heated, +3 
 healing and regrowth over 15 days — with photochemistry, pigmentation, symbionts, and growth. We also
 took tissue for gene expression (RNA-seq, in progress).
 
-**The paper's lead result is the transcriptomic mechanism** (S. Banerjee, lead author; RNA-seq pending);
+**The paper's lead result is the transcriptomic mechanism** (RNA-seq pending);
 the phenotype experiment here supplies its **organismal context**. **The phenotype result:** heat does
 *not* slow wound recovery uniformly — corals seal the wound (tissue healing) at the same rate hot or
 not, but heated corals fail to rebuild skeleton at the tip (regeneration). Heat affects one phase of
@@ -68,8 +68,7 @@ The gene-expression analysis and the manuscript narrative belong to the lead aut
 - The manuscript audit (`code/30_manuscript_audit.R`) is advisory and scoped to phenotype
   Methods/Results only — it does not police the narrative.
 
-Still open for PI/institutional decision: target journal & review process; Banerjee's correspondence
-department/address/email (still `[to confirm]`); and rehoming/renaming the repo.
+Still open for PI/institutional decision: target journal & review process; and rehoming/renaming the repo.
 
 ## How the repo relates to Google Drive
 
@@ -286,18 +285,15 @@ See `docs/for_shreya/` for the lead-author resources. Outstanding items:
 
 ## Authors, license, funding
 
-**S. Banerjee leads the paper** (RNA-seq analysis + Introduction/Discussion/Abstract) and is the
-**corresponding author**. **R. A. Bay and A. C. Stier are co-senior authors.** Byline: Banerjee,
-Brzezinski, Diminuco, Seifert, Osenberg, Bay, Stier. (Banerjee's correspondence
-department/address/email are still `[to confirm]`.)
+Contributors:
 
-- **Shreya Banerjee** (lead, corresponding) — UC Davis Bay Lab; RNA-seq DE + genet-matching; narrative
+- **Shreya Banerjee** — UC Davis Bay Lab; RNA-seq DE + genet-matching; narrative
 - **Molly Brzezinski** — UCSB Stier Lab; experimental execution, data management, microscope analysis. ORCID 0000-0002-0417-3406
 - **Michelle Diminuco** — UGA Osenberg Lab; field collection
 - **Ashley W. Seifert** — University of Kentucky; regeneration biology PI. ORCID 0000-0001-6576-3664
 - **Craig W. Osenberg** — UGA; ORCID 0000-0003-1918-7904
-- **Rachael A. Bay** (co-senior) — UC Davis Bay Lab; gene-expression PI
-- **Adrian C. Stier** (co-senior) — UCSB Stier Lab; astier@ucsb.edu, ORCID 0000-0002-4704-4145
+- **Rachael A. Bay** — UC Davis Bay Lab; gene-expression PI
+- **Adrian C. Stier** — UCSB Stier Lab; astier@ucsb.edu, ORCID 0000-0002-4704-4145
 
 **License:** Code MIT · Data CC-BY 4.0 (until publication, then DOI) · Manuscript all rights reserved.
 **Funding:** NSF support to A.C. Stier and collaborators. Field work at the UC Berkeley Gump Research
