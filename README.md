@@ -27,7 +27,7 @@ For the full results narrative see **`RESULTS.md`**; for the RNA-seq / lead-auth
 ## Contents
 
 - [Quick start](#quick-start)
-- [Who owns what](#who-owns-what)
+- [Working in this repo](#working-in-this-repo)
 - [How the repo relates to Google Drive](#how-the-repo-relates-to-google-drive)
 - [Research question & design](#research-question--design)
 - [Findings (the phenotype half)](#findings-the-phenotype-half)
@@ -56,19 +56,9 @@ last step (`code/30_manuscript_audit.R`) recomputes every phenotype number and *
 manuscript has drifted out of sync (advisory only — never fails the run). Requires R ≥ 4.3 (developed
 on 4.5.2).
 
-## Who owns what
+## Working in this repo
 
-| Person | Owns |
-|---|---|
-| **Shreya Banerjee** (UC Davis, Bay lab) | **Leads the paper** — gene-expression analysis (RNA-seq DE + matching the 3 thickets to Cunning's genotyped genets) and the narrative (Introduction, Discussion, Abstract). Corresponding author. See **`docs/for_shreya/`**. |
-| **Molly Brzezinski** (UCSB) | Fieldwork; the phenotype data (PAM, color, morphology, growth, symbionts); the original exploratory scripts (`code/archive/molly_original/`). |
-| **Stier lab** (UCSB) | The phenotype Methods + Results and the reproducible pipeline (`code/`) — a drop-in foundation. |
-| **R. A. Bay + A. C. Stier** | Co-senior authors. |
-
-Byline order: Banerjee, Brzezinski, Diminuco, Seifert, Osenberg, Bay, Stier. Full affiliations are in
-[Authors](#authors-license-funding).
-
-**Scope rules when working in this repo** (so the lead author's domain stays hers):
+The gene-expression analysis and the manuscript narrative belong to the lead author — keep to these scope rules:
 - Don't write or pre-empt the Introduction / Discussion / Abstract, and don't bake Discussion-level
   interpretation into the Results (effect sizes + direction only there).
 - Don't prescribe the RNA-seq pipeline. The `docs/for_shreya/` files pose *questions/goals* and offer
