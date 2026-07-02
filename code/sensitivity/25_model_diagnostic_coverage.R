@@ -40,7 +40,7 @@ result_fig <- function(m) {
     grepl("pam",   m) ~ "figures/02_pam_fvfm_trajectory.pdf",
     grepl("color|clmm", m) ~ "figures/03_color_trajectory.pdf",
     grepl("bw|growth", m)  ~ "figures/05_buoyant_weight_growth.pdf",
-    grepl("zoox",  m) ~ "figures/06_symbiont_chl_by_day.pdf",
+    grepl("zoox",  m) ~ "figures/06_symbiont_density_by_day.pdf",
     grepl("morph", m) ~ "figures/04_morphology_trajectories.pdf / figures/14_morphology_KM.pdf",
     grepl("genet", m) ~ "figures/13_genet_response_panel.pdf",
     TRUE ~ "figures/16_manuscript_fig1.pdf"

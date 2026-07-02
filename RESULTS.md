@@ -143,7 +143,7 @@ The treatment × wound interaction is not significant under type-III SS (F₁,�
 
 Genet C loses fewer symbionts under heat (Δlog = 1.02, ≈64% loss) than genets A and D (Δlog ≈ 2.6, ≈92% loss), though all three losses are significant.
 
-**Figure:** `figures/06_symbiont_chl_by_day.{pdf,png}`.
+**Figure:** `figures/06_symbiont_density_by_day.{pdf,png}`.
 
 ---
 

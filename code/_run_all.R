@@ -41,7 +41,6 @@ scripts <- c(
   "08_apex_temperature.R",
   "09_ysi_water_chem.R",
   "10_worms.R",
-  "11_combined_figure.R",
   "12_models.R",               # primary models + color-CLMM & morphology-blme robustness (was 12/12b/12c)
   "13_genet_interaction.R",
   "14_morphology_kaplan.R",

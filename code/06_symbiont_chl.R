@@ -23,7 +23,7 @@
 #          data/raw/symbiont_counts/metadata_ordered_merge.csv
 #          data/processed/coral_metadata.rds
 # Output:  data/processed/symbiont_chl_clean.rds
-#          figures/06_symbiont_chl_by_day.{pdf,png}
+#          figures/06_symbiont_density_by_day.{pdf,png}
 #          output/tables/06_symbiont_chl_summary.csv
 # =============================================================================
 
@@ -149,41 +149,10 @@ p_zoox <- ggplot(phys, aes(factor(biopsy_day), cells_per_cm2 / 1e6,
        subtitle = expression(italic(A.~pulchra)~"biopsies, n = 192 corals across 5 timepoints")) +
   theme_pub(10)
 
-# Build the second panel only if chlorophyll data exist; otherwise emit
-# a placeholder panel so the two-panel layout still renders with a note.
-has_chl <- any(is.finite(phys$chlorophyll_ug_cm2))
-if (has_chl) {
-  p_chl <- ggplot(phys, aes(factor(biopsy_day), chlorophyll_ug_cm2,
-                             fill = treatment)) +
-    geom_boxplot(width = 0.6, outlier.shape = NA, alpha = 0.65) +
-    geom_jitter(width = 0.15, height = 0, alpha = 0.4, size = 0.8) +
-    scale_fill_manual(values = c(`28C` = "#56B4E9", `31C` = "#D55E00"),
-                      name = "Temperature") +
-    labs(x = "Biopsy day", y = expression(Chl-a~(mu*g~cm^{-2})),
-         tag = "B") +
-    theme_pub(10)
-  p_combo <- (p_zoox + labs(tag = "A")) + p_chl +
-    patchwork::plot_layout(guides = "collect") &
-    theme(legend.position = "bottom")
-  save_fig(p_combo, "06_symbiont_chl_by_day", width = 170, height = 95)
-} else {
-  message("Chlorophyll-a assay was not run for this project — ",
-          "saving single-panel symbiont figure.")
-  save_fig(p_zoox, "06_symbiont_density_by_day", width = 140, height = 100)
-  # Also write the two-panel layout with an explicit note for chl-a
-  p_chl_placeholder <- ggplot() +
-    annotate("text", x = 0.5, y = 0.5,
-             label = "Chlorophyll-a assay\nwas not run\nfor this project",
-             size = 4, colour = "grey30", lineheight = 1.1) +
-    theme_void() +
-    theme(panel.background = element_rect(fill = "grey96", colour = NA),
-          plot.tag = element_text(size = 11, face = "bold")) +
-    labs(tag = "B")
-  p_combo <- (p_zoox + labs(tag = "A")) + p_chl_placeholder +
-    patchwork::plot_layout(guides = "collect") &
-    theme(legend.position = "bottom")
-  save_fig(p_combo, "06_symbiont_chl_by_day", width = 170, height = 95)
-}
+# Chlorophyll-a was never run for this project (the chl-a column is retained
+# only as a provenance placeholder), so we emit the single-panel symbiont-
+# density figure. There is no chlorophyll panel.
+save_fig(p_zoox, "06_symbiont_density_by_day", width = 140, height = 100)
 
 cat("Wrote symbiont_chl_clean.rds, 06_symbiont_chl_summary.csv,",
-    "06_symbiont_chl_by_day.{pdf,png}\n")
+    "06_symbiont_density_by_day.{pdf,png}\n")
