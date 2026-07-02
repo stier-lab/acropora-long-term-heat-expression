@@ -39,7 +39,7 @@ For the full results narrative see **`RESULTS.md`**; for the RNA-seq / lead-auth
 
 ```bash
 cd ~/Stier-LTH-expression-by-temperature-2025
-Rscript -e 'renv::restore()'     # one-time: install pinned package versions (renv.lock)
+Rscript -e 'install.packages(c("tidyverse","here","readxl","janitor","scales","patchwork","lme4","lmerTest","blme","nlme","MuMIn","car","emmeans","DHARMa","broom","broom.mixed","influence.ME","lmtest","survival","survminer","xml2"))'   # one-time: install packages (current CRAN versions)
 Rscript code/_run_all.R          # full pipeline in dependency order (~4 min); regenerates every figure + table
 ```
 
@@ -181,7 +181,7 @@ Reference levels: treatment = `28C`, wound = `no`.
 ## Reproducing the analysis
 
 ```r
-renv::restore()              # restore pinned packages
+# one-time: install the packages listed in Quick start (current CRAN versions), then:
 source("code/_run_all.R")    # full pipeline in dependency order (~4 min)
 ```
 

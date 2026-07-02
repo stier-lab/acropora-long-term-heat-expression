@@ -6,12 +6,6 @@
 .Rproj.user/
 *.Rproj.user/
 
-# renv
-renv/library/
-renv/staging/
-renv/python/
-renv/sandbox/
-
 # targets
 _targets/
 
