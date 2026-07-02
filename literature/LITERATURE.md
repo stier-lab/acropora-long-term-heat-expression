@@ -76,7 +76,7 @@ Status legend: `pdfs/…` = local PDF held · **[NB]** = in NotebookLM corpus on
 | Paper | DOI | PDF | Note |
 |---|---|---|---|
 | Traylor-Knowles et al. 2016 — wound healing, two temperature regimes | 10.1007/s00227-016-3011-y | pdfs/Traylor-Knowles_2016_WoundHealingTwoTempRegimes.pdf | ⭐ *P. damicornis* & *A. hyacinthus* (model's 2 species) → temp-coupling; DOI corrected (was 10.1186/s12862-016-0791-0 typo) |
-| Xu et al. 2023 — wound healing & regeneration in *Acropora millepora* | 10.3389/fevo.2022.979278 | pdfs/Xu_2023_WoundHealingRegenAcroporaMillepora.pdf | ⭐⭐ coral wound/regeneration transcriptomics; backbone of the candidate-gene panel (c-Fos, JNK, Wnt, FGF, ADAMTS, Galaxin) — see `docs/for_shreya/` |
+| Xu et al. 2023 — wound healing & regeneration in *Acropora millepora* | 10.3389/fevo.2022.979278 | pdfs/Xu_2023_WoundHealingRegenAcroporaMillepora.pdf | ⭐⭐ coral wound/regeneration transcriptomics; backbone of the candidate-gene panel (c-Fos, JNK, Wnt, FGF, ADAMTS, Galaxin) — see `docs/rnaseq/` |
 | Palmer et al. 2011 — corals use similar immune cells & wound-healing processes | 10.1371/journal.pone.0023992 | pdfs/Palmer_2011_CoralsImmuneCellsWoundHealing.pdf | four-phase wound cellular timeline (immune infiltration → proliferation → maturation) |
 | Bonesso et al. 2017 — sub-bleaching SST impairs regeneration | 10.7717/peerj.3719 | pdfs/Bonesso_2017_SubBleachingImpairsRegen.pdf | 32 °C halts apical-tip regrowth (*A. aspera*) → `kc_mult`(temp) |
 | Burmester et al. 2017 — temperature & symbiosis × lesion recovery | 10.3354/meps12114 | pdfs/Burmester_2017_TempSymbiosisLesionRecovery.pdf | symbiotic state × temp × healing |

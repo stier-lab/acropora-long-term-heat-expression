@@ -24,8 +24,8 @@ Three genets (a, c, d), 8 tanks (4 per treatment), wounded on Day 0 after 7 days
 
 ## Key phenotype findings (organismal context)
 
-*These are the Stier-lab phenotype results — the organismal context for the paper. The paper's lead
-result is the transcriptomic mechanism (S. Banerjee, lead author; RNA-seq analysis pending).*
+*These are the phenotype results — the organismal context for the paper. The paper's lead
+result is the transcriptomic mechanism (RNA-seq analysis pending).*
 
 1. **Sustained heating to 31 °C compromises photochemistry, pigmentation, growth, and symbiont retention**, with the divergence between treatments growing across the 14-day experiment.
 2. **Heat impairs the regeneration phase** (new corallite / skeletal regrowth at the tip, tip extension) **but NOT the tissue-healing phase** (coenosarc coverage — hole closure, polyp emergence, and surface smoothing proceed at the same rate in both treatments).

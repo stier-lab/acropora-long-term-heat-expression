@@ -23,7 +23,7 @@
 #   RNA-seq libraries and glues on (a) the experimental design each fragment was
 #   under, (b) its symbiont density at biopsy, and (c) its genet-level resilience
 #   scores. It writes TWO files — a harmonized join (recoded to match the rest of
-#   the phenotype analysis) and a raw, un-recoded lookup (so the lead author can
+#   the phenotype analysis) and a raw, un-recoded lookup (so the gene-expression side can
 #   choose her own factor levels / reference categories). It fits no model; it
 #   hands the expression analyst a ready-to-merge covariate table.
 #

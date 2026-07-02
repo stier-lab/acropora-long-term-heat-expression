@@ -1,40 +1,10 @@
 **Something Flashy about Temperature and Wound Healing in Acropora Pulchra**
 
-Shreya Banerjee3, Molly Brzezinski1,2, Michelle Diminuco4, Ashley W. Seifert5, Craig W. Osenberg4, Rachael A. Bay3,†, Adrian C. Stier1,2,†
-
-† Co-senior authors.
-
-1Department of Ecology, Evolution, and Marine Biology, University of California Santa Barbara, Santa Barbara, California 93106, USA
-
-2Marine Science Institute, University of California Santa Barbara, Santa Barbara, California 93106, USA
-
-3department of something, University of California Davis
-
-4Odum School of Ecology, University of Georgia, 140 E Green St, Athens, GA 30602
-
-5Department of Biology University of Kentucky, Lexington, KY 40508
-
-**Correspondence:** Shreya Banerjee, University of California Davis, [department + address — confirm]. Email: [email — confirm]
-
-Author emails AND ORCID: 
-
-Molly Brzezinski:  [mollybrzezinski@ucsb.edu](mailto:mollybrzezinski@ucsb.edu), ORCID: 0000-0002-0417-3406
-
-Shreya Banerjee:
-
-Michelle Diminuco:
-
-Ashley W. Seifert: [awseifert@uky.edu](mailto:awseifert@uky.edu), ORCID: 0000-0001-6576-3664 
-
-Craig W. Osenberg: [osenberg@uga.edu](mailto:osenberg@uga.edu), ORCID: 0000000319187904
-
-Adrian C. Stier: [astier@ucsb.edu](mailto:astier@ucsb.edu), ORCID: 0000-0002-4704-4145
-
-Rachael Bay: 
+*[Author list, affiliations, and correspondence — to be finalized.]*
 
 **Abstract**
 
-> _[Abstract — led by S. Banerjee; written last, once the gene-expression results are in. The text below is an early rough draft from the project notes, to revise or replace entirely.]_
+> _[Abstract — written last, once the gene-expression results are in. The text below is an early rough draft from the project notes, to revise or replace entirely.]_
 
 Corals show a remarkable capacity to regenerate tissue and skeleton after physical abrasion, and heat stress can affect growth BUT we don’t understand how heat stress impacts the regenerative capacity of corals. In this experiment, we cross wounding treatment with heat stress to understand the mechanisms of tissue regeneration under heat-stress.
 
@@ -42,7 +12,7 @@ Acropora pulchra, like other branching corals, has a distinct physiology that su
 
 **Introduction**
 
-> **[Introduction — led by S. Banerjee.]** This section is the lead author's to write, framed around the gene-expression contribution; the Stier-lab phenotype experiment supplies the organismal context only (see **Methods** and **Results** below). Optional phenotype-side framing angles (deliberately left in tension) and a verified citation bank are at `docs/for_shreya/optional_intro_discussion_notes.md` — material to mine, not a recommended spine; the "energetic-triage" angle is one candidate label among them, not a default. Verified references for any reused citation are in `manuscript/references.bib` (index: `literature/CITATIONS_INDEX.md`); phenotype → expression hypotheses to anchor the framing are in `docs/for_shreya/gene_expression_integration_map.md`.
+> **[Introduction]** To be written, framed around the gene-expression contribution; the phenotype experiment supplies the organismal context only (see **Methods** and **Results** below). Optional phenotype-side framing angles (deliberately left in tension) and a verified citation bank are at `docs/rnaseq/README.md` — material to mine, not a recommended spine; the "energetic-triage" angle is one candidate label among them, not a default. Verified references for any reused citation are in `manuscript/references.bib` (index: `literature/CITATIONS_INDEX.md`); phenotype → expression hypotheses to anchor the framing are in `docs/rnaseq/README.md`.
 
 **Methods**
 
@@ -132,10 +102,10 @@ Placing our design on that calibrated thermal axis also clarifies the nature of 
 
 *Transcriptomics*
 
-> **[Transcriptomics — led by S. Banerjee; the paper's lead result.]** Differential-expression
+> **[Transcriptomics — the paper's lead result.]** Differential-expression
 > results pending from the UC Davis Bay lab (144 libraries: 4 tanks × 3 genets × 2 wound × 3
 > timepoints × 2 temperatures). Suggested phenotype → expression contrasts are in
-> `docs/for_shreya/gene_expression_integration_map.md`. ⟶ **Integration points to the phenotype
+> `docs/rnaseq/README.md`. ⟶ **Integration points to the phenotype
 > results above:** (i) the healing→regeneration decoupling maps to a temperature × timepoint
 > contrast at the wound tip; (ii) the genet-c resilience axis maps to a genet-c vs genets-a/d
 > expression contrast (candidate thermal-tolerance genes); (iii) SNPs called from these libraries
@@ -143,7 +113,7 @@ Placing our design on that calibrated thermal axis also clarifies the nature of 
 
 **Discussion**
 
-> **[Discussion — led by S. Banerjee.]** The lead author's to write, with the transcriptomic result as the spine and the phenotype findings (above) as organismal context. Optional phenotype-side framing angles (energetic-triage is one candidate among them, not a recommendation) and a citation bank are at `docs/for_shreya/optional_intro_discussion_notes.md`. The genet-C resilience axis and the healing→regeneration transition are the natural bridges to the gene-expression results — see `docs/for_shreya/gene_expression_integration_map.md` for suggested contrasts, and `RESULTS.md` §10 for the limitations worth carrying forward.
+> **[Discussion]** To be written, with the transcriptomic result as the spine and the phenotype findings (above) as organismal context. Optional phenotype-side framing angles (energetic-triage is one candidate among them, not a recommendation) and a citation bank are at `docs/rnaseq/README.md`. The genet-C resilience axis and the healing→regeneration transition are the natural bridges to the gene-expression results — see `docs/rnaseq/README.md` for suggested contrasts, and `RESULTS.md` §10 for the limitations worth carrying forward.
 
 **Acknowledgements**  
 Permits: DIREN 01319, CITES Permit FR2598700116-E  

@@ -10,8 +10,8 @@
 #          SCOPE: this only covers the Stier-lab-authored **phenotype Methods
 #          and Results** (physiology, morphology, growth, genet variation,
 #          thermal context). It does NOT police the Introduction, Discussion,
-#          Abstract, or the transcriptomics — those are the lead author's
-#          (S. Banerjee) narrative and are not gated here.
+#          Abstract, or the transcriptomics — those are out of scope here
+#          and are not gated.
 #
 #          To keep a new phenotype number checkable: add a check below. The
 #          rule is one-directional — PASS = the manuscript contains the current
@@ -26,7 +26,7 @@
 #   This is ADVISORY: it never errors out the build. A flag means "check this
 #   sentence," not a failure — so a number that is mid-edit cannot block the
 #   pipeline. It only covers the Stier-lab phenotype sections;
-#   the lead author's narrative (Intro/Discussion/Abstract/transcriptomics) is
+#   the narrative (Intro/Discussion/Abstract/transcriptomics) is
 #   out of scope. Currently 15/15 checks pass.
 #
 # Input:   manuscript/Manuscript_LTH.md
@@ -187,7 +187,7 @@ if (n_fail > 0) {
            "match the regenerated analysis outputs.\n%s\n",
            "Fix when convenient: update the flagged value(s) in the manuscript ",
            "from output/tables/20_master_results.csv. (This check covers only the ",
-           "Stier-lab phenotype Methods/Results, not the lead author's narrative.)"),
+           "phenotype Methods/Results, not the narrative.)"),
     n_fail,
     paste(sprintf("  - %s: expected %s (source %s); manuscript missing: %s",
                   bad$check, bad$expected, bad$source, bad$missing),

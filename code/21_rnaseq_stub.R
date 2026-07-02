@@ -5,7 +5,7 @@
 #          sample metadata into the repo conventions, if useful. Replace freely.
 #
 #          Not in code/_run_all.R. Optional suggestions live in
-#          docs/for_shreya/README.md.
+#          docs/rnaseq/README.md.
 #
 # What & why: this is a PLACEHOLDER. The RNA-seq count matrix does not exist in
 #   the repo yet (it is Shreya's to generate), so there is nothing to analyze.
@@ -15,7 +15,7 @@
 #   example of how to read counts + sample metadata using this project's path
 #   helpers (DATA_RAW, etc.) and column conventions. It is NOT a
 #   differential-expression model: choosing the DE design here would pre-empt a
-#   decision that belongs to the lead author (see the NOTE below).
+#   decision that is out of scope here (see the NOTE below).
 #
 # Input:   data/raw/sequencing/counts.csv          (NOT YET PRESENT — see below)
 #          data/raw/sequencing/sample_metadata.csv (NOT YET PRESENT — see below)
@@ -48,7 +48,7 @@ if (!file.exists(file.path(DATA_RAW, "sequencing", "counts.csv"))) {
 # here — the differential-expression design (factors, normalization, fixed/
 # random structure, tool) is Shreya's (Bay lab) to specify. There is no single
 # pre-decided model in this repo; the open design *questions* (not a formula)
-# are written out in docs/for_shreya/README.md. Picking the model
+# are written out in docs/rnaseq/README.md. Picking the model
 # here would hard-code one of those choices, so we don't.
 
 # Read the gene x library count matrix (genes in rows, one column per library).
@@ -76,4 +76,4 @@ stopifnot(all(sample_md$library_id %in% colnames(counts)))
 cat(sprintf("Imported %d genes x %d libraries; %d sample-metadata rows.\n",
             nrow(counts), ncol(counts) - 1L, nrow(sample_md)))
 cat("Next (yours to design): differential expression, module analysis, GO,\n")
-cat("expression x phenotype, SNP calling — see docs/for_shreya/.\n")
+cat("expression x phenotype, SNP calling — see docs/rnaseq/.\n")
