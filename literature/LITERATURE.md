@@ -247,7 +247,7 @@ A fast-growing, fragile, heat-sensitive branching *Acropora*. Values come from t
 
 **Thermal tolerance — known.** CBASS Fv/Fm ED50 = 34.3–36.6 °C for the exact Mahana/Mo'orea population (Cunning 2024). Photodamage takes ~3× the stress duration to repair and is worst during recovery (Berg 2020). Calcification peaks near 28 °C; at 29.8 °C net calcification drops 18–50% (Comeau 2014/2016). The growth–tolerance trade-off is heritable (Shaw 2016). Symbiont basis: a stable, thermotolerant partnership of *Cladocopium* C40 + *Durusdinium* D1 (Anthony 2023; Rouzé 2017/2019; Lock 2025).
 
-**Thermal tolerance — not known.** Almost no data on proteomic/metabolomic thermal acclimation (the earlier "Zhang 2025" source turned out to be a macroalga). No landscape-scale ED50 mapping (it exists for *A. spathulata*, not *A. pulchra*). Whether ED50 predicts anything beyond Fv/Fm — calcification or regeneration under chronic heat — is unknown.
+**Thermal tolerance — not known.** Almost no data on proteomic/metabolomic thermal acclimation (the "Zhang 2025" source is a macroalga). No landscape-scale ED50 mapping (it exists for *A. spathulata*, not *A. pulchra*). Whether ED50 predicts anything beyond Fv/Fm — calcification or regeneration under chronic heat — is unknown.
 
 **The heat × wounding interaction — the unresolved core.**
 - *Heat impairs recovery:* Meesters & Bak 1993 (bleaching blocks translocation); Bonesso 2017 (32 °C halts skeleton); Rice 2019 (*Pocillopora* Mo'orea, healing −66% at 29 °C); Paradis 2019 (*A. cervicornis*, P:R < 1); Kaufman 2021 (*A. cervicornis*, 35% healed at 31.5 °C vs 99% at 28 °C, donor-history effect).

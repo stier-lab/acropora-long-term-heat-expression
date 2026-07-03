@@ -153,7 +153,7 @@ knitr::include_graphics(fig("26_thermal_context.png"))
 - Every statistic (source of truth) — `output/tables/20_master_results.csv`
 - Figure catalog — `figures/FIGURE_INDEX.md`
 - Pulled slide photos + provenance — `docs/team_summary/img/SLIDE_IMAGES_INDEX.md`
-- RNA-seq handoff (Shreya) — `docs/for_shreya/`
+- RNA-seq notes — `docs/rnaseq/`
 
 <div class="docfooter">
 Repo: <code>stier-lab/17.-LTH_expression_by_temperature_2025</code> · branch <code>docs/annotate-code</code> · source <code>docs/team_summary/LTH_results_summary.Rmd</code><br>

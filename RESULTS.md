@@ -2,7 +2,7 @@
 
 > **Authoritative phenotype results narrative** · Updated 2026-06-30 · Index: [`README.md`](README.md) · every number traces to `output/tables/20_master_results.csv` (built by `code/20`).
 
-Every number comes from `output/tables/*.csv` and the fitted models in `output/models/*.rds`. Use this as the starting point for the manuscript Results section.
+Every number comes from `output/tables/*.csv` and the fitted models in `output/models/*.rds`. Starting point for the manuscript Results section.
 
 ## Experimental snapshot
 
@@ -18,7 +18,7 @@ Three genets (a, c, d), 8 tanks (4 per treatment), wounded on Day 0 after 7 days
 **Statistical-model structure (per Progress Notes 2026-04-29; refined to integrate genet):**
 - Primary fixed structure: `treatment * wound * day * thicket` (full 4-way interactions where data permit).
 - Random effects: `(1 | tank) + (1 | id)` (genet promoted from random to fixed because n_genets = 3 — too few for reliable variance estimation).
-- Per-genet treatment-effect contrasts and reaction norms are integrated throughout the per-response sections below, not bolted on as a separate analysis.
+- Per-genet treatment-effect contrasts and reaction norms are integrated throughout the per-response sections below, not run as a separate analysis.
 
 ---
 
@@ -47,7 +47,7 @@ R² estimates (`output/tables/12_r2_summary.csv`) — marginal R² jumped versus
 
 **Model:** `fv_fm ~ treatment * wound * day * thicket + (1|tank) + (1|id)` — `output/models/12_pam_lmm.rds`. n = 336 observations (top/bottom averaged per coral × day).
 
-**Type-III ANOVA, key terms** (Satterthwaite, `lmerTest`; from `output/tables/12_anova_summary.csv`). With `day` uncentered, *main* effects are evaluated at day 0 (wounding), before heat acts. So the treatment signal lives in the **treatment × day interaction**, not the (conditional) main effect.
+**Type-III ANOVA, key terms** (Satterthwaite, `lmerTest`; from `output/tables/12_anova_summary.csv`). With `day` uncentered, *main* effects are evaluated at day 0 (wounding), before heat acts, so the treatment signal lives in the **treatment × day interaction**, not the (conditional) main effect.
 
 | Term | F | df | Reading |
 |---|---|---|---|
@@ -106,11 +106,11 @@ The treatment × wound interaction is not significant under type-III SS (F₁,�
 
 ## 3. Growth (% skeletal mass change)
 
-**Metric.** Growth is the **percentage change in dry skeletal mass** over the 15-day window (100 · (mass_final − mass_initial) / mass_initial), from buoyant weight (Davies 1989; Jokiel et al. 1978). We do not use an **areal** calcification rate (mass gain per calcifying surface area): it needs the whole-fragment surface area, which we did not measure. Fragments were destructively sampled for transcriptomics, so wax-derived surface area exists only for the small sub-fragment used for symbiont counts (M. Brzezinski, pers. comm.). Specific growth rate (% d⁻¹) is reported as a robustness metric; both are surface-area-free.
+**Metric.** Growth is the **percentage change in dry skeletal mass** over the 15-day window (100 · (mass_final − mass_initial) / mass_initial), from buoyant weight (Davies 1989; Jokiel et al. 1978). We do not use an **areal** calcification rate (mass gain per calcifying surface area): it needs the whole-fragment surface area, which we did not measure. Fragments were destructively sampled for transcriptomics, so wax-derived surface area exists only for the small sub-fragment used for symbiont counts (M. Brzezinski, pers. comm.). Specific growth rate (% d⁻¹) is a robustness metric; both are surface-area-free.
 
 **Model:** `pct_growth ~ treatment * wound * thicket + (1|tank)` (n = 48; single endpoint observation per coral, with temperature randomized at the tank level). `output/models/12_bw_lm.rds`.
 
-**Tank-level inference:** mean growth fell from **6.10% at 28 °C to 4.03% at 31 °C — a 34% reduction** under sustained heating. The exact tank-level randomization test is a trend, not a formal p < 0.05 result (28 °C minus 31 °C = 2.07 percentage points, p = 0.057; `output/tables/05_buoyant_weight_tank_test.csv`). The coral-level LM coefficients are descriptive and point the same way.
+**Tank-level inference:** mean growth fell from **6.10% at 28 °C to 4.03% at 31 °C — a 34% reduction** under sustained heating. The exact tank-level randomization test is a trend, not a formal p < 0.05 result (28 °C minus 31 °C = 2.07 percentage points, p = 0.057; `output/tables/05_buoyant_weight_tank_test.csv`). The coral-level LM coefficients point the same way.
 
 **Metric-invariance.** The heat effect points the same direction under both surface-area-free metrics (`output/tables/05b_growth_metric_comparison.csv`): % mass change and specific growth rate both decrease at 31 °C (SGR 0.39 vs 0.26% d⁻¹, a 33% reduction).
 
@@ -151,7 +151,7 @@ Genet C loses fewer symbionts under heat (Δlog = 1.02, ≈64% loss) than genets
 
 **Model per trait:** `expressed ~ treatment * day * thicket + (1|tank)`, binomial logit (`code/04_physio_morphology.R`). Restricted to wounded corals (n = 12 per treatment, 4 per genet × treatment cell).
 
-Recovery follows the **two-phase sequence** standard in the coral wound-healing literature: a **tissue-healing phase** (re-epithelialization / coenosarc coverage that seals the wound) followed by a **regeneration phase** (reappearance of polyps and skeletal calyx/corallite structure). The 8 binary traits index these two phases. (LTH wounds are apical-**tip excisions**, so we score regeneration as new skeleton at the branch tip rather than polyp reappearance in a surface wound bed.)
+Recovery follows the **two-phase sequence** standard in the coral wound-healing literature: a **tissue-healing phase** (re-epithelialization / coenosarc coverage that seals the wound) followed by a **regeneration phase** (reappearance of polyps and skeletal calyx/corallite structure). The 8 binary traits index these two phases. (LTH wounds are apical-**tip excisions**, so regeneration is scored as new skeleton at the branch tip rather than polyp reappearance in a surface wound bed.)
 
 ### 5a. Tissue healing — coenosarc coverage (uniform across genets)
 - **Axial polyp formation and wound smoothed** index re-epithelialization / coenosarc coverage over the wound bed: ≥90% expression in both treatments by Day 5–7. No significant treatment effect, no genet × treatment interaction. **Heat does not delay tissue healing.** (`axial_polyp_formation` combines the byte-identical `hole_in_center` and `polyp_in_hole` columns — the central hole is the axial polyp hole, scored together; see `data/raw/physio_morphology/SCORING_NOTES.md`.)
@@ -183,7 +183,7 @@ We quantify "heat impairs the regeneration phase, not the healing phase" as the 
 | 28 °C | 12 | 12 | **0 %** | 8 |
 | 31 °C | 12 | 4 | **67 %** | 10 |
 
-At 28 °C every coral that closed its wound went on to regenerate (median 8 d later). At 31 °C **two-thirds closed the wound but never rebuilt skeleton** within the experiment, and the few that did took ~2 d longer. Among corals reaching both milestones the lag difference is marginal (Wilcoxon W = 9, p = 0.061, n = 4 heated); the dominant signal is the *censored fraction*, not the lag length. This turns the "regeneration vs closure" split into a single, testable per-coral statistic.
+At 28 °C every coral that closed its wound went on to regenerate (median 8 d later). At 31 °C **two-thirds closed the wound but never rebuilt skeleton** within the experiment, and the few that did took ~2 d longer. Among corals reaching both milestones the lag difference is marginal (Wilcoxon W = 9, p = 0.061, n = 4 heated); the dominant signal is the *censored fraction*, not the lag length.
 
 ---
 
@@ -228,7 +228,7 @@ The `figures/19_genet_dashboard.png` forest plot collapses every standardized he
 `figures/08_apex_temperature.png` — daily-mean per-tank temperature from the Neptune Apex datalogs. Tanks held within ~0.3 °C of nominal 28 °C and 31 °C setpoints across the experimental window.
 
 ### Flatworm (AEFW) surveillance
-`figures/10_worm_presence.png`, `output/tables/10_worm_summary.csv`. AEFW were checked on three dates (06/07, 06/08, 06/12). 21 unique corals tested worm-positive at some point, with 17/22 worm-positive observations concentrated in 31 °C tanks on **06/07** (3 days post-wounding). All corals were treated with the standard Worm Exit protocol (4 drops per 20 L + transfer-pipet rinse); later surveys showed near-complete clearance. The temperature-biased early distribution suggests heat-stressed corals may have been more prone to flatworm reinfection from the source water — a *confound to watch* in any future thermal-tolerance experiment. No response analysis includes a worm-presence covariate; we can add sensitivity analyses if Adrian wants to confirm robustness.
+`figures/10_worm_presence.png`, `output/tables/10_worm_summary.csv`. AEFW were checked on three dates (06/07, 06/08, 06/12). 21 unique corals tested worm-positive at some point, with 17/22 worm-positive observations concentrated in 31 °C tanks on **06/07** (3 days post-wounding). All corals were treated with the standard Worm Exit protocol (4 drops per 20 L + transfer-pipet rinse); later surveys showed near-complete clearance. The temperature-biased early distribution suggests heat-stressed corals may have been more prone to flatworm reinfection from the source water — a *confound to watch* in any future thermal-tolerance experiment. No response analysis includes a worm-presence covariate.
 
 ---
 
@@ -254,7 +254,7 @@ We benchmarked the LTH design against an independent, calibrated acute thermal-t
 
 ## 10. Statistical limitations and robustness
 
-A diagnostic swarm (`output/diagnostics/{A,B,C,D}_*.{csv,md}`) checked every primary model. Four concerns are worth flagging in the Methods section of the manuscript:
+A diagnostic swarm (`output/diagnostics/{A,B,C,D}_*.{csv,md}`) checked every primary model. Concerns worth flagging in the Methods section of the manuscript:
 
 - **Color D-scale is ordinal, not continuous.** The Siebeck D-scale takes five discrete values (D1–D5). We fit it as a Gaussian LMM to compare directly with the other continuous physiology metrics, and `DHARMa::simulateResiduals` flagged the expected non-uniform residual distribution (KS p < 0.001). As a robustness check we refit the same fixed and random structure as a cumulative-link mixed model (`ordinal::clmm`, `output/models/12b_color_clmm.rds`); every qualitative inference above held under the ordinal likelihood. We keep the Gaussian model for presentation; ordinal LRTs are in `output/tables/12b_color_clmm.csv`.
 
@@ -299,7 +299,7 @@ A diagnostic swarm (`output/diagnostics/{A,B,C,D}_*.{csv,md}`) checked every pri
 
 - **Chlorophyll-a values** — chl-a was planned but ultimately not run, so it is not part of the analysis. Pigmentation/photophysiology is represented by PAM Fv/Fm, color-card scores, and symbiont density.
 - **Gene expression data** — RNA-seq libraries at UC Davis Bay lab. Plate layout in `data/raw/plate_layout/Plate_{1,2}.csv`; sequencing plan in `notes/sequencing-plan-keck-LTH.md` (144 libraries: 4 tanks × 3 genets × 2 wound × 3 days × 2 temps). Stub DESeq2 pipeline at `code/21_rnaseq_stub.R` (waiting on sequencing).
-- **Statistical write-up for manuscript** — the phenotype Methods + Results are already written into `manuscript/Manuscript_LTH.md` from this narrative; this file (`RESULTS.md`) stays the authoritative phenotype results narrative, with every number tracing to `output/tables/20_master_results.csv`.
+- **Statistical write-up for manuscript** — the phenotype Methods + Results are already written into `manuscript/Manuscript_LTH.md` from this narrative; this file (`RESULTS.md`) stays the authoritative phenotype results narrative, every number tracing to `output/tables/20_master_results.csv`.
 
 ---
 

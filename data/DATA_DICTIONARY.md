@@ -8,9 +8,8 @@ coral *Acropora pulchra*, Mo'orea (Gump Station), 2025. Three genets/thickets (a
 integer `id` that links every data stream (PAM, color, morphology, growth, symbionts,
 wax, worm, RNA-seq).
 
-**This file is the main guide to the data folders.** It lets the gene-expression
-lead (Shreya) join RNA-seq libraries to phenotype covariates by `id` without
-reverse-engineering the spreadsheets.
+This dictionary lets the gene-expression lead (Shreya) join RNA-seq libraries to
+phenotype covariates by `id` without reverse-engineering the spreadsheets.
 
 ## Folder map
 
@@ -23,8 +22,8 @@ reverse-engineering the spreadsheets.
 | `data/raw/plate_layout/` | RNA-seq plate maps and the 144-library selected-sample design (see §RNA-seq). |
 
 Each raw stream has a `code/0N_<name>.R` ingest script whose header
-`# Purpose/Input/Output` block is the authority. Read it alongside this section to
-see exactly what each cleaned `.rds` holds.
+`# Purpose/Input/Output` block is the authority; read it alongside this section to
+see what each cleaned `.rds` holds.
 
 ---
 

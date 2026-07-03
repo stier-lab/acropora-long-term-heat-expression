@@ -7,12 +7,12 @@ This is the consolidated brief; the repo root `README.md` is the index for runni
 
 ## 1. Purpose & status
 
-The gene-expression analysis is the open piece. The **phenotype half** (Methods + Results — physiology, morphology, growth, genet variation, thermal context) is finished and reproduces cleanly from one command; the narrative (Introduction, Discussion, Abstract) is out of scope here. Treat everything here as a **resource and a set of suggestions**, not a prescribed pipeline.
+The gene-expression analysis is the open piece. The **phenotype half** (Methods + Results — physiology, morphology, growth, genet variation, thermal context) is finished and reproduces from one command; the narrative (Introduction, Discussion, Abstract) is out of scope here. Treat everything here as a **resource and a set of suggestions**, not a prescribed pipeline.
 
 - **RNA-seq status:** libraries await sequencing — the open genomics piece.
 - **Phenotype pipeline:** `Rscript code/_run_all.R` (~4 min) rebuilds every figure and table.
 - **Single source of truth for every statistic:** `output/tables/20_master_results.csv` (each row: effect size + test stat + df + p + CI; `_paper_ready.csv` is the formatted version). Cite the table; don't hand-copy.
-- **Audit:** `code/30_manuscript_audit.R` recomputes the phenotype numbers and flags drift (advisory, phenotype only; 15/15 checks pass). It does not check the Intro/Discussion/Abstract or the transcriptomics.
+- **Audit:** `code/30_manuscript_audit.R` recomputes the phenotype numbers and flags drift (advisory, phenotype only; 15/15 checks pass). It does not check the Intro/Discussion/Abstract or transcriptomics.
 - Phenotype Results are already written in `manuscript/Manuscript_LTH.md`.
 
 ### Where things live
