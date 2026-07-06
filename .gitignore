@@ -46,3 +46,7 @@ data/raw/sequencing/*.cram
 
 # Drive-staging artifacts (local only)
 /tmp/lth-staging/
+
+# Regenerable diagnostic QA layer (rebuilt by code/_run_all.R)
+figures/diagnostics/
+output/diagnostics/
