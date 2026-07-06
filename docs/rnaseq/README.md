@@ -20,7 +20,7 @@ The gene-expression analysis is the open piece. The **phenotype half** (Methods 
 | Need | Path |
 |---|---|
 | Orientation / how to run | `README.md` (repo root) |
-| Full phenotype results narrative (incl. §10 limitations) | `RESULTS.md` |
+| Full phenotype results narrative (incl. §10 limitations) | `RESULTS.docx` |
 | Every statistic (source of truth) | `output/tables/20_master_results.csv` |
 | RNA-seq plate layout / sequencing plan | `notes/archive/sequencing-plan-keck-LTH.md`, `notes/archive/Experimental_Plan_Gene_Expression.md`, `code/plate_fig.R` |
 | Plate maps / IDs | `notes/LTH_PlateLayout_with_IDs`, `data/raw/plate_layout/` |
@@ -29,8 +29,8 @@ The gene-expression analysis is the open piece. The **phenotype half** (Methods 
 | Per-genet resilience scores | `output/tables/19_genet_resilience_summary.csv` |
 | Cached Cunning 2024 ED50 | `data/external/cunning2024_apulchra_ed50.csv` |
 | Thicket GPS / metadata | `data/raw/metadata/metadata.csv` |
-| Verified references + cite→PDF index | `manuscript/references.bib`, `literature/LITERATURE.md` |
-| Literature library (101 PDFs, mapped) | `literature/LITERATURE.md` |
+| Verified references + cite→PDF index | `manuscript/references.bib`, `literature/LITERATURE.docx` |
+| Literature library (101 PDFs, mapped) | `literature/LITERATURE.docx` |
 
 ---
 
@@ -170,9 +170,9 @@ Phenotype-first raw material, written before your expression results exist — *
 - Genet C multivariate displacement 1.02 vs 3.71 (A) / 3.38 (D); most likely to regenerate at 31 °C.
 - 31 °C sits ~4.4 °C below the population acute ED50 (35.4 °C; Cunning et al. 2024) — chronic/sublethal.
 
-**Fragility to carry forward:** the regeneration result is strongest for interval-censored new-corallite onset (p = 1.4e-7); tip-exist is also delayed, and tip-extension points the same way but is n.s. The first-observed Cox model sits near the PH diagnostic boundary, so the interval model + censored fraction are the cleaner anchors. Three genets resolve variation but not architecture. Apical-tip excision ≠ surface wound bed (Munk 2024). See `RESULTS.md` §10. Chlorophyll-a was **not** run (the metadata slot is kept for provenance; analysis uses PAM, color-card scores, and symbiont counts).
+**Fragility to carry forward:** the regeneration result is strongest for interval-censored new-corallite onset (p = 1.4e-7); tip-exist is also delayed, and tip-extension points the same way but is n.s. The first-observed Cox model sits near the PH diagnostic boundary, so the interval model + censored fraction are the cleaner anchors. Three genets resolve variation but not architecture. Apical-tip excision ≠ surface wound bed (Munk 2024). See `RESULTS.docx` §10. Chlorophyll-a was **not** run (the metadata slot is kept for provenance; analysis uses PAM, color-card scores, and symbiont counts).
 
-**Verified citation bank** (DOIs in `manuscript/references.bib`; index `literature/LITERATURE.md`):
+**Verified citation bank** (DOIs in `manuscript/references.bib`; index `literature/LITERATURE.docx`):
 - *Biphasic healing↔regeneration; growth & injury ecology of *Acropora*:* Henry & Hart 2005 (closure precedes regeneration); Yap & Gomez 1984 (*A. pulchra* extension 13–16 cm yr⁻¹); Highsmith 1982; Madin et al. 2014.
 - *Thermal sensitivity of *Acropora* / *A. pulchra*:* Hoegh-Guldberg 1999; Hughes et al. 2017; Berg et al. 2020 (persistent photosystem damage under sustained heat).
 - *Heat drains the energy budget:* Warner et al. 1999 (PSII damage); Hoegh-Guldberg 1999; Jokiel & Coles 1990; Jokiel & Coles 1977; Comeau et al. 2014 (calcification suppression).

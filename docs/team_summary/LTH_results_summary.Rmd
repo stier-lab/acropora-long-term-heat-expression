@@ -45,7 +45,7 @@ p.caption, figcaption { font-size: 0.85em; color: #667; margin-top: 0.6em; }
 
 A quick tour of what the phenotype half of LTH shows. We heated *A. pulchra* fragments (<span class="t28">28 °C</span> vs <span class="t31">31 °C</span>), wounded half of them, and tracked healing, growth, physiology, and symbionts for two weeks. The RNA-seq is still to come; this is the picture the phenotypes paint.
 
-Every number here traces to `output/tables/20_master_results.csv`; the full write-up with limitations is in `RESULTS.md`. Coral photos and the design schematic are from the project deck (M. Brzezinski) — see `img/SLIDE_IMAGES_INDEX.md`.
+Every number here traces to `output/tables/20_master_results.csv`; the full write-up with limitations is in `RESULTS.docx`. Coral photos and the design schematic are from the project deck (M. Brzezinski) — see `img/SLIDE_IMAGES_INDEX.docx`.
 
 ## The experiment
 
@@ -149,10 +149,10 @@ knitr::include_graphics(fig("26_thermal_context.png"))
 
 ## Where to find things
 
-- Full results + limitations — `RESULTS.md`
+- Full results + limitations — `RESULTS.docx`
 - Every statistic (source of truth) — `output/tables/20_master_results.csv`
-- Figure catalog — `figures/FIGURE_INDEX.md`
-- Pulled slide photos + provenance — `docs/team_summary/img/SLIDE_IMAGES_INDEX.md`
+- Figure catalog — `figures/FIGURE_INDEX.docx`
+- Pulled slide photos + provenance — `docs/team_summary/img/SLIDE_IMAGES_INDEX.docx`
 - RNA-seq notes — `docs/rnaseq/`
 
 <div class="docfooter">

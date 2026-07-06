@@ -13,7 +13,7 @@ A heat × wounding experiment on the branching coral *A. pulchra*: we clipped th
 
 **The phenotype result:** heat doesn't slow recovery uniformly — corals seal the wound (healing) at the same rate hot or not, but heated corals fail to rebuild skeleton at the tip (regeneration). Heat breaks one phase, not the other. (The paper's lead result is the transcriptomic mechanism; RNA-seq pending. The Intro/Discussion/Abstract and the RNA-seq pipeline are out of scope for this repo.)
 
-**More detail:** full results → `RESULTS.md` · figures → `figures/FIGURE_INDEX.md` · data → `data/DATA_DICTIONARY.md` · RNA-seq notes → `docs/rnaseq/`.
+**More detail:** full results → `RESULTS.docx` · figures → `figures/FIGURE_INDEX.docx` · data → `data/DATA_DICTIONARY.docx` · RNA-seq notes → `docs/rnaseq/`.
 
 ## Quick start
 
@@ -39,31 +39,31 @@ Requires R ≥ 4.3. Everything regenerates from `code/_run_all.R`; **never hand-
 
 ## Key findings (phenotype half)
 
-Organismal context, not the paper's lead result. Numbers trace to `output/tables/20_master_results.csv`; full narrative + caveats in `RESULTS.md`; summary figure `figures/16_manuscript_fig1.pdf`.
+Organismal context, not the paper's lead result. Numbers trace to `output/tables/20_master_results.csv`; full narrative + caveats in `RESULTS.docx`; summary figure `figures/16_manuscript_fig1.pdf`.
 
 1. **Heat broadly compromises physiology.** At 31 °C, photochemistry, pigment, symbionts, and growth all decline while 28 °C holds. By Day 14 heated corals paled (58–67 % vs 0–8 %) and grew **34 % less** (6.10 → 4.03 % skeletal mass change).
 2. **Heat blocks regeneration, not healing** — the headline. Wounds seal equally, but new corallites form in 100 % of ambient vs 33 % of heated corals; 67 % of heated corals heal but never rebuild skeleton (interval-censored Weibull time ratio 1.32, 95 % CI 1.19–1.47, p = 1.4e-7; Cox HR 0.22). See `figures/14_morphology_KM.pdf`.
 3. **Genotype matters: C > D > A.** Genet C defends its physiology and regenerates best; its multivariate state shifts **3.6× less** under heat than A's (PCA displacement 1.02 vs 3.71). See `figures/19_genet_dashboard.pdf`.
 4. **Chronic-sublethal, not acute.** 31 °C sits **~4.4 °C below** the acute CBASS Fv/Fm ED50 (35.4 °C; Cunning et al. 2024) — weeks of sub-bleaching stress, not acute photoinhibition. See `figures/26_thermal_context.pdf`.
 
-**Stats in brief:** per-response linear mixed models (`response ~ treatment × wound × day × thicket + (1|tank) + (1|id)`, type-III); binomial GLMMs (penalized where separation occurs) for the 8 binary healing traits; interval-censored Weibull AFT (+ Kaplan–Meier / Cox) for recovery milestones; PCA for the multivariate summary; DHARMa diagnostics throughout. Genet is a fixed effect (only 3 levels). Growth = % skeletal mass change (no areal calcification — surface area unmeasured). Full methods in `RESULTS.md`.
+**Stats in brief:** per-response linear mixed models (`response ~ treatment × wound × day × thicket + (1|tank) + (1|id)`, type-III); binomial GLMMs (penalized where separation occurs) for the 8 binary healing traits; interval-censored Weibull AFT (+ Kaplan–Meier / Cox) for recovery milestones; PCA for the multivariate summary; DHARMa diagnostics throughout. Genet is a fixed effect (only 3 levels). Growth = % skeletal mass change (no areal calcification — surface area unmeasured). Full methods in `RESULTS.docx`.
 
 ## Repository map
 
 | Path | Contents |
 |---|---|
 | `code/` | Analysis scripts; run order = file number, driven by `code/_run_all.R`. Each has a Purpose/Input/Output header. `sensitivity/` and `diagnostics/` hold robustness and model-diagnostic suites. |
-| `data/raw/` | Exported from Drive — never hand-edited. Decoded in `data/DATA_DICTIONARY.md`. |
+| `data/raw/` | Exported from Drive — never hand-edited. Decoded in `data/DATA_DICTIONARY.docx`. |
 | `data/processed/` | Cleaned `.rds` the pipeline produces (regenerable). |
 | `data/external/` | Cunning et al. 2024 CBASS ED50 reference. |
 | `output/tables/` | Every result as CSV; `20_master_results.csv` is the single source of truth. |
 | `output/` | Also `models/` (fitted `.rds`) and `diagnostics/` (regenerated reports). |
-| `figures/` | All figures (`.pdf` + `.png`); catalogued in `figures/FIGURE_INDEX.md`. |
-| `literature/` | 101 PDFs + `LITERATURE.md` (bibliography + synthesis). |
+| `figures/` | All figures (`.pdf` + `.png`); catalogued in `figures/FIGURE_INDEX.docx`. |
+| `literature/` | 101 PDFs + `LITERATURE.docx` (bibliography + synthesis). |
 | `manuscript/Manuscript_LTH.md` | Working draft — phenotype Methods + Results. |
 | `docs/rnaseq/` | RNA-seq design, analysis proposal, genet-matching, candidate genes (suggestions, not a prescribed pipeline). |
 | `docs/team_summary/` | Shareable results summary (`.Rmd` + HTML) and pulled deck imagery. |
-| `RESULTS.md` | Full results narrative (all responses, genet effects, thermal context, §10 limitations). |
+| `RESULTS.docx` | Full results narrative (all responses, genet effects, thermal context, §10 limitations). |
 | `notes/` | Sequencing plan; `notes/archive/` field notes and superseded plans. |
 
 ## Data & Drive

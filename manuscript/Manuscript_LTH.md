@@ -113,7 +113,7 @@ Placing our design on that calibrated thermal axis also shows what kind of stres
 
 **Discussion**
 
-> **[Discussion]** To be written, with the transcriptomic result as the spine and the phenotype findings (above) as organismal context. Optional phenotype-side framing angles (energetic-triage is one candidate among them, not a recommendation) and a citation bank are at `docs/rnaseq/README.md`. The genet-C resilience axis and the healing→regeneration transition are the natural bridges to the gene-expression results — see `docs/rnaseq/README.md` for suggested contrasts, and `RESULTS.md` §10 for the limitations worth carrying forward.
+> **[Discussion]** To be written, with the transcriptomic result as the spine and the phenotype findings (above) as organismal context. Optional phenotype-side framing angles (energetic-triage is one candidate among them, not a recommendation) and a citation bank are at `docs/rnaseq/README.md`. The genet-C resilience axis and the healing→regeneration transition are the natural bridges to the gene-expression results — see `docs/rnaseq/README.md` for suggested contrasts, and `RESULTS.docx` §10 for the limitations worth carrying forward.
 
 **Acknowledgements**  
 Permits: DIREN 01319, CITES Permit FR2598700116-E  
