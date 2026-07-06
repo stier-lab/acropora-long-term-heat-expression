@@ -13,7 +13,7 @@ The gene-expression analysis is the open piece. The **phenotype half** (Methods 
 - **Phenotype pipeline:** `Rscript code/_run_all.R` (~4 min) rebuilds every figure and table.
 - **Single source of truth for every statistic:** `output/tables/20_master_results.csv` (each row: effect size + test stat + df + p + CI; `_paper_ready.csv` is the formatted version). Cite the table; don't hand-copy.
 - **Audit:** `code/30_manuscript_audit.R` recomputes the phenotype numbers and flags drift (advisory, phenotype only; 15/15 checks pass). It does not check the Intro/Discussion/Abstract or transcriptomics.
-- Phenotype Results are already written in `manuscript/Manuscript_LTH.md`.
+- Phenotype Results are already written in `manuscript/Manuscript_LTH.docx`.
 
 ### Where things live
 

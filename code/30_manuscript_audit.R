@@ -29,7 +29,7 @@
 #   the narrative (Intro/Discussion/Abstract/transcriptomics) is
 #   out of scope. Currently 15/15 checks pass.
 #
-# Input:   manuscript/Manuscript_LTH.md
+# Input:   manuscript/Manuscript_LTH.docx
 #          output/tables/{12_anova_summary,14_interval_survreg,
 #                         14_cox_hazard_ratios,14_cox_genet_LRT,
 #                         14_milestone_lag_summary,15_genet_pca_displacement,
@@ -43,10 +43,18 @@
 # DATA_PROC, ...).
 source(here::here("code", "00_setup.R"))
 
-# Read the whole manuscript into ONE string (lines collapsed with "\n") so the
-# token searches below are simple substring tests against the full text.
-ms_path <- here::here("manuscript", "Manuscript_LTH.md")
-ms <- paste(readLines(ms_path, warn = FALSE), collapse = "\n")
+# Read the whole manuscript into ONE string so the token searches below are
+# simple substring tests against the full text. The manuscript is a .docx, so
+# we extract its plain text with pandoc (advisory step: if pandoc or the file
+# is unavailable, we warn and leave ms empty rather than crash the pipeline).
+ms_path <- here::here("manuscript", "Manuscript_LTH.docx")
+ms <- tryCatch(
+  paste(system2("pandoc", c(shQuote(ms_path), "-t", "plain"),
+                stdout = TRUE, stderr = FALSE), collapse = "\n"),
+  error = function(e) "")
+if (!nzchar(ms))
+  message("NOTE: manuscript text unavailable (needs pandoc + ",
+          "manuscript/Manuscript_LTH.docx); audit tokens will show as missing.")
 # Normalize the typographic minus (U+2212, used in the prose) to ASCII "-" so a
 # value like -0.03 matches formatC()'s "-0.03". (Numbers only; harmless to text.)
 ms <- gsub("−", "-", ms)
@@ -183,7 +191,7 @@ if (n_fail > 0) {
   bad <- audit |> filter(!found)
   warning(sprintf(
     paste0("PHENOTYPE NUMBERS MAY BE STALE (advisory — pipeline NOT failed): ",
-           "%d phenotype number(s) in manuscript/Manuscript_LTH.md no longer ",
+           "%d phenotype number(s) in manuscript/Manuscript_LTH.docx no longer ",
            "match the regenerated analysis outputs.\n%s\n",
            "Fix when convenient: update the flagged value(s) in the manuscript ",
            "from output/tables/20_master_results.csv. (This check covers only the ",

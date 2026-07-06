@@ -60,7 +60,7 @@ Organismal context, not the paper's lead result. Numbers trace to `output/tables
 | `output/` | Also `models/` (fitted `.rds`) and `diagnostics/` (regenerated reports). |
 | `figures/` | All figures (`.pdf` + `.png`); catalogued in `figures/FIGURE_INDEX.docx`. |
 | `literature/` | 101 PDFs + `LITERATURE.docx` (bibliography + synthesis). |
-| `manuscript/Manuscript_LTH.md` | Working draft — phenotype Methods + Results. |
+| `manuscript/Manuscript_LTH.docx` | Working draft — phenotype Methods + Results. |
 | `docs/rnaseq/` | RNA-seq design, analysis proposal, genet-matching, candidate genes (suggestions, not a prescribed pipeline). |
 | `docs/team_summary/` | Shareable results summary (`.Rmd` + HTML) and pulled deck imagery. |
 | `RESULTS.docx` | Full results narrative (all responses, genet effects, thermal context, §10 limitations). |
