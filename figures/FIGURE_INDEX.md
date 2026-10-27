@@ -1,5 +1,31 @@
 # Figure Index
 
+## Publication Candidate (October 16)
+
+`45_physiology_figure2.pdf` and `.png` combine photosynthesis efficiency,
+symbiont density, and 15-day skeletal growth. Temperature columns and wound
+symbols are consistent; descriptive error bars use four tank means. See
+`manuscript/FIGURE_2_LEGEND.md`. Confirm fragment 119's wound label before
+finalizing this candidate. The summary uses this figure as its main physiology
+display; previous distributions remain in an expandable supporting section.
+
+Morphology and trade-off figures were regenerated from the October 16 corrected
+scoring sheets. Details: `docs/provenance/scoring_refresh_2026-10-16.md`.
+
+## Current Genetic Figures (October 13)
+
+The `43_final_snp_*` figures supersede the historical `32_prelim_snp_*` figures
+for current interpretation. Script 43 uses final host clusters and separately
+labels the new symbiont read-mapping shares as rough.
+
+| Figure | Content |
+|---|---|
+| `43_final_snp_structure` | Final genetic coordinates and source-patch memberships |
+| `43_final_snp_design` | Full cluster x temperature x wound x day cell counts, including zeros |
+| `43_final_snp_symbiont_density` | Same-fragment density observations by cluster, day and treatment |
+| `43_final_snp_symbiont_typing` | Rough relative mapped-read shares; not cell proportions |
+| `43_final_snp_diagnostics` | Residual and Q-Q checks; inference remains exploratory |
+
 Updated: 2026-09-09
 
 This is the current figure catalog for the LTH heat x wound repo. The older
@@ -80,3 +106,6 @@ some filenames still use legacy `genet` wording.
   not part of the reader-facing figure set.
 - The Trinity/Ross Hauru figure is preliminary context only. It should not be used to assign
   ED50 values to LTH source patches until DNA-marker matching is complete.
+# October 27 physiology refresh
+
+`45_physiology_figure2.{pdf,png}` now uses the confirmed wound assignment for fragment 119. PAM remains a repeated-measurement trajectory; symbiont density and skeletal growth use side-by-side wound-group boxplots. Standalone panels are `45a_photosynthesis`, `45b_symbiont_boxplots`, and `45c_growth_boxplots`, each in PDF and PNG. Driver: `code/45_physiology_figure2.R`; legend: `manuscript/FIGURE_2_LEGEND.md`. These files are generated locally; availability on GitHub requires a separate push.

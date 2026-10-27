@@ -84,7 +84,7 @@ zoox <- zoox_meta |>
                               labels = c("28C", "31C")),     # baseline = 28C ambient
     biopsy_day      = as.integer(biopsy_day),
     thicket         = str_to_lower(str_squish(thicket)),     # normalize genet label
-    wound           = factor(wound, levels = c("no", "yes")),  # baseline = unwounded
+    wound           = factor(correct_wound_labels(id, wound), levels = c("no", "yes")),
     sa_cm2          = as.numeric(calculated_sa_standard_curve),  # wax-curve SA (cm^2)
     slurry_ml       = as.numeric(slurry_volume_m_l),         # tissue slurry volume (mL)
     zoox_avg_sheet  = as.numeric(average),                   # spreadsheet's mean count

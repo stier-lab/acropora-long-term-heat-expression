@@ -56,7 +56,7 @@ pam <- pam_raw |>
     treatment  = factor(as.integer(treatment), levels = c(28, 31),
                         labels = c("28C", "31C")),
     tank       = as.integer(tank),
-    wound      = factor(wound, levels = c("no", "yes")),  # "no" = baseline level
+    wound      = factor(correct_wound_labels(id, wound), levels = c("no", "yes")),
     thicket    = str_to_lower(str_squish(thicket)),       # genet ID; tidy whitespace/case
     id         = as.integer(id),                 # unique coral fragment ID
     location   = str_to_lower(location),         # probe placement: top vs bottom

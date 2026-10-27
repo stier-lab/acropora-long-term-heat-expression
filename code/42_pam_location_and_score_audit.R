@@ -14,7 +14,7 @@ p <- raw_pam |> janitor::clean_names() |>
   mutate(fv_fm = coalesce(suppressWarnings(as.numeric(fv_fm)), as.numeric(y)/1000),
          location = str_to_lower(str_trim(location)),
          treatment = factor(as.numeric(treatment), c(28,31), c("28C","31C")),
-         wound = factor(wound, c("no","yes")), thicket = factor(thicket),
+         wound = factor(correct_wound_labels(id, wound), c("no","yes")), thicket = factor(thicket),
          tank = factor(as.integer(tank)), id = factor(as.integer(id)), day=as.integer(day))
 stopifnot(all(is.finite(p$fv_fm)), all(p$fv_fm > 0 & p$fv_fm < 1),
           all(p$location %in% c("top","bottom")),

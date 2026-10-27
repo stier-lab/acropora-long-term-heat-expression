@@ -1,0 +1,7 @@
+dataset,n_rows_119,wound,status
+coral_metadata,1,yes,pass
+pam_clean,7,yes,pass
+color_clean,7,yes,pass
+buoyant_weight_clean,1,yes,pass
+symbiont_chl_clean,1,yes,pass
+physio_clean,16,yes,pass

@@ -1,0 +1,8 @@
+response_id,term,p_value_before,p_value_after
+pam_fvfm,treatment:wound,0.883,0.59263
+pam_fvfm,treatment:wound:day,0.23545,0.20685
+color_dscale,treatment:wound,0.31225,0.31225
+color_dscale,treatment:wound:day,0.1817,0.1817
+growth_pct,treatment:wound,0.90832,0.99722
+log_zoox_density,treatment:wound,0.55577,0.53396
+log_zoox_density,treatment:wound:biopsy_day_c,0.14254,0.11169
