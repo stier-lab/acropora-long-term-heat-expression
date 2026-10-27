@@ -1,0 +1,12 @@
+# Candidate Figure 2
+
+**Heat exposure and wounding across three measures of coral condition.**
+(A) Maximum photosynthetic efficiency (Fv/Fm), measured with a pulse-amplitude-modulation fluorometer. (B) Algal symbiont density per unit coral surface area. (C) Percentage change in skeletal mass over 15 days, calculated from buoyant weights. Columns separate 28 degrees C (blue) and 31 degrees C (orange). Open symbols and white boxes indicate unwounded fragments; filled symbols and gray boxes indicate wounded fragments. In A, dashed lines indicate unwounded fragments and solid lines indicate wounded fragments. Colored points in A show the equally weighted mean of four tank means per temperature and wound state; bars show one standard error among tank means. In B and C, boxes show medians and the middle half of fragment values. Whiskers extend to the most extreme observations within 1.5 interquartile ranges of each box; all fragment values appear as gray points. These side-by-side boxes compare groups, not statistically paired fragments or confidence intervals.
+
+Panel A follows the same 48 fragments through seven visits. Tip and base readings were averaged within each fragment before calculating tank means. Panel B uses 192 distinct fragments collected destructively on Days 1, 3, 10, and 15, with 12 per temperature-by-wound group on each day. Panel C uses 48 fragments measured at the beginning and end, with 12 per temperature-by-wound group. Temperature was assigned to four tanks per treatment; individual fragments are not independent temperature replicates. Source patches are pooled for display but retained in the analyses. Day 0 marks clipping; Day -1 is before clipping, not an unheated baseline. No missing measurements were filled.
+
+Files: `figures/45_physiology_figure2.pdf` (vector) and `figures/45_physiology_figure2.png` (300 dpi), 185 x 235 mm. Rebuild with `Rscript code/45_physiology_figure2.R`. Plotted values and sample counts are in `output/tables/45_figure2_summary.csv` and `45_figure2_tank_means.csv`.
+
+Individual panels are exported as `45a_photosynthesis`, `45b_symbiont_boxplots`, and `45c_growth_boxplots`, each in PDF and PNG. Boxes use the corresponding fragment-level processed data directly.
+
+This is a descriptive publication candidate, not a display of model-adjusted predictions. The confirmed wounded assignment for fragment 119 is included. Lower average growth under heat remains uncertain in the tank-level test, and the figure does not establish equivalence between wound treatments.

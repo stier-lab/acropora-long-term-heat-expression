@@ -114,7 +114,7 @@ all_eff <- bind_rows(
       response %in% c("pam_fvfm","color_dscale","growth_pct","log_zoox_density")
         ~ "Condition + growth",
       grepl("hole|polyp|smoothed|pigment", response_label, ignore.case = TRUE)
-        ~ "Wound closure",
+        ~ "Early repair",
       grepl("tip|corallite", response_label, ignore.case = TRUE)
         ~ "Regeneration",
       TRUE
@@ -135,7 +135,7 @@ source_order <- c("A", "D", "C")
 domain_summary <- all_eff |>
   mutate(summary_group = case_when(
     domain == "Condition + growth" ~ "Whole-coral condition + growth",
-    domain == "Wound closure" ~ "Wound closure",
+    domain == "Early repair" ~ "Early repair",
     domain == "Regeneration" ~ "Regeneration",
     TRUE                     ~ domain
   )) |>
@@ -155,7 +155,7 @@ quick_summary <- bind_rows(overall_summary, domain_summary) |>
   mutate(
     summary_group = factor(summary_group,
                            levels = c("All responses", "Whole-coral condition + growth",
-                                      "Wound closure", "Regeneration")),
+                                      "Early repair", "Regeneration")),
     source_label = factor(str_to_upper(thicket), levels = source_order),
     label_y = case_when(
       mean_penalty >= 0       ~ mean_penalty + 0.06,
@@ -433,7 +433,7 @@ decomp <- bind_rows(
       response %in% c("pam_fvfm","color_dscale","growth_pct","log_zoox_density")
         ~ "Condition + growth",
       grepl("hole|polyp|smoothed|pigment", response_label, ignore.case = TRUE)
-        ~ "Wound closure",
+        ~ "Early repair",
       grepl("tip|corallite", response_label, ignore.case = TRUE)
         ~ "Regeneration",
       TRUE ~ "Other"
@@ -568,13 +568,13 @@ p_morph_traits <- ggplot(morph_penalty,
 p_morph <- p_morph_mean + p_morph_traits +
   plot_layout(widths = c(0.8, 2.2), guides = "collect") +
   plot_annotation(
-    title = "Heat delayed healing and regrowth less in source patch C",
+    title = "Estimated repair-timing penalties were smaller in source patch C",
     subtitle = str_wrap(
       "Dots left of the dashed line reached a milestone earlier at 31 °C; dots right of the line were delayed. C clusters near no delay or earlier onset, while A and D show the largest delays for some steps.",
       width = 105
     ),
     caption = str_wrap(
-      "Scores compare source patches within each healing/regrowth step after putting timing effects on a common scale. n = 8 wounded fragments per source patch and step (4 at 28 °C, 4 at 31 °C); pigment over wound for source A is omitted because the timing value could not be estimated.",
+      "Scores compare source patches within each healing/regrowth step after putting timing effects on a common scale. n = 8 wounded fragments per source patch and step (4 at 28 °C, 4 at 31 °C). Sparse pigment observations limit precision; these scores are exploratory.",
       width = 105
     )
   ) &

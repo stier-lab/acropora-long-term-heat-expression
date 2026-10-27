@@ -49,7 +49,7 @@ meta <- meta_raw |>
     thicket        = str_to_lower(str_squish(thicket)),  # force a/c/d lowercase to match palettes
     id             = as.integer(id),                 # fragment ID — the join key
     sample         = str_squish(sample),
-    wound          = factor(wound, levels = c("no", "yes")),  # no = sham, yes = apical tip clipped
+    wound          = factor(correct_wound_labels(id, wound), levels = c("no", "yes")),
     tank           = as.integer(tank),               # physical tank (1 of 8); maps to treatment
     treatment_c    = as.integer(treatment),          # raw numeric temp code (28 or 31)
     # Relabel the numeric temp as an ordered 2-level factor: 28C ambient is the

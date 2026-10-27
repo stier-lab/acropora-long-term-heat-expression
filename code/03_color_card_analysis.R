@@ -63,7 +63,7 @@ cc <- cc_raw |>
     tank      = as.integer(tank),
     thicket   = str_to_lower(str_squish(thicket)),  # genet ID; tidy case/whitespace
     id        = as.integer(id),                  # unique coral fragment ID
-    wound     = factor(wound, levels = c("no", "yes")),  # "no" = reference level
+    wound     = factor(correct_wound_labels(id, wound), levels = c("no", "yes")),
     health_status = str_to_lower(str_squish(health_status)),
     # Paling and hole-at-center are yes/no observations; encode as 2-level
     # factors with "no" first so "yes" is the event of interest.

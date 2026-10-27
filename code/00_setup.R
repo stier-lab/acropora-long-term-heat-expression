@@ -157,6 +157,13 @@ save_fig <- function(plot, name, width = 170, height = 110, units = "mm",
   invisible(plot)
 }
 
+# Confirmed by Molly on 2026-10-19 and checked against Drive metadata on
+# 2026-10-27. Preserve the archived raw exports; correct labels at import.
+correct_wound_labels <- function(id, wound) {
+  ifelse(!is.na(as.integer(id)) & as.integer(id) == 119L,
+         "yes", as.character(wound))
+}
+
 # ---- Session log -----------------------------------------------------------
 # log_session() writes sessionInfo() (R version + every package version) to a
 # text file, recording the software environment so a reader can recreate the

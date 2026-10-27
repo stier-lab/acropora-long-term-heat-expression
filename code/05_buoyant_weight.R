@@ -64,7 +64,7 @@ bw <- raw |>
     # whitespace so spelling variants collapse to one label per genet.
     thicket    = str_to_lower(str_squish(thicket)),
     id         = as.integer(id),
-    wound      = factor(wound, levels = c("no", "yes")),     # baseline = unwounded
+    wound      = factor(correct_wound_labels(id, wound), levels = c("no", "yes")),
     tank       = as.integer(tank),
     treatment  = factor(as.integer(treatment), levels = c(28, 31),
                         labels = c("28C", "31C")),           # baseline = 28C ambient
