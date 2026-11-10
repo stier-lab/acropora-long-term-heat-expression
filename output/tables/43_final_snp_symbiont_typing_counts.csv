@@ -1,0 +1,16 @@
+treatment,wound,day,sym_dominant_reported,n
+28C,no,1,A,12
+28C,no,3,A,12
+28C,no,10,A,12
+28C,yes,1,A,12
+28C,yes,3,A,12
+28C,yes,10,A,12
+31C,no,1,A,12
+31C,no,3,A,12
+31C,no,10,A,12
+31C,yes,1,A,11
+31C,yes,1,D,1
+31C,yes,3,A,12
+31C,yes,10,A,7
+31C,yes,10,C,1
+31C,yes,10,D,4

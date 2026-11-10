@@ -1,8 +1,24 @@
-# RNA-seq / Preliminary SNP Inputs
+# RNA-seq / SNP Inputs
 
-Last updated: 2026-09-03
+Last updated: 2026-10-13
 
 This folder holds local RNA-seq-adjacent inputs received from the Bay lab.
+
+## Current: `FINAL_LTH_genoclusters_syms.csv`
+
+Rachael Bay sent this attachment on October 12, 2026, 22:58 UTC, in
+`Re: updated LTH summary + Day 15 genotype question` (Gmail message
+`1a1325721b8b4c29`). Host SNP clusters are final; symbiont typing is explicitly
+rough. Original attachment bytes are retained. SHA-256:
+`d70ebfb58e4fcd02c67bdbc7f9b66468b3de888630f8e8acaaea72d7a0d0025d`.
+
+Use `code/43_final_snp_integration.R` and its `43_final_snp_*` outputs for current
+work. All 144 memberships match the September file, but genetic PCs have changed.
+The file covers Days 1/3/10, not Day 15. Symbiont A/B/C/D columns sum to one and
+are read-mapping shares, not cell proportions. Preserve `total.ab` as reported;
+its denominator is undocumented and it is not used as symbiont density. Every
+sample label contains `wound`, including 72 controls: join by fragment ID and
+use experimental metadata for wound state. See the October 13 provenance note.
 
 ## `PRELIM_LTH_genoclusters.csv`
 
@@ -16,7 +32,7 @@ the `cov` column, so not all cluster assignments should be treated as final.
 When the full SNP set arrives, replace or supersede this file rather than
 treating it as confirmed genet identity.
 
-Current use:
+Historical use (superseded by script 43):
 
 - Read by `code/32_prelim_snp_phenotype_integration.R`.
 - Joined to `output/tables/31_rnaseq_phenotype_covariates.csv` by parsed coral
