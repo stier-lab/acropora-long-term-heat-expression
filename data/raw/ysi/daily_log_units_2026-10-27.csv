@@ -1,0 +1,11 @@
+column,unit,description
+date,MM/DD/YYYY,date of YSI reading
+time ,HH:MM 24,time YSI was taken
+tank,number,assigned tank number
+treatment,"ambient, heated",Temperature treatment: ambient or heated for experimental cores; NA for baseline E cores.
+TEMP,number,Temperature in fahrenheit from YSI reading
+DO %,Percent,YSI measurement of DO in %
+DO mg/L,mg/L,YSI measurement of DO in %
+SAL,unitless,Salinity measurement from YSI
+PH,unitless,pH measurement from YSI
+notes,NA,notes on temperature adjustments for the tank system

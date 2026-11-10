@@ -63,7 +63,7 @@ coverage_summary <- function() {
   if (!file.exists(here::here(p))) return("model coverage table missing")
   x <- suppressMessages(readr::read_csv(here::here(p), show_col_types = FALSE))
   n_gap <- sum(str_detect(str_to_lower(x$status), "gap|missing|failed|fail"))
-  sprintf("Script 25 snapshot: %d/%d fitted models covered; %d coverage gaps (new script 42 fits audited separately)",
+  sprintf("Script 25 snapshot: %d/%d fitted models covered; %d coverage gaps (new script 42/43 fits audited separately)",
           nrow(x) - n_gap, nrow(x), n_gap)
 }
 
@@ -128,8 +128,8 @@ parent_list <- tibble::tribble(
   "Did source patches A, C, and D respond differently?",
   "source_interactions; multivariate_pca; source_resilience_composite",
   "P5", "External genotype and RNA-seq bridge",
-  "What can the preliminary DNA-marker and external Hauru data tell us without overclaiming identity?",
-  "preliminary_snp; trinity_context; rnaseq_covariates",
+  "What can final host assignments, rough symbiont typing and external Hauru data tell us?",
+  "final_snp; preliminary_snp; trinity_context; rnaseq_covariates",
   "P6", "Trade-off tests",
   "Is resilience associated with a cost in growth or regeneration?",
   "tradeoff_formal; tradeoff_screens",
@@ -144,7 +144,7 @@ parent_list <- tibble::tribble(
       parent_id == "P3" ~ paste("Morphology GLMM:", diag_counts$morph_glmm,
                                 "| Cox:", diag_counts$cox),
       parent_id == "P4" ~ paste("PCA/LRT:", diag_counts$pca_lrt),
-      parent_id == "P5" ~ "Join/design checks done; SNP-symbiont model diagnostics are partial because the SNP file is preliminary and source-patch identity is unresolved.",
+      parent_id == "P5" ~ "Host calls final and joins verified; density-model fit checks partial; symbiont typing rough and endpoint genotypes unavailable.",
       parent_id == "P6" ~ paste("Trade-off models:", diag_counts$tradeoff),
       TRUE ~ paste(model_coverage, "| Figure inventory:", diag_counts$plot_inventory)
     )
@@ -205,15 +205,15 @@ inventory <- tibble::tribble(
 
   "P1", "morphology_score_review", "Tip reversals and missing pigment scores",
   "support",
-  "code/42_pam_location_and_score_audit.R",
-  "output/tables/42_morphology_fragment_review.csv; output/tables/42_morphology_missing_calls.csv",
+  "code/42_pam_location_and_score_audit.R; code/44_corrected_scoring_audit.R",
+  "output/tables/42_morphology_fragment_review.csv; output/tables/42_morphology_missing_calls.csv; output/tables/44_scoring_changes.csv",
   "none",
-  "Descriptive score audit, no imputation or model refit",
+  "Archived-versus-corrected score audit; downstream models refitted",
   "Unique ID/day keys; all wounded-fragment tip sequences and missing calls",
   "yes", "not applicable",
-  "Tip reversals in 116, 121, 143; 23/24 Day 9 pigment calls missing. Original observations preserved.",
-  "Field-note review pending. Separate microscope cohort cannot validate individual main-experiment scores.",
-  "Carry score uncertainty in captions and first-observation interpretation.",
+  "October 16 corrections: three tip-presence calls, one tip-extension call, 287 pigment cells and two microscope tissue-cover scores. Previous exports archived.",
+  "Pigment was measured only on five days. Sparse-event model fits and tank-level timing uncertainty remain limitations.",
+  "Onset bounds use scored visits only; unmeasured pigment is never coded absent.",
 
   "P2", "color_score", "Color-card paling score",
   "primary",
@@ -258,10 +258,10 @@ inventory <- tibble::tribble(
   "figures/04_morphology_trajectories.pdf; figures/04b_morphology_trajectories_by_genet.pdf",
   "Binomial GLMMs and weakly regularized binomial GLMMs for separated/saturated traits",
   "DHARMa residual screens, convergence/singularity checks, separation-aware penalized fits, probability-scale contrasts",
-  "yes", "yes",
+  "yes", "partial",
   paste(diag_counts$morph_glmm, "|", model_coverage),
-  "Several traits saturate or separate; these are handled, and final regeneration inference leans on timing models.",
-  "Primary morphology trajectory result.",
+  "Several traits saturate or separate; some penalized refits fail or remain unstable after the October 16 corrections. Do not use their coefficient tests as resolved evidence.",
+  "Observed attainment counts support the main result; sparse daily-model estimates remain exploratory.",
 
   "P3", "morphology_timing", "Time to wound-healing and regeneration milestones",
   "primary",
@@ -270,10 +270,10 @@ inventory <- tibble::tribble(
   "figures/14_morphology_KM.pdf; figures/14b_morphology_KM_by_genet.pdf",
   "Interval-censored Weibull AFT models, Kaplan-Meier curves, Cox proportional-hazards checks",
   "Cox Schoenfeld proportional-hazards tests, event-count checks, interval-censoring sensitivity",
-  "yes", "yes",
-  paste(diag_counts$cox, "| PH checks have no failures"),
-  "Some low-event subsets are handled/skipped; use overall timing models for the manuscript headline.",
-  "Primary regeneration timing result.",
+  "yes", "partial",
+  paste(diag_counts$cox, "| Inspect trait-specific proportional-hazards checks; sparse subsets remain limited"),
+  "Sparse subsets remain limited. Interval bounds now exclude missing visits, but the overall Weibull uncertainty does not account for shared tanks.",
+  "Timing estimates are supportive; observed attainment counts carry the headline result.",
 
   "P3", "microscope_validation", "Separate microscope/photo morphology cohort",
   "support",
@@ -335,7 +335,19 @@ inventory <- tibble::tribble(
   "Expression counts are not yet included; this is a handoff table.",
   "Defines the RNA-seq analysis spine.",
 
-  "P5", "preliminary_snp", "Preliminary SNP cluster and direct SNP-symbiont check",
+  "P5", "final_snp", "Final host clusters and rough symbiont read typing",
+  "exploratory",
+  "code/43_final_snp_integration.R",
+  "output/tables/43_final_snp_join_audit.csv; output/tables/43_final_snp_model_diagnostics.csv; output/tables/43_final_snp_symbiont_contrasts.csv",
+  "figures/43_final_snp_structure.pdf; figures/43_final_snp_symbiont_typing.pdf; figures/43_final_snp_symbiont_density.pdf",
+  "One-to-one ID join; descriptive composition; tank-intercept LMM of log density in replicated host clusters",
+  "Schema/ID/day/patch/fraction checks; design cells; rank/convergence/singularity; residual spread/Q-Q; leave-one-tank-out; dominant-A-only sensitivity",
+  "yes", "partial",
+  "144 final host memberships unchanged. Full and dominant-A models converge without singularity or rank loss; residual tails/spread remain imperfect.",
+  "Only eight tanks; unbalanced clusters; symbiont typing rough and non-A calls confined to heated wounded fragments. No Day 15 genotypes. Do not infer a causal symbiont effect.",
+  "Current SNP handoff and exploratory density comparison; supersedes script 32.",
+
+  "P5", "preliminary_snp", "Historical preliminary SNP comparison (superseded by script 43)",
   "exploratory",
   "code/32_prelim_snp_phenotype_integration.R",
   "output/tables/32_prelim_snp_join_audit.csv; output/tables/32_prelim_snp_response_joinability.csv; output/tables/32_prelim_snp_symbiont_model_summary.csv; output/tables/32_prelim_snp_symbiont_nested_tests.csv",
@@ -489,8 +501,11 @@ parent_checked <- parent_list |>
   mutate(
     n_analysis_rows = map_int(parent_id, \(id) sum(inventory_checked$parent_id == id)),
     diagnostic_readiness = case_when(
-      parent_id == "P5" ~ "mixed: SNP and Trinity/Ross layers remain preliminary",
+      parent_id == "P5" ~ "host calls final; phenotype inference exploratory; symbiont typing and Hauru context preliminary",
       parent_id == "P2" ~ "primary condition analyses covered; location-model fit checks remain partial",
+      parent_id == "P3" ~ "observed counts usable; daily binary fits unstable; timing uncertainty not fully tank-adjusted",
+      parent_id == "P4" ~ "condition comparisons supported; timing-based composite remains exploratory",
+      parent_id == "P6" ~ "diagnostics run; small samples and influence flags limit trade-off inference",
       parent_id == "P7" ~ model_coverage,
       TRUE ~ "covered for current manuscript use"
     )
@@ -552,9 +567,9 @@ doc <- c(
   paste0("- Cox/time-to-event models: ", diag_counts$cox, "."),
   paste0("- PCA/source-patch LRT checks: ", diag_counts$pca_lrt, "."),
   paste0("- Formal trade-off models: ", diag_counts$tradeoff, "."),
-  "- Main remaining diagnostic gap: the preliminary SNP-by-symbiont linear models need residual/influence checks before any SNP-phenotype result is treated as inferential. They are currently marked as exploratory.",
+  "- Current SNP analysis: script 43 supersedes the preliminary LM with final calls and a tank-intercept model. Residual tails/spread and unbalanced clusters keep its phenotype interpretation exploratory; no Day 15 genotypes were added.",
   "- Molly's recent LTH emails are incorporated here: A/C/D remain source-patch labels, Trinity/Ross ED50 values remain external context, and exact identity requires DNA-marker comparison rather than coordinate matching.",
-  "- Environmental update: recovered Apex files fill Days 0-15 for all tanks. Exact clock-hour exposure still needs the logger time-zone convention confirmed; later YSI spot checks remain unavailable."
+  "- Environmental update: recovered Apex files fill Days 0-15 for all tanks. Exact clock-hour exposure still needs the logger time-zone convention confirmed. The October 27 YSI snapshot supplies all eight tanks on 14 dates within June 4-19 (112 readings; June 4 and 7 missing). Script 09 verifies units, coverage and legacy overlap, and reports descriptive SD across readings separately from SE among tank means."
 )
 
 writeLines(doc, DOC_PATH)

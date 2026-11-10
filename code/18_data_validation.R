@@ -230,8 +230,9 @@ add("microscope", "pigment D8-D15 blanks",
 # readings may be missing; the temperature range confirms tanks held a
 # plausible 27–33 °C window.
 ysi <- readRDS(file.path(DATA_PROC, "ysi_clean.rds"))
-add("ysi", "n daily readings", if (nrow(ysi) > 50) "PASS" else "WARN",
-    nrow(ysi), "~72", "9 tanks × ~8 days")
+ysi_study <- ysi |> filter(date >= as.Date("2025-06-04"), date <= as.Date("2025-06-19"))
+add("ysi", "n study spot checks", if (nrow(ysi_study) == 112) "PASS" else "WARN",
+    nrow(ysi_study), "112", "8 tanks × 14 dates; June 4 and 7 missing")
 add("ysi", "temperature (°C) range", "INFO",
     sprintf("[%.1f, %.1f]", min(ysi$temp_c, na.rm=TRUE),
                             max(ysi$temp_c, na.rm=TRUE)),
