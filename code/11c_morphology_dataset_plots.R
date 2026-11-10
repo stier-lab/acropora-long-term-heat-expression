@@ -529,7 +529,7 @@ coverage_checks <- coverage_grid |>
         all_missing_after_d7 & all_d0_d7_scored ~ "HANDLED",
       dataset == "physio_morphology" &
         as.character(trait) == "pigment_over_wound" &
-        (missing_days == "9" | low_count_days == "9") ~ "HANDLED",
+        missing_days == "0,1,2,5,6,7,8,10,11,13,14" ~ "HANDLED",
       dataset == "microscope_physio" &
         as.character(trait) == "tissue_over_wound" &
         as.character(treatment) == "31C" &
@@ -540,7 +540,7 @@ coverage_checks <- coverage_grid |>
     notes = case_when(
       dataset == "physio_morphology" &
         as.character(trait) == "pigment_over_wound" &
-        (missing_days == "9" | low_count_days == "9") ~ "source sheet has sparse/blank main-morphology pigment scoring at D9; adjacent D8/D10 and endpoint values are scored",
+        missing_days == "0,1,2,5,6,7,8,10,11,13,14" ~ "reviewed October 16 source: pigment measured only D3/D4/D9/D12/D15; other days remain missing",
       dataset == "microscope_physio" &
         as.character(trait) == "tissue_over_wound" &
         as.character(treatment) == "31C" &

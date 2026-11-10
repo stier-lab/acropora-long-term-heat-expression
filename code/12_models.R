@@ -581,7 +581,15 @@ fit_blme <- function(tr) {
       NULL
     }
   )
-  if (is.null(m)) return(NULL)
+  if (is.null(m)) {
+    stale <- file.path(MOD_DIR, paste0("12c_morph_", tr, "_blme.rds"))
+    if (file.exists(stale)) {
+      archive <- file.path(MOD_DIR, "superseded")
+      dir.create(archive, showWarnings = FALSE)
+      file.rename(stale, file.path(archive, paste0(format(Sys.time(), "%Y%m%dT%H%M%S"), "_", basename(stale))))
+    }
+    return(NULL)
+  }
   saveRDS(m, file.path(MOD_DIR, paste0("12c_morph_", tr, "_blme.rds")))
   av <- as.data.frame(car::Anova(m, type = 2)) |>
     tibble::rownames_to_column("term") |>

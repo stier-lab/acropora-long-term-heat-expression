@@ -32,7 +32,7 @@ dir.create(TBL_DIR, recursive = TRUE, showWarnings = FALSE)
 dir.create(DATA_PROC, recursive = TRUE, showWarnings = FALSE)
 
 MICROSCOPE_SOURCE_URL <- "https://docs.google.com/spreadsheets/d/1rB5VFJqQov0ZXsPjRKnjwVDOtiPxgbfMMDm9l_9Y-Q4/edit"
-MICROSCOPE_SOURCE_MODIFIED_UTC <- "2025-10-07T18:34:33.762Z"
+MICROSCOPE_SOURCE_MODIFIED_UTC <- "2026-10-16T16:27:21.528Z"
 
 raw_path <- file.path(DATA_RAW, "microscope_physio", "data.csv")
 if (!file.exists(raw_path)) {

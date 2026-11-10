@@ -205,9 +205,10 @@ for (tr in traits) {
   # (and therefore the by-name drift comparison) line up exactly.
   contrasts(d$treatment) <- contr.treatment(nlevels(d$treatment))
   contrasts(d$thicket) <- contr.treatment(nlevels(d$thicket))
+  d$day_z <- (d$day - mean(d$day)) / (2 * stats::sd(d$day))
   compare_lmm(paste0("12c_morph_", tr, "_blme"),
               file.path(MOD_DIR, paste0("12c_morph_", tr, "_blme.rds")),
-              y ~ treatment * day * thicket + (1|tank) + (1|id),
+              y ~ treatment * day_z * thicket + (1|tank) + (1|id),
               d, family = binomial,
               use_blme = TRUE, fixef.prior = "t(scale = 2.5, df = 1)")
 }

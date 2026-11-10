@@ -124,6 +124,8 @@ compute_events <- function(d, trait) {
   d |>
     filter(wound == "yes", !is.na(day), day >= 0) |>
     mutate(y = .data[[trait]]) |>
+    # An unscored visit cannot bound onset or extend observation follow-up.
+    filter(!is.na(y)) |>
     group_by(id, treatment, tank, thicket) |>
     arrange(day, .by_group = TRUE) |>   # order visits so "first 1" is meaningful
     summarise(
@@ -160,6 +162,7 @@ events <- events |>
     thicket = factor(thicket)
   ) |>
   left_join(trait_interpretation, by = "trait")
+write_csv(events, file.path(TBL_DIR, "14_event_intervals.csv"))
 contrasts(events$treatment) <- contr.treatment(nlevels(events$treatment))
 
 # ---- KM summary tables ----------------------------------------------------

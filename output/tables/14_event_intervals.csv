@@ -1,0 +1,145 @@
+id,treatment,tank,thicket,event_day,event_lower,event_upper,event,trait,event_interpretation
+110,31C,10,d,4,3,4,1,axial_polyp_formation,first observed axial polyp / central hole
+113,28C,3,d,3,2,3,1,axial_polyp_formation,first observed axial polyp / central hole
+115,31C,5,c,3,2,3,1,axial_polyp_formation,first observed axial polyp / central hole
+116,31C,11,c,9,8,9,1,axial_polyp_formation,first observed axial polyp / central hole
+117,28C,6,c,4,3,4,1,axial_polyp_formation,first observed axial polyp / central hole
+118,28C,9,d,3,2,3,1,axial_polyp_formation,first observed axial polyp / central hole
+119,31C,10,c,3,2,3,1,axial_polyp_formation,first observed axial polyp / central hole
+121,28C,9,c,9,8,9,1,axial_polyp_formation,first observed axial polyp / central hole
+126,31C,5,d,4,3,4,1,axial_polyp_formation,first observed axial polyp / central hole
+129,28C,3,c,3,2,3,1,axial_polyp_formation,first observed axial polyp / central hole
+130,28C,12,c,3,2,3,1,axial_polyp_formation,first observed axial polyp / central hole
+133,31C,4,c,3,2,3,1,axial_polyp_formation,first observed axial polyp / central hole
+143,31C,4,d,3,2,3,1,axial_polyp_formation,first observed axial polyp / central hole
+144,28C,12,d,6,5,6,1,axial_polyp_formation,first observed axial polyp / central hole
+146,28C,6,d,4,3,4,1,axial_polyp_formation,first observed axial polyp / central hole
+149,31C,11,d,3,2,3,1,axial_polyp_formation,first observed axial polyp / central hole
+152,31C,4,a,3,2,3,1,axial_polyp_formation,first observed axial polyp / central hole
+166,28C,9,a,4,3,4,1,axial_polyp_formation,first observed axial polyp / central hole
+170,31C,5,a,3,2,3,1,axial_polyp_formation,first observed axial polyp / central hole
+172,28C,3,a,3,2,3,1,axial_polyp_formation,first observed axial polyp / central hole
+174,31C,11,a,3,2,3,1,axial_polyp_formation,first observed axial polyp / central hole
+175,31C,10,a,4,3,4,1,axial_polyp_formation,first observed axial polyp / central hole
+177,28C,12,a,3,2,3,1,axial_polyp_formation,first observed axial polyp / central hole
+179,28C,6,a,4,3,4,1,axial_polyp_formation,first observed axial polyp / central hole
+110,31C,10,d,4,3,4,1,wound_smoothed,first observed smoothed wound surface
+113,28C,3,d,4,3,4,1,wound_smoothed,first observed smoothed wound surface
+115,31C,5,c,4,3,4,1,wound_smoothed,first observed smoothed wound surface
+116,31C,11,c,4,3,4,1,wound_smoothed,first observed smoothed wound surface
+117,28C,6,c,4,3,4,1,wound_smoothed,first observed smoothed wound surface
+118,28C,9,d,4,3,4,1,wound_smoothed,first observed smoothed wound surface
+119,31C,10,c,4,3,4,1,wound_smoothed,first observed smoothed wound surface
+121,28C,9,c,6,5,6,1,wound_smoothed,first observed smoothed wound surface
+126,31C,5,d,4,3,4,1,wound_smoothed,first observed smoothed wound surface
+129,28C,3,c,4,3,4,1,wound_smoothed,first observed smoothed wound surface
+130,28C,12,c,4,3,4,1,wound_smoothed,first observed smoothed wound surface
+133,31C,4,c,4,3,4,1,wound_smoothed,first observed smoothed wound surface
+143,31C,4,d,4,3,4,1,wound_smoothed,first observed smoothed wound surface
+144,28C,12,d,6,5,6,1,wound_smoothed,first observed smoothed wound surface
+146,28C,6,d,6,5,6,1,wound_smoothed,first observed smoothed wound surface
+149,31C,11,d,4,3,4,1,wound_smoothed,first observed smoothed wound surface
+152,31C,4,a,4,3,4,1,wound_smoothed,first observed smoothed wound surface
+166,28C,9,a,6,5,6,1,wound_smoothed,first observed smoothed wound surface
+170,31C,5,a,4,3,4,1,wound_smoothed,first observed smoothed wound surface
+172,28C,3,a,4,3,4,1,wound_smoothed,first observed smoothed wound surface
+174,31C,11,a,4,3,4,1,wound_smoothed,first observed smoothed wound surface
+175,31C,10,a,6,5,6,1,wound_smoothed,first observed smoothed wound surface
+177,28C,12,a,4,3,4,1,wound_smoothed,first observed smoothed wound surface
+179,28C,6,a,4,3,4,1,wound_smoothed,first observed smoothed wound surface
+110,31C,10,d,15,15,Inf,0,pigment_over_wound,first observed pigment over wound; expression can be non-monotonic
+113,28C,3,d,3,0,3,1,pigment_over_wound,first observed pigment over wound; expression can be non-monotonic
+115,31C,5,c,15,12,15,1,pigment_over_wound,first observed pigment over wound; expression can be non-monotonic
+116,31C,11,c,15,12,15,1,pigment_over_wound,first observed pigment over wound; expression can be non-monotonic
+117,28C,6,c,15,15,Inf,0,pigment_over_wound,first observed pigment over wound; expression can be non-monotonic
+118,28C,9,d,15,15,Inf,0,pigment_over_wound,first observed pigment over wound; expression can be non-monotonic
+119,31C,10,c,15,12,15,1,pigment_over_wound,first observed pigment over wound; expression can be non-monotonic
+121,28C,9,c,9,4,9,1,pigment_over_wound,first observed pigment over wound; expression can be non-monotonic
+126,31C,5,d,15,15,Inf,0,pigment_over_wound,first observed pigment over wound; expression can be non-monotonic
+129,28C,3,c,15,15,Inf,0,pigment_over_wound,first observed pigment over wound; expression can be non-monotonic
+130,28C,12,c,15,15,Inf,0,pigment_over_wound,first observed pigment over wound; expression can be non-monotonic
+133,31C,4,c,15,12,15,1,pigment_over_wound,first observed pigment over wound; expression can be non-monotonic
+143,31C,4,d,15,15,Inf,0,pigment_over_wound,first observed pigment over wound; expression can be non-monotonic
+144,28C,12,d,4,3,4,1,pigment_over_wound,first observed pigment over wound; expression can be non-monotonic
+146,28C,6,d,3,0,3,1,pigment_over_wound,first observed pigment over wound; expression can be non-monotonic
+149,31C,11,d,15,15,Inf,0,pigment_over_wound,first observed pigment over wound; expression can be non-monotonic
+152,31C,4,a,15,15,Inf,0,pigment_over_wound,first observed pigment over wound; expression can be non-monotonic
+166,28C,9,a,9,4,9,1,pigment_over_wound,first observed pigment over wound; expression can be non-monotonic
+170,31C,5,a,4,3,4,1,pigment_over_wound,first observed pigment over wound; expression can be non-monotonic
+172,28C,3,a,15,15,Inf,0,pigment_over_wound,first observed pigment over wound; expression can be non-monotonic
+174,31C,11,a,3,0,3,1,pigment_over_wound,first observed pigment over wound; expression can be non-monotonic
+175,31C,10,a,15,15,Inf,0,pigment_over_wound,first observed pigment over wound; expression can be non-monotonic
+177,28C,12,a,15,15,Inf,0,pigment_over_wound,first observed pigment over wound; expression can be non-monotonic
+179,28C,6,a,15,15,Inf,0,pigment_over_wound,first observed pigment over wound; expression can be non-monotonic
+110,31C,10,d,6,5,6,1,tip_exist,first observed visible tip; expression can be non-monotonic
+113,28C,3,d,6,5,6,1,tip_exist,first observed visible tip; expression can be non-monotonic
+115,31C,5,c,8,7,8,1,tip_exist,first observed visible tip; expression can be non-monotonic
+116,31C,11,c,6,5,6,1,tip_exist,first observed visible tip; expression can be non-monotonic
+117,28C,6,c,8,7,8,1,tip_exist,first observed visible tip; expression can be non-monotonic
+118,28C,9,d,6,5,6,1,tip_exist,first observed visible tip; expression can be non-monotonic
+119,31C,10,c,8,7,8,1,tip_exist,first observed visible tip; expression can be non-monotonic
+121,28C,9,c,15,15,Inf,0,tip_exist,first observed visible tip; expression can be non-monotonic
+126,31C,5,d,6,5,6,1,tip_exist,first observed visible tip; expression can be non-monotonic
+129,28C,3,c,6,5,6,1,tip_exist,first observed visible tip; expression can be non-monotonic
+130,28C,12,c,8,7,8,1,tip_exist,first observed visible tip; expression can be non-monotonic
+133,31C,4,c,6,5,6,1,tip_exist,first observed visible tip; expression can be non-monotonic
+143,31C,4,d,15,15,Inf,0,tip_exist,first observed visible tip; expression can be non-monotonic
+144,28C,12,d,6,5,6,1,tip_exist,first observed visible tip; expression can be non-monotonic
+146,28C,6,d,6,5,6,1,tip_exist,first observed visible tip; expression can be non-monotonic
+149,31C,11,d,6,5,6,1,tip_exist,first observed visible tip; expression can be non-monotonic
+152,31C,4,a,6,5,6,1,tip_exist,first observed visible tip; expression can be non-monotonic
+166,28C,9,a,6,5,6,1,tip_exist,first observed visible tip; expression can be non-monotonic
+170,31C,5,a,6,5,6,1,tip_exist,first observed visible tip; expression can be non-monotonic
+172,28C,3,a,6,5,6,1,tip_exist,first observed visible tip; expression can be non-monotonic
+174,31C,11,a,8,7,8,1,tip_exist,first observed visible tip; expression can be non-monotonic
+175,31C,10,a,8,7,8,1,tip_exist,first observed visible tip; expression can be non-monotonic
+177,28C,12,a,6,5,6,1,tip_exist,first observed visible tip; expression can be non-monotonic
+179,28C,6,a,6,5,6,1,tip_exist,first observed visible tip; expression can be non-monotonic
+110,31C,10,d,8,7,8,1,tip_extension,first observed tip extension; expression can be non-monotonic
+113,28C,3,d,8,7,8,1,tip_extension,first observed tip extension; expression can be non-monotonic
+115,31C,5,c,15,14,15,1,tip_extension,first observed tip extension; expression can be non-monotonic
+116,31C,11,c,14,13,14,1,tip_extension,first observed tip extension; expression can be non-monotonic
+117,28C,6,c,8,7,8,1,tip_extension,first observed tip extension; expression can be non-monotonic
+118,28C,9,d,8,7,8,1,tip_extension,first observed tip extension; expression can be non-monotonic
+119,31C,10,c,10,9,10,1,tip_extension,first observed tip extension; expression can be non-monotonic
+121,28C,9,c,15,15,Inf,0,tip_extension,first observed tip extension; expression can be non-monotonic
+126,31C,5,d,8,7,8,1,tip_extension,first observed tip extension; expression can be non-monotonic
+129,28C,3,c,8,7,8,1,tip_extension,first observed tip extension; expression can be non-monotonic
+130,28C,12,c,8,7,8,1,tip_extension,first observed tip extension; expression can be non-monotonic
+133,31C,4,c,8,7,8,1,tip_extension,first observed tip extension; expression can be non-monotonic
+143,31C,4,d,15,15,Inf,0,tip_extension,first observed tip extension; expression can be non-monotonic
+144,28C,12,d,8,7,8,1,tip_extension,first observed tip extension; expression can be non-monotonic
+146,28C,6,d,8,7,8,1,tip_extension,first observed tip extension; expression can be non-monotonic
+149,31C,11,d,8,7,8,1,tip_extension,first observed tip extension; expression can be non-monotonic
+152,31C,4,a,8,7,8,1,tip_extension,first observed tip extension; expression can be non-monotonic
+166,28C,9,a,8,7,8,1,tip_extension,first observed tip extension; expression can be non-monotonic
+170,31C,5,a,8,7,8,1,tip_extension,first observed tip extension; expression can be non-monotonic
+172,28C,3,a,8,7,8,1,tip_extension,first observed tip extension; expression can be non-monotonic
+174,31C,11,a,8,7,8,1,tip_extension,first observed tip extension; expression can be non-monotonic
+175,31C,10,a,15,15,Inf,0,tip_extension,first observed tip extension; expression can be non-monotonic
+177,28C,12,a,8,7,8,1,tip_extension,first observed tip extension; expression can be non-monotonic
+179,28C,6,a,8,7,8,1,tip_extension,first observed tip extension; expression can be non-monotonic
+110,31C,10,d,15,15,Inf,0,new_corallites_on_tip,first observed new corallites on tip
+113,28C,3,d,12,11,12,1,new_corallites_on_tip,first observed new corallites on tip
+115,31C,5,c,14,13,14,1,new_corallites_on_tip,first observed new corallites on tip
+116,31C,11,c,15,15,Inf,0,new_corallites_on_tip,first observed new corallites on tip
+117,28C,6,c,14,13,14,1,new_corallites_on_tip,first observed new corallites on tip
+118,28C,9,d,12,11,12,1,new_corallites_on_tip,first observed new corallites on tip
+119,31C,10,c,14,13,14,1,new_corallites_on_tip,first observed new corallites on tip
+121,28C,9,c,15,14,15,1,new_corallites_on_tip,first observed new corallites on tip
+126,31C,5,d,15,15,Inf,0,new_corallites_on_tip,first observed new corallites on tip
+129,28C,3,c,12,11,12,1,new_corallites_on_tip,first observed new corallites on tip
+130,28C,12,c,14,13,14,1,new_corallites_on_tip,first observed new corallites on tip
+133,31C,4,c,14,13,14,1,new_corallites_on_tip,first observed new corallites on tip
+143,31C,4,d,15,15,Inf,0,new_corallites_on_tip,first observed new corallites on tip
+144,28C,12,d,12,11,12,1,new_corallites_on_tip,first observed new corallites on tip
+146,28C,6,d,12,11,12,1,new_corallites_on_tip,first observed new corallites on tip
+149,31C,11,d,12,11,12,1,new_corallites_on_tip,first observed new corallites on tip
+152,31C,4,a,15,15,Inf,0,new_corallites_on_tip,first observed new corallites on tip
+166,28C,9,a,12,11,12,1,new_corallites_on_tip,first observed new corallites on tip
+170,31C,5,a,15,15,Inf,0,new_corallites_on_tip,first observed new corallites on tip
+172,28C,3,a,12,11,12,1,new_corallites_on_tip,first observed new corallites on tip
+174,31C,11,a,15,15,Inf,0,new_corallites_on_tip,first observed new corallites on tip
+175,31C,10,a,15,15,Inf,0,new_corallites_on_tip,first observed new corallites on tip
+177,28C,12,a,12,11,12,1,new_corallites_on_tip,first observed new corallites on tip
+179,28C,6,a,12,11,12,1,new_corallites_on_tip,first observed new corallites on tip

@@ -13,6 +13,7 @@ _targets/
 # Regenerable outputs — kept ignored by default; un-ignore once stable
 output/figures/*.pdf
 output/models/*.rds
+output/models/**/*.rds
 
 # OS
 .DS_Store

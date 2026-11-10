@@ -589,7 +589,7 @@ action_items <- tibble::tribble(
   "Resolve final genetic identity first; then decide whether Day 15 genotyping answers the clustering question without extra expression libraries.",
   "Healing/regeneration staging",
   "Separate early healing from later regeneration stages.",
-  sprintf("The microscope-photo cohort has 16 all-wounded corals. For coenosarc/tissue cover, 14/14 scored corals are positive by Day 1 and %d/%d are positive by Day 2. The main physiology cohort has 48 fragments; the stage-timing subset is 12 wounded fragments per temperature.",
+  sprintf("The microscope-photo cohort has 16 all-wounded corals. The October 16 corrections record all 16 covered on Day 1; %d/%d are positive by Day 2. The main physiology cohort has 48 fragments; the stage-timing subset is 12 wounded fragments per temperature.",
           coenosarc_d2$n_reached_by_day2, coenosarc_d2$n_total),
   "Updated the one-healing-step plus five-regeneration-step framing with Molly's corrected sample-size language.",
   "Use the microscope-photo cohort for coenosarc healing only, likely as supplement support; keep later stages tied to the main morphology data.",

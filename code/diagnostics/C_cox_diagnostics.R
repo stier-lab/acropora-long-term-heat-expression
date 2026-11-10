@@ -78,6 +78,7 @@ compute_events <- function(d, trait) {
   d |>
     filter(wound == "yes", !is.na(day), day >= 0) |>
     mutate(y = .data[[trait]]) |>
+    filter(!is.na(y)) |>
     group_by(id, treatment, tank, thicket) |>
     arrange(day, .by_group = TRUE) |>
     summarise(

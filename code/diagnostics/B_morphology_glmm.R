@@ -160,7 +160,16 @@ diagnose_one <- function(mfile) {
   # If a penalized blme refit exists for this trait (script 12c), a convergence
   # or separation problem here is already dealt with => HANDLED instead of WARN.
   blme_path <- file.path(MOD_DIR, sprintf("12c_morph_%s_blme.rds", trait))
-  blme_available <- file.exists(blme_path)
+  # A saved fit is not evidence that a failed or separated refit was resolved.
+  blme_available <- FALSE
+  if (file.exists(blme_path)) {
+    bm <- readRDS(blme_path)
+    bs <- suppressWarnings(summary(bm)$coefficients[, "Std. Error"])
+    blme_available <- identical(as.numeric(model.response(model.frame(bm))), as.numeric(d$y)) &&
+      all(is.finite(bs)) && all(bs < 50) &&
+      is.null(bm@optinfo$conv$lme4$messages) &&
+      (is.null(bm@optinfo$conv$opt) || all(bm@optinfo$conv$opt == 0))
+  }
   conv_msgs <- character(0)
   opt_conv  <- m@optinfo$conv$opt              # optimizer code: 0 = converged
   lme4_msgs <- m@optinfo$conv$lme4$messages    # any "failed to converge" notes
@@ -304,6 +313,11 @@ diagnose_one <- function(mfile) {
                           statistic = NA_real_, p_value = NA_real_,
                           status = "HANDLED",
                           notes = "skipped refit=TRUE; underdispersion already handled as saturated closure trait")
+    } else if (!is.na(disp$p.value) && disp$p.value < 0.05 &&
+               (!conv_ok || sep_status %in% c("FAIL", "WARN"))) {
+      res <- add_row_safe(res, trait, "DHARMa_dispersion_refit",
+                          statistic = NA_real_, p_value = NA_real_, status = "WARN",
+                          notes = "not run: base model fails convergence or separation screen; refitting simulated data cannot establish validity of this fit. Revise the model before using coefficient inference.")
     } else if (!is.na(disp$p.value) && disp$p.value < 0.05) {
       dh2 <- tryCatch(DHARMa::simulateResiduals(m, n = 200, refit = TRUE,
                                                 plot = FALSE, seed = 42),

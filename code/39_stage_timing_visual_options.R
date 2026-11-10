@@ -221,7 +221,7 @@ p_cumulative <- ggplot(cumulative, aes(day, pct_reached, colour = treatment,
     subtitle = "All fragments stay in the denominator, including those that had not reached a stage",
     x = "Day",
     y = "Fragments first seen at this stage by each day",
-    caption = "Tissue cover: 8 fragments per temperature in a separate photo experiment. Other panels: 12 per temperature.\nTwo heated fragments lacked a Day 1 tissue-cover score; both were first recorded as covered on Day 2."
+    caption = "Tissue cover: 8 fragments per temperature in a separate photo experiment, all covered on Day 1.\nOther panels: 12 fragments per temperature in the main experiment."
   ) +
   theme_pub(10) +
   theme(legend.position = "bottom")
