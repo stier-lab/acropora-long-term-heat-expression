@@ -1,25 +1,34 @@
 # LTH: 15-day heat x wound experiment with RNA-seq samples in *Acropora pulchra*
 
-> Project #17 · Gump Station, Mo'orea, French Polynesia · May–July 2025 · Repo: `stier-lab/regen-2025-acropora-lth-expression` · Updated 2026-09-05
+**October 27 update:** The results summary and analyses include fragment 119's confirmed wounded assignment. Figure 2 now shows side-by-side wound-group boxplots for symbiont density and growth, with standalone panels. The heat-by-wound conclusion is unchanged. See `docs/provenance/summary_refresh_2026-10-27.md` and the rebuilt `docs/team_summary/LTH_results_summary.html`. Molly's Google Doc has not been edited.
+
+**October 13 update:** Rachael's final host SNP clusters and rough symbiont
+typing are integrated through `code/43_final_snp_integration.R`. Current
+sequencing covariates: `output/tables/43_final_snp_rnaseq_covariates.csv`.
+All 144 assignments retain their preliminary membership; genetic coordinates
+are updated. These are Days 1/3/10 samples, not Day 15. The September `32_*`
+outputs are historical. Expression results are still pending.
+
+> Project #17 · Gump Station, Mo'orea, French Polynesia · May–July 2025 · Repo: `stier-lab/regen-2025-acropora-lth-expression` · Updated 2026-10-27
 
 <p align="center">
   <img src="docs/team_summary/img/healing_ambient_vs_heated.gif" width="720"
        alt="Wound-healing time-lapse, ambient 28 °C vs heated 31 °C, Day 0 to Day 15"><br>
   <sub><b>Wound healing over 15 days.</b> <b>Ambient&nbsp;28&nbsp;°C</b> (left, blue) closes the wound <b>and</b> regrows the tip;
-  <b>Heated&nbsp;31&nbsp;°C</b> (right, orange) closes the wound but never regenerates.</sub>
+  <b>Heated&nbsp;31&nbsp;°C</b> (right, orange) re-covers the wound and rebuilds a tip, but has not budded new corallites by Day 15.</sub>
 </p>
 
 A 15-day heat x wound experiment on the branching coral *A. pulchra*: we clipped about 1 cm from the growing tip of half the fragments, held corals at **28 °C** or **31 °C (+3 °C)**, and tracked tissue closure, skeletal regrowth, growth, physiology, and symbionts for 15 days. We also collected tissue for RNA-seq.
 
-**The phenotype result:** heat does not slow recovery uniformly. Corals heal early wounds with tissue at the same rate at 28 °C and 31 °C, but heated corals often fail to regenerate the apical skeleton and new corallites. Here, healing means the coenosarc tissue sheet re-covers the wound. Regeneration means later rebuilding steps such as tip extension and new radial corallite budding. Expression counts are still pending/integration-ready; this repo is the phenotype analysis, RNA-seq sample handoff, and an explicitly preliminary SNP-cluster covariate check.
+**The phenotype result:** all 16 fragments in the separate microscope cohort had tissue covering the wound by Day 1. In the main experiment, new corallites were observed by Day 15 in 12/12 ambient and 4/12 heated wounded fragments. These separate cohorts do not establish a within-fragment sequence, and we do not know whether the remaining heated fragments would have budded later. Final host SNP assignments are integrated for 144 early samples; phenotype associations remain exploratory and expression results are pending.
 
-**More detail:** plain-language team summary → `docs/team_summary/LTH_results_summary.html` · analysis/diagnostic inventory → `docs/analysis_diagnostic_inventory.md` · next-analysis roadmap → `docs/next_analysis_roadmap.md` · full results → `RESULTS.docx` · figures → `figures/FIGURE_INDEX.md` · data → `data/DATA_DICTIONARY.docx` · docs map → `docs/README.md` · RNA-seq notes → `docs/rnaseq/`.
+**Which outputs are current:** `docs/OUTPUTS_STATUS.md` (also explains why files show as changed after a run). **More detail:** plain-language team summary → `docs/team_summary/LTH_results_summary.html` · analysis/diagnostic inventory → `docs/analysis_diagnostic_inventory.md` · next-analysis roadmap → `docs/next_analysis_roadmap.md` · full results → `RESULTS.docx` · figures → `figures/FIGURE_INDEX.md` · data → `data/DATA_DICTIONARY.docx` · docs map → `docs/README.md` · RNA-seq notes → `docs/rnaseq/`.
 
 **Terms used consistently here:**
 
 - **Wounded** = about 1 cm removed from the growing tip on D0 with a band saw.
 - **No-wound control** = fragments assigned to the no-wound level. The exact sham/handling procedure still needs to be verified before manuscript wording calls this a "sham" control.
-- **Source patch label** = field source-patch labels A, C, and D. These are stored as `thicket` or legacy `genet` columns in some code and tables. Rachael Bay's preliminary 2026-09-02 SNP clusters suggest C is coherent while A and D are mixed source-patch labels. A, C, and D are not confirmed genetic individuals and are not yet matched to Cunning et al. (2024)'s numbered genets.
+- **Source patch label** = field labels A, C, and D, stored as `thicket` or legacy `genet` columns. Final SNP assignments place all 48 early C samples in one cluster; A and D contain multiple clusters. The Day 15 fragments remain ungenotyped. Source labels are not genetic assignments or confirmed matches to the external Hauru colonies.
 - **Healing vs regeneration** = healing is early tissue re-covering of the wound; regeneration is later rebuilding of structures such as the tip and new radial corallites.
 - **Species wording** = the repo historically uses *Acropora pulchra* and `apulchra` filenames. Trinity Conn's 2026-08-10 note recommends *Acropora cf. pulchra* for the Mo'orea animal until the taxonomy is settled, because the Mo'orea form may not be the Australian type specimen of *A. pulchra*.
 
@@ -47,14 +56,15 @@ Requires R ≥ 4.3. Everything regenerates from `code/_run_all.R`; **never hand-
 
 ## Key findings (phenotype half)
 
-Organismal context, not the paper's lead result. Numbers trace to `output/tables/20_master_results.csv`; full narrative + caveats in `RESULTS.docx`; summary figure `figures/16_manuscript_fig1.pdf`.
+Current results and limitations are in `docs/team_summary/LTH_results_summary.html`. `RESULTS.docx` and the local manuscript draft are older documents and have not been reconciled in this refresh. Analysis-specific tables in `output/tables/` provide the numerical record.
 
-1. **Heat broadly compromises physiology.** At 31 °C, photochemistry, pigment, symbionts, and growth all decline while 28 °C holds. By Day 14 heated corals paled (58–67 % vs 0–8 %) and grew **34 % less** (6.10 → 4.03 % skeletal mass change).
-2. **Heat blocks regeneration, not healing** — the headline. Wounds seal equally, but new corallites form in 100 % of ambient vs 33 % of heated corals; 67 % of heated corals heal but never rebuild skeleton (interval-censored Weibull time ratio 1.32, 95 % CI 1.19–1.47, p = 1.4e-7; Cox HR 0.22). See `figures/14_morphology_KM.pdf`.
-3. **Source identity matters: C > D > A.** Source C defends its physiology and regenerates best; its multivariate state shifts **3.6× less** under heat than A's (PCA displacement 1.02 vs 3.71). Preliminary SNP clusters support C as genetically coherent but split A and D across several clusters, so do not call A/C/D final genets yet. See `figures/19_genet_dashboard.pdf` and `figures/32_prelim_snp_structure.pdf`.
-4. **Chronic-sublethal, not acute.** 31 °C sits **~4.4 °C below** the acute CBASS Fv/Fm ED50 (35.4 °C; Cunning et al. 2024) — weeks of sub-bleaching stress, not acute photoinhibition. See `figures/26_thermal_context.pdf`.
+1. **Heat reduced coral condition.** Photosynthesis efficiency, color, and symbiont density declined under heat. Mean skeletal mass gain was 34% lower (6.10% versus 4.03%), but the tank-level growth test remains uncertain (p = 0.057).
+2. **Wound covering did not imply later regrowth.** Tissue cover was recorded by Day 1 in all 16 microscope fragments. In the separate main cohort, new corallites were observed by Day 15 in 12/12 ambient versus 4/12 heated wounded fragments. This does not mean heat permanently stopped regeneration or that the others never rebuilt skeleton.
+3. **Source patch C was less affected by heat.** The clearest evidence is in photosynthesis efficiency, color, and symbiont density. Genetic identity is not established for the endpoint fragments. See `figures/19_genet_dashboard.pdf` and `figures/43_final_snp_structure.pdf`.
+4. **Exposure duration matters.** The 31 degrees C treatment is 4.4 degrees below an external short-test mean half-drop temperature of 35.4 degrees C. That external value is not a safe threshold for weeks of exposure or a measured threshold for our fragments.
+5. **Trade-offs remain unresolved.** We found no clear growth cost of regeneration. Small samples, source-patch differences, and simultaneous measurement of growth and regrowth limit causal interpretation.
 
-**Models used:** per-measurement linear mixed models (`response ~ treatment x wound x day x thicket + (1|tank) + (1|id)`, type-III; `thicket` is the legacy source-patch column); binomial GLMMs (penalized where separation occurs) for the 8 binary healing traits; interval-censored Weibull AFT (+ Kaplan-Meier / Cox) for recovery milestones; PCA for the multivariate summary; DHARMa diagnostics throughout. Source patch is a fixed effect because there are only 3 source-patch labels. Growth = % skeletal mass change (no areal calcification because whole-fragment surface area was not measured). Full methods are in `RESULTS.docx`.
+**Models used:** response-specific mixed models with tank effects and, for repeated measurements, fragment effects; daily binary morphology models; interval-censored and Cox timing models; and multivariate summaries. Source patch is a fixed effect because there are only three patches. Growth is percent skeletal mass change, not areal calcification. Some binary morphology fits remain unstable despite penalization, and timing uncertainty is not fully tank-adjusted. Do not interpret their small p-values as established evidence. See `docs/analysis_diagnostic_inventory.md` for the current checks and gaps.
 
 The separate 16-fragment microscope/photo cohort is analyzed in `code/11_microscope_physio.R` as supporting visual-validation evidence. It is not pooled with the main morphology models because it is wounded-only and includes only source-patch labels A/C. Cross-dataset morphology plots that keep the cohorts separate are generated by `code/11c_morphology_dataset_plots.R` as `figures/11c_morphology_dataset_all_trait_trajectories.pdf`, `figures/11d_morphology_dataset_shared_trait_comparison.pdf`, and `figures/11e_morphology_dataset_event_summary.pdf`. The same script writes plot-matched endpoint and timing tests plus diagnostic coverage checks as `output/tables/11f_morphology_dataset_endpoint_tests.csv`, `output/tables/11f_morphology_dataset_logrank_tests.csv`, `output/tables/11f_morphology_dataset_analysis_manifest.csv`, `output/diagnostics/11f_morphology_dataset_diagnostic_checks.csv`, and `output/diagnostics/11f_morphology_dataset_analysis_report.md`.
 
@@ -96,5 +106,5 @@ The ordered analysis queue is in `docs/next_analysis_roadmap.md`. In short: fini
 
 ## License and funding
 
-**License:** Code MIT · Data CC-BY 4.0 (until publication, then DOI) · Manuscript all rights reserved.
+**License:** Code MIT · Data CC-BY 4.0 (until publication, then DOI) · Images (separate Zenodo record, in preparation) CC BY-NC 4.0 · Manuscript all rights reserved.
 **Funding:** NSF support to the project investigators. Field work at the UC Berkeley Gump Research Station, Mo'orea, French Polynesia.
