@@ -1,14 +1,17 @@
 # Next Analysis Roadmap
 
-Last checked: 2026-09-09
+Last checked: 2026-10-13
 
 This roadmap organizes the analyses that would most improve the project after the
 current phenotype summary. It is a planning document, not a results document.
 The phenotype pipeline is current; RNA sequencing (RNA-seq) expression counts
-are not integrated yet. Rachael Bay's 2026-09-02 single-nucleotide polymorphism
-(SNP) cluster file is preliminary and should be replaced by final SNP, genetic
-similarity, or genetic relatedness (kinship) results before final genetic
-wording.
+are not integrated yet. Rachael Bay's October 12 final single-nucleotide
+polymorphism (SNP) host clusters now supersede the September file. Script 43
+provides the current genetic handoff and rough symbiont typing; the older
+final-genetics action items below are satisfied for these 144 early samples,
+but not for Day 15 identity or external Hauru matching. Do not delay the paper
+for new Day 15 sequencing; prioritize expression analysis with the existing
+samples and check genetic treatment coverage before fitting cluster effects.
 
 Molly's 2026-09-03 forwarded email adds Trinity Conn's preliminary Hauru colony table from
 the Ross Cunning / Trinity Conn work. That file is now stored as external

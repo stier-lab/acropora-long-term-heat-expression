@@ -14,11 +14,20 @@ for compatibility, but carry the caveat in manuscript-facing wording.
 
 ## 1. Purpose & status
 
+**Current genetic handoff, October 13, 2026:** use
+`output/tables/43_final_snp_rnaseq_covariates.csv`, built by script 43 from
+Rachael's October 12 final host-cluster file. All 144 assignments are unchanged;
+PCs are updated. Rough symbiont read shares are retained separately. The older
+September SNP discussion below is historical and is superseded by this handoff.
+No Day 15 genotypes or expression counts were delivered. Rachael and Shreya
+will rerun expression processing; check design rank and within-treatment
+coverage before adding host cluster, and treat symbiont typing as a sensitivity
+question rather than automatically adjusting for a possible treatment response.
+
 The RNA-seq analysis has not been run yet. The **phenotype analysis** (Methods + Results — physiology, morphology, growth, source-patch variation, thermal context) is finished and reproduces from one command; the narrative (Introduction, Discussion, Abstract) is out of scope here. Treat this file as background for the analyst, not a prescribed pipeline.
 
-- **RNA-seq status:** expression counts are not integrated in this repo yet, but
-  preliminary SNP cluster/PC results for the 144 RNA-seq libraries were received
-  from Rachael Bay on 2026-09-02 and added as an exploratory covariate layer.
+- **RNA-seq status:** final host clusters/PCs are integrated for 144 libraries;
+  expression counts remain pending and symbiont read typing remains rough.
 - **Phenotype pipeline:** `Rscript code/_run_all.R` (~4 min) rebuilds every figure and table.
 - **Single source of truth for every statistic:** `output/tables/20_master_results.csv` (each row: effect size + test stat + df + p + CI; `_paper_ready.csv` is the formatted version). Cite the table; don't hand-copy.
 - **Audit:** `code/30_manuscript_audit.R` recomputes the phenotype numbers and flags drift (advisory, phenotype only; 15/15 checks pass). It does not check the Intro/Discussion/Abstract or transcriptomics.

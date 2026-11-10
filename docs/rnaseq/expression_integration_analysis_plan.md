@@ -36,8 +36,8 @@ Useful repo anchors:
 | Paper-ready phenotype summary | `output/tables/20_master_results_paper_ready.csv` |
 | Per-library phenotype covariates | `output/tables/31_rnaseq_phenotype_covariates.csv` |
 | Raw library lookup | `output/tables/31_rnaseq_library_lookup_raw.csv` |
-| Preliminary SNP cluster covariates | `output/tables/32_prelim_snp_rnaseq_covariates.csv` |
-| Preliminary SNP join/design audit | `output/tables/32_prelim_snp_join_audit.csv`, `output/tables/32_prelim_snp_response_joinability.csv`, `output/tables/32_prelim_snp_design_balance.csv` |
+| Current final host clusters and rough symbiont typing | `output/tables/43_final_snp_rnaseq_covariates.csv` |
+| Final SNP join/design audit | `output/tables/43_final_snp_join_audit.csv`, `output/tables/43_final_snp_response_joinability.csv`, `output/tables/43_final_snp_design_balance.csv` |
 | Trinity/Ross preliminary Hauru candidate-match context | `docs/provenance/trinity_conn_hauru_context.md` |
 | Trinity/Ross cleaned table, nearest candidates, and map | `data/external/trinity_conn_hauru_colonies_2026-08-10.csv`, `output/tables/26b_trinity_hauru_*.csv`, `figures/26b_trinity_hauru_context.png` |
 | Project-level next-analysis roadmap | `docs/next_analysis_roadmap.md` |
@@ -57,10 +57,14 @@ Important limits:
 - A, C, and D are field source-patch labels. Some code and tables still store
   these labels as `thicket` or legacy `genet` columns, but they are not yet
   matched to the Cunning CBASS genets.
-- The preliminary SNP cluster file received from Rachael Bay on 2026-09-02 is
-  explicitly provisional. It can be used for exploratory checks and planning,
-  but final expression models should use the final SNP set, genetic PCs, or
-  kinship matrix once delivered.
+- The October 12 final host-cluster file supersedes the September 2 preliminary
+  file. Use `output/tables/43_final_snp_rnaseq_covariates.csv` for current host
+  clusters/PCs and rough symbiont read shares. No kinship matrix or expression
+  counts were supplied. Host memberships are unchanged, but PCs are updated.
+  Check rank and treatment overlap before adding host covariates; source patch
+  and cluster are not freely interchangeable or independently estimable effects.
+  All six non-A symbiont calls are heated and wounded, so type adjustment can
+  condition on a treatment response. Use it cautiously as a sensitivity analysis.
 - The Trinity/Ross Hauru table forwarded by Molly on 2026-09-03 is preliminary external
   context only. Source patch C is closest by coordinate to `Apul-115`, but ED50
   values should not be assigned to A/C/D until LTH RNA-seq SNPs are compared

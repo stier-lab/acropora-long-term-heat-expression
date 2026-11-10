@@ -287,6 +287,34 @@ knitr::include_graphics(fig("08_apex_temperature.png"))
 
 The temperature record is complete through Day 15. Treatment averages exclude later days, after the main experiment ended.
 
+**Water conditions during the experiment**
+
+Handheld meter readings cover all eight tanks on 14 dates within 4–19 June: 112 tank-date observations. There are no meter readings for 4 or 7 June; these gaps do not affect the separate, continuous temperature record above.
+
+```{r ysi-summary, echo=FALSE}
+ysi_overall <- read.csv(here::here("output/tables/09_ysi_study_summary.csv"))
+ysi_treatment <- read.csv(here::here("output/tables/09_ysi_treatment_summary.csv"))
+ysi_vars <- c("sal", "do_mgl", "ph")
+ysi_fmt <- function(d) {
+  d <- d[match(ysi_vars, d$variable), ]
+  sprintf("%.2f ± %.2f", d$mean, d$sd_readings)
+}
+knitr::kable(data.frame(
+  Measure=c("Salinity (unitless)", "Dissolved oxygen (mg/L)", "pH"),
+  `All tanks`=ysi_fmt(ysi_overall),
+  `28 °C`=ysi_fmt(subset(ysi_treatment, treatment == "28C")),
+  `31 °C`=ysi_fmt(subset(ysi_treatment, treatment == "31C")),
+  check.names=FALSE), row.names=FALSE)
+```
+
+Values are means ± standard deviations, which describe variation across tanks and sampled dates. Each temperature includes four tanks and 56 readings. Repeated readings are not additional independent tanks. The sheet identifies dissolved oxygen as **milligrams per liter (mg/L)** and salinity as unitless; it does not specify the pH scale.
+
+Salinity and pH varied little in these spot checks. Dissolved oxygen concentration was lower in the heated tanks, so these measurements do not establish that temperature was the only water condition that differed. Spot checks also cannot rule out changes between visits.
+
+```{r, fig.cap="Water conditions measured with a handheld YSI meter during 4–19 June 2025. Each line follows one tank; points are recorded readings, with four tanks per temperature. Panels have different vertical scales. Temperature is converted from the sheet’s Fahrenheit readings to Celsius; dissolved oxygen is in mg/L, and salinity and pH are unitless. All tanks were measured on 14 dates. No readings are available for 4 or 7 June; connecting lines do not represent measurements or filled values on missing dates."}
+knitr::include_graphics(fig("09_ysi_water_chem.png"))
+```
+
 ### 2. Heat reduced coral condition; average growth was also lower
 
 At <span class="t31">31 °C</span>, fragments became paler, gained less skeletal mass, and lost algal symbionts. Their photosynthesis-efficiency score, **Fv/Fm**, also fell. This score measures how efficiently the algae’s photosynthetic system can use light.

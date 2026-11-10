@@ -23,8 +23,8 @@ id,treatment,tank,thicket,day,tip_exist,tip_extension,new_corallites_on_tip,note
 121,28C,9,c,5,0,0,0,NA
 121,28C,9,c,6,0,0,0,NA
 121,28C,9,c,7,0,0,0,NA
-121,28C,9,c,8,1,0,0,checked for worms by pipette
-121,28C,9,c,9,0,0,0,NA
+121,28C,9,c,8,0,0,0,checked for worms by pipette
+121,28C,9,c,9,0,0,0,color at tip
 121,28C,9,c,10,0,0,0,NA
 121,28C,9,c,11,0,0,0,NA
 121,28C,9,c,12,0,0,0,NA

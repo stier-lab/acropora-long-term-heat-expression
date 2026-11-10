@@ -16,7 +16,7 @@ treatment,day,n_total,n_scored_today,n_missing_today,n_present_today,stage_order
 28C,14,8,8,0,8,1
 28C,15,8,8,0,8,1
 31C,0,8,8,0,0,1
-31C,1,8,6,2,6,1
+31C,1,8,8,0,8,1
 31C,2,8,8,0,8,1
 31C,3,8,8,0,8,1
 31C,4,8,8,0,8,1
@@ -103,7 +103,7 @@ treatment,day,n_total,n_scored_today,n_missing_today,n_present_today,stage_order
 28C,5,12,12,0,0,4
 28C,6,12,12,0,9,4
 28C,7,12,12,0,9,4
-28C,8,12,12,0,12,4
+28C,8,12,12,0,11,4
 28C,9,12,12,0,11,4
 28C,10,12,12,0,11,4
 28C,11,12,12,0,11,4
@@ -119,8 +119,8 @@ treatment,day,n_total,n_scored_today,n_missing_today,n_present_today,stage_order
 31C,5,12,12,0,0,4
 31C,6,12,12,0,7,4
 31C,7,12,12,0,7,4
-31C,8,12,12,0,12,4
-31C,9,12,12,0,10,4
+31C,8,12,12,0,11,4
+31C,9,12,12,0,11,4
 31C,10,12,12,0,11,4
 31C,11,12,12,0,11,4
 31C,12,12,12,0,11,4
@@ -151,7 +151,7 @@ treatment,day,n_total,n_scored_today,n_missing_today,n_present_today,stage_order
 31C,5,12,12,0,0,5
 31C,6,12,12,0,0,5
 31C,7,12,12,0,0,5
-31C,8,12,12,0,8,5
+31C,8,12,12,0,7,5
 31C,9,12,12,0,6,5
 31C,10,12,12,0,7,5
 31C,11,12,12,0,7,5

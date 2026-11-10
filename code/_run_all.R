@@ -95,6 +95,10 @@ scripts <- c(
   # 12/12 vs 4/12, and 39a draws violins from <=12 reachers.
   "41_stage_progression_figure.R", # recommended: per-fragment timing + never-reached + proportion
   "42_pam_location_and_score_audit.R", # paired tip/base readings and morphology score audit
+  "44_corrected_scoring_audit.R", # October 16 field-score corrections and coverage
+  "43_final_snp_integration.R", # current host assignments and rough symbiont typing
+  "45_physiology_figure2.R", # aligned heat-by-wound physiology display
+  "46_wound_label_validation.R", # confirmed 119 label and before/after physiology tests
   "38_analysis_diagnostic_inventory.R", # inventory after all supporting analyses
   "30_manuscript_audit.R"          # advisory phenotype reproducibility check — warns (never fails) if phenotype numbers drift
 )

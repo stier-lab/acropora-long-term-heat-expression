@@ -4,5 +4,5 @@ Day-15 morphology rows,48,One Day-15 morphology row per physiology fragment.
 joined rows,48,Joined by coral fragment ID.
 unique joined IDs,48,Duplicate IDs would make same-fragment trade-off plots invalid.
 treatment-label mismatches,0,Should be zero before plotting.
-wound-label mismatches,1,One known mismatch means morphology wound labels define the wounded-only regeneration screen.
+wound-label mismatches,0,One known mismatch means morphology wound labels define the wounded-only regeneration screen.
 source-patch-label mismatches,0,Should be zero before plotting.

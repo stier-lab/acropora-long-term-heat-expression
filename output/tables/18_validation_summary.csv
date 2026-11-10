@@ -35,9 +35,9 @@ microscope,genets,PASS,"a,c","a,c",
 microscope,28C tank IDs,PASS,"6,9","6,9",photo-only subset uses two of the four ambient tanks
 microscope,31C tank IDs,PASS,"4,5","4,5",photo-only subset uses two of the four heated tanks
 microscope,pigment D8-D15 blanks,HANDLED,128/128 missing after D7,"blank = not scored, not no",
-ysi,n daily readings,PASS,72,~72,9 tanks × ~8 days
-ysi,temperature (°C) range,INFO,"[27.6, 31.7]","[27, 33] reasonable",
-apex,n daily probe-records,INFO,2225,thousands across 6 datalog files,
+ysi,n study spot checks,PASS,112,112,8 tanks × 14 dates; June 4 and 7 missing
+ysi,temperature (°C) range,INFO,"[27.2, 31.7]","[27, 33] reasonable",
+apex,n daily probe-records,INFO,612,thousands across 6 datalog files,
 worms,total worm-positive obs,INFO,22,0–few,21 unique corals contaminated; concentrated in 31C tanks on 06/07 — treated with Worm Exit
 cross-stream,PAM ids in metadata,PASS,0,0,Orphans: 
 cross-stream,buoyant-weight ids in metadata,PASS,0,0,

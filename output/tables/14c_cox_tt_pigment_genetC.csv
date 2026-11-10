@@ -1,2 +1,2 @@
 trait,scope,n,n_event,coef,se,z,p,note
-pigment_over_wound,genet=c (tt log(t+1)),8,5,0.6514273061269013,0.42723999139563973,1.524733918280735,0.1273254781028336,time-varying coefficient on treatment; HR is exp(coef * log(t+1))
+pigment_over_wound,genet=c (tt log(t+1)),8,5,0.7048632757569485,0.44934611021210863,1.5686422108432763,0.11673133104177416,time-varying coefficient on treatment; HR is exp(coef * log(t+1))

@@ -53,7 +53,7 @@ day,treatment,thicket,trait,label,n,n_yes,prop
 1,31C,c,pigment_over_wound,Pigment over wound,4,0,0
 1,31C,c,tip_exist,Tip exists,4,0,0
 1,31C,c,tip_extension,Tip extension,4,0,0
-1,31C,c,tissue_over_wound,Tissue over wound,2,2,1
+1,31C,c,tissue_over_wound,Tissue over wound,4,4,1
 1,31C,c,wound_smoothed,Wound smoothed,4,0,0
 2,28C,a,axial_polyp_formation,Axial polyp formation,4,0,0
 2,28C,a,new_corallites_on_tip,New corallites on tip,4,0,0

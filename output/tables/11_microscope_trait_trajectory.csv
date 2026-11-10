@@ -25,7 +25,7 @@ day,treatment,trait,label,n,n_yes,prop
 1,31C,pigment_over_wound,Pigment over wound,8,0,0
 1,31C,tip_exist,Tip exists,8,0,0
 1,31C,tip_extension,Tip extension,8,0,0
-1,31C,tissue_over_wound,Tissue over wound,6,6,1
+1,31C,tissue_over_wound,Tissue over wound,8,8,1
 1,31C,wound_smoothed,Wound smoothed,8,0,0
 2,28C,axial_polyp_formation,Axial polyp formation,8,0,0
 2,28C,new_corallites_on_tip,New corallites on tip,8,0,0

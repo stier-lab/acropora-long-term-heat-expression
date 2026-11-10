@@ -22,7 +22,7 @@ tip_extension,Tip extension,31C,c,4,4,1,10.5,9.75,11,15
 tissue_over_wound,Tissue over wound,28C,a,4,4,1,1,1,1,15
 tissue_over_wound,Tissue over wound,28C,c,4,4,1,1,1,1,15
 tissue_over_wound,Tissue over wound,31C,a,4,4,1,1,1,1,15
-tissue_over_wound,Tissue over wound,31C,c,4,4,1,1.5,1,2,15
+tissue_over_wound,Tissue over wound,31C,c,4,4,1,1,1,1,15
 wound_smoothed,Wound smoothed,28C,a,4,4,1,4,4,4.25,15
 wound_smoothed,Wound smoothed,28C,c,4,4,1,5,4.75,5,15
 wound_smoothed,Wound smoothed,31C,a,4,4,1,4,4,4.25,15

@@ -16,7 +16,7 @@ microscope_physio,Microscope photos,13,28C,tissue_over_wound,Tissue cover,Tissue
 microscope_physio,Microscope photos,14,28C,tissue_over_wound,Tissue cover,Tissue over wound,1,Wound covering,Covering,Microscope: Tissue cover,8,8,1
 microscope_physio,Microscope photos,15,28C,tissue_over_wound,Tissue cover,Tissue over wound,1,Wound covering,Covering,Microscope: Tissue cover,8,8,1
 microscope_physio,Microscope photos,0,31C,tissue_over_wound,Tissue cover,Tissue over wound,1,Wound covering,Covering,Microscope: Tissue cover,8,0,0
-microscope_physio,Microscope photos,1,31C,tissue_over_wound,Tissue cover,Tissue over wound,1,Wound covering,Covering,Microscope: Tissue cover,6,6,1
+microscope_physio,Microscope photos,1,31C,tissue_over_wound,Tissue cover,Tissue over wound,1,Wound covering,Covering,Microscope: Tissue cover,8,8,1
 microscope_physio,Microscope photos,2,31C,tissue_over_wound,Tissue cover,Tissue over wound,1,Wound covering,Covering,Microscope: Tissue cover,8,8,1
 microscope_physio,Microscope photos,3,31C,tissue_over_wound,Tissue cover,Tissue over wound,1,Wound covering,Covering,Microscope: Tissue cover,8,8,1
 microscope_physio,Microscope photos,4,31C,tissue_over_wound,Tissue cover,Tissue over wound,1,Wound covering,Covering,Microscope: Tissue cover,8,8,1
@@ -303,36 +303,15 @@ physio_morphology,Main morphology,12,31C,wound_smoothed,Wound smoothed,Wound smo
 physio_morphology,Main morphology,13,31C,wound_smoothed,Wound smoothed,Wound smoothed,4,Wound closure,Closure,Main: Wound smoothed,12,12,1
 physio_morphology,Main morphology,14,31C,wound_smoothed,Wound smoothed,Wound smoothed,4,Wound closure,Closure,Main: Wound smoothed,12,12,1
 physio_morphology,Main morphology,15,31C,wound_smoothed,Wound smoothed,Wound smoothed,4,Wound closure,Closure,Main: Wound smoothed,12,12,1
-physio_morphology,Main morphology,0,28C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,0,0
-physio_morphology,Main morphology,1,28C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,0,0
-physio_morphology,Main morphology,2,28C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,0,0
 physio_morphology,Main morphology,3,28C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,2,0.16666666666666666
 physio_morphology,Main morphology,4,28C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,1,0.08333333333333333
-physio_morphology,Main morphology,5,28C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,1,0.08333333333333333
-physio_morphology,Main morphology,6,28C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,0,0
-physio_morphology,Main morphology,7,28C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,0,0
-physio_morphology,Main morphology,8,28C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,0,0
-physio_morphology,Main morphology,9,28C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,1,0,0
-physio_morphology,Main morphology,10,28C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,0,0
-physio_morphology,Main morphology,11,28C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,0,0
+physio_morphology,Main morphology,9,28C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,2,0.16666666666666666
 physio_morphology,Main morphology,12,28C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,1,0.08333333333333333
-physio_morphology,Main morphology,13,28C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,1,0.08333333333333333
-physio_morphology,Main morphology,14,28C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,1,0.08333333333333333
 physio_morphology,Main morphology,15,28C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,1,0.08333333333333333
-physio_morphology,Main morphology,0,31C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,0,0
-physio_morphology,Main morphology,1,31C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,0,0
-physio_morphology,Main morphology,2,31C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,0,0
 physio_morphology,Main morphology,3,31C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,1,0.08333333333333333
 physio_morphology,Main morphology,4,31C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,2,0.16666666666666666
-physio_morphology,Main morphology,5,31C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,2,0.16666666666666666
-physio_morphology,Main morphology,6,31C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,0,0
-physio_morphology,Main morphology,7,31C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,0,0
-physio_morphology,Main morphology,8,31C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,0,0
-physio_morphology,Main morphology,10,31C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,0,0
-physio_morphology,Main morphology,11,31C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,0,0
+physio_morphology,Main morphology,9,31C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,0,0
 physio_morphology,Main morphology,12,31C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,0,0
-physio_morphology,Main morphology,13,31C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,0,0
-physio_morphology,Main morphology,14,31C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,0,0
 physio_morphology,Main morphology,15,31C,pigment_over_wound,Pigment,Pigment over wound,5,Wound covering,Covering,Main: Pigment,12,4,0.3333333333333333
 physio_morphology,Main morphology,0,28C,tip_exist,Tip exists,Tip exists,6,Regeneration,Regeneration,Main: Tip exists,12,0,0
 physio_morphology,Main morphology,1,28C,tip_exist,Tip exists,Tip exists,6,Regeneration,Regeneration,Main: Tip exists,12,0,0
@@ -342,7 +321,7 @@ physio_morphology,Main morphology,4,28C,tip_exist,Tip exists,Tip exists,6,Regene
 physio_morphology,Main morphology,5,28C,tip_exist,Tip exists,Tip exists,6,Regeneration,Regeneration,Main: Tip exists,12,0,0
 physio_morphology,Main morphology,6,28C,tip_exist,Tip exists,Tip exists,6,Regeneration,Regeneration,Main: Tip exists,12,9,0.75
 physio_morphology,Main morphology,7,28C,tip_exist,Tip exists,Tip exists,6,Regeneration,Regeneration,Main: Tip exists,12,9,0.75
-physio_morphology,Main morphology,8,28C,tip_exist,Tip exists,Tip exists,6,Regeneration,Regeneration,Main: Tip exists,12,12,1
+physio_morphology,Main morphology,8,28C,tip_exist,Tip exists,Tip exists,6,Regeneration,Regeneration,Main: Tip exists,12,11,0.9166666666666666
 physio_morphology,Main morphology,9,28C,tip_exist,Tip exists,Tip exists,6,Regeneration,Regeneration,Main: Tip exists,12,11,0.9166666666666666
 physio_morphology,Main morphology,10,28C,tip_exist,Tip exists,Tip exists,6,Regeneration,Regeneration,Main: Tip exists,12,11,0.9166666666666666
 physio_morphology,Main morphology,11,28C,tip_exist,Tip exists,Tip exists,6,Regeneration,Regeneration,Main: Tip exists,12,11,0.9166666666666666
@@ -358,8 +337,8 @@ physio_morphology,Main morphology,4,31C,tip_exist,Tip exists,Tip exists,6,Regene
 physio_morphology,Main morphology,5,31C,tip_exist,Tip exists,Tip exists,6,Regeneration,Regeneration,Main: Tip exists,12,0,0
 physio_morphology,Main morphology,6,31C,tip_exist,Tip exists,Tip exists,6,Regeneration,Regeneration,Main: Tip exists,12,7,0.5833333333333334
 physio_morphology,Main morphology,7,31C,tip_exist,Tip exists,Tip exists,6,Regeneration,Regeneration,Main: Tip exists,12,7,0.5833333333333334
-physio_morphology,Main morphology,8,31C,tip_exist,Tip exists,Tip exists,6,Regeneration,Regeneration,Main: Tip exists,12,12,1
-physio_morphology,Main morphology,9,31C,tip_exist,Tip exists,Tip exists,6,Regeneration,Regeneration,Main: Tip exists,12,10,0.8333333333333334
+physio_morphology,Main morphology,8,31C,tip_exist,Tip exists,Tip exists,6,Regeneration,Regeneration,Main: Tip exists,12,11,0.9166666666666666
+physio_morphology,Main morphology,9,31C,tip_exist,Tip exists,Tip exists,6,Regeneration,Regeneration,Main: Tip exists,12,11,0.9166666666666666
 physio_morphology,Main morphology,10,31C,tip_exist,Tip exists,Tip exists,6,Regeneration,Regeneration,Main: Tip exists,12,11,0.9166666666666666
 physio_morphology,Main morphology,11,31C,tip_exist,Tip exists,Tip exists,6,Regeneration,Regeneration,Main: Tip exists,12,11,0.9166666666666666
 physio_morphology,Main morphology,12,31C,tip_exist,Tip exists,Tip exists,6,Regeneration,Regeneration,Main: Tip exists,12,11,0.9166666666666666
@@ -390,7 +369,7 @@ physio_morphology,Main morphology,4,31C,tip_extension,Tip extension,Tip extensio
 physio_morphology,Main morphology,5,31C,tip_extension,Tip extension,Tip extension,7,Regeneration,Regeneration,Main: Tip extension,12,0,0
 physio_morphology,Main morphology,6,31C,tip_extension,Tip extension,Tip extension,7,Regeneration,Regeneration,Main: Tip extension,12,0,0
 physio_morphology,Main morphology,7,31C,tip_extension,Tip extension,Tip extension,7,Regeneration,Regeneration,Main: Tip extension,12,0,0
-physio_morphology,Main morphology,8,31C,tip_extension,Tip extension,Tip extension,7,Regeneration,Regeneration,Main: Tip extension,12,8,0.6666666666666666
+physio_morphology,Main morphology,8,31C,tip_extension,Tip extension,Tip extension,7,Regeneration,Regeneration,Main: Tip extension,12,7,0.5833333333333334
 physio_morphology,Main morphology,9,31C,tip_extension,Tip extension,Tip extension,7,Regeneration,Regeneration,Main: Tip extension,12,6,0.5
 physio_morphology,Main morphology,10,31C,tip_extension,Tip extension,Tip extension,7,Regeneration,Regeneration,Main: Tip extension,12,7,0.5833333333333334
 physio_morphology,Main morphology,11,31C,tip_extension,Tip extension,Tip extension,7,Regeneration,Regeneration,Main: Tip extension,12,7,0.5833333333333334
