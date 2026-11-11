@@ -7,7 +7,7 @@ Updated 2026-11-11. Use this page to tell current results from historical files 
 | What | Where | Notes |
 |---|---|---|
 | Every reported number | `output/paper/*_numbers.csv` | Single source of truth since 2026-11-11. One file per results section, written by the last section of `code/02`–`05` (run `code/run_all.R`). |
-| Plain-language results | `docs/team_summary/LTH_results_summary.html` | Rebuilt 2026-11-11 with a statistics drop-down (methods and results text) under each finding, read from `output/paper/`. |
+| Plain-language results | `docs/team_summary/LTH_results_summary.html` | Updated 2026-11-11: statistics drop-down (methods and results text) under each finding, read from `output/paper/`; narrative, take-homes and confidence section match the fixed models; frozen exploratory figures labeled. |
 | Physiology figure | `figures/45_physiology_figure2.*` | Publication candidate. Legend: `manuscript/FIGURE_2_LEGEND.md`. |
 | Stage-timing figure | `figures/39b_stage_timing_cumulative_option.*` | Paper figure and team-summary display (decided 2026-11-11). `41_stage_progression` is the alternative. Both keep fragments that never reached a stage in the denominator. |
 | Genetics | `figures/43_final_snp_*`, `output/tables/43_final_snp_*` | Final host clusters from Rachael (2026-10-13), built by `code/06_genetics.R`. Symbiont read shares are rough. |
