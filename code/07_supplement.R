@@ -6,6 +6,8 @@
 #   2 Results without the flagged fragments: refit the Fv/Fm and color
 #     temperature x day tests and the growth tank permutation without
 #     fragments 116 and 121 and without tank 3 (slow to equilibrate).
+#   2b How much the symbiont wound result and the growth result depend on
+#     single fragments or tanks.
 #   3 Color: tank-level permutation check (no distribution assumed).
 #
 # Other supplement material is written by the main scripts: the growth tank
@@ -13,7 +15,7 @@
 # (04_regeneration.R), and the wax standard curve (01_clean_data.R).
 #
 # Writes: output/tables/11_microscope_trait_trajectory.csv, 22_sensitivity_flagged.csv,
-#         12b_color_tank_test.csv
+#         22b_sensitivity_wound_growth.csv, 12b_color_tank_test.csv
 #         figures/11_microscope_trait_trajectories
 # =============================================================================
 
@@ -65,11 +67,13 @@ save_fig(p_micro, "11_microscope_trait_trajectories",
          width = 210, height = 130)
 
 # ---- 2. Results without the flagged fragments and tank ---------------------
+# Fv/Fm and color use the 03_physiology.R models (day slopes per tank).
+ctrl <- lme4::lmerControl(check.conv.singular = .makeCC("ignore", tol = 1e-4), optimizer = "bobyqa")
 FLAGGED_IDS  <- c(116, 121)   # two coral colonies that behaved anomalously
 FLAGGED_TANK <- 3             # ambient tank that warmed/equilibrated slowly
 results <- list()             # one tibble per (response × full-or-dropped) goes here
 grab <- function(model, label, term) {
-  av <- as.data.frame(anova(model))
+  av <- as.data.frame(anova(model, type = 3))
   av$term <- rownames(av)
   row <- av[av$term == term, , drop = FALSE]
   if (nrow(row) == 0) return(NULL)
@@ -84,20 +88,20 @@ pam <- readRDS(file.path(DATA_PROC, "pam_clean.rds")) |>
   mutate(thicket = factor(thicket)) |>
   filter(day >= 0)
 pam_drop <- pam |> filter(!id %in% FLAGGED_IDS, tank != FLAGGED_TANK)
-f_full <- lmerTest::lmer(fv_fm ~ treatment * wound * day + thicket + (1|tank) + (1|id),
-                         data = pam, REML = FALSE)
-f_drop <- lmerTest::lmer(fv_fm ~ treatment * wound * day + thicket + (1|tank) + (1|id),
-                         data = pam_drop, REML = FALSE)
+f_full <- lmerTest::lmer(fv_fm ~ treatment * wound * day * thicket + (1 + day || tank) + (1 | id),
+                         data = pam, REML = TRUE, control = ctrl)
+f_drop <- lmerTest::lmer(fv_fm ~ treatment * wound * day * thicket + (1 + day || tank) + (1 | id),
+                         data = pam_drop, REML = TRUE, control = ctrl)
 results$pam_full <- grab(f_full, "PAM Fv/Fm (full data)",     "treatment:day")
 results$pam_drop <- grab(f_drop, "PAM Fv/Fm (flagged dropped)","treatment:day")
 col <- readRDS(file.path(DATA_PROC, "color_clean.rds")) |>
   mutate(thicket = factor(thicket)) |>
   filter(day >= 0)
 col_drop <- col |> filter(!id %in% FLAGGED_IDS, tank != FLAGGED_TANK)
-c_full <- lmerTest::lmer(color_num ~ treatment * wound * day + thicket + (1|tank) + (1|id),
-                         data = col, REML = FALSE)
-c_drop <- lmerTest::lmer(color_num ~ treatment * wound * day + thicket + (1|tank) + (1|id),
-                         data = col_drop, REML = FALSE)
+c_full <- lmerTest::lmer(color_num ~ treatment * wound * day * thicket + (1 + day || tank) + (1 | id),
+                         data = col, REML = TRUE, control = ctrl)
+c_drop <- lmerTest::lmer(color_num ~ treatment * wound * day * thicket + (1 + day || tank) + (1 | id),
+                         data = col_drop, REML = TRUE, control = ctrl)
 results$col_full <- grab(c_full, "Color D-scale (full data)",     "treatment:day")
 results$col_drop <- grab(c_drop, "Color D-scale (flagged dropped)","treatment:day")
 bw <- readRDS(file.path(DATA_PROC, "buoyant_weight_clean.rds")) |>
@@ -132,6 +136,60 @@ results$bw_full <- tank_perm(bw, "Growth % (full data)")
 results$bw_drop <- tank_perm(bw_drop, "Growth % (flagged dropped)")
 out <- bind_rows(results)
 write_csv(out, file.path(TBL_DIR, "22_sensitivity_flagged.csv"))
+
+# ---- 2b. How much do two results depend on single fragments or tanks? -------
+# (a) Symbionts, temperature x wound x day: the five fragments the residual
+#     check flags as outliers are all heated, Day 15, patch A, three of them
+#     nearly bleached out. They look like real bleaching, so they stay in the
+#     reported model; this shows how the wound result moves without them.
+# (b) Growth, temperature: ambient tank 3 (slow to equilibrate) grew like the
+#     heated tanks.
+sym <- readRDS(file.path(DATA_PROC, "symbiont_chl_clean.rds")) |>
+  filter(is.finite(cells_per_cm2), cells_per_cm2 > 0) |>
+  mutate(thicket = factor(thicket), biopsy_day_c = biopsy_day - 1)
+f_sym <- log(cells_per_cm2) ~ treatment * wound * biopsy_day_c * thicket + (1 + biopsy_day_c || tank)
+term_p <- function(m, term) { a <- as.data.frame(anova(m, type = 3)); c(F = a[term, "F value"], p = a[term, "Pr(>F)"]) }
+sens <- list()
+add_sens <- function(response, term, version, Fp, note = NA_character_)
+  sens[[length(sens) + 1]] <<- tibble(response, term, version, F_value = unname(Fp[1]), p_value = unname(Fp[2]), note)
+k3 <- "treatment:wound:biopsy_day_c"
+m_sym <- lmerTest::lmer(f_sym, data = sym, control = ctrl)
+add_sens("symbionts", k3, "as reported (03_physiology.R)", term_p(m_sym, k3))
+set.seed(42)
+out_rows <- DHARMa::outliers(DHARMa::simulateResiduals(m_sym, n = 500))
+add_sens("symbionts", k3, "without residual outliers", term_p(lmerTest::lmer(f_sym, data = sym[-out_rows, ], control = ctrl), k3),
+         paste("dropped fragments", paste(sort(sym$id[out_rows]), collapse = ", ")))
+m_var <- nlme::lme(log(cells_per_cm2) ~ treatment * wound * biopsy_day_c * thicket,
+                   random = list(tank = nlme::pdDiag(~ 1 + biopsy_day_c)),
+                   weights = nlme::varIdent(form = ~ 1 | treatment), data = sym,
+                   control = nlme::lmeControl(opt = "optim"))
+a_var <- anova(m_var, type = "marginal")
+add_sens("symbionts", k3, "separate residual variance by temperature (nlme)",
+         c(a_var[k3, "F-value"], a_var[k3, "p-value"]))
+loto <- sapply(sort(unique(sym$tank)), \(tk) term_p(lmerTest::lmer(f_sym, data = sym[sym$tank != tk, ], control = ctrl), k3)["p"])
+add_sens("symbionts", k3, "leave one tank out: lowest p", c(NA, min(loto)), paste("tank", sort(unique(sym$tank))[which.min(loto)], "dropped"))
+add_sens("symbionts", k3, "leave one tank out: highest p", c(NA, max(loto)), paste("tank", sort(unique(sym$tank))[which.max(loto)], "dropped"))
+gm <- sym |> filter(biopsy_day == 15, treatment == "31C") |> group_by(wound) |>
+  summarise(gm = exp(mean(log(cells_per_cm2))), .groups = "drop")
+add_sens("symbionts", "Day 15 heated geometric mean, wounded / unwounded", "direction of the wound difference",
+         c(NA, NA), sprintf("wounded %.0f vs unwounded %.0f cells per cm2", gm$gm[gm$wound == "yes"], gm$gm[gm$wound == "no"]))
+
+f_bw <- pct_growth ~ treatment * wound * thicket + (1 | tank)
+add_sens("growth", "treatment", "as reported (03_physiology.R)", term_p(lmerTest::lmer(f_bw, data = bw, control = ctrl), "treatment"))
+tks <- sort(unique(bw$tank))
+loto_bw <- sapply(tks, \(tk) term_p(lmerTest::lmer(f_bw, data = bw[bw$tank != tk, ], control = ctrl), "treatment")["p"])
+add_sens("growth", "treatment", "leave one tank out: lowest p", c(NA, min(loto_bw)), paste("tank", tks[which.min(loto_bw)], "dropped"))
+add_sens("growth", "treatment", "leave one tank out: highest p", c(NA, max(loto_bw)), paste("tank", tks[which.max(loto_bw)], "dropped"))
+add_sens("growth", "treatment", "without ambient tank 3", term_p(lmerTest::lmer(f_bw, data = bw[bw$tank != 3, ], control = ctrl), "treatment"))
+lofo_bw <- sapply(seq_len(nrow(bw)), \(i) term_p(lmerTest::lmer(f_bw, data = bw[-i, ], control = ctrl), "treatment")["p"])
+add_sens("growth", "treatment", "leave one fragment out: range of p", c(NA, NA),
+         sprintf("p from %.3f to %.3f; %d of %d single-fragment drops give p > 0.05", min(lofo_bw), max(lofo_bw), sum(lofo_bw > 0.05), length(lofo_bw)))
+tank_means <- bw |> group_by(treatment, tank) |> summarise(m = mean(pct_growth), .groups = "drop")
+add_sens("growth", "tank means (% mass gained)", "ambient tanks vs heated tanks", c(NA, NA),
+         paste0("ambient ", paste(sprintf("%d: %.1f", tank_means$tank[tank_means$treatment == "28C"], tank_means$m[tank_means$treatment == "28C"]), collapse = ", "),
+                "; heated ", paste(sprintf("%d: %.1f", tank_means$tank[tank_means$treatment == "31C"], tank_means$m[tank_means$treatment == "31C"]), collapse = ", ")))
+write_csv(bind_rows(sens) |> mutate(across(where(is.double), \(x) signif(x, 4))),
+          file.path(TBL_DIR, "22b_sensitivity_wound_growth.csv"))
 
 # ---- 3. Color: tank-level check ------------------------------------------
 # Color is a 1-6 card score and ambient fragments almost all stayed at 4, so

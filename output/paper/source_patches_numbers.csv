@@ -1,8 +1,8 @@
 key,description,estimate,ci_low,ci_high,test,statistic,df1,df2,p_value,n,source
-patch_x_temp_pam_fvfm,Fv/Fm: does the heat effect differ among source patches?,,,,likelihood-ratio test,77.4631,14,,8.33644e-11,288,output/tables/13_genet_anova.csv
-patch_x_temp_color_dscale,Color: does the heat effect differ among source patches?,,,,likelihood-ratio test,149.763,14,,8.01796e-25,288,output/tables/13_genet_anova.csv
-patch_x_temp_log_zoox,Symbionts: does the heat effect differ among source patches?,,,,likelihood-ratio test,62.7467,14,,3.8482e-8,192,output/tables/13_genet_anova.csv
-patch_x_temp_growth_pct,Growth: does the heat effect differ among source patches?,,,,likelihood-ratio test,13.3495,6,,0.0378091,48,output/tables/13_genet_anova.csv
+patch_x_temp_pam_fvfm,Fv/Fm: does the heat effect differ among source patches?,,,,likelihood-ratio test of all source patch x temperature terms,60.0612,8,,4.53403e-10,288,output/tables/13_genet_anova.csv
+patch_x_temp_color_dscale,Color: does the heat effect differ among source patches?,,,,likelihood-ratio test of all source patch x temperature terms,108.048,8,,9.58559e-20,288,output/tables/13_genet_anova.csv
+patch_x_temp_log_zoox,Symbionts: does the heat effect differ among source patches?,,,,likelihood-ratio test of all source patch x temperature terms,54.6353,8,,5.19727e-9,192,output/tables/13_genet_anova.csv
+patch_x_temp_growth_pct,Growth: does the heat effect differ among source patches?,,,,likelihood-ratio test of all source patch x temperature terms,12.9566,4,,0.0114896,48,output/tables/13_genet_anova.csv
 heat_drop_pam_fvfm_patch_A,"Fv/Fm: ambient minus heated on Day 14, patch A (mean over wound status)",0.11811,,,model estimate (emmeans),,,,,,output/tables/12_genet_treatment_effects.csv
 heat_drop_pam_fvfm_patch_C,"Fv/Fm: ambient minus heated on Day 14, patch C (mean over wound status)",0.03575,,,model estimate (emmeans),,,,,,output/tables/12_genet_treatment_effects.csv
 heat_drop_pam_fvfm_patch_D,"Fv/Fm: ambient minus heated on Day 14, patch D (mean over wound status)",0.11235,,,model estimate (emmeans),,,,,,output/tables/12_genet_treatment_effects.csv

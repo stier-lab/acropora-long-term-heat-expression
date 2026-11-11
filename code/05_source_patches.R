@@ -4,9 +4,11 @@
 # A source patch (A, C, D) is the field patch a fragment's parent branch came
 # from. Patches are field labels, not confirmed genotypes (see 06_genetics.R).
 #
-# For each physiology response, a model with all source patch x temperature
-# terms is compared with one without them (likelihood-ratio test, ML fits).
-# Fixed effects otherwise match 03_physiology.R. The per-patch heat effects
+# For each physiology response, the 03_physiology.R model is compared with
+# the same model minus every term containing source patch x temperature
+# (likelihood-ratio test, ML fits; 8 df, 4 for growth). Until 2026-11-11 the
+# reduced model also dropped patch x wound and patch x day terms, so the
+# test was broader than its name; see docs/diagnostics/. The per-patch heat effects
 # (ambient minus heated, Day 14) come from the 03_physiology.R models.
 #
 # Writes: output/tables/13_genet_anova.csv, 13_genet_emmeans.csv
@@ -29,66 +31,45 @@ phys  <- readRDS(file.path(DATA_PROC, "symbiont_chl_clean.rds")) |>
   filter(is.finite(cells_per_cm2), cells_per_cm2 > 0) |>
   mutate(thicket = factor(thicket),
          biopsy_day_c = biopsy_day - 1)   # centred time axis (matches code/12)
-fit_and_report <- function(data, response, name, fixed_extra = NULL,
-                           include_id = TRUE) {
-  id_term <- if (include_id) " + (1 | id)" else ""
-  rhs_null  <- paste0("treatment * wound * day + thicket + (1 | tank)",
-                      id_term)
-  rhs_genet <- paste0("treatment * wound * day * thicket + (1 | tank)",
-                      id_term)
-  if (!is.null(fixed_extra)) {
-    rhs_null  <- str_replace(rhs_null,  "day", fixed_extra)
-    rhs_genet <- str_replace(rhs_genet, "day", fixed_extra)
+# Full model = the 03_physiology.R model (same random effects, ML fit).
+# Reduced model = full minus every term that contains source patch x
+# temperature: patch:temp, patch:temp:wound, patch:temp:day and
+# patch:temp:wound:day (8 df; 4 for growth, which has no day term).
+ctrl <- lme4::lmerControl(check.conv.singular = .makeCC("ignore", tol = 1e-4), optimizer = "bobyqa")
+lrt_patch_temp <- function(data, response, name, time = "day", re) {
+  drop <- c("treatment:thicket", "treatment:wound:thicket")
+  if (is.na(time)) {
+    f1 <- as.formula(paste(response, "~ treatment * wound * thicket +", re))
+  } else {
+    f1 <- as.formula(paste(response, "~ treatment * wound *", time, "* thicket +", re))
+    drop <- c(drop, paste0("treatment:", time, ":thicket"), paste0("treatment:wound:", time, ":thicket"))
   }
-  f0 <- as.formula(paste(response, "~", rhs_null))
-  f1 <- as.formula(paste(response, "~", rhs_genet))
-  m0 <- suppressWarnings(suppressMessages(
-    lme4::lmer(f0, data = data, REML = FALSE)))
-  m1 <- suppressWarnings(suppressMessages(
-    lme4::lmer(f1, data = data, REML = FALSE)))
+  f0 <- update(f1, as.formula(paste(". ~ . -", paste(drop, collapse = " - "))))
+  m1 <- lme4::lmer(f1, data = data, REML = FALSE, control = ctrl)
+  m0 <- lme4::lmer(f0, data = data, REML = FALSE, control = ctrl)
   saveRDS(m1, file.path(MOD_DIR, paste0("13_", name, "_genet_lmm.rds")))
   lrt <- anova(m0, m1)
   tibble(
-    response      = name,
-    n_obs         = nrow(data),
-    aic_null      = AIC(m0),
-    aic_genet     = AIC(m1),
-    delta_aic     = AIC(m1) - AIC(m0),
-    lrt_chisq     = lrt$Chisq[2],
-    lrt_df        = lrt$Df[2],
-    lrt_p         = lrt$`Pr(>Chisq)`[2]
+    response  = name,
+    test      = paste("LRT, drop", paste(drop, collapse = ", ")),
+    random    = re,
+    n_obs     = nrow(data),
+    aic_null  = AIC(m0),
+    aic_genet = AIC(m1),
+    delta_aic = AIC(m1) - AIC(m0),
+    lrt_chisq = lrt$Chisq[2],
+    lrt_df    = lrt$Df[2],
+    lrt_p     = lrt$`Pr(>Chisq)`[2]
   )
 }
+bw_a <- bw |> filter(is.finite(pct_growth))
 genet_tests <- bind_rows(
-  fit_and_report(pam,   "fv_fm",              "pam_fvfm"),
-  fit_and_report(color, "color_num",          "color_dscale"),
-  fit_and_report(phys,  "log(cells_per_cm2)", "log_zoox",
-                 fixed_extra = "biopsy_day_c", include_id = FALSE)
+  lrt_patch_temp(pam,   "fv_fm",              "pam_fvfm",     re = "(1 + day || tank) + (1 | id)"),
+  lrt_patch_temp(color, "color_num",          "color_dscale", re = "(1 + day || tank) + (1 | id)"),
+  lrt_patch_temp(phys,  "log(cells_per_cm2)", "log_zoox", time = "biopsy_day_c",
+                 re = "(1 + biopsy_day_c || tank)"),
+  lrt_patch_temp(bw_a,  "pct_growth",         "growth_pct", time = NA, re = "(1 | tank)")
 )
-bw_a       <- bw |> filter(is.finite(pct_growth))
-m_bw_null  <- lme4::lmer(
-  pct_growth ~ treatment * wound + thicket + (1 | tank),
-  data = bw_a, REML = FALSE,
-  control = lme4::lmerControl(check.conv.singular = .makeCC("ignore", tol = 1e-4))
-)
-m_bw_genet <- lme4::lmer(
-  pct_growth ~ treatment * wound * thicket + (1 | tank),
-  data = bw_a, REML = FALSE,
-  control = lme4::lmerControl(check.conv.singular = .makeCC("ignore", tol = 1e-4))
-)
-bw_lrt <- anova(m_bw_null, m_bw_genet)
-bw_lrt_df <- if ("Chi Df" %in% names(bw_lrt)) bw_lrt$`Chi Df`[2] else bw_lrt$Df[2]
-genet_tests <- bind_rows(genet_tests, tibble(
-  response  = "growth_pct",
-  n_obs     = nrow(bw_a),
-  aic_null  = AIC(m_bw_null),
-  aic_genet = AIC(m_bw_genet),
-  delta_aic = AIC(m_bw_genet) - AIC(m_bw_null),
-  lrt_chisq = bw_lrt$Chisq[2],
-  lrt_df    = bw_lrt_df,
-  lrt_p     = bw_lrt$`Pr(>Chisq)`[2]
-))
-saveRDS(m_bw_genet, file.path(MOD_DIR, "13_growth_genet_lmm.rds"))
 write_csv(genet_tests, file.path(TBL_DIR, "13_genet_anova.csv"))
 
 # ---- 2. End-of-experiment means by patch (figure) --------------------------
@@ -152,7 +133,7 @@ for (r in names(labels)) {
   if (nrow(d) != 1) next
   rows[[length(rows) + 1]] <- paper_row(
     paste0("patch_x_temp_", r), paste0(labels[[r]], ": does the heat effect differ among source patches?"),
-    test = "likelihood-ratio test", statistic = d$lrt_chisq, df1 = d$lrt_df, p_value = d$lrt_p,
+    test = "likelihood-ratio test of all source patch x temperature terms", statistic = d$lrt_chisq, df1 = d$lrt_df, p_value = d$lrt_p,
     n = d$n_obs, source = "output/tables/13_genet_anova.csv")
 }
 for (r in c("pam_fvfm", "color_dscale")) {

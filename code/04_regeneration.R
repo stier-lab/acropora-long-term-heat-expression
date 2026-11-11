@@ -7,7 +7,7 @@
 #
 #   1 Day 15 counts: Fisher's exact test per stage; log-rank test on the first
 #     day each stage was seen. Each experiment tested on its own.
-#   2 Timing models (main experiment): interval-censored Weibull models (the
+#   2 Timing models (main experiment): interval-censored log-logistic models (the
 #     stage began between the last "no" and the first "yes"), Cox models
 #     stratified by source patch, and a likelihood-ratio test for source patch
 #     x temperature. Kaplan-Meier curves as a supporting figure.
@@ -17,7 +17,8 @@
 #   5 Numbers for the results text, including the tank-level budding check.
 #
 # Writes: output/tables/11f_morphology_dataset_{endpoint,logrank}_tests.csv,
-#         14_event_intervals.csv, 14_interval_survreg.csv, 14_cox_hazard_ratios.csv,
+#         14_event_intervals.csv, 14_interval_survreg.csv, 14_interval_survreg_distributions.csv,
+#         14_cox_hazard_ratios.csv,
 #         14_cox_genet_LRT.csv, 36_stage_timing.csv, 36_stage_timing_mean_iqr.csv,
 #         39_stage_cumulative_percent.csv
 #         figures/39b_stage_timing_cumulative_option (Figure 1B), 36_stage_timing,
@@ -272,19 +273,31 @@ write_csv(events, file.path(TBL_DIR, "14_event_intervals.csv"))
 contrasts(events$treatment) <- contr.treatment(nlevels(events$treatment))
 n_km_per_trt  <- events |> distinct(id, treatment) |> count(treatment) |>
   pull(n) |> (\(x) if (length(unique(x)) == 1) unique(x) else paste(range(x), collapse = "–"))()
+# Distribution: log-logistic. Compared by AIC across Weibull, lognormal,
+# log-logistic and exponential (14_interval_survreg_distributions.csv), it is
+# the best fit or within 0.6 AIC of it for every reported stage. It does not
+# converge for pigment over the wound (not reported), which falls back to
+# lognormal; the `model` column says which was used. Weibull, used until
+# 2026-11-11, fitted worst for tip formation and tip extension (dAIC 22, 12)
+# and made tip extension look slower under heat.
+AFT_DIST <- "loglogistic"
+AFT_FALLBACK <- "lognormal"
 fit_interval_survreg <- function(tr) {
   d <- events |> filter(trait == tr)
   if (sum(d$event) < 5 || length(unique(d$treatment)) < 2) return(NULL)
-  fit <- tryCatch(
+  fit_dist <- function(dist) tryCatch(
     survreg(Surv(event_lower, event_upper, type = "interval2") ~ treatment + thicket,
-            data = d, dist = "weibull"),
-    error = function(e) NULL
+            data = d, dist = dist),
+    error = function(e) NULL, warning = function(w) NULL
   )
+  used <- AFT_DIST
+  fit <- fit_dist(AFT_DIST)
+  if (is.null(fit)) { used <- AFT_FALLBACK; fit <- fit_dist(AFT_FALLBACK) }
   if (is.null(fit)) {
     return(tibble(
       trait = tr, term = "treatment", n = nrow(d), n_event = sum(d$event),
       time_ratio_31_vs28 = NA_real_, ratio_lo = NA_real_, ratio_hi = NA_real_,
-      z = NA_real_, p = NA_real_, model = "interval-censored Weibull AFT",
+      z = NA_real_, p = NA_real_, model = paste("interval-censored", AFT_DIST, "AFT"),
       event_interpretation = trait_interpretation$event_interpretation[
         match(tr, trait_interpretation$trait)
       ],
@@ -301,7 +314,7 @@ fit_interval_survreg <- function(tr) {
     return(tibble(
       trait = tr, term = "treatment", n = nrow(d), n_event = sum(d$event),
       time_ratio_31_vs28 = NA_real_, ratio_lo = NA_real_, ratio_hi = NA_real_,
-      z = NA_real_, p = NA_real_, model = "interval-censored Weibull AFT",
+      z = NA_real_, p = NA_real_, model = paste("interval-censored", AFT_DIST, "AFT"),
       event_interpretation = trait_interpretation$event_interpretation[
         match(tr, trait_interpretation$trait)
       ],
@@ -320,7 +333,7 @@ fit_interval_survreg <- function(tr) {
     ratio_hi = exp(est + 1.96 * se),
     z = tab[trt_row, "z"],
     p = tab[trt_row, "p"],
-    model = "interval-censored Weibull AFT",
+    model = paste("interval-censored", used, "AFT"),
     event_interpretation = trait_interpretation$event_interpretation[
       match(tr, trait_interpretation$trait)
     ],
@@ -329,6 +342,24 @@ fit_interval_survreg <- function(tr) {
 }
 interval_survreg <- map_dfr(traits, fit_interval_survreg)
 write_csv(interval_survreg, file.path(TBL_DIR, "14_interval_survreg.csv"))
+
+# Distribution check: AIC and time ratio for each candidate distribution.
+aft_dists <- map_dfr(traits, function(tr) {
+  d <- events |> filter(trait == tr)
+  map_dfr(c("weibull", "lognormal", "loglogistic", "exponential"), function(dist) {
+    f <- tryCatch(survreg(Surv(event_lower, event_upper, type = "interval2") ~ treatment + thicket,
+                          data = d, dist = dist), error = function(e) NULL)
+    if (is.null(f)) return(tibble(trait = tr, dist = dist, converged = FALSE))
+    tab <- summary(f)$table; r <- grep("^treatment", rownames(tab), value = TRUE)[1]
+    tibble(trait = tr, dist = dist, converged = TRUE, AIC = AIC(f),
+           time_ratio_31_vs28 = exp(tab[r, "Value"]), p = tab[r, "p"])
+  })
+}) |>
+  group_by(trait) |> mutate(delta_AIC = AIC - min(AIC, na.rm = TRUE)) |> ungroup() |>
+  left_join(interval_survreg |> transmute(trait, used_dist = sub("interval-censored (.*) AFT", "\\1", model)), by = "trait") |>
+  mutate(used = dist == used_dist) |> select(-used_dist) |>
+  mutate(across(where(is.double), \(x) signif(x, 4)))
+write_csv(aft_dists, file.path(TBL_DIR, "14_interval_survreg_distributions.csv"))
 fit_cox_overall <- function(tr) {
   d <- events |> filter(trait == tr)
   if (sum(d$event) < 5) return(NULL)
@@ -954,14 +985,14 @@ rows[[length(rows) + 1]] <- paper_row(
   statistic = d$logrank_chisq, df1 = d$logrank_df, p_value = d$logrank_p,
   source = "output/tables/11f_morphology_dataset_logrank_tests.csv")
 
-# Time to each stage (interval-censored Weibull; time ratio > 1 = slower under heat)
+# Time to each stage (interval-censored log-logistic; time ratio > 1 = slower under heat)
 for (tr in names(traits)) {
   d <- aft[aft$trait == tr, ]
   if (nrow(d) != 1) next
   rows[[length(rows) + 1]] <- paper_row(
     paste0(tr, "_time_ratio"), paste0(traits[[tr]], ": time ratio, heated / ambient"),
     estimate = d$time_ratio_31_vs28, ci_low = d$ratio_lo, ci_high = d$ratio_hi,
-    test = "interval-censored Weibull model", statistic = d$z, p_value = d$p, n = d$n,
+    test = paste0(sub(" AFT$", "", d$model), " model"), statistic = d$z, p_value = d$p, n = d$n,
     source = "output/tables/14_interval_survreg.csv")
 }
 d <- cox[cox$trait == "new_corallites_on_tip" & grepl("^overall", cox$scope), ]

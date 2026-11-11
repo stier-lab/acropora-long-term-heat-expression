@@ -1741,7 +1741,10 @@ heat.</li>
 <li>Skeletal mass gain was <strong>34% lower</strong> at <span class="t31">31 °C</span>. Because temperature was assigned to tanks, the
 test uses four tanks per treatment as the independent replicates
 (<em>p</em> = 0.046). A stricter tank permutation check gives <em>p</em>
-= 0.057, so treat this as moderate evidence.</li>
+= 0.057, so treat this as moderate evidence. It leans on ambient tank 3,
+which grew about as little as the heated tanks: without tank 3 the test
+gives <em>p</em> = 0.002, and leaving out tank 12 instead gives
+<em>p</em> = 0.108.</li>
 </ul>
 <p><strong>Heat and wounding across three measures of coral
 condition</strong></p>
@@ -1877,42 +1880,46 @@ wounded and unwounded.</p>
 <div class="ms">
 We analysed Fv/Fm and color score with linear mixed models. Fixed
 effects were temperature, wound status, day and source patch, with all
-their interactions, and day entered as a linear trend. Because fragments
-shared tanks and were measured repeatedly, each model included a random
-intercept for tank and for fragment. Symbiont density was
-log-transformed because it varied several-fold among fragments. It was
-analysed with the same fixed effects and a random intercept for tank
-only, because each fragment was sampled once. Growth was analysed with
-temperature, wound status, source patch and their interactions, and a
-random intercept for tank. We fitted models with lme4 and lmerTest in R
-and used Satterthwaite degrees of freedom. Because temperature was
-applied to whole tanks, the temperature test for growth uses tanks as
-the replicates (4 per temperature). As a check, we also compared the
-four ambient and four heated tank means against all 70 possible ways of
-assigning four tanks to each treatment (an exact permutation test;
-reported in the supplement).
+their interactions, and day entered as a linear trend. Because
+temperature was applied to whole tanks and fragments were measured
+repeatedly, each model included a random intercept and a random day
+slope for each tank, and a random intercept for each fragment. The tank
+slopes make the temperature × day test use tanks as the replicates.
+Symbiont density was log-transformed because it varied several-fold
+among fragments. It was analysed with the same fixed effects and a
+random intercept and day slope for each tank; each fragment was sampled
+once. Growth was analysed with temperature, wound status, source patch
+and their interactions, and a random intercept for tank. We fitted
+models with lme4 and lmerTest in R and used Satterthwaite degrees of
+freedom. Because temperature was applied to whole tanks, the temperature
+test for growth uses tanks as the replicates (4 per temperature). As a
+check, we also compared the four ambient and four heated tank means
+against all 70 possible ways of assigning four tanks to each treatment
+(an exact permutation test; reported in the supplement).
 </div>
 </div>
 <div id="results-text-draft-1" class="section level5">
 <h5>Results text (draft)</h5>
 <div class="ms">
 <p>Fv/Fm declined over time in heated fragments but not in ambient
-fragments (temperature × day, F<sub>1,228</sub> = 120.2, <em>p</em> &lt;
-0.001). By Day 14, heated fragments averaged 0.56 and ambient fragments
+fragments (temperature × day, F<sub>1,7</sub> = 18.2, <em>p</em> =
+0.004). By Day 14, heated fragments averaged 0.56 and ambient fragments
 0.67. Wounded and unwounded fragments declined at similar rates
-(temperature × wound × day, F<sub>1,228</sub> = 1.6, <em>p</em> =
-0.207).</p>
+(temperature × wound × day, F<sub>1,225</sub> = 1.9, <em>p</em> =
+0.174).</p>
 <p>Heated fragments also became paler over time (temperature × day,
-F<sub>1,228</sub> = 287.6, <em>p</em> &lt; 0.001), ending at a mean
-color score of 2.7 compared with 3.9 at ambient. The change in color
-again did not differ between wounded and unwounded fragments
-(temperature × wound × day, F<sub>1,228</sub> = 1.8, <em>p</em> =
-0.182).</p>
+F<sub>1,6</sub> = 34.3, <em>p</em> &lt; 0.001), ending at a mean color
+score of 2.7 compared with 3.9 at ambient. The change in color again did
+not differ between wounded and unwounded fragments (temperature × wound
+× day, F<sub>1,223</sub> = 2.2, <em>p</em> = 0.141).</p>
 <p>Symbiont density fell over time under heat (temperature × day,
-F<sub>1,162</sub> = 95.4, <em>p</em> &lt; 0.001). By Day 15, heated
-fragments held 0.21 million cells per cm², compared with 0.97 million at
-ambient. Wounding did not change this pattern (temperature × wound ×
-day, F<sub>1,162</sub> = 2.6, <em>p</em> = 0.112).</p>
+F<sub>1,7</sub> = 19.7, <em>p</em> = 0.003). By Day 15, heated fragments
+held 0.21 million cells per cm², compared with 0.97 million at ambient.
+Wounding did not clearly change this pattern (temperature × wound × day,
+F<sub>1,162</sub> = 3.1, <em>p</em> = 0.079), but this term depends on
+individual tanks and fragments: leaving out one tank gives <em>p</em>
+values from 0.009 to 0.292. Where there was a difference, heated wounded
+fragments kept more symbionts than heated unwounded ones, not fewer.</p>
 Heated fragments gained 34% less skeletal mass over 15 days than ambient
 fragments (4.03% vs 6.10%; temperature, F<sub>1,6</sub> = 6.3,
 <em>p</em> = 0.046). Wounded and unwounded fragments grew similarly
@@ -1933,6 +1940,11 @@ in the text. The tank permutation (<em>p</em> = 0.057) goes in the
 supplement as a check; it agrees in direction but sits just above 0.05,
 so describe the growth effect as moderate evidence rather than a strong
 result.</p>
+<p><strong>Out of date (Nov 11):</strong> <em>F</em> values for
+temperature × day from before Nov 11 (for example Fv/Fm <em>F</em> = 120
+on 228 df) came from models without tank day slopes, which treated every
+measurement as independent evidence about the slope. They overstated the
+evidence; use the numbers above (about 6–7 denominator df).</p>
 <p><strong>Out of date:</strong> earlier drafts gave wound <em>p</em> =
 0.351 and temperature × wound <em>p</em> = 0.908 for growth. Those
 predate the correction of fragment 119 to wounded.</p>
@@ -2236,14 +2248,17 @@ seen. We compared the number of fragments that reached each stage by Day
 fragments took to reach a stage, we used time-to-event models. Because
 fragments were scored once a day, each stage began at some point between
 the last check without it and the first check with it. Interval-censored
-Weibull models use that interval rather than assuming the stage began
-exactly on the day it was first seen. Fragments that had not reached a
-stage by Day 15 were kept in the analysis as “not yet reached”, not
-dropped. Models included source patch, and we checked the results with
-Cox proportional-hazards models and log-rank tests on the first day each
-stage was seen (survival package in R). Because temperature was applied
-to whole tanks, we also report the outcome for each tank and an exact
-permutation test of the four ambient and four heated tanks.
+log-logistic models use that interval rather than assuming the stage
+began exactly on the day it was first seen. We chose the log-logistic
+distribution because it fitted best, or within 0.6 AIC of the best, for
+every stage among Weibull, lognormal, log-logistic and exponential.
+Fragments that had not reached a stage by Day 15 were kept in the
+analysis as “not yet reached”, not dropped. Models included source
+patch, and we checked the results with Cox proportional-hazards models
+and log-rank tests on the first day each stage was seen (survival
+package in R). Because temperature was applied to whole tanks, we also
+report the outcome for each tank and an exact permutation test of the
+four ambient and four heated tanks.
 </div>
 </div>
 <div id="results-text-draft-2" class="section level5">
@@ -2260,13 +2275,13 @@ compared with 4 of 12 heated fragments (Fisher’s exact test, <em>p</em>
 wounded fragments budded; in every heated tank, 1 of 3 did (exact tank
 permutation, <em>p</em> = 0.029, the smallest value possible with four
 tanks per temperature). A time-to-event model estimated that budding
-took about 1.3 times as long under heat (time ratio 1.32; 95% CI
-1.19–1.47; <em>p</em> &lt; 0.001). On any given day, heated fragments
+took about 1.3 times as long under heat (time ratio 1.28; 95% CI
+1.17–1.41; <em>p</em> &lt; 0.001). On any given day, heated fragments
 were about one-fifth as likely to bud as ambient fragments (Cox hazard
 ratio 0.22; 95% CI 0.07–0.69; <em>p</em> = 0.010). Tip extension was
-reached by 11 of 12 ambient and 10 of 12 heated fragments and took
-somewhat longer under heat (time ratio 1.36; 95% CI 1.04–1.77;
-<em>p</em> = 0.023).
+reached by 11 of 12 ambient and 10 of 12 heated fragments and its timing
+did not differ clearly between temperatures (time ratio 1.16; 95% CI
+0.95–1.42; <em>p</em> = 0.135).
 </div>
 </div>
 <div id="where-the-numbers-come-from-2" class="section level5">
@@ -2285,9 +2300,16 @@ photos exist for only 7 of the 16 days.</p>
 whether a stage was present on the last scored day, so tip extension
 there is 11 vs 9. The “reached by Day 15” counts above give 11 vs
 10.</p>
-<p><strong>Tanks:</strong> the timing models treat each fragment as
-independent, but three wounded fragments shared each tank. The per-tank
-counts and the tank permutation are the safest summary.</p>
+<p><strong>Tanks:</strong> the timing models, the Cox model and the
+Fisher and log-rank tests treat each fragment as independent, but three
+wounded fragments shared each tank. Use the time ratio and hazard ratio
+as effect sizes; for significance, cite the per-tank counts and the tank
+permutation.</p>
+<p><strong>Out of date (Nov 11):</strong> earlier drafts used Weibull
+timing models, which fitted these intervals worst and gave tip extension
+a time ratio of 1.36 (<em>p</em> = 0.023, “took somewhat longer under
+heat”). The log-logistic models do not show a clear difference for tip
+extension. Budding is unchanged in direction and size.</p>
 <p><strong>Don’t report:</strong></p>
 <ul>
 <li><em>p</em>-values from the daily yes/no models (frozen in
@@ -2536,10 +2558,10 @@ then estimated the ambient-minus-heated difference for each patch at Day
 <h5>Results text (draft)</h5>
 <div class="ms">
 The effect of heat differed among source patches for Fv/Fm
-(χ²<sub>14</sub> = 77.5, <em>p</em> &lt; 0.001), color (χ²<sub>14</sub>
-= 149.8, <em>p</em> &lt; 0.001) and symbiont density (χ²<sub>14</sub> =
-62.7, <em>p</em> &lt; 0.001). The evidence for growth was weaker
-(χ²<sub>6</sub> = 13.3, <em>p</em> = 0.038). Fragments from patch C were
+(χ²<sub>8</sub> = 60.1, <em>p</em> &lt; 0.001), color (χ²<sub>8</sub> =
+108.0, <em>p</em> &lt; 0.001) and symbiont density (χ²<sub>8</sub> =
+54.6, <em>p</em> &lt; 0.001). The evidence for growth was weaker
+(χ²<sub>4</sub> = 13.0, <em>p</em> = 0.011). Fragments from patch C were
 affected least. By Day 14, heat lowered Fv/Fm by 0.036 in patch C,
 compared with 0.118 in A and 0.112 in D (model estimates averaged over
 wound status). Color fell by 0.3 points in C, compared with 1.8 in A and
@@ -2558,6 +2580,16 @@ the <code>code/03_physiology.R</code> models.
 field labels, not confirmed genotypes. Rachael’s final SNP clusters
 place all 48 sequenced patch C fragments in one cluster, while A and D
 each contain several.</p>
+<p><strong>Out of date (Nov 11):</strong> earlier versions of this test
+compared 14 df (6 for growth) because they also dropped patch × wound
+and patch × day terms. The test now drops only the terms that contain
+source patch × temperature, as the methods text says (8 df; 4 for
+growth).</p>
+<p><strong>Per-patch heat effects:</strong> six contrasts per response
+(three patches × wound status). Holm-adjusted <em>p</em> values are in
+<code>output/tables/12_genet_treatment_effects.csv</code>
+(<code>p_holm</code>). The patch C estimates are the smallest and least
+certain.</p>
 <p><strong>What this can show:</strong> with three patches, this
 describes differences among these patches. It does not estimate how much
 heat tolerance varies among genotypes in the population.</p>

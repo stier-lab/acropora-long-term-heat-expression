@@ -4,7 +4,32 @@
 
 Status labels: **yes** = adequate for the current claim; **handled** = a concern exists but a specific check shows it doesn't change the conclusion; **partial** = a specific gap remains; **not applicable** = no fitted model (counts, summaries).
 
-## Bottom line
+## Fixes applied (2026-11-11, commit after 785a06b)
+
+All four fixes and the three "state in the text" items below were applied the same day. Numbers now in `output/paper/`:
+
+| What | Before | After |
+|---|---|---|
+| Fv/Fm temperature × day | F₁,₂₂₈ = 120 | F₁,₇ = 18.2, p = 0.004 |
+| Color temperature × day | F₁,₂₂₈ = 288 | F₁,₆ = 34.3, p < 0.001 |
+| Symbionts temperature × day | F₁,₁₆₂ = 95 | F₁,₇ = 19.7, p = 0.003 |
+| Symbionts temperature × wound × day | p = 0.11 | p = 0.079; one tank left out: 0.009–0.29 (`22b_sensitivity_wound_growth.csv`) |
+| Patch × temperature (Fv/Fm, color, symbionts, growth) | χ² on 14, 14, 14, 6 df | χ²₈ = 60.1, 108.0, 54.6; χ²₄ = 13.0 (all p ≤ 0.011) |
+| Tip extension time ratio | 1.36, p = 0.023 (Weibull) | 1.16, p = 0.135 (log-logistic) |
+| Budding time ratio | 1.32, p = 1e-7 (Weibull) | 1.28, p = 3e-7 (log-logistic) |
+| Wound smoothing time ratio | 0.83, p = 0.022 | 0.89, p = 0.14 |
+
+What changed in the code:
+
+- `03_physiology.R`: Fv/Fm and color use `(1 + day || tank) + (1 | id)`; symbionts use `(1 + biopsy_day_c || tank)`. Per-patch heat contrasts gain a Holm-adjusted `p_holm` column (6 per response).
+- `05_source_patches.R`: the reduced model drops only the terms containing source patch × temperature (8 df; 4 for growth), with the same random effects as 03. This now matches the methods text.
+- `04_regeneration.R`: interval-censored models use the log-logistic distribution (best or within 0.6 AIC for every reported stage; pigment over the wound falls back to lognormal). `14_interval_survreg_distributions.csv` records the AIC comparison. One correction to the audit below: lognormal is *not* within 2.3 AIC of the best for every stage (it is 7.8 behind for tip formation), so log-logistic was used instead.
+- `07_supplement.R`: the flagged-fragment refits use the 03 structure (Fv/Fm p = 0.028, color p = 0.007 without fragments 116, 121 and tank 3). The new `22b_sensitivity_wound_growth.csv` covers the symbiont wound term (with the new model, two fragments are flagged as outliers, 163 and 212; without them p = 0.009) and growth's dependence on tank 3 (without it p = 0.002; leaving out tank 12 gives p = 0.108; 7 of 48 single-fragment drops give p > 0.05).
+- Team summary: methods and results text updated (tank slopes, log-logistic, tip extension "no clear difference", the symbiont wound caveat, growth and tank 3), plus "out of date" notes listing the superseded numbers.
+
+Status after the fixes: A, C, F and I move from partial to handled; E becomes yes (Holm reported); N becomes handled. Remaining partial: J (Cox p-values are fragment-level; cite the tank permutation) and O (exploratory genetics).
+
+## Bottom line (audit as run, before the fixes)
 
 No headline conclusion changes. Heat lowered Fv/Fm, color and symbiont density over time and stopped most wounded fragments from budding by Day 15, under every check. Four things need fixing before the numbers go into the manuscript:
 
@@ -46,7 +71,7 @@ Already handled: the budding patch × temperature Cox test (K, now reported as c
 
 ## Status by family
 
-| ID | Family | Role | Status | Changes the conclusion? |
+| ID | Family | Role | Status (as audited) | Changes the conclusion? |
 |---|---|---|---|---|
 | A | Fv/Fm over time | primary | partial | No; reported F and df overstated |
 | B | Color over time | primary | handled | No; F overstated, wound term unstable |

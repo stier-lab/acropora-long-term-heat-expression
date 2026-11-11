@@ -3,18 +3,28 @@
 #
 # Models (lme4 + lmerTest, REML, Satterthwaite F tests, type III):
 #   Fv/Fm, color: temperature x wound x day x source patch, day as a linear
-#     trend (Day 0 onward), random intercepts for tank and fragment.
-#   Symbionts:    log(cells per cm2), same fixed effects with biopsy day,
-#                 random intercept for tank (each fragment sampled once).
+#     trend (Day 0 onward). Random effects: an intercept and a day slope for
+#     each tank (uncorrelated), and an intercept for each fragment.
+#   Symbionts:    log(cells per cm2), same fixed effects with biopsy day;
+#                 an intercept and a day slope for each tank (each fragment
+#                 was sampled once).
+#   Temperature was applied to tanks, so the temperature x day test has to be
+#   judged against how much day slopes vary among tanks (about 6 denominator
+#   df). Intercept-only models overstated it (F 95-288 on 160-230 df; see
+#   docs/diagnostics/MODEL_DIAGNOSTICS_2026-11-11.md). Some fits put the tank
+#   intercept variance at zero (singular); the slope variance is what matters.
 #   Growth:       % skeletal mass change Day 0-15, temperature x wound x
 #                 source patch, random intercept for tank. This is the
 #                 reported temperature test (decided 2026-11-10); the exact
-#                 tank permutation in section 4 is the supplement check.
+#                 tank permutation in section 4 is the supplement check. The
+#                 result depends on ambient tank 3 (see 07_supplement.R).
+#   Per-patch heat effects (emmeans, Day 14) carry a Holm-adjusted p across
+#   the 6 patch x wound contrasts of each response.
 #
 # Writes: output/tables/12_anova_summary.csv, 12_genet_treatment_effects.csv,
 #         03_color_end_proportions.csv, 05_buoyant_weight_tank_test.csv,
 #         06_symbiont_chl_summary.csv, 45_figure2_summary.csv, 45_figure2_tank_means.csv
-#         figures/45_physiology_figure2 (Figure 2), 03_color_trajectory,
+#         figures/45_physiology_figure2 (Figure 2; panels 45a-c), 03_color_trajectory,
 #         05_buoyant_weight_growth, 06_symbiont_density_by_day
 #         output/models/12_*.rds (not tracked; read by 08_checks.R)
 #         output/paper/physiology_numbers.csv
@@ -40,6 +50,7 @@ record_anova <- function(model, name) {
 record_patch_effect <- function(emm, name) {
   contr <- as_tibble(pairs(emm, by = c("thicket", "wound"), adjust = "none"))
   contr$response <- name
+  contr$p_holm <- p.adjust(contr$p.value, "holm")   # 6 patch x wound contrasts
   patch_rows[[name]] <<- contr
 }
 
@@ -47,7 +58,7 @@ record_patch_effect <- function(emm, name) {
 # Day -1 (Fv/Fm) and Day -4 (color) are pre-treatment baselines: shown in the
 # figures but left out of the models, so the day slope is post-clipping only.
 pam_m <- pam |> mutate(thicket = as.factor(thicket)) |> filter(day >= 0)
-m_pam <- lmerTest::lmer(fv_fm ~ treatment * wound * day * thicket + (1 | tank) + (1 | id),
+m_pam <- lmerTest::lmer(fv_fm ~ treatment * wound * day * thicket + (1 + day || tank) + (1 | id),
                         data = pam_m, REML = TRUE, control = ctrl)
 saveRDS(m_pam, file.path(MOD_DIR, "12_pam_lmm.rds"))
 record_anova(m_pam, "pam_fvfm")
@@ -55,7 +66,7 @@ record_patch_effect(emmeans::emmeans(m_pam, ~ treatment | thicket * wound, at = 
                     "pam_fvfm")
 
 color_m <- color |> mutate(thicket = as.factor(thicket)) |> filter(day >= 0)
-m_color <- lmerTest::lmer(color_num ~ treatment * wound * day * thicket + (1 | tank) + (1 | id),
+m_color <- lmerTest::lmer(color_num ~ treatment * wound * day * thicket + (1 + day || tank) + (1 | id),
                           data = color_m, REML = TRUE, control = ctrl)
 saveRDS(m_color, file.path(MOD_DIR, "12_color_lmm.rds"))
 record_anova(m_color, "color_dscale")
@@ -73,7 +84,7 @@ record_patch_effect(emmeans::emmeans(m_bw, ~ treatment | thicket * wound), "grow
 sym_m <- sym |>
   filter(is.finite(cells_per_cm2), cells_per_cm2 > 0) |>
   mutate(thicket = factor(thicket), biopsy_day_c = biopsy_day - 1)
-m_zoox <- lmerTest::lmer(log(cells_per_cm2) ~ treatment * wound * biopsy_day_c * thicket + (1 | tank),
+m_zoox <- lmerTest::lmer(log(cells_per_cm2) ~ treatment * wound * biopsy_day_c * thicket + (1 + biopsy_day_c || tank),
                          data = sym_m, REML = TRUE, control = ctrl)
 saveRDS(m_zoox, file.path(MOD_DIR, "12_zoox_lmm.rds"))
 record_anova(m_zoox, "log_zoox_density")
@@ -278,6 +289,9 @@ figure2 <- (a / (b + guides(fill = "none", shape = "none")) /
   plot_layout(guides = "collect", heights = c(1, 1, 0.95)) &
   theme(legend.position = "bottom")
 save_fig(figure2, "45_physiology_figure2", width = 185, height = 235)
+save_fig(a, "45a_photosynthesis", width = 185, height = 85)
+save_fig(b, "45b_symbiont_boxplots", width = 185, height = 85)
+save_fig(c, "45c_growth_boxplots", width = 185, height = 85)
 stopifnot(all(raw$wound[raw$id == 119L] == "yes"),
           all(count(growth, treatment, wound)$n == 12L))
 cat("Figure 2 verified: 48 repeated PAM fragments, 192 destructive symbiont samples,",

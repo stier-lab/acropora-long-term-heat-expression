@@ -1,5 +1,7 @@
 # Analysis and diagnostic inventory
 
+> **Superseded 2026-11-11** by `docs/diagnostics/MODEL_DIAGNOSTICS_2026-11-11.md`. This inventory describes the models before the code was merged and before the 2026-11-11 model fixes (for example, it still lists intercept-only random effects and Weibull timing models). Kept for provenance.
+
 Generated: 2026-10-27 17:51:16 PDT
 
 This is the parent list for the project. It answers a simple question:

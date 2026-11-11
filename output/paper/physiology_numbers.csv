@@ -1,15 +1,15 @@
 key,description,estimate,ci_low,ci_high,test,statistic,df1,df2,p_value,n,source
-pam_temp_x_day,Fv/Fm: temperature x day,,,,F test (Satterthwaite),120.162,1,228,0,,output/tables/12_anova_summary.csv
-pam_temp_x_wound_x_day,Fv/Fm: temperature x wound x day,,,,F test (Satterthwaite),1.60242,1,228,0.20685,,output/tables/12_anova_summary.csv
-pam_wound,Fv/Fm: wound,,,,F test (Satterthwaite),0.25508,1,152.587,0.61425,,output/tables/12_anova_summary.csv
+pam_temp_x_day,Fv/Fm: temperature x day,,,,F test (Satterthwaite),18.2254,1,7.02117,0.00368,,output/tables/12_anova_summary.csv
+pam_temp_x_wound_x_day,Fv/Fm: temperature x wound x day,,,,F test (Satterthwaite),1.86366,1,224.988,0.17357,,output/tables/12_anova_summary.csv
+pam_wound,Fv/Fm: wound,,,,F test (Satterthwaite),0.28081,1,144.226,0.59698,,output/tables/12_anova_summary.csv
 pam_day14_ambient,"Fv/Fm on Day 14, ambient (mean of wound groups)",0.669646,,,,,,,,,output/tables/45_figure2_summary.csv
 pam_day14_heated,"Fv/Fm on Day 14, heated (mean of wound groups)",0.564458,,,,,,,,,output/tables/45_figure2_summary.csv
-color_temp_x_day,Color: temperature x day,,,,F test (Satterthwaite),287.625,1,228,0,,output/tables/12_anova_summary.csv
-color_temp_x_wound_x_day,Color: temperature x wound x day,,,,F test (Satterthwaite),1.7946,1,228,0.1817,,output/tables/12_anova_summary.csv
+color_temp_x_day,Color: temperature x day,,,,F test (Satterthwaite),34.3128,1,6.16803,9.9e-4,,output/tables/12_anova_summary.csv
+color_temp_x_wound_x_day,Color: temperature x wound x day,,,,F test (Satterthwaite),2.18612,1,223.274,0.14067,,output/tables/12_anova_summary.csv
 color_final_ambient,"Final color score (1-6), ambient",3.9375,,,,,,,,,output/tables/03_color_end_proportions.csv
 color_final_heated,"Final color score (1-6), heated",2.6875,,,,,,,,,output/tables/03_color_end_proportions.csv
-zoox_temp_x_day,Symbionts: temperature x day,,,,F test (Satterthwaite),95.387,1,162,0,,output/tables/12_anova_summary.csv
-zoox_temp_x_wound_x_day,Symbionts: temperature x wound x day,,,,F test (Satterthwaite),2.55791,1,162,0.11169,,output/tables/12_anova_summary.csv
+zoox_temp_x_day,Symbionts: temperature x day,,,,F test (Satterthwaite),19.6928,1,7.30205,0.00272,,output/tables/12_anova_summary.csv
+zoox_temp_x_wound_x_day,Symbionts: temperature x wound x day,,,,F test (Satterthwaite),3.13341,1,162,0.07858,,output/tables/12_anova_summary.csv
 zoox_day15_ambient,"Symbionts on Day 15, ambient (million cells per cm2)",0.967415,,,,,,,,,output/tables/06_symbiont_chl_summary.csv
 zoox_day15_heated,"Symbionts on Day 15, heated (million cells per cm2)",0.208909,,,,,,,,,output/tables/06_symbiont_chl_summary.csv
 growth_temp,Growth: temperature (reported test),,,,F test (Satterthwaite),6.32874,1,6,0.04555,,output/tables/12_anova_summary.csv

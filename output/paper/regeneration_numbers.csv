@@ -10,11 +10,11 @@ tip_exist_reached_by_day15,"New tip forms: fragments that reached the stage by D
 tip_extension_reached_by_day15,"Tip extends: fragments that reached the stage by Day 15 (estimate = ambient, statistic = heated)",11,,,,10,,,,12,output/tables/36_stage_timing_mean_iqr.csv
 new_corallites_on_tip_reached_by_day15,"New radial corallites bud: fragments that reached the stage by Day 15 (estimate = ambient, statistic = heated)",12,,,,4,,,,12,output/tables/36_stage_timing_mean_iqr.csv
 budding_logrank,Budding: log-rank test,,,,log-rank,15.36,1,,8.88509e-5,,output/tables/11f_morphology_dataset_logrank_tests.csv
-axial_polyp_formation_time_ratio,"Axial polyp forms: time ratio, heated / ambient",0.894662,0.668301,1.1977,interval-censored Weibull model,-0.74789,,,0.454527,24,output/tables/14_interval_survreg.csv
-wound_smoothed_time_ratio,"Cut surface smooths over: time ratio, heated / ambient",0.831402,0.70954,0.974193,interval-censored Weibull model,-2.28333,,,0.022411,24,output/tables/14_interval_survreg.csv
-tip_exist_time_ratio,"New tip forms: time ratio, heated / ambient",1.12826,0.79019,1.61097,interval-censored Weibull model,0.664111,,,0.506619,24,output/tables/14_interval_survreg.csv
-tip_extension_time_ratio,"Tip extends: time ratio, heated / ambient",1.35755,1.04225,1.76823,interval-censored Weibull model,2.26685,,,0.0233993,24,output/tables/14_interval_survreg.csv
-new_corallites_on_tip_time_ratio,"New radial corallites bud: time ratio, heated / ambient",1.32106,1.19103,1.46528,interval-censored Weibull model,5.26698,,,1.38684e-7,24,output/tables/14_interval_survreg.csv
+axial_polyp_formation_time_ratio,"Axial polyp forms: time ratio, heated / ambient",0.90355,0.700259,1.16586,interval-censored loglogistic model,-0.779934,,,0.43543,24,output/tables/14_interval_survreg.csv
+wound_smoothed_time_ratio,"Cut surface smooths over: time ratio, heated / ambient",0.891027,0.765036,1.03777,interval-censored loglogistic model,-1.48339,,,0.137971,24,output/tables/14_interval_survreg.csv
+tip_exist_time_ratio,"New tip forms: time ratio, heated / ambient",1.04242,0.874523,1.24255,interval-censored loglogistic model,0.463657,,,0.642894,24,output/tables/14_interval_survreg.csv
+tip_extension_time_ratio,"Tip extends: time ratio, heated / ambient",1.1643,0.953733,1.42135,interval-censored loglogistic model,1.49457,,,0.135027,24,output/tables/14_interval_survreg.csv
+new_corallites_on_tip_time_ratio,"New radial corallites bud: time ratio, heated / ambient",1.2823,1.16634,1.4098,interval-censored loglogistic model,5.14156,,,2.72464e-7,24,output/tables/14_interval_survreg.csv
 budding_hazard_ratio,"Budding: hazard ratio, heated / ambient (Cox)",0.216556,0.0681071,0.688571,"Cox model, stratified by source patch",-2.59219,,,0.00953684,24,output/tables/14_cox_hazard_ratios.csv
 budding_patch_x_temp,"Budding: source patch x temperature (unstable: no heated patch A fragment budded, so the model cannot estimate it; report the counts below)",,,,likelihood-ratio test,11.3023,2,,0.00351341,,output/tables/14_cox_genet_LRT.csv
 budding_per_tank_ambient,"Budding by Day 15, ambient tanks: wounded fragments that budded per tank (estimate = fewest, statistic = most)",3,,,,3,4,,,3,data/processed/physio_clean.rds

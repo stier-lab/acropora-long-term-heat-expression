@@ -54,6 +54,15 @@ Output files kept the names they had before the scripts were merged, so links in
 - **Daily yes/no regeneration models.** Their p-values change with the computer and package versions (`docs/provenance/rerun_check_2026-11-10.md`). They are frozen in `extras/`. The regeneration results use stage counts, tank counts and the timing models instead.
 - **The average day a stage was reached** for stages some fragments never reached. For budding under heat, that average describes only 4 of 12 fragments.
 
+## Model choices (2026-11-11)
+
+Checked in `docs/diagnostics/MODEL_DIAGNOSTICS_2026-11-11.md`:
+
+- Fv/Fm, color and symbiont models have a random day slope for each tank, so temperature × day uses tanks as the replicates.
+- The source-patch test drops only the terms containing source patch × temperature.
+- Timing models use the log-logistic distribution (`14_interval_survreg_distributions.csv` compares four).
+- `07_supplement.R` writes `22b_sensitivity_wound_growth.csv`, showing how the symbiont wound result and the growth result depend on single tanks and fragments.
+
 ## After a run
 
 Rerunning rewrites tracked files. To see which changes are real:
