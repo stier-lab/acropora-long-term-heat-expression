@@ -16,8 +16,14 @@ tip_exist_time_ratio,"New tip forms: time ratio, heated / ambient",1.12826,0.790
 tip_extension_time_ratio,"Tip extends: time ratio, heated / ambient",1.35755,1.04225,1.76823,interval-censored Weibull model,2.26685,,,0.0233993,24,output/tables/14_interval_survreg.csv
 new_corallites_on_tip_time_ratio,"New radial corallites bud: time ratio, heated / ambient",1.32106,1.19103,1.46528,interval-censored Weibull model,5.26698,,,1.38684e-7,24,output/tables/14_interval_survreg.csv
 budding_hazard_ratio,"Budding: hazard ratio, heated / ambient (Cox)",0.216556,0.0681071,0.688571,"Cox model, stratified by source patch",-2.59219,,,0.00953684,24,output/tables/14_cox_hazard_ratios.csv
-budding_patch_x_temp,Budding: source patch x temperature (exploratory; 4 fragments per patch and temperature),,,,likelihood-ratio test,11.3023,2,,0.00351341,,output/tables/14_cox_genet_LRT.csv
+budding_patch_x_temp,"Budding: source patch x temperature (unstable: no heated patch A fragment budded, so the model cannot estimate it; report the counts below)",,,,likelihood-ratio test,11.3023,2,,0.00351341,,output/tables/14_cox_genet_LRT.csv
 budding_per_tank_ambient,"Budding by Day 15, ambient tanks: wounded fragments that budded per tank (estimate = fewest, statistic = most)",3,,,,3,4,,,3,data/processed/physio_clean.rds
 budding_per_tank_heated,"Budding by Day 15, heated tanks: wounded fragments that budded per tank (estimate = fewest, statistic = most)",1,,,,1,4,,,3,data/processed/physio_clean.rds
 budding_tank_permutation,"Budding: exact permutation test of tank proportions, 4 vs 4 tanks",0.666667,,,exact permutation (70 assignments); smallest possible p = 2/70,,,,0.0285714,8,data/processed/physio_clean.rds
+budding_ambient_patch_A,"Budding by Day 15, ambient, source patch A: wounded fragments that budded",4,,,,,,,,4,data/processed/physio_clean.rds
+budding_ambient_patch_C,"Budding by Day 15, ambient, source patch C: wounded fragments that budded",4,,,,,,,,4,data/processed/physio_clean.rds
+budding_ambient_patch_D,"Budding by Day 15, ambient, source patch D: wounded fragments that budded",4,,,,,,,,4,data/processed/physio_clean.rds
+budding_heated_patch_A,"Budding by Day 15, heated, source patch A: wounded fragments that budded",0,,,,,,,,4,data/processed/physio_clean.rds
+budding_heated_patch_C,"Budding by Day 15, heated, source patch C: wounded fragments that budded",3,,,,,,,,4,data/processed/physio_clean.rds
+budding_heated_patch_D,"Budding by Day 15, heated, source patch D: wounded fragments that budded",1,,,,,,,,4,data/processed/physio_clean.rds
 tissue_cover_by_day1,Microscope experiment: fragments with tissue covering the cut by Day 1,16,,,,,,,,16,data/processed/microscope_physio_clean.rds

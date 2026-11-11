@@ -36,7 +36,7 @@ A 15-day heat x wound experiment on the branching coral *A. pulchra*: we clipped
 
 ```bash
 cd ~/Stier-LTH-expression-by-temperature-2025
-Rscript -e 'install.packages(c("tidyverse","here","readxl","janitor","scales","patchwork","lme4","lmerTest","blme","nlme","MuMIn","car","emmeans","DHARMa","broom","broom.mixed","influence.ME","lmtest","survival","survminer","xml2"))'
+Rscript -e 'install.packages(c("tidyverse","here","readxl","janitor","scales","patchwork","broom","broom.mixed","lme4","lmerTest","emmeans","DHARMa","survival","xml2","rmarkdown"))'
 Rscript code/run_all.R          # under a minute; rebuilds every number, table and figure the paper uses
 ```
 

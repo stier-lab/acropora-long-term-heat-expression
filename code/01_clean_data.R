@@ -118,6 +118,14 @@ cc <- read_csv(file.path(DATA_RAW, "color_card", "data.csv"), show_col_types = F
     color_num = convert_color(color)
   ) |>
   filter(!is.na(color_num))
+# The color sheet records every fragment as unwounded at the Day -4 baseline
+# (before clipping). Use each fragment's assigned wound group from the metadata
+# so the baseline is grouped like every other day (as in the Fv/Fm data).
+stopifnot(all(cc$id %in% meta$id))
+cc <- cc |>
+  select(-wound) |>
+  left_join(meta |> distinct(id, wound), by = "id") |>
+  relocate(wound, .after = id)
 saveRDS(cc, file.path(DATA_PROC, "color_clean.rds"))
 
 # ---- 4. Daily regeneration scores (main experiment) ------------------------

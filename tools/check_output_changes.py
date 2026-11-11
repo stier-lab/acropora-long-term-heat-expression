@@ -26,8 +26,10 @@ def pdf_norm(b):
 def text_norm(b):
     return b"\n".join(l.rstrip() for l in b.replace(b"\r\n", b"\n").split(b"\n")).strip()
 
-modified = [l[3:] for l in git("status", "--porcelain", text=True).splitlines() if l.startswith(" M")]
-untracked = [l[3:] for l in git("status", "--porcelain", text=True).splitlines() if l.startswith("??")]
+# -z: NUL-separated, paths unquoted (safe with spaces). Y = working-tree status.
+entries = [e for e in git("status", "--porcelain", "-z", text=True).split("\0") if e]
+modified = [e[3:] for e in entries if e[1] == "M"]
+untracked = [e[3:] for e in entries if e[:2] == "??"]
 noise, real = [], []
 for f in modified:
     old, new = git("show", f"HEAD:{f}"), open(f, "rb").read()

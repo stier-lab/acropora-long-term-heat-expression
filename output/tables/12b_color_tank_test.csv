@@ -1,0 +1,2 @@
+response,day,test,n_tanks,estimate_28_minus_31,p_two_sided,paled_per_tank_28C,paled_per_tank_31C,note
+color_dscale,14,tank-level exact permutation,8,1.25,0.02857,"1, 1, 0, 0","6, 4, 5, 4",Paled = card score below 4. 2/70 = 0.029 is the smallest possible two-sided p with 4 tanks per temperature.

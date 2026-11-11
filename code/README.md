@@ -15,7 +15,7 @@ Rscript code/run_all.R    # under a minute; rebuilds everything below
 | `04_regeneration.R` | Day 15 stage counts, timing models, stage table; Figure 1B. | Results 2 |
 | `05_source_patches.R` | Does the heat effect differ among source patches A, C and D? | Results 3 |
 | `06_genetics.R` | Final genetic clusters; one-row-per-library table for the RNA-seq team. | Results 4 |
-| `07_supplement.R` | Microscope-experiment figure, results without flagged fragments, color as an ordered score. | Supplement |
+| `07_supplement.R` | Microscope-experiment figure, results without flagged fragments, tank-level color check. | Supplement |
 | `08_checks.R` | Data validation, model residual checks, Cox proportional-hazards checks. | none (QA) |
 | `run_all.R` | Runs 01–08 in order. | none |
 
@@ -81,7 +81,7 @@ The 26 scripts the paper used were merged into 01–08. Two tags mark the earlie
 | `analysis/11c_stage_counts` (tests), `14_stage_timing_models`, `36_stage_timing_tables`, `39_stage_timing_figures` (39b), `paper/regeneration` | `04_regeneration.R` |
 | `analysis/13_source_patch_tests`, `paper/source_patches` | `05_source_patches.R` |
 | `rnaseq/31_rnaseq_covariate_table`, `analysis/43_genetic_clusters` | `06_genetics.R` |
-| `analysis/11_microscope_experiment` (figure), `checks/22_sensitivity_flagged`, `analysis/12_models` (ordinal color) | `07_supplement.R` |
+| `analysis/11_microscope_experiment` (figure), `checks/22_sensitivity_flagged` | `07_supplement.R`, which also adds a tank-level color check in place of the ordinal color model (that model could not be estimated) |
 | `checks/18_data_validation`, `analysis/14_stage_timing_models` (PH tests), `checks/diagnostics/A` (residual checks, rewritten shorter) | `08_checks.R` |
 | `analysis/12_models` and `04_regeneration_scores` (daily yes/no models), `20_master_results_table`, everything in `exploratory/`, other `checks/`, `rnaseq/21`, `32`, plate figure, `archive/` | `extras/` (frozen) |
 | `run_paper.R`, `tools/check_output_changes.py` | `run_all.R` now takes under a minute; the checker moved to `tools/` at the repo root |

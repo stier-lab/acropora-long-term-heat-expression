@@ -150,7 +150,7 @@ endpoint_tests <- events_by_coral |>
   ungroup() |>
   mutate(
     test = "Fisher exact test at last scored day",
-    test_scope = "paired with figures 11c-11e; cohorts tested separately"
+    test_scope = "cohorts tested separately"
   ) |>
   arrange(dataset, trait_order)
 write_csv(endpoint_tests,
@@ -207,8 +207,8 @@ logrank_tests <- events_by_coral |>
   mutate(
     test = "Log-rank test on first-observed day",
     test_scope = paste(
-      "paired with figures 11c-11e; cohorts tested separately;",
-      "main-cohort primary inference remains script 14 interval-censored AFT"
+      "cohorts tested separately;",
+      "main-experiment timing results use the interval-censored models (04_regeneration.R, section 2)"
     )
   ) |>
   arrange(dataset, trait_order)
@@ -973,7 +973,7 @@ rows[[length(rows) + 1]] <- paper_row(
   source = "output/tables/14_cox_hazard_ratios.csv")
 d <- cox_gx[cox_gx$trait == "new_corallites_on_tip", ]
 rows[[length(rows) + 1]] <- paper_row(
-  "budding_patch_x_temp", "Budding: source patch x temperature (exploratory; 4 fragments per patch and temperature)",
+  "budding_patch_x_temp", "Budding: source patch x temperature (unstable: no heated patch A fragment budded, so the model cannot estimate it; report the counts below)",
   test = "likelihood-ratio test", statistic = d$chisq_genet_trt_int, df1 = d$df_genet_trt_int,
   p_value = d$p_genet_trt_int, source = "output/tables/14_cox_genet_LRT.csv")
 
@@ -1004,6 +1004,22 @@ rows[[length(rows) + 1]] <- paper_row(
   "budding_tank_permutation", "Budding: exact permutation test of tank proportions, 4 vs 4 tanks",
   estimate = obs, test = "exact permutation (70 assignments); smallest possible p = 2/70",
   p_value = perm_p, n = length(props), source = "data/processed/physio_clean.rds")
+
+# Budding by source patch (counts behind the patch x temperature pattern)
+by_patch <- ph |>
+  dplyr::filter(wound == "yes") |>
+  dplyr::group_by(treatment, thicket, id) |>
+  dplyr::summarise(budded = any(new_corallites_on_tip %in% c("yes", 1, TRUE)), .groups = "drop") |>
+  dplyr::group_by(treatment, thicket) |>
+  dplyr::summarise(n = dplyr::n(), k = sum(budded), .groups = "drop")
+for (i in seq_len(nrow(by_patch))) {
+  lab <- if (by_patch$treatment[i] == "28C") "ambient" else "heated"
+  rows[[length(rows) + 1]] <- paper_row(
+    paste0("budding_", lab, "_patch_", toupper(by_patch$thicket[i])),
+    paste0("Budding by Day 15, ", lab, ", source patch ", toupper(by_patch$thicket[i]),
+           ": wounded fragments that budded"),
+    estimate = by_patch$k[i], n = by_patch$n[i], source = "data/processed/physio_clean.rds")
+}
 
 # Tissue cover, separate microscope experiment
 mic <- readRDS(file.path(DATA_PROC, "microscope_physio_clean.rds"))

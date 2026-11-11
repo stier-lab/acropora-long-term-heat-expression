@@ -6,14 +6,14 @@
 #   2 Results without the flagged fragments: refit the Fv/Fm and color
 #     temperature x day tests and the growth tank permutation without
 #     fragments 116 and 121 and without tank 3 (slow to equilibrate).
-#   3 Color as an ordered score: robustness check for the color model.
+#   3 Color: tank-level permutation check (no distribution assumed).
 #
 # Other supplement material is written by the main scripts: the growth tank
 # permutation (03_physiology.R), Kaplan-Meier curves and Cox models
 # (04_regeneration.R), and the wax standard curve (01_clean_data.R).
 #
 # Writes: output/tables/11_microscope_trait_trajectory.csv, 22_sensitivity_flagged.csv,
-#         12b_color_clmm.csv, 12b_color_clmm_genet_effects.csv
+#         12b_color_tank_test.csv
 #         figures/11_microscope_trait_trajectories
 # =============================================================================
 
@@ -133,56 +133,34 @@ results$bw_drop <- tank_perm(bw_drop, "Growth % (flagged dropped)")
 out <- bind_rows(results)
 write_csv(out, file.path(TBL_DIR, "22_sensitivity_flagged.csv"))
 
-# ---- 3. Color as an ordered score (robustness) ------------------------------
-# Color is a 1-6 card score, so the Gaussian model's residuals are not normal
-# (see 08_model_checks.csv). This refits color as an ordered category
-# (cumulative-link mixed model, ordinal package) to check that the temperature
-# terms point the same way.
-cat("\n=== PART 2: color ordinal-CLMM robustness ===\n")
-color_ord_df <- readRDS(file.path(DATA_PROC, "color_clean.rds")) |>
-  mutate(thicket = factor(thicket),
-         color_ord = factor(pmin(pmax(as.integer(floor(color_num + 0.5)), 1), 6),
-                            ordered = TRUE))
-m_clmm <- ordinal::clmm(
-  color_ord ~ treatment * wound * day + treatment * thicket +
-              treatment * wound * thicket + day * thicket + (1 | id),
-  data = color_ord_df, Hess = TRUE
-)
-saveRDS(m_clmm, file.path(MOD_DIR, "12b_color_clmm.rds"))
-av_drop <- as.data.frame(drop1(m_clmm, test = "Chisq")) |>
-  tibble::rownames_to_column("term") |>
-  mutate(response = "color_dscale_ordinal")
-write_csv(av_drop, file.path(TBL_DIR, "12b_color_clmm.csv"))
-av <- av_drop |> rename(LR.stat = LRT, `Pr(>Chisq)` = `Pr(>Chi)`)
-m_gauss <- readRDS(file.path(MOD_DIR, "12_color_lmm.rds"))
-gauss_av <- as.data.frame(anova(m_gauss))
-cat("\n=== Treatment main-effect comparison (Gaussian LMM vs ordinal CLMM) ===\n")
-if ("treatment" %in% rownames(gauss_av)) {
-  cat("Gaussian LMM treatment: F =",
-      round(gauss_av["treatment", "F value"], 2), "\n")
-}
-trt_row <- av[grepl("^treatment$", av$term), , drop = FALSE]
-if (nrow(trt_row) > 0) {
-  cat("Ordinal CLMM treatment: LRT =", round(trt_row$LR.stat[1], 2),
-      " p =", signif(trt_row$`Pr(>Chisq)`[1], 3), "\n")
-} else {
-  cat("CLMM drop1 did not report a main treatment term (likely all retained due to higher-order interactions); see 12b_color_clmm.csv for full term-by-term tests.\n")
-}
-pairs_df <- tryCatch({
-  emm <- emmeans::emmeans(m_clmm, ~ treatment | thicket * wound,
-                          at = list(day = 14))
-  as_tibble(pairs(emm, adjust = "none")) |>
-    mutate(response = "color_dscale_ordinal")
-}, error = function(e) {
-  message("emmeans pairwise contrasts skipped (Hessian singular: ",
-          conditionMessage(e), ")")
-  tibble(
-    note = "CLMM Hessian singular; per-genet contrasts not computable from this fit",
-    response = "color_dscale_ordinal"
-  )
-})
-write_csv(pairs_df, file.path(TBL_DIR, "12b_color_clmm_genet_effects.csv"))
-cat("\nWrote 12b_color_clmm.csv, 12b_color_clmm_genet_effects.csv, 12b_color_clmm.rds\n")
-cat("CLMM fit converged (LL =", round(as.numeric(logLik(m_clmm)), 1),
-    "); use drop1 LRTs in 12b_color_clmm.csv for term-by-term tests.\n")
-cat("Robustness conclusion: see report (overall direction of every term should match the Gaussian LMM).\n")
+# ---- 3. Color: tank-level check ------------------------------------------
+# Color is a 1-6 card score and ambient fragments almost all stayed at 4, so
+# the Gaussian model's residuals are not normal (18_model_checks.csv) and an
+# ordered-category model cannot be estimated (near-complete separation). The
+# check that needs no distribution: compare final mean color of the 4 ambient
+# and 4 heated tanks against all 70 ways of splitting 8 tanks into two groups
+# of 4, as for growth (03_physiology.R) and budding (04_regeneration.R).
+color_final <- readRDS(file.path(DATA_PROC, "color_clean.rds")) |>
+  filter(day == max(day, na.rm = TRUE))
+tank_color <- color_final |>
+  group_by(tank, treatment) |>
+  summarise(mean_color = mean(color_num), n_corals = n(),
+            n_paled = sum(color_num < 4), .groups = "drop")
+obs_diff <- with(tank_color, mean(mean_color[treatment == "28C"]) - mean(mean_color[treatment == "31C"]))
+vals <- tank_color$mean_color
+assignments <- combn(seq_along(vals), sum(tank_color$treatment == "28C"), simplify = FALSE)
+perm_diffs <- vapply(assignments, function(idx) mean(vals[idx]) - mean(vals[-idx]), numeric(1))
+color_tank_test <- tibble(
+  response = "color_dscale",
+  day = unique(color_final$day),
+  test = "tank-level exact permutation",
+  n_tanks = nrow(tank_color),
+  estimate_28_minus_31 = obs_diff,
+  p_two_sided = mean(abs(perm_diffs) >= abs(obs_diff)),
+  paled_per_tank_28C = paste(tank_color$n_paled[tank_color$treatment == "28C"], collapse = ", "),
+  paled_per_tank_31C = paste(tank_color$n_paled[tank_color$treatment == "31C"], collapse = ", "),
+  note = "Paled = card score below 4. 2/70 = 0.029 is the smallest possible two-sided p with 4 tanks per temperature."
+) |>
+  mutate(across(where(is.double), \(x) signif(x, 4)))
+write_csv(color_tank_test, file.path(TBL_DIR, "12b_color_tank_test.csv"))
+print(as.data.frame(color_tank_test))
