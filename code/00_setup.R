@@ -1,7 +1,7 @@
 # =============================================================================
 # Purpose: Project-wide setup — packages, paths, theme, palettes
 #
-# What & why: every numbered analysis script starts with
+# What & why: each of 01-08 starts with
 #   `source(here::here("code", "00_setup.R"))`. It loads the shared packages,
 #   fixes the random seed so results are reproducible, sets the project-wide
 #   contrast convention, and defines the folder paths, colour palettes, and
@@ -179,7 +179,7 @@ message("Setup complete. ", length(search()), " env entries; ",
         format(Sys.time(), "%Y-%m-%d %H:%M:%S"))
 
 # ---- Paper numbers -----------------------------------------------------------
-# Scripts in code/paper/ write one CSV per results section to output/paper/.
+# The last section of scripts 02-05 writes one CSV per results section to output/paper/.
 # Each row is one number used in the text. Values are rounded to 6 significant
 # digits so that tiny floating-point differences between runs don't show up as
 # changes in git.

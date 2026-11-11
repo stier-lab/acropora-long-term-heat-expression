@@ -1714,9 +1714,7 @@ Dissolved oxygen was lower in heated tanks (6.75 vs 7.38 mg/L).
 <h5>Where the numbers come from</h5>
 <p class="src">
 <code>output/paper/tanks_water_numbers.csv</code>, written by
-<code>code/paper/tanks_water.R</code> from the outputs of
-<code>code/analysis/08_temperature.R</code> and
-<code>code/analysis/09_water_quality.R</code>.
+<code>code/02_tanks_water.R</code>.
 </p>
 <div class="dont">
 <p><strong>Open question:</strong> the pH scale (NBS or total) is not
@@ -1926,12 +1924,8 @@ F<sub>1,30</sub> = 0.0, <em>p</em> = 0.997).
 <h5>Where the numbers come from</h5>
 <p class="src">
 <code>output/paper/physiology_numbers.csv</code>, written by
-<code>code/paper/physiology.R</code>. The models are fitted in
-<code>code/analysis/12_models.R</code>; growth means come from
-<code>code/analysis/45_figure2_physiology.R</code>, final color from
-<code>code/analysis/03_color.R</code>, symbiont means from
-<code>code/analysis/06_symbionts.R</code>, and the tank permutation from
-<code>code/analysis/05_growth.R</code>.
+<code>code/03_physiology.R</code> (models in section 1, Figure 2 means
+in section 5, the tank permutation in section 4).
 </p>
 <div class="dont">
 <p><strong>Growth test (decided Nov 10):</strong> report the model test
@@ -2279,13 +2273,9 @@ somewhat longer under heat (time ratio 1.36; 95% CI 1.04–1.77;
 <h5>Where the numbers come from</h5>
 <p class="src">
 <code>output/paper/regeneration_numbers.csv</code>, written by
-<code>code/paper/regeneration.R</code>. Stage counts and Fisher tests
-come from <code>code/analysis/11c_stage_counts.R</code>; timing models
-from <code>code/analysis/14_stage_timing_models.R</code>;
-reached-by-Day-15 counts from
-<code>code/analysis/36_stage_timing_tables.R</code>; tank counts and
-tissue cover are calculated in <code>code/paper/regeneration.R</code>
-from the processed scoring data.
+<code>code/04_regeneration.R</code> (stage counts and Fisher tests in
+section 1, timing models in section 2, reached-by-Day-15 counts in
+section 3, tank counts and tissue cover in section 5).
 </p>
 <div class="dont">
 <p><strong>To confirm:</strong> whether the daily scores were made by
@@ -2300,11 +2290,11 @@ independent, but three wounded fragments shared each tank. The per-tank
 counts and the tank permutation are the safest summary.</p>
 <p><strong>Don’t report:</strong></p>
 <ul>
-<li><em>p</em>-values from the daily yes/no models in
-<code>code/analysis/12_models.R</code> (<code>12_morph_*</code>,
-<code>12c_*</code>, and the “Morphology” rows of
-<code>20_master_results.csv</code>), including the planned tip-extension
-test. Their results change with the computer and package versions
+<li><em>p</em>-values from the daily yes/no models (frozen in
+<code>extras/</code>: <code>12_morph_*</code>, <code>12c_*</code>, and
+the “Morphology” rows of <code>20_master_results.csv</code>), including
+the planned tip-extension test. Their results change with the computer
+and package versions
 (<code>docs/provenance/rerun_check_2026-11-10.md</code>).</li>
 <li>the average day each stage was reached, for stages some fragments
 never reached. For budding under heat, that average describes only 4 of
@@ -2558,9 +2548,8 @@ wound status). Color fell by 0.3 points in C, compared with 1.8 in A and
 <h5>Where the numbers come from</h5>
 <p class="src">
 <code>output/paper/source_patches_numbers.csv</code>, written by
-<code>code/paper/source_patches.R</code> from the outputs of
-<code>code/analysis/13_source_patch_tests.R</code> and
-<code>code/analysis/12_models.R</code>.
+<code>code/05_source_patches.R</code>, using per-patch heat effects from
+the <code>code/03_physiology.R</code> models.
 </p>
 <div class="dont">
 <p><strong>Source patches vs genotypes:</strong> source patches are

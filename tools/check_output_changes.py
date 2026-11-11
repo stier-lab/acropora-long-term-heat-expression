@@ -3,8 +3,8 @@
 
 Run from the repo root after code/run_all.R:
 
-    python3 code/tools/check_output_changes.py            # report only
-    python3 code/tools/check_output_changes.py --restore  # undo noise-only changes
+    python3 tools/check_output_changes.py            # report only
+    python3 tools/check_output_changes.py --restore  # undo noise-only changes
 
 "Noise" means a file whose only difference from the last commit is:
   - a PDF whose PNG twin (same name, .png) is unchanged: R's PDF writer embeds
