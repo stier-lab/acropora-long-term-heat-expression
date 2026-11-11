@@ -1,0 +1,23 @@
+suppressMessages(source(here::here("code", "00_setup.R"))); suppressMessages(library(lmerTest))
+ctrl <- lme4::lmerControl(check.conv.singular = .makeCC("ignore", tol = 1e-4))
+bw <- readRDS(file.path(DATA_PROC, "buoyant_weight_clean.rds")) |> mutate(thicket = factor(thicket)) |> filter(is.finite(pct_growth))
+m <- lmer(pct_growth ~ treatment * wound * thicket + (1 | tank), bw, control = ctrl)
+p0 <- anova(m, type = 3)["treatment", "Pr(>F)"]
+lofo <- sapply(seq_len(nrow(bw)), function(i) anova(lmer(pct_growth ~ treatment * wound * thicket + (1 | tank), bw[-i, ], control = ctrl), type = 3)["treatment", "Pr(>F)"])
+cat(sprintf("growth temperature p=%.3f; leave-one-fragment-out range %.3f-%.3f; fragments whose removal pushes p>0.05: %s\n", p0, min(lofo), max(lofo), paste(bw$id[lofo > 0.05], collapse = ",")))
+cd <- influence.ME::influence(lme4::lmer(pct_growth ~ treatment * wound * thicket + (1 | tank), bw, control = ctrl), obs = TRUE) |> cooks.distance(); cat("growth max Cook's D (fragment):", signif(max(cd), 3), "at id", bw$id[which.max(cd)], "; 4/n =", signif(4/nrow(bw), 3), "; n above 4/n:", sum(cd > 4/nrow(bw)), "\n")
+tk <- bw |> group_by(treatment, tank) |> summarise(mean = mean(pct_growth), .groups = "drop"); print(as.data.frame(tk))
+cat("\n--- Per-patch heat contrasts (emmeans, unadjusted): family size and Holm-adjusted p for reported rows ---\n")
+pe <- read_csv(file.path(TBL_DIR, "12_genet_treatment_effects.csv"), show_col_types = FALSE)
+print(as.data.frame(pe |> group_by(response) |> mutate(p_holm = p.adjust(p.value, "holm"), family = n()) |> ungroup() |>
+  filter(response %in% c("pam_fvfm", "color_dscale")) |> select(response, thicket, wound, estimate, df, p.value, p_holm, family) |> mutate(across(where(is.double), \(x) signif(x, 3)))))
+cat("\n--- Fisher endpoint tests: tables and estimability ---\n")
+ft <- read_csv(file.path(TBL_DIR, "11f_morphology_dataset_endpoint_tests.csv"), show_col_types = FALSE)
+print(as.data.frame(ft |> select(any_of(c("dataset", "trait", "n_28C", "n_31C", "yes_28C", "yes_31C", "fisher_p", "status", "odds_ratio"))) ))
+cat("\n--- Permutation tests: tank values ---\n")
+print(read_csv(file.path(TBL_DIR, "05_buoyant_weight_tank_test.csv"), show_col_types = FALSE) |> as.data.frame())
+print(read_csv(file.path(TBL_DIR, "12b_color_tank_test.csv"), show_col_types = FALSE) |> select(-note) |> as.data.frame())
+cat("\n--- Genetics model (06) ---\n")
+g <- list.files(TBL_DIR, "^43_final_snp_.*(model|contrast|diag|balance|design)", full.names = TRUE); print(basename(g))
+for (f in g) { x <- read_csv(f, show_col_types = FALSE); cat("##", basename(f), nrow(x), "rows\n"); print(head(as.data.frame(x), 8)) }
+cat("\n--- Sensitivity (22) ---\n"); print(read_csv(file.path(TBL_DIR, "22_sensitivity_flagged.csv"), show_col_types = FALSE) |> as.data.frame())

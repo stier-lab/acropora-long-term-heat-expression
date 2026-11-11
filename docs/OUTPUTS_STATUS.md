@@ -14,6 +14,7 @@ Updated 2026-11-11. Use this page to tell current results from historical files 
 | Morphology scores | `data/raw/physio_morphology/data.csv`, `data/raw/microscope_physio/data.csv` | October 16 corrected exports. Cell-level changes: `extras/output/tables/44_scoring_changes.csv`. |
 | Water chemistry | `figures/09_ysi_water_chem.*`, `output/tables/09_ysi_*` | October 27 refresh from the corrected daily log. |
 | Figure catalog | `figures/FIGURE_INDEX.md` | Rewritten 2026-11-11 for the figures the core scripts make. |
+| Model diagnostics audit | `docs/diagnostics/MODEL_DIAGNOSTICS_2026-11-11.md` | All 18 analysis families checked 2026-11-11. No headline conclusion changes, but four fixes are pending before numbers go in the manuscript: tank-level day slopes for the physiology F tests, the fragile symbiont wound result, the mislabeled patch × temperature test, and the Weibull-dependent tip-extension timing. |
 | Everything else | `extras/` | Frozen 2026-11-11: exploratory analyses, older audits, the daily yes/no models, the master results table, and their outputs. Not rerun. See `extras/README.md`. |
 
 ## Historical: keep for provenance, don't cite
