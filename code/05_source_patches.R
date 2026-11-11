@@ -73,6 +73,9 @@ genet_tests <- bind_rows(
 write_csv(genet_tests, file.path(TBL_DIR, "13_genet_anova.csv"))
 
 # ---- 2. End-of-experiment means by patch (figure) --------------------------
+# Raw means (not model estimates) at the last measurement of each response,
+# with SE across fragments. Lines that are not parallel mean the heat effect
+# differs among patches.
 make_react_norm <- function(data, response_col, label) {
   last_day <- if ("day" %in% names(data)) {
     data |> filter(day == max(day, na.rm = TRUE))
@@ -89,37 +92,35 @@ make_react_norm <- function(data, response_col, label) {
               .groups = "drop") |>
     mutate(response = label)
 }
+RESP_LEVELS <- c("Fv/Fm (Day 14)", "Color score (Day 14)",
+                 "Symbionts, log10 cells per cm\u00b2 (Day 15)", "Growth, % mass gained (Days 0\u201315)")
 emm_long <- bind_rows(
-  make_react_norm(pam,   "fv_fm",                "PAM Fv/Fm"),
-  make_react_norm(color, "color_num",            "Color (D-scale)"),
+  make_react_norm(pam,   "fv_fm",     RESP_LEVELS[1]),
+  make_react_norm(color, "color_num", RESP_LEVELS[2]),
+  phys |> mutate(log10_cells = log10(cells_per_cm2)) |>
+    make_react_norm("log10_cells", RESP_LEVELS[3]),
   bw_a |> group_by(treatment, thicket) |>
     summarise(mean = mean(pct_growth, na.rm = TRUE),
               se   = sd(pct_growth, na.rm = TRUE) / sqrt(n()),
               n    = n(),
               .groups = "drop") |>
-    mutate(response = "Growth (% mass change)"),
-  phys |> mutate(log10_cells = log10(cells_per_cm2)) |>
-    group_by(treatment, thicket) |>
-    summarise(mean = mean(log10_cells, na.rm = TRUE),
-              se   = sd(log10_cells, na.rm = TRUE) / sqrt(n()),
-              n    = n(),
-              .groups = "drop") |>
-    mutate(response = "log10 symbionts cm⁻² (raw summary)")
-)
+    mutate(response = RESP_LEVELS[4])
+) |>
+  mutate(response = factor(response, levels = RESP_LEVELS))
 write_csv(emm_long, file.path(TBL_DIR, "13_genet_emmeans.csv"))
-p_react <- ggplot(emm_long, aes(treatment, mean,
-                                 colour = thicket, group = thicket)) +
+p_react <- ggplot(emm_long, aes(treatment, mean, colour = thicket, group = thicket)) +
   geom_line(linewidth = 0.6) +
-  geom_pointrange(aes(ymin = mean - se, ymax = mean + se),
-                  size = 0.35, fatten = 2.5) +
-  facet_wrap(~ response, scales = "free_y", ncol = 4) +
-  scale_colour_manual(values = PAL_GENO, name = "Genotype",
-                      labels = c("a", "c", "d")) +
-  labs(x = NULL, y = "End-of-experiment mean (± 1 SE)",
-       title = "Genet-level reaction norms: 28 °C vs 31 °C",
-       subtitle = "Parallel lines = additive temperature effect; crossing = G × E") +
-  theme_pub(9)
-save_fig(p_react, "13_genet_response_panel", width = 200, height = 95)
+  geom_linerange(aes(ymin = mean - se, ymax = mean + se), linewidth = 0.5) +
+  geom_point(size = 2) +
+  facet_wrap(~ response, scales = "free_y", ncol = 4,
+             labeller = label_wrap_gen(width = 24)) +
+  scale_x_discrete(labels = c("28C" = "28 \u00b0C", "31C" = "31 \u00b0C")) +
+  scale_colour_manual(values = PAL_GENO, name = "Source patch",
+                      labels = c("A", "C", "D")) +
+  labs(x = NULL, y = "Mean at end of experiment (\u00b1 1 SE)") +
+  theme_pub(9) +
+  theme(legend.position = "bottom")
+save_fig(p_react, "13_genet_response_panel", width = 200, height = 90)
 
 # ---- 3. Numbers for the results text ---------------------------------------
 lrt <- readr::read_csv(file.path(TBL_DIR, "13_genet_anova.csv"), show_col_types = FALSE)

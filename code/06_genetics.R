@@ -4,7 +4,7 @@
 # Section 1 builds one row per RNA-seq library (144) with its temperature,
 # wound status, tank, day and symbiont density. It also carries three
 # source-level heat-sensitivity scores from a frozen exploratory table
-# (extras/output/tables/19_genet_resilience_summary.csv, last rebuilt before
+# (extras/output/tables/19_genet_resilience_summary.csv; not shown in the team summary; last rebuilt before
 # the 2026-11-11 reorganization).
 # Section 2 joins Rachael Bay's final host clusters (2026-10-12) and rough
 # symbiont read-mapping shares, checks every join, and fits the symbiont

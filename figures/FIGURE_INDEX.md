@@ -18,7 +18,7 @@ Updated 2026-11-11. Every figure in this folder is rebuilt by `code/run_all.R` (
 | `07_wax_standard_curve` | Wax-dipping standard curve used for surface area. | `01_clean_data.R` |
 | `14_morphology_KM` | Kaplan–Meier curves for each regeneration stage, by temperature. | `04_regeneration.R` |
 | `11_microscope_trait_trajectories` | Microscope experiment: share of the 16 fragments showing each stage, by day. | `07_supplement.R` |
-| `13_genet_response_panel` | End-of-experiment means by source patch and temperature. | `05_source_patches.R` |
+| `13_genet_response_panel` | End-of-experiment means by source patch and temperature (Fv/Fm and color Day 14, symbionts Day 15, growth Days 0–15). Used in the team summary, section 4. | `05_source_patches.R` |
 | `43_final_snp_structure`, `43_final_snp_design`, `43_final_snp_symbiont_density`, `43_final_snp_symbiont_typing` | Final host clusters, how they spread across treatments, symbiont density within clusters, and rough symbiont read shares. | `06_genetics.R` |
 
 ## Team summary and checks
