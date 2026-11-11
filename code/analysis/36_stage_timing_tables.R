@@ -20,13 +20,13 @@
 #          data/processed/physio_clean.rds
 #          data/processed/microscope_physio_clean.rds
 #          output/tables/32_prelim_snp_response_joinability.csv
-# Output:  output/tables/36_molly_temperature_coverage_days0_16.csv
-#          output/tables/36_molly_stage_timing.csv
-#          output/tables/36_molly_stage_timing_summary.csv
-#          output/tables/36_molly_stage_timing_mean_iqr.csv
-#          output/tables/36_molly_followup_action_items.csv
-#          figures/36_molly_stage_timing.{pdf,png}
-#          figures/36b_molly_stage_violin.{pdf,png}
+# Output:  output/tables/36_temperature_coverage_days0_16.csv
+#          output/tables/36_stage_timing.csv
+#          output/tables/36_stage_timing_summary.csv
+#          output/tables/36_stage_timing_mean_iqr.csv
+#          output/tables/36_followup_action_items.csv
+#          figures/36_stage_timing.{pdf,png}
+#          figures/36b_stage_violin.{pdf,png}
 # =============================================================================
 
 source(here::here("code", "00_setup.R"))
@@ -142,7 +142,7 @@ temperature_coverage <- days_0_16 |>
   mutate(across(where(is.numeric), \(x) round(x, 3)))
 
 write_csv(temperature_coverage,
-          file.path(TBL_DIR, "36_molly_temperature_coverage_days0_16.csv"))
+          file.path(TBL_DIR, "36_temperature_coverage_days0_16.csv"))
 
 # ---- Stage timing: one healing step plus five regeneration steps -----------
 physio <- readRDS(file.path(DATA_PROC, "physio_clean.rds"))
@@ -214,7 +214,7 @@ stage_events <- purrr::pmap_dfr(stage_map, function(stage_order, phase, stage,
   arrange(stage_order, treatment, id)
 
 write_csv(stage_events,
-          file.path(TBL_DIR, "36_molly_stage_timing.csv"))
+          file.path(TBL_DIR, "36_stage_timing.csv"))
 
 stage_summary <- stage_events |>
   group_by(stage_order, phase, stage, dataset_label, trait, measurement_note,
@@ -250,7 +250,7 @@ stage_summary <- stage_events |>
   arrange(stage_order, treatment)
 
 write_csv(stage_summary,
-          file.path(TBL_DIR, "36_molly_stage_timing_summary.csv"))
+          file.path(TBL_DIR, "36_stage_timing_summary.csv"))
 
 stage_summary_display <- stage_summary |>
   transmute(
@@ -275,7 +275,7 @@ stage_summary_display <- stage_summary |>
   )
 
 write_csv(stage_summary_display,
-          file.path(TBL_DIR, "36_molly_stage_timing_mean_iqr.csv"))
+          file.path(TBL_DIR, "36_stage_timing_mean_iqr.csv"))
 
 label_data <- stage_summary |>
   mutate(
@@ -390,7 +390,7 @@ p_stage <- ggplot() +
     plot.margin = margin(8, 40, 8, 8, "pt")
   )
 
-save_fig(p_stage, "36_molly_stage_timing", width = 190, height = 110)
+save_fig(p_stage, "36_stage_timing", width = 190, height = 110)
 
 stage_axis_levels <- paste0("Stage ", seq_len(nrow(stage_map)))
 stage_axis_labels <- c(
@@ -535,7 +535,7 @@ p_stage_violin <- ggplot() +
     plot.margin = margin(8, 12, 8, 8, "pt")
   )
 
-save_fig(p_stage_violin, "36b_molly_stage_violin",
+save_fig(p_stage_violin, "36b_stage_violin",
          width = 190, height = 130)
 
 # ---- Action table for the coauthor summary and email -----------------------
@@ -601,7 +601,7 @@ action_items <- tibble::tribble(
 )
 
 write_csv(action_items,
-          file.path(TBL_DIR, "36_molly_followup_action_items.csv"))
+          file.path(TBL_DIR, "36_followup_action_items.csv"))
 
 cat("\n=== Molly 2026-09-04 follow-up checks ===\n")
 cat("Wrote temperature coverage, stage timing figure/table, and action-item table.\n")

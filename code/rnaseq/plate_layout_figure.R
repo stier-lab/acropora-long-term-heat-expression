@@ -7,7 +7,7 @@
 # Output:  figures/Fig_B_balanced_plates.{pdf,png}  (if `fig_dir` is set,
 #          else written to the working directory)
 #          figures/Fig_B_plate_layouts.csv          — the well-by-well layout
-# Note:    STANDALONE — not sourced by code/_run_all.R (run directly when the
+# Note:    STANDALONE — not sourced by code/run_all.R (run directly when the
 #          sequencing plate map is needed). Uses its own palette, independent
 #          of 00_setup.R, to match the wet-lab plate-map conventions.
 #

@@ -161,7 +161,7 @@ anova12 <- read_csv(file.path(TBL_DIR, "12_anova_summary.csv"),
     qualitative     = paste0(term, " effect on ", response,
                              if_else(coalesce(`Pr(>F)`, `Pr(>Chisq)`) < 0.05,
                                      " (significant)", " (n.s.)")),
-    source_script   = "code/12_models.R",
+    source_script   = "code/analysis/12_models.R",
     source_artifact = "output/tables/12_anova_summary.csv"
   )
 
@@ -235,7 +235,7 @@ genet_rows <- genet_eff_pct |>
               "no change"),
       if_else(!is.na(pct_change), sprintf("(%+.1f%%)", pct_change), "")
     ),
-    source_script   = "code/12_models.R",
+    source_script   = "code/analysis/12_models.R",
     source_artifact = "output/tables/12_genet_treatment_effects.csv"
   )
 
@@ -260,7 +260,7 @@ r2_rows <- read_csv(file.path(TBL_DIR, "12_r2_summary.csv"),
     pct_change      = NA_real_, ci_low = NA_real_, ci_high = NA_real_,
     p_value         = NA_real_,
     qualitative     = sprintf("%s = %.3f", metric, value),
-    source_script   = "code/12_models.R",
+    source_script   = "code/analysis/12_models.R",
     source_artifact = "output/tables/12_r2_summary.csv"
   )
 
@@ -288,7 +288,7 @@ morph_anova <- read_csv(file.path(TBL_DIR, "12c_morph_blme_anova.csv"),
     qualitative     = paste0(term, " effect on ", trait,
                              if_else(`Pr(>Chisq)` < 0.05,
                                      " (significant)", " (n.s.)")),
-    source_script   = "code/12_models.R",
+    source_script   = "code/analysis/12_models.R",
     source_artifact = "output/tables/12c_morph_blme_anova.csv"
   )
 
@@ -327,7 +327,7 @@ morph_fixed <- read_csv(
       sprintf("%s: OR=%.2f (%s, blme penalized)", term, exp(estimate),
               if_else(2 * pnorm(-abs(statistic)) < 0.05, "sig", "n.s."))
     ),
-    source_script   = "code/12_models.R",
+    source_script   = "code/analysis/12_models.R",
     source_artifact = "output/tables/12c_morph_blme_fixed_effects.csv"
   )
 
@@ -364,7 +364,7 @@ cox_rows <- read_csv(file.path(TBL_DIR, "14_cox_hazard_ratios.csv"),
       HR_31_vs28,
       if_else(p < 0.05, "sig", "n.s.")
     ),
-    source_script   = "code/14_morphology_kaplan.R",
+    source_script   = "code/analysis/14_stage_timing_models.R",
     source_artifact = "output/tables/14_cox_hazard_ratios.csv"
   )
 
@@ -399,7 +399,7 @@ interval_rows <- if (file.exists(file.path(TBL_DIR, "14_interval_survreg.csv")))
         if_else(p < 0.05, "sig", "n.s."),
         event_interpretation
       ),
-      source_script   = "code/14_morphology_kaplan.R",
+      source_script   = "code/analysis/14_stage_timing_models.R",
       source_artifact = "output/tables/14_interval_survreg.csv"
     )
 } else tibble()
@@ -428,7 +428,7 @@ cox_tt <- if (file.exists(file.path(TBL_DIR, "14c_cox_tt_pigment_genetC.csv"))) 
                           scope,
                           if_else(p < 0.05, "sig", "n.s. — original per-genet HR was inflated by PH violation"),
                           note),
-      source_script="code/14_morphology_kaplan.R",
+      source_script="code/analysis/14_stage_timing_models.R",
       source_artifact="output/tables/14c_cox_tt_pigment_genetC.csv"
     )
 } else tibble()
@@ -453,7 +453,7 @@ cox_genet_rows <- bind_rows(
       p_value=p_genet_main,
       qualitative=sprintf("Genet main effect on %s healing: %s", trait,
                           if_else(p_genet_main < 0.05, "sig", "n.s.")),
-      source_script="code/14_morphology_kaplan.R",
+      source_script="code/analysis/14_stage_timing_models.R",
       source_artifact="output/tables/14_cox_genet_LRT.csv"
     ),
   cox_genet_lrt |>
@@ -470,7 +470,7 @@ cox_genet_rows <- bind_rows(
       p_value=p_genet_trt_int,
       qualitative=sprintf("Genet x treatment on %s healing: %s", trait,
                           if_else(p_genet_trt_int < 0.05, "sig", "n.s.")),
-      source_script="code/14_morphology_kaplan.R",
+      source_script="code/analysis/14_stage_timing_models.R",
       source_artifact="output/tables/14_cox_genet_LRT.csv"
     )
 )
@@ -502,7 +502,7 @@ lrt13 <- read_csv(file.path(TBL_DIR, "13_genet_anova.csv"),
       "Adding genet x trt improves fit by dAIC=%.1f (%s)", delta_aic,
       if_else(lrt_p < 0.05, "sig", "n.s.")
     ),
-    source_script   = "code/13_genet_interaction.R",
+    source_script   = "code/analysis/13_source_patch_tests.R",
     source_artifact = "output/tables/13_genet_anova.csv"
   )
 
@@ -525,7 +525,7 @@ pca_load <- read_csv(file.path(TBL_DIR, "15_pca_loadings.csv"),
     pct_change=NA_real_, ci_low=NA_real_, ci_high=NA_real_,
     p_value=NA_real_,
     qualitative=sprintf("%s loads %.2f on %s", variable, loading, PC),
-    source_script="code/15_multivariate.R",
+    source_script="code/exploratory/15_physiology_pca.R",
     source_artifact="output/tables/15_pca_loadings.csv"
   )
 
@@ -545,7 +545,7 @@ pca_disp <- read_csv(file.path(TBL_DIR, "15_genet_pca_displacement.csv"),
     p_value=NA_real_,
     qualitative=sprintf("Genet %s shifts %.2f PC-units under heat", thicket,
                         displacement),
-    source_script="code/15_multivariate.R",
+    source_script="code/exploratory/15_physiology_pca.R",
     source_artifact="output/tables/15_genet_pca_displacement.csv"
   )
 
@@ -569,7 +569,7 @@ bw_lm <- read_csv(file.path(TBL_DIR, "05_buoyant_weight_lm.csv"),
     p_value=p.value,
     qualitative=sprintf("%s: est=%.2f%% (%s)", term, estimate,
                         if_else(p.value < 0.05, "sig", "n.s.")),
-    source_script="code/05_buoyant_weight.R",
+    source_script="code/analysis/05_growth.R",
     source_artifact="output/tables/05_buoyant_weight_lm.csv"
   )
 
@@ -591,7 +591,7 @@ bw_tank_test <- if (file.exists(file.path(TBL_DIR, "05_buoyant_weight_tank_test.
       p_value=p_two_sided,
       qualitative=sprintf("Tank-level heat effect %.2f pct-points over 15 d (p=%.3g)",
                           estimate_28_minus_31, p_two_sided),
-      source_script="code/05_buoyant_weight.R",
+      source_script="code/analysis/05_growth.R",
       source_artifact="output/tables/05_buoyant_weight_tank_test.csv"
     )
 } else tibble()
@@ -620,7 +620,7 @@ clmm_rows <- if (file.exists(file.path(TBL_DIR, "12b_color_clmm.csv"))) {
       p_value         = `Pr(>Chi)`,
       qualitative     = sprintf("%s (ordinal CLMM): %s", term,
                                 if_else(`Pr(>Chi)` < 0.05, "sig", "n.s.")),
-      source_script   = "code/12_models.R",
+      source_script   = "code/analysis/12_models.R",
       source_artifact = "output/tables/12b_color_clmm.csv"
     )
 } else {
@@ -653,7 +653,7 @@ bw_means_rows <- bw_raw |>
     p_value=NA_real_,
     qualitative=sprintf("%s mean growth = %.2f%% (SD %.2f, n=%d)",
                         treatment, mean_pct, sd_pct, n),
-    source_script="code/05_buoyant_weight.R (raw)",
+    source_script="code/analysis/05_growth.R (raw)",
     source_artifact="data/processed/buoyant_weight_clean.rds"
   )
 
@@ -676,7 +676,7 @@ bw_pct_drop <- bw_raw |>
     p_value=NA_real_,
     qualitative=sprintf("31C corals grew %.0f%% less mass than 28C corals",
                         abs(pct_drop_31C_vs_28C)),
-    source_script="code/05_buoyant_weight.R (raw)",
+    source_script="code/analysis/05_growth.R (raw)",
     source_artifact="data/processed/buoyant_weight_clean.rds"
   )
 
@@ -701,7 +701,7 @@ zoox_means_rows <- zoox_raw |>
     p_value=NA_real_,
     qualitative=sprintf("%s, biopsy day %s: %.2e cells cm-2 (n=%d)",
                         treatment, biopsy_day, mean_cells, n),
-    source_script="code/06_symbiont_chl.R (raw)",
+    source_script="code/analysis/06_symbionts.R (raw)",
     source_artifact="data/processed/symbiont_chl_clean.rds"
   )
 
@@ -728,7 +728,7 @@ ts_rows <- if (file.exists(file.path(TBL_DIR, "23_timeseries_diagnostics.csv")))
       pct_change      = NA_real_, ci_low = NA_real_, ci_high = NA_real_,
       p_value         = p_value,
       qualitative     = conclusion,
-      source_script   = "code/sensitivity/23_timeseries_diagnostics.R",
+      source_script   = "code/checks/23_timeseries_diagnostics.R",
       source_artifact = "output/tables/23_timeseries_diagnostics.csv"
     )
 } else tibble()
@@ -754,7 +754,7 @@ coxph_rows <- if (file.exists(file.path(TBL_DIR, "14_cox_ph_tests.csv"))) {
       p_value         = zph_p,
       qualitative     = if_else(ph_ok, "PH assumption met (p>=0.05)",
                                 "PH violated — see time-varying refit"),
-      source_script   = "code/14_morphology_kaplan.R",
+      source_script   = "code/analysis/14_stage_timing_models.R",
       source_artifact = "output/tables/14_cox_ph_tests.csv"
     )
 } else tibble()
@@ -779,7 +779,7 @@ thermal_rows <- if (file.exists(file.path(TBL_DIR, "26_thermal_context.csv"))) {
       pct_change = NA_real_, ci_low = NA_real_, ci_high = NA_real_,
       p_value = NA_real_,
       qualitative = "acute thermal-tolerance benchmark; 31C chronic is sublethal (below acute ED50)",
-      source_script = "code/sensitivity/26_thermal_context.R",
+      source_script = "code/exploratory/26_thermal_context.R",
       source_artifact = "data/external/cunning2024_apulchra_ed50.csv"
     )
 } else tibble()
@@ -806,7 +806,7 @@ lag_rows <- if (file.exists(file.path(TBL_DIR, "14_milestone_lag_summary.csv")))
       qualitative = sprintf("%s: %.0f%% closed but never regenerated; median lag %s d",
                             treatment, pct_closed_no_regen,
                             ifelse(is.na(median_lag), "NA", as.character(round(median_lag,1)))),
-      source_script = "code/14_morphology_kaplan.R",
+      source_script = "code/analysis/14_stage_timing_models.R",
       source_artifact = "output/tables/14_milestone_lag_summary.csv"
     )
 } else tibble()
@@ -828,7 +828,7 @@ icc_rows <- if (file.exists(file.path(TBL_DIR, "27_variance_partitioning.csv")))
       pct_change = NA_real_, ci_low = NA_real_, ci_high = NA_real_,
       p_value = NA_real_,
       qualitative = sprintf("%s: %.1f%% of variance", component, 100 * icc),
-      source_script = "code/sensitivity/27_variance_partitioning.R",
+      source_script = "code/checks/27_variance_partitioning.R",
       source_artifact = "output/tables/27_variance_partitioning.csv"
     )
 } else tibble()
@@ -854,7 +854,7 @@ mt_rows <- if (file.exists(file.path(TBL_DIR, "28_multiple_testing.csv"))) {
                             hypothesis,
                             ifelse(significant, "significant", "n.s."),
                             rationale),
-      source_script = "code/sensitivity/28_multiple_testing.R",
+      source_script = "code/checks/28_multiple_testing.R",
       source_artifact = "output/tables/28_multiple_testing.csv"
     )
 } else tibble()
@@ -881,7 +881,7 @@ probc_rows <- if (file.exists(file.path(TBL_DIR, "29_morphology_prob_contrasts.c
       p_value = p_value,
       qualitative = sprintf("P(28C)=%.2f vs P(31C)=%.2f; OR(31vs28)=%.2g",
                             prob_28, prob_31, or_31_vs_28),
-      source_script = "code/sensitivity/29_morphology_prob_contrasts.R",
+      source_script = "code/exploratory/29_morphology_prob_contrasts.R",
       source_artifact = "output/tables/29_morphology_prob_contrasts.csv"
     )
 } else tibble()
@@ -915,7 +915,7 @@ resilience_rows <- if (file.exists(file.path(TBL_DIR, "19_genet_resilience_summa
         thicket, mean_sensitivity, median_sensitivity, pca_displacement,
         rank_overall
       ),
-      source_script = "code/19_genet_dashboard.R",
+      source_script = "code/exploratory/19_source_patch_dashboard.R",
       source_artifact = "output/tables/19_genet_resilience_summary.csv"
     )
 } else tibble()
@@ -939,7 +939,7 @@ resilience_scope_rows <- if (file.exists(file.path(TBL_DIR, "19c_resilience_deco
       p_value = NA_real_,
       qualitative = sprintf("Genet %s, %s: mean sensitivity %.2f across %d responses",
                             thicket, scope, mean_sensitivity, n_responses),
-      source_script = "code/19_genet_dashboard.R",
+      source_script = "code/exploratory/19_source_patch_dashboard.R",
       source_artifact = "output/tables/19c_resilience_decomp_by_scope.csv"
     )
 } else tibble()
@@ -976,7 +976,7 @@ micro_rows <- if (file.exists(file.path(TBL_DIR, "11_microscope_event_tests.csv"
           sprintf("%d/%d", yes_31, n_31),
           risk_diff_31_minus_28
         ),
-        source_script = "code/11_microscope_physio.R",
+        source_script = "code/analysis/11_microscope_experiment.R",
         source_artifact = "output/tables/11_microscope_event_tests.csv"
       ),
     micro_tests |>
@@ -997,7 +997,7 @@ micro_rows <- if (file.exists(file.path(TBL_DIR, "11_microscope_event_tests.csv"
           "Microscope first-observed timing for %s (exploratory log-rank p=%s)",
           trait, fmt_p(logrank_p)
         ),
-        source_script = "code/11_microscope_physio.R",
+        source_script = "code/analysis/11_microscope_experiment.R",
         source_artifact = "output/tables/11_microscope_event_tests.csv"
       )
   )

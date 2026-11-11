@@ -27,7 +27,7 @@ stopifnot(isTRUE(all.equal(as.data.frame(encoded),
 write_csv(tibble(check = c("CSV vs workbook", "CSV vs live sheet", "CSV vs processed"),
                  n_rows = 32L, n_trait_values = 96L, agrees = TRUE),
           "output/tables/40b_stage_source_agreement.csv")
-events <- read_csv("output/tables/36_molly_stage_timing.csv", show_col_types = FALSE) |>
+events <- read_csv("output/tables/36_stage_timing.csv", show_col_types = FALSE) |>
   filter(stage_order == 6)
 # Descriptive sensitivity only: omit disputed fragments, without recoding them.
 counts <- bind_rows(

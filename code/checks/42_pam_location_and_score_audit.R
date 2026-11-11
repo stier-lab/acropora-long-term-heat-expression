@@ -5,7 +5,8 @@ source(here::here("code", "00_setup.R"))
 
 raw_pam <- suppressWarnings(read_csv(file.path(DATA_RAW, "pam", "PAM_data.csv"),
               col_types=cols(.default=col_character()), show_col_types = FALSE))
-write_csv(problems(raw_pam),file.path(TBL_DIR,"42_pam_csv_parse_audit.csv"))
+write_csv(dplyr::mutate(problems(raw_pam), file = basename(file)),
+          file.path(TBL_DIR, "42_pam_csv_parse_audit.csv"))
 # Ragged CSV rows omit trailing notes; complete measurement pairs and exact
 # agreement with the canonical cleaned means are checked below.
 p <- raw_pam |> janitor::clean_names() |>

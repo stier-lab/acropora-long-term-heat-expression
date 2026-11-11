@@ -177,3 +177,30 @@ log_session <- function(path = file.path(OUT_DIR, "session_info.txt")) {
 # shows the setup ran. search() lists attached packages/environments.
 message("Setup complete. ", length(search()), " env entries; ",
         format(Sys.time(), "%Y-%m-%d %H:%M:%S"))
+
+# ---- Paper numbers -----------------------------------------------------------
+# Scripts in code/paper/ write one CSV per results section to output/paper/.
+# Each row is one number used in the text. Values are rounded to 6 significant
+# digits so that tiny floating-point differences between runs don't show up as
+# changes in git.
+PAPER_DIR <- here("output", "paper")
+paper_row <- function(key, description, estimate = NA_real_, ci_low = NA_real_,
+                      ci_high = NA_real_, test = NA_character_, statistic = NA_real_,
+                      df1 = NA_real_, df2 = NA_real_, p_value = NA_real_, n = NA_real_,
+                      source = NA_character_) {
+  tibble::tibble(key = key, description = description,
+                 estimate = estimate, ci_low = ci_low, ci_high = ci_high,
+                 test = test, statistic = statistic, df1 = df1, df2 = df2,
+                 p_value = p_value, n = n, source = source)
+}
+write_paper <- function(rows, section) {
+  dir.create(PAPER_DIR, recursive = TRUE, showWarnings = FALSE)
+  out <- dplyr::bind_rows(rows) |>
+    dplyr::mutate(dplyr::across(c(estimate, ci_low, ci_high, statistic, df1, df2, p_value, n),
+                                ~ signif(as.numeric(.x), 6)))
+  stopifnot(!anyDuplicated(out$key))
+  path <- file.path(PAPER_DIR, paste0(section, "_numbers.csv"))
+  readr::write_csv(out, path, na = "")
+  message("Wrote ", path, " (", nrow(out), " numbers)")
+  invisible(out)
+}

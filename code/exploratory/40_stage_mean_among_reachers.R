@@ -1,7 +1,7 @@
 # Descriptive companion and scoring audit requested by Molly on 2026-09-15.
 # Retain non-reachers in denominators, never assign them a completion day.
 source(here::here("code", "00_setup.R"))
-events <- read_csv(file.path(TBL_DIR, "36_molly_stage_timing.csv"),
+events <- read_csv(file.path(TBL_DIR, "36_stage_timing.csv"),
                    show_col_types = FALSE)
 stage_names <- c("Living tissue covers wound", "Main polyp forms",
                  "Wound surface remodels", "Tip forms", "Tip extends",
@@ -33,7 +33,8 @@ p <- ggplot(means, aes(mean_day, row, colour = treatment)) +
        title = "Average days, shown alongside the number reaching each stage",
        subtitle = "Open circles leave out fragments that had not reached the stage by Day 15.",
        caption = "Lines show the middle half of observed days, not uncertainty in the mean.\nTissue cover: separate microscope experiment (8 per temperature); other stages: main experiment (12 per temperature).") +
-  theme_pub(9) + theme(legend.position = "bottom")
+  theme_pub(9) + theme(legend.position = "bottom") +
+  guides(shape = guide_legend(order = 1), colour = guide_legend(order = 2))
 save_fig(p, "40_stage_mean_review", width = 210, height = 125)
 
 sequence <- events |> filter(stage_order %in% c(5, 6)) |>

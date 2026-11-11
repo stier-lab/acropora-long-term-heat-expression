@@ -78,7 +78,7 @@ check_tanks <- function(stream, d) {
 }
 
 # ---- Metadata --------------------------------------------------------------
-# The master spine (from 01_load_clean_metadata.R). Confirm the total fragment
+# The master spine (from 01_metadata.R). Confirm the total fragment
 # count and that the design factors carry exactly the expected levels.
 meta <- readRDS(file.path(DATA_PROC, "coral_metadata.rds"))
 add("metadata", "n total fragments", if (nrow(meta) == 208) "PASS" else "FAIL",

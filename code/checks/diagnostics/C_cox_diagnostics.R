@@ -11,7 +11,7 @@
 #   early then hurt late). If that assumption is violated, the single reported HR
 #   is misleading, so every Cox fit is tested before it is trusted. This script:
 #     1. Recomputes time-to-event per coral (first day the trait = 1, else
-#        censored at the last observed day), mirroring code/14_morphology_kaplan.R.
+#        censored at the last observed day), mirroring code/analysis/14_stage_timing_models.R.
 #     2. Refits three scopes: overall (stratified by genet), a documented N/A
 #        "by_wound" scope (only wounded corals are at risk), and one model per genet.
 #     3. Runs survival::cox.zph() — this correlates the SCHOENFELD residuals
@@ -68,7 +68,7 @@ traits <- c("axial_polyp_formation", "wound_smoothed",
             "pigment_over_wound", "tip_exist", "tip_extension",
             "new_corallites_on_tip")
 
-# ---- compute time-to-event (mirrors code/14_morphology_kaplan.R) -----------
+# ---- compute time-to-event (mirrors code/analysis/14_stage_timing_models.R) -----------
 # Collapse the repeated daily yes/no scores per coral into one survival record:
 #   event_day = first day the trait was observed (==1); if it never appeared,
 #               censor at the last day the coral was seen.
@@ -325,7 +325,7 @@ write_csv(diag_df, CSV_PATH)
 md_lines <- c(
   "# Cox proportional-hazards diagnostics",
   "",
-  paste0("Source script: `code/14_morphology_kaplan.R`  "),
+  paste0("Source script: `code/analysis/14_stage_timing_models.R`  "),
   paste0("Data: `data/processed/physio_clean.rds`  "),
   paste0("Generated: ", format(Sys.time(), "%Y-%m-%d %H:%M:%S")),
   "",

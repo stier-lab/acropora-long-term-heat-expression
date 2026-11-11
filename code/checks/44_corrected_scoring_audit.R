@@ -40,7 +40,7 @@ print(count(changes, cohort, column))
 print(events |> group_by(trait, treatment) |> summarise(n = n(), reached = sum(reached), .groups = "drop"))
 
 # Test the production censoring function without refitting its models.
-definitions <- parse(file.path("code", "14_morphology_kaplan.R"))
+definitions <- parse(file.path("code", "analysis", "14_stage_timing_models.R"))
 is_event_function <- vapply(definitions, function(x) is.call(x) &&
   identical(x[[1]], as.name("<-")) && identical(x[[2]], as.name("compute_events")), logical(1))
 stopifnot(sum(is_event_function) == 1)

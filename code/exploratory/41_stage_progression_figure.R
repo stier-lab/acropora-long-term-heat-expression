@@ -35,7 +35,7 @@
 # funnel or attrition cascade: that would impose an ordering the data do not
 # obey. They are milestones that usually, not always, occur in order.
 #
-# Input:   output/tables/36_molly_stage_timing.csv
+# Input:   output/tables/36_stage_timing.csv
 # Output:  figures/41_stage_progression.{pdf,png}
 #          output/tables/41_stage_reached_proportions.csv
 # =============================================================================
@@ -52,7 +52,7 @@ NR_X      <- FINAL_DAY + 2.4   # x position of the "never reached" zone
 NR_GAP    <- FINAL_DAY + 1.2   # where the panel break is drawn
 
 stage_events <- readr::read_csv(
-  file.path(TBL_DIR, "36_molly_stage_timing.csv"), show_col_types = FALSE
+  file.path(TBL_DIR, "36_stage_timing.csv"), show_col_types = FALSE
 ) |>
   mutate(
     treatment = factor(treatment, levels = c("28C", "31C")),

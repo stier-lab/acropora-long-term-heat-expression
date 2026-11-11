@@ -1,0 +1,9 @@
+key,description,estimate,ci_low,ci_high,test,statistic,df1,df2,p_value,n,source
+temp_mean_ambient,"Mean tank temperature (°C), ambient",27.7756,27.3492,28.0988,mean; ci_low/ci_high = lowest and highest daily tank mean,,,,,64,output/tables/08_apex_treatment_summary.csv
+temp_mean_heated,"Mean tank temperature (°C), heated",30.8655,30.3796,31.2002,mean; ci_low/ci_high = lowest and highest daily tank mean,,,,,64,output/tables/08_apex_treatment_summary.csv
+temp_difference,Heated minus ambient mean temperature (°C),3.08991,,,,,,,,4,output/tables/08_apex_treatment_summary.csv
+ysi_sal,"Meter reading, mean (statistic = SD): sal",36.4376,,,mean and SD across readings,0.0389327,14,,,112,output/tables/09_ysi_study_summary.csv
+ysi_do_mgl,"Meter reading, mean (statistic = SD): do_mgl",7.06455,,,mean and SD across readings,0.459565,14,,,112,output/tables/09_ysi_study_summary.csv
+ysi_ph,"Meter reading, mean (statistic = SD): ph",8.04518,,,mean and SD across readings,0.0360925,14,,,112,output/tables/09_ysi_study_summary.csv
+ysi_do_ambient,"Dissolved oxygen (mg/L), ambient (statistic = SD)",7.38161,,,mean and SD across readings,0.329207,,,,56,output/tables/09_ysi_treatment_summary.csv
+ysi_do_heated,"Dissolved oxygen (mg/L), heated (statistic = SD)",6.7475,,,mean and SD across readings,0.336394,,,,56,output/tables/09_ysi_treatment_summary.csv

@@ -1,8 +1,8 @@
 # =============================================================================
 # Purpose: Verify the two multivariate/interaction analyses. (1) The PCA from
-#          15_multivariate.R — sample size, variance explained, Kaiser criterion,
+#          15_physiology_pca.R — sample size, variance explained, Kaiser criterion,
 #          loadings, and centering/scaling. (2) The genet likelihood-ratio tests
-#          from 13_genet_interaction.R — REML status, degrees of freedom,
+#          from 13_source_patch_tests.R — REML status, degrees of freedom,
 #          convergence, and effect direction vs. emmeans.
 #
 # What & why: two of the paper's claims rest on methods that are easy to get
@@ -60,7 +60,7 @@ report_lines <- c("# PCA + Genet LRT Diagnostics",
 # ----------------------------------------------------------------------------
 # PCA CHECKS
 # ----------------------------------------------------------------------------
-report_lines <- c(report_lines, "## PCA (15_multivariate.R)\n")
+report_lines <- c(report_lines, "## PCA (15_physiology_pca.R)\n")
 
 # Rebuild the PCA input the same way script 15 did: take each coral's LAST
 # observation per metric (end-of-experiment state), then join into one wide
@@ -221,7 +221,7 @@ ggsave(file.path(DIAG_FIG, "D_pca_loadings.png"), p_load,
 # ----------------------------------------------------------------------------
 # GENET LRT CHECKS
 # ----------------------------------------------------------------------------
-report_lines <- c(report_lines, "", "## Genet LRTs (13_genet_interaction.R)\n")
+report_lines <- c(report_lines, "", "## Genet LRTs (13_source_patch_tests.R)\n")
 
 # Load the results script 13 reported, so we can independently reproduce its LRT
 # df and p-values (anova_tab) and check effect directions (emm_tab).

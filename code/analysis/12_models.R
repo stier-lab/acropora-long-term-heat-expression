@@ -236,7 +236,7 @@ record_genet_effect(emm_color_end, "color_dscale")
 
 # ---- 3. Coral growth (% skeletal mass change) ------------------------------
 # PRIMARY growth metric is % mass change (100 · Δdry / dry_initial; see
-# code/05_buoyant_weight.R). An AREAL calcification rate is NOT used: it would
+# code/analysis/05_growth.R). An AREAL calcification rate is NOT used: it would
 # need the whole-fragment surface area, but the wax SA we have is only for the
 # small symbiont-slurry sub-fragment (the rest was chopped for transcriptomics),
 # so it is not a valid denominator for whole-fragment mass gain. SGR is recorded

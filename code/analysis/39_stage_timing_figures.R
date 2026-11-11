@@ -8,7 +8,7 @@
 #   B. cumulative percent reached through time;
 #   C. a treatment-by-stage-day heatmap.
 #
-# Input:   output/tables/36_molly_stage_timing.csv
+# Input:   output/tables/36_stage_timing.csv
 # Output:  figures/39a_stage_timing_violin_option.{pdf,png}
 #          figures/39b_stage_timing_cumulative_option.{pdf,png}
 #          figures/39c_stage_timing_heatmap_option.{pdf,png}
@@ -18,7 +18,7 @@
 source(here::here("code", "00_setup.R"))
 
 stage_events <- readr::read_csv(
-  file.path(TBL_DIR, "36_molly_stage_timing.csv"),
+  file.path(TBL_DIR, "36_stage_timing.csv"),
   show_col_types = FALSE
 ) |>
   mutate(

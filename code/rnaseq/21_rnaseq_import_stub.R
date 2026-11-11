@@ -4,7 +4,7 @@
 #          lab) to design and lead; this shows one way to read counts +
 #          sample metadata into the repo conventions, if useful. Replace freely.
 #
-#          Not in code/_run_all.R. Optional suggestions live in
+#          Not in code/run_all.R. Optional suggestions live in
 #          docs/rnaseq/README.md.
 #
 # What & why: this is a PLACEHOLDER. The RNA-seq count matrix does not exist in

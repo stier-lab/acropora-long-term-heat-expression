@@ -72,7 +72,7 @@ summary can be shared as a coauthor-facing interpretation.
   immediate question is cluster identity; sequence extra endpoint RNA only if
   endpoint gene expression is needed.
 
-**Where it fits:** `code/36_molly_followup_checks.R` now writes the temperature
+**Where it fits:** `code/analysis/36_stage_timing_tables.R` now writes the temperature
 coverage audit, the healing/regeneration stage-timing tables, and the companion
 figures used in the team summary.
 
@@ -98,7 +98,7 @@ pattern holds in the complete genetic analysis.
 - A short wording decision: "source patch," "genetic individual," or "genetic
   group."
 
-**Where it fits:** `code/32_prelim_snp_phenotype_integration.R` is the current
+**Where it fits:** `code/rnaseq/32_prelim_snp_integration.R` is the current
 preliminary layer. Extend it or replace it with a final-genetics script when the
 final file arrives.
 
@@ -218,7 +218,7 @@ gene expression is worth the added cost and analysis.
 Best output: a sample-join table showing exactly which Day 15 samples connect
 to endpoint phenotypes, followed by a genotype-only versus RNA-seq
 recommendation.
-Likely home: extend `code/36_molly_followup_checks.R` for the decision audit,
+Likely home: extend `code/analysis/36_stage_timing_tables.R` for the decision audit,
 then add a future RNA-seq script only if sequencing proceeds.
 
 ### Tank And Environment Sensitivity
@@ -249,7 +249,7 @@ make the acute-versus-chronic comparison especially useful.
 
 Best output: a match table and a test of acute CBASS ED50 versus chronic LTH
 source-patch or genetic ranking.
-Likely home: extend `code/sensitivity/26b_trinity_hauru_context.R` after final
+Likely home: extend `code/exploratory/26b_trinity_hauru_context.R` after final
 SNP files and Trinity/Ross or Cunning reference genotypes are available.
 
 ## Hypotheses To Carry Forward

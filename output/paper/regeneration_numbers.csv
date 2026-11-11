@@ -1,0 +1,23 @@
+key,description,estimate,ci_low,ci_high,test,statistic,df1,df2,p_value,n,source
+axial_polyp_formation_present_day15,"Axial polyp forms: fragments with the stage on Day 15 (estimate = ambient, statistic = heated; n = per temperature)",12,,,Fisher's exact test,12,,,1,12,output/tables/11f_morphology_dataset_endpoint_tests.csv
+wound_smoothed_present_day15,"Cut surface smooths over: fragments with the stage on Day 15 (estimate = ambient, statistic = heated; n = per temperature)",12,,,Fisher's exact test,12,,,1,12,output/tables/11f_morphology_dataset_endpoint_tests.csv
+tip_exist_present_day15,"New tip forms: fragments with the stage on Day 15 (estimate = ambient, statistic = heated; n = per temperature)",11,,,Fisher's exact test,11,,,1,12,output/tables/11f_morphology_dataset_endpoint_tests.csv
+tip_extension_present_day15,"Tip extends: fragments with the stage on Day 15 (estimate = ambient, statistic = heated; n = per temperature)",11,,,Fisher's exact test,9,,,0.590062,12,output/tables/11f_morphology_dataset_endpoint_tests.csv
+new_corallites_on_tip_present_day15,"New radial corallites bud: fragments with the stage on Day 15 (estimate = ambient, statistic = heated; n = per temperature)",12,,,Fisher's exact test,4,,,0.00134608,12,output/tables/11f_morphology_dataset_endpoint_tests.csv
+axial_polyp_formation_reached_by_day15,"Axial polyp forms: fragments that reached the stage by Day 15 (estimate = ambient, statistic = heated)",12,,,,12,,,,12,output/tables/36_stage_timing_mean_iqr.csv
+wound_smoothed_reached_by_day15,"Cut surface smooths over: fragments that reached the stage by Day 15 (estimate = ambient, statistic = heated)",12,,,,12,,,,12,output/tables/36_stage_timing_mean_iqr.csv
+tip_exist_reached_by_day15,"New tip forms: fragments that reached the stage by Day 15 (estimate = ambient, statistic = heated)",11,,,,11,,,,12,output/tables/36_stage_timing_mean_iqr.csv
+tip_extension_reached_by_day15,"Tip extends: fragments that reached the stage by Day 15 (estimate = ambient, statistic = heated)",11,,,,10,,,,12,output/tables/36_stage_timing_mean_iqr.csv
+new_corallites_on_tip_reached_by_day15,"New radial corallites bud: fragments that reached the stage by Day 15 (estimate = ambient, statistic = heated)",12,,,,4,,,,12,output/tables/36_stage_timing_mean_iqr.csv
+budding_logrank,Budding: log-rank test,,,,log-rank,15.36,1,,8.88509e-5,,output/tables/11f_morphology_dataset_logrank_tests.csv
+axial_polyp_formation_time_ratio,"Axial polyp forms: time ratio, heated / ambient",0.894662,0.668301,1.1977,interval-censored Weibull model,-0.74789,,,0.454527,24,output/tables/14_interval_survreg.csv
+wound_smoothed_time_ratio,"Cut surface smooths over: time ratio, heated / ambient",0.831402,0.70954,0.974193,interval-censored Weibull model,-2.28333,,,0.022411,24,output/tables/14_interval_survreg.csv
+tip_exist_time_ratio,"New tip forms: time ratio, heated / ambient",1.12826,0.79019,1.61097,interval-censored Weibull model,0.664111,,,0.506619,24,output/tables/14_interval_survreg.csv
+tip_extension_time_ratio,"Tip extends: time ratio, heated / ambient",1.35755,1.04225,1.76823,interval-censored Weibull model,2.26685,,,0.0233993,24,output/tables/14_interval_survreg.csv
+new_corallites_on_tip_time_ratio,"New radial corallites bud: time ratio, heated / ambient",1.32106,1.19103,1.46528,interval-censored Weibull model,5.26698,,,1.38684e-7,24,output/tables/14_interval_survreg.csv
+budding_hazard_ratio,"Budding: hazard ratio, heated / ambient (Cox)",0.216556,0.0681071,0.688571,"Cox model, stratified by source patch",-2.59219,,,0.00953684,24,output/tables/14_cox_hazard_ratios.csv
+budding_patch_x_temp,Budding: source patch x temperature (exploratory; 4 fragments per patch and temperature),,,,likelihood-ratio test,11.3023,2,,0.00351341,,output/tables/14_cox_genet_LRT.csv
+budding_per_tank_ambient,"Budding by Day 15, ambient tanks: wounded fragments that budded per tank (estimate = fewest, statistic = most)",3,,,,3,4,,,3,data/processed/physio_clean.rds
+budding_per_tank_heated,"Budding by Day 15, heated tanks: wounded fragments that budded per tank (estimate = fewest, statistic = most)",1,,,,1,4,,,3,data/processed/physio_clean.rds
+budding_tank_permutation,"Budding: exact permutation test of tank proportions, 4 vs 4 tanks",0.666667,,,exact permutation (70 assignments); smallest possible p = 2/70,,,,0.0285714,8,data/processed/physio_clean.rds
+tissue_cover_by_day1,Microscope experiment: fragments with tissue covering the cut by Day 1,16,,,,,,,,16,data/processed/microscope_physio_clean.rds

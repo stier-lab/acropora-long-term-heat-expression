@@ -32,7 +32,7 @@
 #          output/diagnostics/B_morphology_report.md
 #          figures/diagnostics/B_<trait>.png
 #
-# Run:  Rscript code/diagnostics/B_morphology_glmm.R
+# Run:  Rscript code/checks/checks/diagnostics/B_morphology_glmm.R
 # =============================================================================
 
 suppressPackageStartupMessages({

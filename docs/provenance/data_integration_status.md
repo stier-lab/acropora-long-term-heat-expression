@@ -18,19 +18,19 @@ Status categories:
 
 | source group | status | current use |
 |---|---|---|
-| `metadata` | `supporting_analysis` | Cleaned by `code/01_load_clean_metadata.R`; writes `data/processed/coral_metadata.rds` and the metadata summary. This is the design spine for downstream joins and validation. |
-| `pam` | `full_analysis` | Cleaned/analyzed by `code/02_pam_analysis.R`; writes `data/processed/pam_clean.rds`, PAM figures, and treatment contrasts. |
-| `color_card` | `full_analysis` | Cleaned/analyzed by `code/03_color_card_analysis.R`; writes `data/processed/color_clean.rds`, color figures, end proportions, and contributes to the main models. |
-| `physio_morphology` | `full_analysis` | Cleaned/analyzed by `code/04_physio_morphology.R`; writes `data/processed/physio_clean.rds`, morphology trajectory figures, GLMM summaries, and feeds survival/KM/model scripts. Also feeds the cross-dataset morphology plots, endpoint/timing tests, and diagnostic coverage checks in `code/11c_morphology_dataset_plots.R`. |
-| `microscope_physio` | `full_analysis` | Cleaned/analyzed by `code/11_microscope_physio.R` as a separate photo-only data set; writes cleaned data, design/event/trajectory tables, and microscope figures. Also feeds the cross-dataset morphology plots, endpoint/timing tests, and diagnostic coverage checks in `code/11c_morphology_dataset_plots.R`. |
-| `wax_dipping` | `supporting_analysis` | Cleaned/analyzed by `code/07_wax_dipping.R`; writes `data/processed/wax_clean.rds`, the wax standard-curve figure, and surface areas used by growth/symbiont calculations. |
-| `buoyant_weight` | `full_analysis` | Cleaned/analyzed by `code/05_buoyant_weight.R`; writes `data/processed/buoyant_weight_clean.rds`, growth figures, growth model tables, tank tests, and metric comparisons. |
-| `symbiont_counts` | `full_analysis` | Cleaned/analyzed by `code/06_symbiont_chl.R`; writes `data/processed/symbiont_chl_clean.rds`, symbiont-density figure, summaries, and RNA-seq covariates. Chlorophyll-a is explicitly handled as not run. |
-| `apex` | `supporting_analysis` | Updated 2026-09-11: Molly's recovered XML and compiled sheet fill the late gap. All eight tanks have 144 ten-minute readings per day through Days 0-15 (and Day 16). `code/08_apex_temperature.R` verifies duplicate agreement, checks the compiled sheet, uses dated tank assignments, and exports hourly/daily data plus coverage and clock-sensitivity tables. See `docs/provenance/molly_followup_2026-09-11.md`. |
+| `metadata` | `supporting_analysis` | Cleaned by `code/analysis/01_metadata.R`; writes `data/processed/coral_metadata.rds` and the metadata summary. This is the design spine for downstream joins and validation. |
+| `pam` | `full_analysis` | Cleaned/analyzed by `code/analysis/02_photosynthesis.R`; writes `data/processed/pam_clean.rds`, PAM figures, and treatment contrasts. |
+| `color_card` | `full_analysis` | Cleaned/analyzed by `code/analysis/03_color.R`; writes `data/processed/color_clean.rds`, color figures, end proportions, and contributes to the main models. |
+| `physio_morphology` | `full_analysis` | Cleaned/analyzed by `code/analysis/04_regeneration_scores.R`; writes `data/processed/physio_clean.rds`, morphology trajectory figures, GLMM summaries, and feeds survival/KM/model scripts. Also feeds the cross-dataset morphology plots, endpoint/timing tests, and diagnostic coverage checks in `code/analysis/11c_stage_counts.R`. |
+| `microscope_physio` | `full_analysis` | Cleaned/analyzed by `code/analysis/11_microscope_experiment.R` as a separate photo-only data set; writes cleaned data, design/event/trajectory tables, and microscope figures. Also feeds the cross-dataset morphology plots, endpoint/timing tests, and diagnostic coverage checks in `code/analysis/11c_stage_counts.R`. |
+| `wax_dipping` | `supporting_analysis` | Cleaned/analyzed by `code/analysis/07_surface_area.R`; writes `data/processed/wax_clean.rds`, the wax standard-curve figure, and surface areas used by growth/symbiont calculations. |
+| `buoyant_weight` | `full_analysis` | Cleaned/analyzed by `code/analysis/05_growth.R`; writes `data/processed/buoyant_weight_clean.rds`, growth figures, growth model tables, tank tests, and metric comparisons. |
+| `symbiont_counts` | `full_analysis` | Cleaned/analyzed by `code/analysis/06_symbionts.R`; writes `data/processed/symbiont_chl_clean.rds`, symbiont-density figure, summaries, and RNA-seq covariates. Chlorophyll-a is explicitly handled as not run. |
+| `apex` | `supporting_analysis` | Updated 2026-09-11: Molly's recovered XML and compiled sheet fill the late gap. All eight tanks have 144 ten-minute readings per day through Days 0-15 (and Day 16). `code/analysis/08_temperature.R` verifies duplicate agreement, checks the compiled sheet, uses dated tank assignments, and exports hourly/daily data plus coverage and clock-sensitivity tables. See `docs/provenance/molly_followup_2026-09-11.md`. |
 | `ysi` | `supporting_analysis` | Updated October 27 from Molly's daily-log spreadsheet. Script 09 imports the dated raw snapshot, checks units and legacy overlap, and exports cleaned data, coverage, descriptive summaries, and water-chemistry figures. June 4–19 includes 112 readings from eight tanks on 14 dates; June 4 and 7 are missing. SD across readings and SE among tank averages are reported separately. See `docs/provenance/ysi_refresh_2026-10-27.md`. |
-| `worm_presence` | `supporting_analysis` | Cleaned/summarized by `code/10_worms.R`; writes `data/processed/worm_clean.rds`, worm-presence figure, and summary table. Used as contamination/QC context. |
-| `trinity_hauru_colonies` | `supporting_analysis` | Preliminary external Hauru colony table attached to Trinity Conn's 2026-08-10 email and forwarded by Molly Brzezinski on 2026-09-03. Read by `code/sensitivity/26b_trinity_hauru_context.R`, which writes a cleaned CSV, nearest-coordinate table, and map. This is context for future DNA-marker matching only, not a confirmed genotype match to LTH source patches. |
-| `plate_layout` | `handoff_only` | Read by `code/31_rnaseq_covariate_table.R`; writes RNA-seq library lookup and phenotype-covariate handoff tables. No expression model is fit in this repo. |
+| `worm_presence` | `supporting_analysis` | Cleaned/summarized by `code/checks/10_flatworms.R`; writes `data/processed/worm_clean.rds`, worm-presence figure, and summary table. Used as contamination/QC context. |
+| `trinity_hauru_colonies` | `supporting_analysis` | Preliminary external Hauru colony table attached to Trinity Conn's 2026-08-10 email and forwarded by Molly Brzezinski on 2026-09-03. Read by `code/exploratory/26b_trinity_hauru_context.R`, which writes a cleaned CSV, nearest-coordinate table, and map. This is context for future DNA-marker matching only, not a confirmed genotype match to LTH source patches. |
+| `plate_layout` | `handoff_only` | Read by `code/rnaseq/31_rnaseq_covariate_table.R`; writes RNA-seq library lookup and phenotype-covariate handoff tables. No expression model is fit in this repo. |
 | `rnaseq` | final host calls; exploratory phenotype analysis | October 12 `FINAL_LTH_genoclusters_syms.csv` supersedes the September file. Script 43 joins all 144 final host assignments and rough symbiont read shares to the Days 1/3/10 covariates. Memberships are unchanged; PCs are updated. Density-model diagnostics remain partial. No Day 15 genotypes or expression counts were delivered. |
 | `shipping` | `provenance_only` | Imported/codebooked sample handling and storage metadata. The current pipeline does not read these sheets directly. |
 | `daily_health_log` | `provenance_only` | Imported/codebooked for completeness; mostly a filled design/template log and not used by the current pipeline. |
@@ -47,8 +47,8 @@ Phenotype validation status after this classification:
 
 Molly follow-up outputs added 2026-09-05 and updated 2026-09-06:
 
-- `output/tables/36_molly_temperature_coverage_days0_16.csv`
-- `output/tables/36_molly_stage_timing.csv`
-- `output/tables/36_molly_stage_timing_summary.csv`
-- `output/tables/36_molly_followup_action_items.csv`
-- `figures/36_molly_stage_timing.png`
+- `output/tables/36_temperature_coverage_days0_16.csv`
+- `output/tables/36_stage_timing.csv`
+- `output/tables/36_stage_timing_summary.csv`
+- `output/tables/36_followup_action_items.csv`
+- `figures/36_stage_timing.png`

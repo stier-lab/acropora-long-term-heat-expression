@@ -157,7 +157,7 @@ inventory <- tibble::tribble(
 
   "P1", "data_integrity", "Cleaned data and experimental design",
   "support",
-  "code/01_load_clean_metadata.R; code/18_data_validation.R; code/diagnostics/H_spreadsheet_coverage.R",
+  "code/analysis/01_metadata.R; code/checks/18_data_validation.R; code/checks/checks/diagnostics/H_spreadsheet_coverage.R",
   "output/tables/01_metadata_summary.csv; output/tables/18_validation_summary.csv; output/diagnostics/H_coverage_by_source.csv",
   "none",
   "Data validation, ID checks, tank-treatment checks, and spreadsheet coverage",
@@ -169,8 +169,8 @@ inventory <- tibble::tribble(
 
   "P1", "temperature_context", "Apex logger, YSI, and heat-treatment context",
   "support",
-  "code/08_apex_temperature.R; code/09_ysi_water_chem.R; code/36_molly_followup_checks.R",
-  "output/tables/36_molly_temperature_coverage_days0_16.csv",
+  "code/analysis/08_temperature.R; code/analysis/09_water_quality.R; code/analysis/36_stage_timing_tables.R",
+  "output/tables/36_temperature_coverage_days0_16.csv",
   "figures/08_apex_temperature.pdf; figures/08b_apex_temperature_full.pdf; figures/09_ysi_water_chem.pdf",
   "Descriptive environmental summaries",
   "Coverage audit for days 0-16; tank-treatment map checks through the shared setup",
@@ -181,7 +181,7 @@ inventory <- tibble::tribble(
 
   "P2", "pam_fvfm", "Photosynthesis-efficiency score (PAM Fv/Fm)",
   "primary",
-  "code/02_pam_analysis.R; code/12_models.R",
+  "code/analysis/02_photosynthesis.R; code/analysis/12_models.R",
   "output/tables/02_pam_treatment_contrasts.csv; output/tables/12_anova_summary.csv; output/tables/12_emmeans_contrasts.csv",
   "figures/02_pam_fvfm_trajectory.pdf",
   "Linear mixed model with treatment x wound x day x source patch plus tank and coral ID random intercepts",
@@ -193,7 +193,7 @@ inventory <- tibble::tribble(
 
   "P2", "pam_location", "Paired near-tip versus near-base photosynthesis",
   "support",
-  "code/42_pam_location_and_score_audit.R",
+  "code/checks/42_pam_location_and_score_audit.R",
   "output/tables/42_pam_location_heat_tests.csv; output/tables/42_pam_location_diagnostics.csv; output/tables/42_pam_location_trajectory_test.csv",
   "figures/42_pam_location_comparison.pdf; figures/42_pam_location_diagnostics.pdf",
   "Tank-level exact label permutations; paired-difference repeated-measures LMM; correlated unequal-variance sensitivity",
@@ -205,7 +205,7 @@ inventory <- tibble::tribble(
 
   "P1", "morphology_score_review", "Tip reversals and missing pigment scores",
   "support",
-  "code/42_pam_location_and_score_audit.R; code/44_corrected_scoring_audit.R",
+  "code/checks/42_pam_location_and_score_audit.R; code/checks/44_corrected_scoring_audit.R",
   "output/tables/42_morphology_fragment_review.csv; output/tables/42_morphology_missing_calls.csv; output/tables/44_scoring_changes.csv",
   "none",
   "Archived-versus-corrected score audit; downstream models refitted",
@@ -217,7 +217,7 @@ inventory <- tibble::tribble(
 
   "P2", "color_score", "Color-card paling score",
   "primary",
-  "code/03_color_card_analysis.R; code/12_models.R",
+  "code/analysis/03_color.R; code/analysis/12_models.R",
   "output/tables/03_color_end_proportions.csv; output/tables/12_anova_summary.csv; output/tables/12b_color_clmm.csv",
   "figures/03_color_trajectory.pdf",
   "Linear mixed model plus ordinal cumulative-link mixed-model robustness check",
@@ -229,7 +229,7 @@ inventory <- tibble::tribble(
 
   "P2", "skeletal_growth", "Buoyant-weight skeletal growth",
   "primary",
-  "code/05_buoyant_weight.R; code/12_models.R",
+  "code/analysis/05_growth.R; code/analysis/12_models.R",
   "output/tables/05_buoyant_weight_lm.csv; output/tables/05_buoyant_weight_tank_test.csv; output/tables/12_anova_summary.csv",
   "figures/05_buoyant_weight_growth.pdf",
   "Endpoint LM/LMM and tank-level randomization check",
@@ -241,7 +241,7 @@ inventory <- tibble::tribble(
 
   "P2", "symbiont_density", "Symbiont density",
   "primary",
-  "code/06_symbiont_chl.R; code/12_models.R",
+  "code/analysis/06_symbionts.R; code/analysis/12_models.R",
   "output/tables/06_symbiont_chl_summary.csv; output/tables/12_anova_summary.csv; output/tables/12_genet_treatment_effects.csv",
   "figures/06_symbiont_density_by_day.pdf",
   "Linear mixed model on log symbiont density",
@@ -253,7 +253,7 @@ inventory <- tibble::tribble(
 
   "P3", "main_morphology_states", "Daily wound-healing and regeneration states",
   "primary",
-  "code/04_physio_morphology.R; code/12_models.R; code/sensitivity/29_morphology_prob_contrasts.R",
+  "code/analysis/04_regeneration_scores.R; code/analysis/12_models.R; code/exploratory/29_morphology_prob_contrasts.R",
   "output/tables/04_morphology_trait_glmm_summaries.csv; output/tables/12c_morph_blme_anova.csv; output/tables/29_morphology_prob_contrasts.csv",
   "figures/04_morphology_trajectories.pdf; figures/04b_morphology_trajectories_by_genet.pdf",
   "Binomial GLMMs and weakly regularized binomial GLMMs for separated/saturated traits",
@@ -265,7 +265,7 @@ inventory <- tibble::tribble(
 
   "P3", "morphology_timing", "Time to wound-healing and regeneration milestones",
   "primary",
-  "code/14_morphology_kaplan.R; code/diagnostics/C_cox_diagnostics.R",
+  "code/analysis/14_stage_timing_models.R; code/checks/checks/diagnostics/C_cox_diagnostics.R",
   "output/tables/14_interval_survreg.csv; output/tables/14_cox_hazard_ratios.csv; output/tables/14_cox_ph_tests.csv",
   "figures/14_morphology_KM.pdf; figures/14b_morphology_KM_by_genet.pdf",
   "Interval-censored Weibull AFT models, Kaplan-Meier curves, Cox proportional-hazards checks",
@@ -277,7 +277,7 @@ inventory <- tibble::tribble(
 
   "P3", "microscope_validation", "Separate microscope/photo morphology cohort",
   "support",
-  "code/11_microscope_physio.R; code/11c_morphology_dataset_plots.R",
+  "code/analysis/11_microscope_experiment.R; code/analysis/11c_stage_counts.R",
   "output/tables/11_microscope_event_tests.csv; output/tables/11f_morphology_dataset_endpoint_tests.csv; output/tables/11f_morphology_dataset_logrank_tests.csv",
   "figures/11_microscope_trait_trajectories.pdf; figures/11c_morphology_dataset_all_trait_trajectories.pdf; figures/11e_morphology_dataset_event_summary.pdf",
   "Fisher exact endpoint tests and log-rank first-observed timing tests",
@@ -289,7 +289,7 @@ inventory <- tibble::tribble(
 
   "P4", "source_interactions", "Source-patch dependence of physiology and morphology",
   "primary/support",
-  "code/13_genet_interaction.R; code/14_morphology_kaplan.R; code/diagnostics/D_pca_lrt.R",
+  "code/analysis/13_source_patch_tests.R; code/analysis/14_stage_timing_models.R; code/checks/checks/diagnostics/D_pca_lrt.R",
   "output/tables/13_genet_anova.csv; output/tables/13_genet_emmeans.csv; output/tables/14_cox_genet_LRT.csv",
   "figures/13_genet_response_panel.pdf; figures/14b_morphology_KM_by_genet.pdf",
   "Likelihood-ratio tests comparing models with and without source-patch terms",
@@ -301,7 +301,7 @@ inventory <- tibble::tribble(
 
   "P4", "multivariate_pca", "End-of-experiment multivariate physiology",
   "support/synthesis",
-  "code/15_multivariate.R; code/diagnostics/D_pca_lrt.R",
+  "code/exploratory/15_physiology_pca.R; code/checks/checks/diagnostics/D_pca_lrt.R",
   "output/tables/15_pca_loadings.csv; output/tables/15_genet_pca_displacement.csv",
   "figures/15_physio_PCA_biplot.pdf; figures/15b_physio_PCA_by_genet.pdf",
   "PCA on centered and scaled endpoint physiology variables",
@@ -313,7 +313,7 @@ inventory <- tibble::tribble(
 
   "P4", "source_resilience_composite", "Source-patch heat-sensitivity composite",
   "synthesis/exploratory",
-  "code/19_genet_dashboard.R; code/37_tradeoff_formal_tests.R",
+  "code/exploratory/19_source_patch_dashboard.R; code/exploratory/37_tradeoff_formal_tests.R",
   "output/tables/19_genet_resilience_summary.csv; output/tables/19c_resilience_decomp_by_scope.csv; output/tables/37_tradeoff_heat_penalty_leave_one_trait_out.csv",
   "figures/19_genet_dashboard.pdf; figures/19b_genet_resilience_ranking.pdf; figures/19c_decomposed_resilience.pdf",
   "Derived row-max standardized heat-penalty score",
@@ -325,7 +325,7 @@ inventory <- tibble::tribble(
 
   "P5", "rnaseq_covariates", "RNA-seq phenotype covariate handoff",
   "support",
-  "code/31_rnaseq_covariate_table.R",
+  "code/rnaseq/31_rnaseq_covariate_table.R",
   "output/tables/31_rnaseq_phenotype_covariates.csv; output/tables/31_rnaseq_library_lookup_raw.csv",
   "none",
   "Sample-level covariate table, no fitted response model",
@@ -337,7 +337,7 @@ inventory <- tibble::tribble(
 
   "P5", "final_snp", "Final host clusters and rough symbiont read typing",
   "exploratory",
-  "code/43_final_snp_integration.R",
+  "code/analysis/43_genetic_clusters.R",
   "output/tables/43_final_snp_join_audit.csv; output/tables/43_final_snp_model_diagnostics.csv; output/tables/43_final_snp_symbiont_contrasts.csv",
   "figures/43_final_snp_structure.pdf; figures/43_final_snp_symbiont_typing.pdf; figures/43_final_snp_symbiont_density.pdf",
   "One-to-one ID join; descriptive composition; tank-intercept LMM of log density in replicated host clusters",
@@ -349,7 +349,7 @@ inventory <- tibble::tribble(
 
   "P5", "preliminary_snp", "Historical preliminary SNP comparison (superseded by script 43)",
   "exploratory",
-  "code/32_prelim_snp_phenotype_integration.R",
+  "code/rnaseq/32_prelim_snp_integration.R",
   "output/tables/32_prelim_snp_join_audit.csv; output/tables/32_prelim_snp_response_joinability.csv; output/tables/32_prelim_snp_symbiont_model_summary.csv; output/tables/32_prelim_snp_symbiont_nested_tests.csv",
   "figures/32_prelim_snp_structure.pdf; figures/32_prelim_snp_design_balance.pdf; figures/32_prelim_snp_symbiont_heat_effects.pdf",
   "Chi-square design-balance tests and exploratory LM on same-fragment symbiont density",
@@ -362,7 +362,7 @@ inventory <- tibble::tribble(
 
   "P5", "trinity_context", "Trinity/Ross Hauru coordinate and ED50 context",
   "support/external context",
-  "code/sensitivity/26b_trinity_hauru_context.R",
+  "code/exploratory/26b_trinity_hauru_context.R",
   "output/tables/26b_trinity_hauru_table_summary.csv; output/tables/26b_trinity_hauru_nearest_source_patch_matches.csv",
   "figures/26b_trinity_hauru_context.pdf",
   "Nearest-coordinate descriptive screen, no fitted model",
@@ -374,7 +374,7 @@ inventory <- tibble::tribble(
 
   "P6", "tradeoff_screens", "Exploratory growth, heat, and regeneration trade-off screens",
   "exploratory",
-  "code/33_growth_tradeoff_screen.R; code/34_regeneration_tradeoff_screen.R; code/35_tradeoff_summary.R",
+  "code/exploratory/33_growth_tradeoff_screen.R; code/exploratory/34_regeneration_tradeoff_screen.R; code/exploratory/35_tradeoff_summary.R",
   "output/tables/33_growth_heat_tradeoff.csv; output/tables/34_heat_tolerance_regeneration_screen.csv; output/tables/35_tradeoff_summary.csv",
   "figures/33_growth_heat_tradeoff.pdf; figures/34_regeneration_tradeoff_screens.pdf; figures/35_tradeoff_summary.pdf",
   "Descriptive source-patch and fragment-level screens",
@@ -386,7 +386,7 @@ inventory <- tibble::tribble(
 
   "P6", "tradeoff_formal", "Formal trade-off model set",
   "support/sensitivity",
-  "code/37_tradeoff_formal_tests.R",
+  "code/exploratory/37_tradeoff_formal_tests.R",
   "output/tables/37_tradeoff_main_results.csv; output/tables/37_tradeoff_model_diagnostics.csv; output/tables/37_tradeoff_heat_penalty_leave_one_trait_out.csv",
   "figures/37_tradeoff_diagnostics/*.png; figures/35_tradeoff_summary.pdf",
   "Endpoint LM, robust LM, bias-reduced logistic models, Cox timing, and discrete-time transition models",
@@ -398,7 +398,7 @@ inventory <- tibble::tribble(
 
   "P7", "multiple_testing", "Confirmatory versus exploratory p-value handling",
   "diagnostic",
-  "code/sensitivity/28_multiple_testing.R",
+  "code/checks/28_multiple_testing.R",
   "output/tables/28_multiple_testing.csv",
   "none",
   "Benjamini-Hochberg false-discovery-rate correction for exploratory family only",
@@ -410,7 +410,7 @@ inventory <- tibble::tribble(
 
   "P7", "model_diagnostic_coverage", "Every saved model has a diagnostic artifact",
   "diagnostic",
-  "code/sensitivity/25_model_diagnostic_coverage.R; code/diagnostics/G_diagnostic_plots.R",
+  "code/checks/25_model_diagnostic_coverage.R; code/checks/checks/diagnostics/G_diagnostic_plots.R",
   "output/tables/25_model_diagnostic_coverage.csv; output/diagnostics/K_model_coverage_report.md; output/diagnostics/G_plot_inventory.csv",
   "figures/diagnostics/*.png; figures/37_tradeoff_diagnostics/*.png",
   "Model inventory coverage check",
@@ -422,7 +422,7 @@ inventory <- tibble::tribble(
 
   "P7", "figure_and_manuscript_audits", "Figure freshness and manuscript-number checks",
   "diagnostic",
-  "code/17_figure_audit.R; code/30_manuscript_audit.R",
+  "code/checks/17_figure_audit.R; code/checks/30_manuscript_audit.R",
   "output/tables/17_figure_audit.csv; output/tables/30_manuscript_audit.csv",
   "figures/FIGURE_INDEX.md",
   "File freshness checks and regenerated-number audit",

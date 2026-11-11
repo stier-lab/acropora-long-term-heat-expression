@@ -47,7 +47,7 @@ if (!file.exists(snp_path)) {
   cat("Missing data/raw/rnaseq/PRELIM_LTH_genoclusters.csv\n")
 } else {
   if (!file.exists(cov_path)) {
-    source(here::here("code", "31_rnaseq_covariate_table.R"))
+    source(here::here("code", "rnaseq", "31_rnaseq_covariate_table.R"))
   }
 
   snp_raw <- read_csv(snp_path, show_col_types = FALSE) |>

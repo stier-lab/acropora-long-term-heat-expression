@@ -165,7 +165,7 @@ fit_lm_growth_cost <- function(dat, event_var, event_label, model_label,
       p_value = p.value,
       estimate_scale = "percentage-point growth difference: event yes minus no",
       tradeoff_direction = "negative estimate would support a growth cost of regeneration",
-      diagnostic_figure = diag_path
+      diagnostic_figure = sub(paste0(here::here(), "/"), "", diag_path, fixed = TRUE)
     )
 
   diagnostics <- tibble(
@@ -180,7 +180,7 @@ fit_lm_growth_cost <- function(dat, event_var, event_label, model_label,
                if_else(max(cooks, na.rm = TRUE) < 1, "passed", "flagged"),
                if_else(sum(cooks > cook_threshold, na.rm = TRUE) <= 1,
                        "passed", "flagged")),
-    diagnostic_figure = diag_path
+    diagnostic_figure = sub(paste0(here::here(), "/"), "", diag_path, fixed = TRUE)
   )
 
   influence <- tibble(
@@ -318,7 +318,7 @@ fit_robust_growth_cost <- function(dat, event_var, event_label, model_label,
     p_value = clean_p(event_row[["Pr(>|t|)"]]),
     estimate_scale = "robust percentage-point growth difference: event yes minus no",
     tradeoff_direction = "negative estimate would support a growth cost of regeneration",
-    diagnostic_figure = diag_path
+    diagnostic_figure = sub(paste0(here::here(), "/"), "", diag_path, fixed = TRUE)
   )
 
   diagnostics <- tibble(
@@ -334,7 +334,7 @@ fit_robust_growth_cost <- function(dat, event_var, event_label, model_label,
                if_else(min(weights_rob, na.rm = TRUE) > 0.05,
                        "passed", "flagged"),
                if_else(low_weight_count <= 1, "passed", "flagged")),
-    diagnostic_figure = diag_path
+    diagnostic_figure = sub(paste0(here::here(), "/"), "", diag_path, fixed = TRUE)
   )
 
   list(model = model, result = result, diagnostics = diagnostics)
@@ -397,7 +397,7 @@ fit_brglm_regeneration <- function(dat, event_var, event_label, model_label,
     p_value = clean_p(growth_row[["Pr(>|z|)"]]),
     estimate_scale = "odds ratio for event per 1 SD higher growth",
     tradeoff_direction = "odds ratio below 1 would support slower/lower regeneration in faster-growing fragments",
-    diagnostic_figure = diag_path
+    diagnostic_figure = sub(paste0(here::here(), "/"), "", diag_path, fixed = TRUE)
   )
 
   diagnostics <- tibble(
@@ -414,7 +414,7 @@ fit_brglm_regeneration <- function(dat, event_var, event_label, model_label,
                plain_status(dharma$uniformity_p),
                plain_status(dharma$dispersion_p),
                plain_status(dharma$outlier_p)),
-    diagnostic_figure = diag_path
+    diagnostic_figure = sub(paste0(here::here(), "/"), "", diag_path, fixed = TRUE)
   )
 
   list(model = model, result = result, diagnostics = diagnostics)
@@ -506,7 +506,7 @@ fit_cox_timing <- function(phys, bw, trait, event_label) {
       p_value = clean_p(`Pr(>|z|)`),
       estimate_scale = "hazard ratio for event per 1 SD higher growth",
       tradeoff_direction = "hazard ratio below 1 would support slower regeneration in faster-growing fragments",
-      diagnostic_figure = diag_path
+      diagnostic_figure = sub(paste0(here::here(), "/"), "", diag_path, fixed = TRUE)
     )
 
   diagnostics <- tibble(
@@ -519,7 +519,7 @@ fit_cox_timing <- function(phys, bw, trait, event_label) {
     status = c(plain_status(global_ph_p),
                plain_status(growth_ph_p),
                if_else(max_dfbeta < 1, "passed", "flagged")),
-    diagnostic_figure = diag_path
+    diagnostic_figure = sub(paste0(here::here(), "/"), "", diag_path, fixed = TRUE)
   )
 
   list(model = model, result = result, diagnostics = diagnostics, data = dat)

@@ -1,7 +1,7 @@
 # =============================================================================
 # Purpose: Comprehensive comparison plots for the two morphology datasets.
 #
-# What & why: 04_physio_morphology.R and 11_microscope_physio.R each make
+# What & why: 04_regeneration_scores.R and 11_microscope_experiment.R each make
 #   dataset-specific trajectory plots. This script adds the cross-dataset view:
 #   it keeps the main gross morphology cohort and the microscope/photo cohort
 #   separate, but puts their observed trait trajectories, endpoint states, and
@@ -717,7 +717,7 @@ report <- c(
   "",
   "## Interpretation",
   "",
-  "These plot-matched analyses keep the two morphology datasets separate. For the main morphology cohort, the formal primary inference remains the interval-censored survival analysis in `code/14_morphology_kaplan.R`; the 11f tables provide the same simple endpoint/timing summaries used for the microscope cohort so the cross-dataset figures have directly paired statistics."
+  "These plot-matched analyses keep the two morphology datasets separate. For the main morphology cohort, the formal primary inference remains the interval-censored survival analysis in `code/analysis/14_stage_timing_models.R`; the 11f tables provide the same simple endpoint/timing summaries used for the microscope cohort so the cross-dataset figures have directly paired statistics."
 )
 writeLines(report,
            file.path(DIAG_OUT, "11f_morphology_dataset_analysis_report.md"))

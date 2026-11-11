@@ -25,7 +25,7 @@ kept only for provenance.
 | Folder | Status |
 |---|---|
 | `provenance/drive_methods/` | Google Drive method exports and photo-source notes. These are useful for tracing decisions, but the root README and analysis scripts define the current pipeline. |
-| `../notes/archive/` | Historical plans, meeting notes, and resolved analysis decisions. Keep them for provenance; do not use them as the current design without checking against the root README and `code/_run_all.R`. |
+| `../notes/archive/` | Historical plans, meeting notes, and resolved analysis decisions. Keep them for provenance; do not use them as the current design without checking against the root README and `code/run_all.R`. |
 
 ## Current Terminology
 

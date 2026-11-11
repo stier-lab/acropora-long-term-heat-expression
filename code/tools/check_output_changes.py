@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """Sort uncommitted changes into real edits and rerun noise.
 
-Run from the repo root after code/_run_all.R:
+Run from the repo root after code/run_all.R:
 
     python3 code/tools/check_output_changes.py            # report only
     python3 code/tools/check_output_changes.py --restore  # undo noise-only changes
 
 "Noise" means a file whose only difference from the last commit is:
-  - a PDF creation/modification timestamp or document ID
+  - a PDF whose PNG twin (same name, .png) is unchanged: R's PDF writer embeds
+    the run time and a random font-subset tag, so PDFs change on every run
   - trailing whitespace or line endings in a text file
   - output/session_info.txt (it changes with whichever packages were loaded)
 Everything else is listed as a real change to review and commit.
@@ -34,7 +35,10 @@ for f in modified:
     if f == "output/session_info.txt":
         noise.append(f)
     elif ext == "pdf":
-        (noise if pdf_norm(old) == pdf_norm(new) else real).append(f)
+        png = f[:-4] + ".png"
+        png_same = png not in modified and subprocess.run(["git", "ls-files", "--error-unmatch", png],
+                                                          capture_output=True).returncode == 0
+        (noise if pdf_norm(old) == pdf_norm(new) or png_same else real).append(f)
     elif ext in {"csv", "txt", "md", "r", "rmd", "html", "json", "tsv"}:
         (noise if text_norm(old) == text_norm(new) else real).append(f)
     else:

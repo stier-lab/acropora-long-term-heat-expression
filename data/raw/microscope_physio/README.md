@@ -28,4 +28,4 @@ Important conventions:
 - `use_photo` marks image series that are useful for illustrative figures; it is
   not a biological response variable.
 
-The corresponding analysis script is `code/11_microscope_physio.R`.
+The corresponding analysis script is `code/analysis/11_microscope_experiment.R`.

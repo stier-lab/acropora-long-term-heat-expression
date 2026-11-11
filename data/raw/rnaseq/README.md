@@ -12,7 +12,7 @@ Rachael Bay sent this attachment on October 12, 2026, 22:58 UTC, in
 rough. Original attachment bytes are retained. SHA-256:
 `d70ebfb58e4fcd02c67bdbc7f9b66468b3de888630f8e8acaaea72d7a0d0025d`.
 
-Use `code/43_final_snp_integration.R` and its `43_final_snp_*` outputs for current
+Use `code/analysis/43_genetic_clusters.R` and its `43_final_snp_*` outputs for current
 work. All 144 memberships match the September file, but genetic PCs have changed.
 The file covers Days 1/3/10, not Day 15. Symbiont A/B/C/D columns sum to one and
 are read-mapping shares, not cell proportions. Preserve `total.ab` as reported;
@@ -34,7 +34,7 @@ treating it as confirmed genet identity.
 
 Historical use (superseded by script 43):
 
-- Read by `code/32_prelim_snp_phenotype_integration.R`.
+- Read by `code/rnaseq/32_prelim_snp_integration.R`.
 - Joined to `output/tables/31_rnaseq_phenotype_covariates.csv` by parsed coral
   fragment ID.
 - Used for exploratory summaries of preliminary SNP cluster structure, design

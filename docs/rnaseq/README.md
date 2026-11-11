@@ -28,9 +28,9 @@ The RNA-seq analysis has not been run yet. The **phenotype analysis** (Methods +
 
 - **RNA-seq status:** final host clusters/PCs are integrated for 144 libraries;
   expression counts remain pending and symbiont read typing remains rough.
-- **Phenotype pipeline:** `Rscript code/_run_all.R` (~4 min) rebuilds every figure and table.
+- **Phenotype pipeline:** `Rscript code/run_all.R` (~4 min) rebuilds every figure and table.
 - **Single source of truth for every statistic:** `output/tables/20_master_results.csv` (each row: effect size + test stat + df + p + CI; `_paper_ready.csv` is the formatted version). Cite the table; don't hand-copy.
-- **Audit:** `code/30_manuscript_audit.R` recomputes the phenotype numbers and flags drift (advisory, phenotype only; 15/15 checks pass). It does not check the Intro/Discussion/Abstract or transcriptomics.
+- **Audit:** `code/checks/30_manuscript_audit.R` recomputes the phenotype numbers and flags drift (advisory, phenotype only; 15/15 checks pass). It does not check the Intro/Discussion/Abstract or transcriptomics.
 - Phenotype Results are already written in `manuscript/Manuscript_LTH.docx`.
 
 ### Where things live
@@ -40,12 +40,12 @@ The RNA-seq analysis has not been run yet. The **phenotype analysis** (Methods +
 | Orientation / how to run | `README.md` (repo root) |
 | Full phenotype results narrative (incl. §10 limitations) | `RESULTS.docx` |
 | Every statistic (source of truth) | `output/tables/20_master_results.csv` |
-| RNA-seq plate layout / sequencing plan | `notes/archive/sequencing-plan-keck-LTH.md`, `notes/archive/Experimental_Plan_Gene_Expression.md`, `code/plate_fig.R` |
+| RNA-seq plate layout / sequencing plan | `notes/archive/sequencing-plan-keck-LTH.md`, `notes/archive/Experimental_Plan_Gene_Expression.md`, `code/rnaseq/plate_layout_figure.R` |
 | Plate maps / IDs | `notes/LTH_PlateLayout_with_IDs`, `data/raw/plate_layout/` |
-| Per-library phenotype covariate table | `output/tables/31_rnaseq_phenotype_covariates.csv` (built by `code/31_rnaseq_covariate_table.R`) |
+| Per-library phenotype covariate table | `output/tables/31_rnaseq_phenotype_covariates.csv` (built by `code/rnaseq/31_rnaseq_covariate_table.R`) |
 | Raw un-recoded library lookup | `output/tables/31_rnaseq_library_lookup_raw.csv` |
 | Preliminary SNP cluster file | `data/raw/rnaseq/PRELIM_LTH_genoclusters.csv` |
-| Preliminary SNP integration outputs | `output/tables/32_prelim_snp_*.csv`, `figures/32_prelim_snp_*.png` (built by `code/32_prelim_snp_phenotype_integration.R`) |
+| Preliminary SNP integration outputs | `output/tables/32_prelim_snp_*.csv`, `figures/32_prelim_snp_*.png` (built by `code/rnaseq/32_prelim_snp_integration.R`) |
 | Trinity/Ross preliminary Hauru colony attachment | `data/external/trinity_conn_hauru_colonies_2026-08-10.xlsx` |
 | Trinity/Ross cleaned/context outputs | `data/external/trinity_conn_hauru_colonies_2026-08-10.csv`, `output/tables/26b_trinity_hauru_*.csv`, `figures/26b_trinity_hauru_context.png` |
 | Trinity/Ross provenance note | `docs/provenance/trinity_conn_hauru_context.md` |
@@ -84,7 +84,7 @@ The RNA-seq analysis has not been run yet. The **phenotype analysis** (Methods +
 metric, and cluster assignments for all 144 RNA-seq libraries. Her email says
 these results are preliminary and that some singleton clusters may be less
 reliable where `cov` is low. The current pipeline therefore treats the file as
-exploratory only. `code/32_prelim_snp_phenotype_integration.R` joins it by
+exploratory only. `code/rnaseq/32_prelim_snp_integration.R` joins it by
 fragment ID and writes the audit trail.
 
 Current read:
