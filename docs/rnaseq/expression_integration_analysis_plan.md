@@ -6,9 +6,6 @@ This is a planning document for the LTH heat x wound RNA-seq analysis. It is
 written before the expression counts arrive so the analysis does not drift toward
 the phenotype story only after we see the transcriptome. The core rule is:
 
-For the broader project order, see `docs/next_analysis_roadmap.md`. This file
-focuses on RNA-seq expression and phenotype integration.
-
 **Run the expression analysis genome-wide first; use physiology and regeneration
 results to define contrasts and interpret modules, not to pre-select winners.**
 
@@ -32,19 +29,14 @@ Useful repo anchors:
 
 | Need | File |
 |---|---|
-| Phenotype source of truth | `output/tables/20_master_results.csv` |
-| Paper-ready phenotype summary | `output/tables/20_master_results_paper_ready.csv` |
+| Phenotype numbers | `output/paper/*_numbers.csv` |
+| Collaborator notes (Hauru context, symbiont typing) | `docs/DATA_NOTES.md` |
 | Per-library phenotype covariates | `output/tables/31_rnaseq_phenotype_covariates.csv` |
 | Raw library lookup | `output/tables/31_rnaseq_library_lookup_raw.csv` |
 | Current final host clusters and rough symbiont typing | `output/tables/43_final_snp_rnaseq_covariates.csv` |
 | Final SNP join/design audit | `output/tables/43_final_snp_join_audit.csv`, `output/tables/43_final_snp_response_joinability.csv`, `output/tables/43_final_snp_design_balance.csv` |
-| Trinity/Ross preliminary Hauru candidate-match context | `docs/provenance/trinity_conn_hauru_context.md` |
-| Trinity/Ross cleaned table, nearest candidates, and map | `data/external/trinity_conn_hauru_colonies_2026-08-10.csv`, `output/tables/26b_trinity_hauru_*.csv`, `figures/26b_trinity_hauru_context.png` |
-| Project-level next-analysis roadmap | `docs/next_analysis_roadmap.md` |
 | RNA-seq background notes | `docs/rnaseq/README.md` |
-| Coral expression literature synthesis | `docs/rnaseq/coral_expression_literature_synthesis.md` |
 | Candidate gene evidence table | `docs/rnaseq/candidate_genes_reference.csv` |
-| Literature search log | `docs/rnaseq/literature_search_log.md` |
 
 Important limits:
 

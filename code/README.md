@@ -51,7 +51,7 @@ Output files kept the names they had before the scripts were merged, so links in
 
 ## Not reported
 
-- **Daily yes/no regeneration models.** Their p-values change with the computer and package versions (`docs/provenance/rerun_check_2026-11-10.md`). They are frozen in `extras/`. The regeneration results use stage counts, tank counts and the timing models instead.
+- **Daily yes/no regeneration models.** Their p-values change with the computer and package versions (found in a 2026-11-10 rerun check). They are frozen in `extras/`. The regeneration results use stage counts, tank counts and the timing models instead.
 - **The average day a stage was reached** for stages some fragments never reached. For budding under heat, that average describes only 4 of 12 fragments.
 
 ## After a run

@@ -4,8 +4,8 @@ Last audited: 2026-09-03
 
 These files are local exports of Google Docs from the project Drive folder.
 They are provenance material, not generated analysis outputs or current
-analysis instructions. Use the repo root `README.md`, `docs/README.md`, and
-`RESULTS.docx` for the current design, terminology, and analysis status.
+analysis instructions. Use the repo root `README.md` and `docs/README.md`
+for the current design, terminology, and analysis status.
 Several exports still contain early-plan language about confirmed genotypes,
 chlorophyll-a, microbiome work, symbiont genotyping, D15 RNA-seq, or "biopsy"
 wording; treat those as historical unless the current data inventory confirms
@@ -33,5 +33,4 @@ them.
 
 The image files themselves are not imported here because the Drive notes point
 to `smb://stier-nas1.eemb.ucsb.edu`, not to files in the project Drive folder.
-The resolved mounted NAS paths are recorded in
-`docs/provenance/nas_image_sources.md`.
+The NAS paths are recorded in `docs/DATA_NOTES.md`.

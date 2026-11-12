@@ -21,4 +21,4 @@ git worktree add ../lth-pre-merge pre-merge-2026-11-11
 cd ../lth-pre-merge && Rscript code/run_all.R
 ```
 
-Then copy the outputs you need back into `extras/`. Don't report p-values from the daily yes/no regeneration models; they change with the computer and package versions (`docs/provenance/rerun_check_2026-11-10.md`).
+Then copy the outputs you need back into `extras/`. Don't report p-values from the daily yes/no regeneration models; they change with the computer and package versions (found in a 2026-11-10 rerun check).

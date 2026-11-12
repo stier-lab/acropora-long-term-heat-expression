@@ -23,8 +23,6 @@ Updated 2026-11-12. Use this page to tell current results from historical files 
 | Everything in `extras/` (old scripts, figures, tables, the master results table and the daily yes/no models) | The 10 core scripts in `code/` (merged 2026-11-11) |
 | `extras/figures/39a_*`, `39c_*`, `40_stage_mean_review*`, `41_stage_progression*` | `39b` (Figure 1B) and `39d`. The older options can misrepresent the 12/12 vs 4/12 budding result (commit 2ffa570). |
 | `data/raw/*/data_before_2026-10-16.csv` | The October 16 corrected `data.csv` in the same folder |
-| `RESULTS.docx`, `manuscript/Manuscript_LTH.docx`, `figures/FIGURE_INDEX.docx` | Not reconciled with the October refreshes. Use the team summary and `output/paper/`. |
-| `docs/provenance/MAIN_FIGURE_PLAN_2026-09-16.md` | `manuscript/MAIN_FIGURE_PLAN.md` |
 
 ## Why files show as changed after running the pipeline
 
@@ -51,3 +49,4 @@ Commit code, raw-data and output changes together, with a message that says what
 
 - **Growth temperature test (2026-11-10, Adrian):** report the model test (temperature, F1,6 = 6.33, p = 0.046, from `03_physiology.R`). The tank permutation (p = 0.057, `05_buoyant_weight_tank_test.csv`) goes in the supplement as a check.
 - **Figure 1B (2026-11-12):** follows Molly's working draft: four regeneration milestones (axial polyp, axial corallite forms, axial corallite extends, radial corallites), main experiment only. Healing and wound-surface remodelling go in the all-stage version (`39d`) for the supplement.
+- **Old AI-written docs removed (2026-11-12):** RESULTS.docx, the local manuscript draft and its source extracts, session logs in `docs/provenance/`, email drafts, the roadmap, the diagnostic inventory and `notes/archive/`. Facts worth keeping went to `docs/DATA_NOTES.md`; the rest is in git history. Molly's Google Doc is the manuscript draft.
