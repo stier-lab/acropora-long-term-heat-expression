@@ -1,0 +1,157 @@
+day,treatment,wound,n,k,panel,pct
+0,28C,no,12,12,Polyps extended,100
+0,28C,yes,12,12,Polyps extended,100
+0,31C,no,12,12,Polyps extended,100
+0,31C,yes,12,12,Polyps extended,100
+1,28C,no,12,12,Polyps extended,100
+1,28C,yes,12,12,Polyps extended,100
+1,31C,no,12,12,Polyps extended,100
+1,31C,yes,12,12,Polyps extended,100
+2,28C,no,12,12,Polyps extended,100
+2,28C,yes,12,12,Polyps extended,100
+2,31C,no,12,12,Polyps extended,100
+2,31C,yes,12,12,Polyps extended,100
+3,28C,no,12,12,Polyps extended,100
+3,28C,yes,12,12,Polyps extended,100
+3,31C,no,12,12,Polyps extended,100
+3,31C,yes,12,12,Polyps extended,100
+4,28C,no,12,0,Polyps extended,0
+4,28C,yes,12,0,Polyps extended,0
+4,31C,no,12,0,Polyps extended,0
+4,31C,yes,12,0,Polyps extended,0
+5,28C,no,12,12,Polyps extended,100
+5,28C,yes,12,12,Polyps extended,100
+5,31C,no,12,12,Polyps extended,100
+5,31C,yes,12,12,Polyps extended,100
+6,28C,yes,12,12,Polyps extended,100
+6,31C,yes,12,10,Polyps extended,83.33333333333333
+7,28C,no,12,12,Polyps extended,100
+7,28C,yes,12,12,Polyps extended,100
+7,31C,no,12,11,Polyps extended,91.66666666666667
+7,31C,yes,12,8,Polyps extended,66.66666666666667
+8,28C,no,12,12,Polyps extended,100
+8,28C,yes,12,12,Polyps extended,100
+8,31C,no,12,12,Polyps extended,100
+8,31C,yes,12,12,Polyps extended,100
+9,28C,no,12,12,Polyps extended,100
+9,28C,yes,12,12,Polyps extended,100
+9,31C,no,12,12,Polyps extended,100
+9,31C,yes,12,10,Polyps extended,83.33333333333333
+10,28C,yes,12,12,Polyps extended,100
+10,31C,yes,12,12,Polyps extended,100
+11,28C,yes,12,12,Polyps extended,100
+11,31C,yes,12,9,Polyps extended,75
+12,28C,yes,12,12,Polyps extended,100
+12,31C,yes,12,11,Polyps extended,91.66666666666667
+13,28C,yes,12,12,Polyps extended,100
+13,31C,yes,12,10,Polyps extended,83.33333333333333
+14,28C,yes,12,12,Polyps extended,100
+14,31C,yes,12,8,Polyps extended,66.66666666666667
+15,28C,yes,12,12,Polyps extended,100
+15,31C,yes,12,8,Polyps extended,66.66666666666667
+3,28C,yes,12,2,Pigment over wound (wounded only),16.666666666666668
+3,31C,yes,12,1,Pigment over wound (wounded only),8.333333333333334
+4,28C,yes,12,1,Pigment over wound (wounded only),8.333333333333334
+4,31C,yes,12,2,Pigment over wound (wounded only),16.666666666666668
+9,28C,yes,12,2,Pigment over wound (wounded only),16.666666666666668
+9,31C,yes,12,0,Pigment over wound (wounded only),0
+12,28C,yes,12,1,Pigment over wound (wounded only),8.333333333333334
+12,31C,yes,12,0,Pigment over wound (wounded only),0
+15,28C,yes,12,1,Pigment over wound (wounded only),8.333333333333334
+15,31C,yes,12,4,Pigment over wound (wounded only),33.333333333333336
+0,28C,yes,12,0,Algae on wound (wounded only),0
+0,31C,yes,12,0,Algae on wound (wounded only),0
+1,28C,yes,12,0,Algae on wound (wounded only),0
+1,31C,yes,12,0,Algae on wound (wounded only),0
+2,28C,yes,12,0,Algae on wound (wounded only),0
+2,31C,yes,12,0,Algae on wound (wounded only),0
+3,28C,yes,12,0,Algae on wound (wounded only),0
+3,31C,yes,12,0,Algae on wound (wounded only),0
+4,28C,yes,12,0,Algae on wound (wounded only),0
+4,31C,yes,12,0,Algae on wound (wounded only),0
+5,28C,yes,12,0,Algae on wound (wounded only),0
+5,31C,yes,12,0,Algae on wound (wounded only),0
+6,28C,yes,12,0,Algae on wound (wounded only),0
+6,31C,yes,12,0,Algae on wound (wounded only),0
+7,28C,yes,12,0,Algae on wound (wounded only),0
+7,31C,yes,12,0,Algae on wound (wounded only),0
+8,28C,yes,12,0,Algae on wound (wounded only),0
+8,31C,yes,12,0,Algae on wound (wounded only),0
+9,28C,yes,12,0,Algae on wound (wounded only),0
+9,31C,yes,12,0,Algae on wound (wounded only),0
+10,28C,yes,12,0,Algae on wound (wounded only),0
+10,31C,yes,12,0,Algae on wound (wounded only),0
+11,28C,yes,12,0,Algae on wound (wounded only),0
+11,31C,yes,12,0,Algae on wound (wounded only),0
+12,28C,yes,12,0,Algae on wound (wounded only),0
+12,31C,yes,12,0,Algae on wound (wounded only),0
+13,28C,yes,12,0,Algae on wound (wounded only),0
+13,31C,yes,12,0,Algae on wound (wounded only),0
+14,28C,yes,12,0,Algae on wound (wounded only),0
+14,31C,yes,12,0,Algae on wound (wounded only),0
+15,28C,yes,12,0,Algae on wound (wounded only),0
+15,31C,yes,12,0,Algae on wound (wounded only),0
+0,28C,no,12,0,Flatworm (AEF) signs recorded,0
+0,28C,yes,12,0,Flatworm (AEF) signs recorded,0
+0,31C,no,12,0,Flatworm (AEF) signs recorded,0
+0,31C,yes,12,0,Flatworm (AEF) signs recorded,0
+1,28C,no,12,0,Flatworm (AEF) signs recorded,0
+1,28C,yes,12,0,Flatworm (AEF) signs recorded,0
+1,31C,no,12,0,Flatworm (AEF) signs recorded,0
+1,31C,yes,12,0,Flatworm (AEF) signs recorded,0
+2,28C,no,12,0,Flatworm (AEF) signs recorded,0
+2,28C,yes,12,0,Flatworm (AEF) signs recorded,0
+2,31C,no,12,0,Flatworm (AEF) signs recorded,0
+2,31C,yes,12,0,Flatworm (AEF) signs recorded,0
+3,28C,no,12,0,Flatworm (AEF) signs recorded,0
+3,28C,yes,12,0,Flatworm (AEF) signs recorded,0
+3,31C,no,12,4,Flatworm (AEF) signs recorded,33.333333333333336
+3,31C,yes,12,3,Flatworm (AEF) signs recorded,25
+4,28C,no,12,0,Flatworm (AEF) signs recorded,0
+4,28C,yes,12,0,Flatworm (AEF) signs recorded,0
+4,31C,no,12,4,Flatworm (AEF) signs recorded,33.333333333333336
+4,31C,yes,12,3,Flatworm (AEF) signs recorded,25
+5,28C,no,12,0,Flatworm (AEF) signs recorded,0
+5,28C,yes,12,0,Flatworm (AEF) signs recorded,0
+5,31C,no,12,0,Flatworm (AEF) signs recorded,0
+5,31C,yes,12,0,Flatworm (AEF) signs recorded,0
+6,28C,no,12,0,Flatworm (AEF) signs recorded,0
+6,28C,yes,12,0,Flatworm (AEF) signs recorded,0
+6,31C,no,12,0,Flatworm (AEF) signs recorded,0
+6,31C,yes,12,0,Flatworm (AEF) signs recorded,0
+7,28C,no,12,0,Flatworm (AEF) signs recorded,0
+7,28C,yes,12,0,Flatworm (AEF) signs recorded,0
+7,31C,no,12,0,Flatworm (AEF) signs recorded,0
+7,31C,yes,12,0,Flatworm (AEF) signs recorded,0
+8,28C,no,12,0,Flatworm (AEF) signs recorded,0
+8,28C,yes,12,0,Flatworm (AEF) signs recorded,0
+8,31C,no,12,1,Flatworm (AEF) signs recorded,8.333333333333334
+8,31C,yes,12,0,Flatworm (AEF) signs recorded,0
+9,28C,no,12,0,Flatworm (AEF) signs recorded,0
+9,28C,yes,12,0,Flatworm (AEF) signs recorded,0
+9,31C,no,12,0,Flatworm (AEF) signs recorded,0
+9,31C,yes,12,0,Flatworm (AEF) signs recorded,0
+10,28C,no,12,0,Flatworm (AEF) signs recorded,0
+10,28C,yes,12,0,Flatworm (AEF) signs recorded,0
+10,31C,no,12,0,Flatworm (AEF) signs recorded,0
+10,31C,yes,12,0,Flatworm (AEF) signs recorded,0
+11,28C,no,12,0,Flatworm (AEF) signs recorded,0
+11,28C,yes,12,0,Flatworm (AEF) signs recorded,0
+11,31C,no,12,0,Flatworm (AEF) signs recorded,0
+11,31C,yes,12,0,Flatworm (AEF) signs recorded,0
+12,28C,no,12,0,Flatworm (AEF) signs recorded,0
+12,28C,yes,12,0,Flatworm (AEF) signs recorded,0
+12,31C,no,12,0,Flatworm (AEF) signs recorded,0
+12,31C,yes,12,0,Flatworm (AEF) signs recorded,0
+13,28C,no,12,0,Flatworm (AEF) signs recorded,0
+13,28C,yes,12,0,Flatworm (AEF) signs recorded,0
+13,31C,no,12,0,Flatworm (AEF) signs recorded,0
+13,31C,yes,12,0,Flatworm (AEF) signs recorded,0
+14,28C,no,12,0,Flatworm (AEF) signs recorded,0
+14,28C,yes,12,0,Flatworm (AEF) signs recorded,0
+14,31C,no,12,0,Flatworm (AEF) signs recorded,0
+14,31C,yes,12,0,Flatworm (AEF) signs recorded,0
+15,28C,no,12,0,Flatworm (AEF) signs recorded,0
+15,28C,yes,12,0,Flatworm (AEF) signs recorded,0
+15,31C,no,12,0,Flatworm (AEF) signs recorded,0
+15,31C,yes,12,0,Flatworm (AEF) signs recorded,0

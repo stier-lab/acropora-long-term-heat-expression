@@ -28,9 +28,8 @@ The RNA-seq analysis has not been run yet. The **phenotype analysis** (Methods +
 
 - **RNA-seq status:** final host clusters/PCs are integrated for 144 libraries;
   expression counts remain pending and symbiont read typing remains rough.
-- **Phenotype pipeline:** `Rscript code/run_all.R` (under a minute) rebuilds every number, table and figure the paper uses.
-- **Numbers reported in the text:** `output/paper/*_numbers.csv` (each row: estimate, test, df, p, n and source table). Cite the table; don't hand-copy. The older all-statistics table (`20_master_results.csv`) is frozen in `extras/`.
-- **Audit (frozen):** `extras/code/checks/30_manuscript_audit.R` recomputed the phenotype numbers and flags drift (advisory, phenotype only; 15/15 checks pass). It does not check the Intro/Discussion/Abstract or transcriptomics.
+- **Phenotype pipeline:** `Rscript code/run_all.R` (about 1 min) rebuilds every figure and table from the 10 core scripts (merged 2026-11-11; older scripts frozen in `extras/`).
+- **Single source of truth for every statistic:** `output/paper/*_numbers.csv`. Cite those files; don't hand-copy.
 - Phenotype Results are already written in `manuscript/Manuscript_LTH.docx`.
 
 ### Where things live
@@ -39,13 +38,13 @@ The RNA-seq analysis has not been run yet. The **phenotype analysis** (Methods +
 |---|---|
 | Orientation / how to run | `README.md` (repo root) |
 | Full phenotype results narrative (incl. §10 limitations) | `RESULTS.docx` |
-| Every statistic (source of truth) | `output/tables/20_master_results.csv` |
-| RNA-seq plate layout / sequencing plan | `notes/archive/sequencing-plan-keck-LTH.md`, `notes/archive/Experimental_Plan_Gene_Expression.md`, `code/rnaseq/plate_layout_figure.R` |
+| Every statistic (source of truth) | `output/paper/*_numbers.csv` |
+| RNA-seq plate layout / sequencing plan | `notes/archive/sequencing-plan-keck-LTH.md`, `notes/archive/Experimental_Plan_Gene_Expression.md`, `code/plate_fig.R` |
 | Plate maps / IDs | `notes/LTH_PlateLayout_with_IDs`, `data/raw/plate_layout/` |
-| Per-library phenotype covariate table | `output/tables/31_rnaseq_phenotype_covariates.csv` (built by `code/06_genetics.R`) |
+| Per-library phenotype covariate table | `output/tables/31_rnaseq_phenotype_covariates.csv` (built by `code/31_rnaseq_covariate_table.R`) |
 | Raw un-recoded library lookup | `output/tables/31_rnaseq_library_lookup_raw.csv` |
 | Preliminary SNP cluster file | `data/raw/rnaseq/PRELIM_LTH_genoclusters.csv` |
-| Preliminary SNP integration outputs | `output/tables/32_prelim_snp_*.csv`, `figures/32_prelim_snp_*.png` (built by `extras/code/rnaseq/32_prelim_snp_integration.R`) |
+| Preliminary SNP integration outputs | `output/tables/32_prelim_snp_*.csv`, `figures/32_prelim_snp_*.png` (built by `code/32_prelim_snp_phenotype_integration.R`) |
 | Trinity/Ross preliminary Hauru colony attachment | `data/external/trinity_conn_hauru_colonies_2026-08-10.xlsx` |
 | Trinity/Ross cleaned/context outputs | `data/external/trinity_conn_hauru_colonies_2026-08-10.csv`, `output/tables/26b_trinity_hauru_*.csv`, `figures/26b_trinity_hauru_context.png` |
 | Trinity/Ross provenance note | `docs/provenance/trinity_conn_hauru_context.md` |
@@ -84,7 +83,7 @@ The RNA-seq analysis has not been run yet. The **phenotype analysis** (Methods +
 metric, and cluster assignments for all 144 RNA-seq libraries. Her email says
 these results are preliminary and that some singleton clusters may be less
 reliable where `cov` is low. The current pipeline therefore treats the file as
-exploratory only. `extras/code/rnaseq/32_prelim_snp_integration.R` joins it by
+exploratory only. `code/32_prelim_snp_phenotype_integration.R` joins it by
 fragment ID and writes the audit trail.
 
 Current read:
@@ -189,7 +188,7 @@ Phenotype-first raw material, written before your expression results exist — *
 - **B. Molecular basis of the healing→regeneration transition (transcriptomics-led).** The phenotype locates *where* recovery fails; the expression data ask *why*. Leads with mechanism, not allocation — likely the stronger spine.
 - **C. Source-patch/genetic thermal tolerance of regeneration (cross-method).** Regenerative capacity differs strongly among source patches (C vs A/D); final SNPs can test how much of that signal is genotype/kinship-linked and whether it pairs with the independent acute CBASS assay (Cunning et al. 2024). Can sit under A or B, or stand alone as a Discussion section.
 
-**Phenotype numbers these rest on** (→ `output/tables/20_master_results.csv`):
+**Phenotype numbers these rest on** (→ `output/paper/*_numbers.csv`; the values below date from before the 2026-11-11 model update):
 - Coenosarc closure indistinguishable 28/31 °C; new-corallite regeneration delayed under heat (time ratio 1.32, 95% CI 1.19–1.47, p = 1.4e-7; first-observed Cox HR 0.22, 95% CI 0.07–0.69).
 - Closed-but-never-regenerated: 67% at 31 °C vs 0% at 28 °C (median healing→regeneration lag 10 vs 8 d).
 - Whole-colony physiology responds to temperature, barely to wounding; skeletal growth (% mass change) **34% lower** at 31 °C.

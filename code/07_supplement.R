@@ -3,6 +3,7 @@
 #
 #   1 Microscope experiment: share of the 16 fragments showing each stage on
 #     each day, by temperature (supplement figure).
+#   1b Other daily observations (polyps, pigment, algae, flatworms).
 #   2 Results without the flagged fragments: refit the Fv/Fm and color
 #     temperature x day tests and the growth tank permutation without
 #     fragments 116 and 121 and without tank 3 (slow to equilibrate).
@@ -14,29 +15,32 @@
 # permutation (03_physiology.R), Kaplan-Meier curves and Cox models
 # (04_regeneration.R), and the wax standard curve (01_clean_data.R).
 #
-# Writes: output/tables/11_microscope_trait_trajectory.csv, 22_sensitivity_flagged.csv,
+# Writes: output/tables/11_microscope_trait_trajectory.csv, 47_other_daily_observations.csv,
+#         22_sensitivity_flagged.csv,
 #         22b_sensitivity_wound_growth.csv, 12b_color_tank_test.csv
-#         figures/11_microscope_trait_trajectories
+#         figures/11_microscope_trait_trajectories (Supp. fig. 3), 47_other_daily_observations (Supp. fig. 2)
 # =============================================================================
 
 source(here::here("code", "00_setup.R"))
 
 # ---- 1. Microscope experiment: stage trajectories --------------------------
 micro <- readRDS(file.path(DATA_PROC, "microscope_physio_clean.rds"))
+# Supplementary figure 3 (Molly's numbering): healing plus the five
+# regeneration stages, in manuscript order and terms. Share of the 8
+# fragments per temperature scored "yes" on each day.
 trait_meta <- tibble::tribble(
-  ~trait,                  ~label,                    ~event_interpretation,
-  "tissue_over_wound",     "Tissue over wound",        "first observed tissue/coenosarc over wound",
-  "axial_polyp_formation", "Axial polyp formation",   "first observed central axial polyp/hole",
-  "wound_smoothed",        "Wound smoothed",          "first observed smoothed wound surface",
-  "pigment_over_wound",    "Pigment over wound",      "first observed pigment over wound; scored D0-D7 only",
-  "tip_exist",             "Tip exists",              "first observed visible axial tip",
-  "tip_extension",         "Tip extension",           "first observed vertical tip extension",
-  "new_corallites_on_tip", "New corallites on tip",   "first observed new corallites on the regenerating tip"
-)
+  ~trait,                  ~label,
+  "tissue_over_wound",     "Healing: coenosarc covers wound",
+  "axial_polyp_formation", "1. Axial polyp forms",
+  "wound_smoothed",        "2. Wound surface remodels",
+  "tip_exist",             "3. Axial corallite forms",
+  "tip_extension",         "4. Axial corallite extends",
+  "new_corallites_on_tip", "5. Radial corallites form"
+) |>
+  mutate(label = factor(label, levels = label))
 traits <- trait_meta$trait
 long <- micro |>
-  select(day, date, treatment, tank, thicket, id, use_photo, notes,
-         all_of(traits)) |>
+  select(day, date, treatment, tank, thicket, id, all_of(traits)) |>
   pivot_longer(all_of(traits), names_to = "trait", values_to = "expressed") |>
   left_join(trait_meta, by = "trait") |>
   filter(!is.na(expressed))
@@ -53,18 +57,62 @@ p_micro <- ggplot(prop_df, aes(day, prop, colour = treatment,
                                group = treatment)) +
   geom_line(linewidth = 0.65) +
   geom_point(size = 1.5) +
-  scale_colour_manual(values = PAL_TEMP, name = "Temperature") +
+  scale_colour_manual(values = PAL_TEMP, name = "Temperature",
+                      labels = c(`28C` = "28 \u00b0C", `31C` = "31 \u00b0C")) +
   scale_x_continuous(breaks = seq(0, 15, by = 3), limits = c(0, 15)) +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1),
                      limits = c(0, 1)) +
-  facet_wrap(~ label, ncol = 4) +
-  labs(x = "Days post-wounding",
-       y = "Photo corals expressing trait",
-       title = "Microscope wound-healing trajectories",
-       subtitle = "Separate photo-only cohort; wounded corals only (n = 8 per temperature)") +
-  theme_pub(9)
+  facet_wrap(~ label, ncol = 3, labeller = label_wrap_gen(width = 22)) +
+  labs(x = "Days after wounding", y = "Fragments showing the stage (%)") +
+  theme_pub(9) +
+  theme(legend.position = "bottom")
 save_fig(p_micro, "11_microscope_trait_trajectories",
-         width = 210, height = 130)
+         width = 190, height = 130)
+
+# ---- 1b. Other daily observations, main experiment (Supplementary fig. 2) ---
+# Polyp extension (all 48 fragments; unwounded fragments were not scored on
+# Days 6 and 10-15), pigment over the wound (wounded fragments; scored on
+# Days 3, 4, 9, 12 and 15), algae on the wound (wounded; scored daily) and
+# Acropora-eating flatworm (AEF) signs, which were recorded only when seen.
+# On Day 4 every fragment was dipped in the AEF chemical treatment and all
+# polyps were retracted (0/48); that dip is a handling effect, not heat.
+ph_obs <- readRDS(file.path(DATA_PROC, "physio_clean.rds"))
+obs_panels <- c("Polyps extended", "Pigment over wound (wounded only)",
+                "Algae on wound (wounded only)", "Flatworm (AEF) signs recorded")
+daily_obs <- bind_rows(
+  ph_obs |> filter(!is.na(polyps_out)) |>
+    group_by(day, treatment, wound) |>
+    summarise(n = n(), k = sum(polyps_out), .groups = "drop") |>
+    mutate(panel = obs_panels[1]),
+  ph_obs |> filter(wound == "yes", !is.na(pigment_over_wound)) |>
+    group_by(day, treatment, wound) |>
+    summarise(n = n(), k = sum(pigment_over_wound), .groups = "drop") |>
+    mutate(panel = obs_panels[2]),
+  ph_obs |> filter(wound == "yes", !is.na(algae_on_wound)) |>
+    group_by(day, treatment, wound) |>
+    summarise(n = n(), k = sum(algae_on_wound), .groups = "drop") |>
+    mutate(panel = obs_panels[3]),
+  ph_obs |> group_by(day, treatment, wound) |>
+    summarise(n = n(), k = sum(disease_status %in% "AEF"), .groups = "drop") |>
+    mutate(panel = obs_panels[4])
+) |>
+  mutate(pct = 100 * k / n, panel = factor(panel, levels = obs_panels))
+write_csv(daily_obs, file.path(TBL_DIR, "47_other_daily_observations.csv"))
+p_obs <- ggplot(daily_obs, aes(day, pct, colour = treatment, linetype = wound,
+                               group = interaction(treatment, wound))) +
+  geom_line(linewidth = 0.6) +
+  geom_point(size = 1.4) +
+  facet_wrap(~ panel, ncol = 2) +
+  scale_colour_manual(values = PAL_TEMP, name = "Temperature",
+                      labels = c(`28C` = "28 \u00b0C", `31C` = "31 \u00b0C")) +
+  scale_linetype_manual(values = c(no = "dashed", yes = "solid"), name = "Wounded",
+                        labels = c(no = "No", yes = "Yes")) +
+  scale_x_continuous(breaks = seq(0, 15, by = 3), limits = c(0, 15)) +
+  scale_y_continuous(limits = c(0, 100)) +
+  labs(x = "Days after wounding", y = "Fragments (%)") +
+  theme_pub(9) +
+  theme(legend.position = "bottom")
+save_fig(p_obs, "47_other_daily_observations", width = 180, height = 130)
 
 # ---- 2. Results without the flagged fragments and tank ---------------------
 # Fv/Fm and color use the 03_physiology.R models (day slopes per tank).

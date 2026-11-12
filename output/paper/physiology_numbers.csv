@@ -19,3 +19,6 @@ growth_ambient,"Growth over 15 days (% mass change), ambient",6.10425,,,,,,,,,ou
 growth_heated,"Growth over 15 days (% mass change), heated",4.03344,,,,,,,,,output/tables/45_figure2_summary.csv
 growth_pct_lower,"Growth under heat, % lower than ambient",33.9241,,,,,,,,,output/tables/45_figure2_summary.csv
 growth_tank_permutation,Growth: tank permutation test (supplement check),,,,exact permutation of 4 vs 4 tank means,,,,0.05714,,output/tables/05_buoyant_weight_tank_test.csv
+zoox_heated_wound_ratio_day10,"Symbionts at 31 C, Day 10: wounded / unwounded mean density",1.29672,,,,,,,,,data/processed/symbiont_chl_clean.rds
+zoox_heated_wound_ratio_day15,"Symbionts at 31 C, Day 15: wounded / unwounded mean density",1.11757,,,,,,,,,data/processed/symbiont_chl_clean.rds
+zoox_heated_tanks_wounded_higher,Heated tanks where wounded fragments had more symbionts on both Day 10 and Day 15,3,,,,,,,,4,data/processed/symbiont_chl_clean.rds

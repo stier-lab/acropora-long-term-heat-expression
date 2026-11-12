@@ -15,7 +15,7 @@ Rscript code/run_all.R    # under a minute; rebuilds everything below
 | `04_regeneration.R` | Day 15 stage counts, timing models, stage table; Figure 1B. | Results 2 |
 | `05_source_patches.R` | Does the heat effect differ among source patches A, C and D? | Results 3 |
 | `06_genetics.R` | Final genetic clusters; one-row-per-library table for the RNA-seq team. | Results 4 |
-| `07_supplement.R` | Microscope-experiment figure, results without flagged fragments, tank-level color check. | Supplement |
+| `07_supplement.R` | Microscope-experiment figure (Supp. fig. 3), other daily observations (Supp. fig. 2), results without flagged fragments, tank-level color check. | Supplement |
 | `08_checks.R` | Data validation, model residual checks, Cox proportional-hazards checks. | none (QA) |
 | `run_all.R` | Runs 01–08 in order. | none |
 
@@ -43,25 +43,16 @@ Output files kept the names they had before the scripts were merged, so links in
 | `01_`, `07_`, `10_`, `11_microscope_design_crosswalk` | `01_clean_data.R` |
 | `08_`, `09_` | `02_tanks_water.R` |
 | `03_`, `05_`, `06_`, `12_` (except `12b_`), `45_` | `03_physiology.R` |
-| `11f_`, `14_` (except `14_cox_ph_tests`), `36_`, `36b_`, `39_`, `39b_` | `04_regeneration.R` |
+| `11f_`, `14_` (except `14_cox_ph_tests`), `36_`, `36b_`, `39_`, `39b_`, `39d_` | `04_regeneration.R` |
 | `13_` | `05_source_patches.R` |
 | `31_`, `43_` | `06_genetics.R` |
-| `11_microscope_trait_*`, `12b_`, `22_` | `07_supplement.R` |
+| `11_microscope_trait_*`, `12b_`, `22_`, `47_` | `07_supplement.R` |
 | `14_cox_ph_tests`, `18_` | `08_checks.R` |
 
 ## Not reported
 
 - **Daily yes/no regeneration models.** Their p-values change with the computer and package versions (`docs/provenance/rerun_check_2026-11-10.md`). They are frozen in `extras/`. The regeneration results use stage counts, tank counts and the timing models instead.
 - **The average day a stage was reached** for stages some fragments never reached. For budding under heat, that average describes only 4 of 12 fragments.
-
-## Model choices (2026-11-11)
-
-Checked in `docs/diagnostics/MODEL_DIAGNOSTICS_2026-11-11.md`:
-
-- Fv/Fm, color and symbiont models have a random day slope for each tank, so temperature × day uses tanks as the replicates.
-- The source-patch test drops only the terms containing source patch × temperature.
-- Timing models use the log-logistic distribution (`14_interval_survreg_distributions.csv` compares four).
-- `07_supplement.R` writes `22b_sensitivity_wound_growth.csv`, showing how the symbiont wound result and the growth result depend on single tanks and fragments.
 
 ## After a run
 

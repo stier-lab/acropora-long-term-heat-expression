@@ -194,3 +194,18 @@ p5 <- ggplot(j,aes(factor(day),symbiont_cells_per_cm2/1e6,colour=treatment,shape
     title="Symbiont density within final host clusters",shape="Clipped",colour="Temperature")+theme_pub(10)
 save_fig(p5,"43_final_snp_symbiont_density",width=190,height=130)
 print(summary); print(table(j$sym_dominant_reported)); print(ct)
+
+# ---- Numbers for the results text: symbionts by source patch ----------------
+# Open question on patch C. Rough read shares (Rachael's mapping) for reference
+# group D, in the 28 C samples, where heat has not shifted them. Only group A
+# is confirmed (Symbiodinium); confirm with Rachael what group D is.
+rows <- list()
+for (p in sort(unique(j$source_patch))) {
+  z <- j |> filter(treatment == "28C", source_patch == p, !is.na(sym_read_D))
+  rows[[length(rows) + 1]] <- paper_row(
+    paste0("sym_D_over5pct_28C_patch_", toupper(p)),
+    paste0("28 C samples from patch ", toupper(p), " with more than 5% of symbiont reads in group D (statistic = median D share)"),
+    estimate = sum(z$sym_read_D > 0.05), statistic = median(z$sym_read_D), n = nrow(z),
+    source = "output/tables/43_final_snp_rnaseq_covariates.csv")
+}
+write_paper(rows, "genetics")

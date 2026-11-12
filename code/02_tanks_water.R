@@ -275,4 +275,30 @@ for (tr in c("28C", "31C")) {
     test = "mean and SD across readings", n = yt(tr, "do_mgl")$n_readings,
     source = "output/tables/09_ysi_treatment_summary.csv")
 }
+# Oxygen in the heated tanks (open question). Warm water holds less oxygen, so
+# part of the lower concentration is expected at any saturation. Solubility
+# from Garcia & Gordon (1992, combined fit), converted from ml/L to mg/L.
+o2_sat_mgl <- function(t_c, s) {
+  ts <- log((298.15 - t_c) / (273.15 + t_c))
+  ln <- 2.00907 + 3.22014 * ts + 4.0501 * ts^2 + 4.94457 * ts^3 - 0.256847 * ts^4 +
+    3.88767 * ts^5 + s * (-6.24523e-3 - 7.37614e-3 * ts - 1.0341e-2 * ts^2 -
+    8.17083e-3 * ts^3) - 4.88682e-7 * s^2
+  exp(ln) * 1.42905
+}
+for (tr in c("28C", "31C")) {
+  lab <- if (tr == "28C") "ambient" else "heated"
+  rows[[length(rows) + 1]] <- paper_row(
+    paste0("ysi_do_pct_", lab), paste("Dissolved oxygen (% saturation),", lab,
+                                      "(ci_low/ci_high = lowest and highest reading)"),
+    estimate = yt(tr, "do_pct")$mean, ci_low = yt(tr, "do_pct")$minimum,
+    ci_high = yt(tr, "do_pct")$maximum, n = yt(tr, "do_pct")$n_readings,
+    source = "output/tables/09_ysi_treatment_summary.csv")
+}
+sol_drop <- o2_sat_mgl(yt("28C", "temp_c")$mean, yt("28C", "sal")$mean) -
+  o2_sat_mgl(yt("31C", "temp_c")$mean, yt("31C", "sal")$mean)
+rows[[length(rows) + 1]] <- paper_row(
+  "do_solubility_drop", "Oxygen drop expected from warmer water alone at 100% saturation (mg/L); statistic = observed drop",
+  estimate = sol_drop, statistic = yt("28C", "do_mgl")$mean - yt("31C", "do_mgl")$mean,
+  test = "Garcia & Gordon (1992) solubility at mean tank temperature and salinity",
+  source = "output/tables/09_ysi_treatment_summary.csv")
 write_paper(rows, "tanks_water")

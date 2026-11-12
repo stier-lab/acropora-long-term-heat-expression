@@ -75,6 +75,15 @@ cap_symbiont <- paste(
   "192 total."
 )
 
+cap_other_obs <- paste(
+  "Other daily notes in the main experiment. Lines show the percentage of fragments",
+  "with each observation; colour shows temperature and line type shows wound status.",
+  "Polyps were retracted on every fragment on Day 4, the day all fragments were dipped",
+  "to treat Acropora-eating flatworms. Pigment over the wound was scored on Days 3, 4, 9, 12",
+  "and 15. Algae on the wound were never recorded. Flatworm signs were recorded on 15",
+  "fragment-days, all at 31 °C. Every fragment was alive at every check."
+)
+
 cap_morph_km <- paste(
   "Heat mostly blocked the final regrowth step, not wound sealing.",
   "Step lines show the percentage of wounded fragments that had reached each",
@@ -145,6 +154,7 @@ fF   <- function(k) { d <- pn(k); sprintf("F~%s,%s~ = %.1f, %s", round(d$df1), r
 fchi <- function(k) { d <- pn(k); sprintf("χ²~%s~ = %.1f, %s", round(d$df1), d$statistic, fp(d$p_value)) }
 fci  <- function(k, digits = 2) { d <- pn(k); sprintf("%.*f; 95%% CI %.*f–%.*f; %s", digits, d$estimate, digits, d$ci_low, digits, d$ci_high, fp(d$p_value)) }
 est  <- function(k, digits = 2) sprintf("%.*f", digits, pn(k)$estimate)
+frac <- function(k) { d <- pn(k); sprintf("%d of %d", as.integer(d$statistic), as.integer(d$n)) }
 cnt  <- function(k, which = c("estimate", "statistic")) { d <- pn(k); sprintf("%d", as.integer(d[[match.arg(which)]])) }
 nn   <- function(k) sprintf("%d", as.integer(pn(k)$n))
 sens_tbl <- readr::read_csv(table_file("22b_sensitivity_wound_growth.csv"), show_col_types = FALSE)
@@ -364,8 +374,12 @@ Here, **healing** means the coenosarc, the sheet of living tissue between coral 
 The healing panel uses a separate microscope-photo experiment with 16 wounded fragments, eight per temperature. The other panels use the 24 wounded fragments in the main experiment, 12 per temperature. All 16 microscope fragments were recorded as covered on Day 1. The microscope photos illustrate the stages in a separate group; they cannot verify individual scores in the main experiment.
 
 ```{r, fig.cap=cap_stage_cumulative}
-knitr::include_graphics(fig("39b_stage_timing_cumulative_option.png"))
+knitr::include_graphics(fig("39d_stage_cumulative_all_stages.png"))
 ```
+
+The manuscript's Figure 1B (`39b_stage_timing_cumulative_option`) shows four of these panels, the regeneration milestones 1, 3, 4 and 5, all from the main experiment.
+
+The gap opened before Day 15. By Day 8, `r frac("tip_extension_pct_day8_ambient")` ambient fragments had an extending tip, compared with `r frac("tip_extension_pct_day8_heated")` heated fragments. By Day 12, `r frac("budding_pct_day12_ambient")` ambient fragments had budded new corallites, compared with `r frac("budding_pct_day12_heated")` heated fragments.
 
 The curves show the percentage first recorded at each stage by each day. Each percentage includes all fragments, including those that had not reached the stage. Once a fragment has a positive score, it remains counted, even if a later score marks the feature absent. A later absence may reflect a real change or a scoring inconsistency; these curves do not distinguish the two.
 
@@ -426,6 +440,15 @@ knitr::include_graphics(fig("36_stage_timing.png"))
 **What the scores tell us.** The reviewed records show tip formation in 11 of 12 fragments at each temperature, rather than all 12. Budding can occur in the wound area before visible tip extension, so these stages are not a strict sequence. The budding result remains 12/12 at 28 °C versus 4/12 at 31 °C.
 
 Pigment was assessed on Days 3, 4, 9, 12, and 15 in the main experiment. Other days remain unknown, not absent. Pigment is not one of the six stages above, and its sparse observations support a less precise timing comparison.
+
+<details>
+<summary>Other daily observations (polyps, pigment, algae, flatworms)</summary>
+
+```{r, fig.cap=cap_other_obs}
+knitr::include_graphics(fig("47_other_daily_observations.png"))
+```
+
+</details>
 
 **How the timing models handle unfinished stages.** A fragment that had not reached a stage by its final observation contributes “not yet reached” information. It is not dropped or assigned an invented completion day. For fragments that did reach a stage, the main timing model places onset between the last absent score and the first present score.
 
@@ -593,11 +616,13 @@ All six non-A-dominated fragments were heated and clipped; five were sampled on 
 
 ## Open questions
 
-- **Was budding delayed or blocked?** The experiment ended on Day 15, when 8 of 12 heated fragments had not budded. A longer run, or a recovery period at 28 °C, would tell a delay from a failure.
-- **What makes patch C more tolerant?** C is one host cluster from one field patch, so its tolerance could reflect genotype, symbionts, or field history. Separating these needs more genotypes per patch or C fragments grown alongside others before testing.
-- **Which gene responses go with slower regrowth?** Expression results from the Day 1, 3 and 10 samples can test whether heat changes genes linked to rebuilding the tip, and whether patch C responds differently.
-- **Did lower oxygen in the heated tanks contribute?** Oxygen was only spot-checked, so its role can't be separated from temperature here.
-- **Does clipping change symbiont loss under heat?** The current result shifts with which tanks are included. A test with more tanks per temperature would settle it.
+What the current data can and cannot say about each question, as of November 12, 2026.
+
+- **Was budding delayed or blocked?** Partly answered: heat did more than push the schedule back. At 28 °C, every fragment budded `r est("bud_lag_ambient", 0)` to `r cnt("bud_lag_ambient", "statistic")` days after its tip began to extend. At 31 °C, `r cnt("bud_stalled_heated")` of 12 fragments had an extending tip for longer than that and still had not budded by Day 15. The last heated fragment to bud did so on Day `r cnt("budding_first_day_range_heated", "statistic")`. The separate microscope experiment showed the same pattern: `r cnt("micro_budding_day15_heated")` of 8 heated fragments had budded by Day 15, compared with `r cnt("micro_budding_day15_ambient")` of 8 at 28 °C. So heat slowed or stalled the step from tip extension to budding. Whether those fragments would bud given more time, or after a return to 28 °C, needs a longer experiment.
+- **What makes patch C more tolerant?** Partly answered: patch C carried a second symbiont group alongside the usual one. In the 28 °C samples, `r cnt("sym_D_over5pct_28C_patch_C")` of 24 patch C samples had more than 5% of their symbiont reads in group D, compared with `r cnt("sym_D_over5pct_28C_patch_A")` of 24 from patch A and `r cnt("sym_D_over5pct_28C_patch_D")` of 24 from patch D. Patch C also budded more often under heat: `r cnt("budding_heated_patch_C")` of the 4 heated fragments that budded came from C. If group D is *Durusdinium*, as the standard clade letters would suggest, that would fit, since *Durusdinium* is often linked to heat tolerance; Rachael confirmed only that group A is *Symbiodinium*, so that needs checking with her. The read shares are rough, and patch C is a single host cluster from one field patch. Host genotype, symbionts and field history therefore still travel together. Separating them would need patch C hosts with and without the group D symbionts, or more genotypes per patch.
+- **Which gene responses go with slower regrowth?** Not answerable yet. The expression counts have not been delivered; Rachael and Shreya are rerunning the processing. Two limits apply when they arrive. The expression samples come from Days 1, 3 and 10, before any fragment budded. They are also destructively sampled fragments, not the fragments scored for budding. Expression can therefore test group differences (heat, clipping, and whether patch C responds differently), but it cannot link one fragment's genes to that fragment's regrowth.
+- **Did lower oxygen in the heated tanks contribute?** Unlikely to explain much. Heated tanks averaged `r est("ysi_do_heated")` mg/L of oxygen, compared with `r est("ysi_do_ambient")` mg/L in ambient tanks. Warmer water holds less oxygen, which alone accounts for `r est("do_solubility_drop")` mg/L of the `r sprintf("%.2f", pn("do_solubility_drop")$statistic)` mg/L difference. Tanks stayed above saturation on average (heated `r est("ysi_do_pct_heated", 0)`%, ambient `r est("ysi_do_pct_ambient", 0)`%), and the lowest single reading was `r sprintf("%.0f", pn("ysi_do_pct_heated")$ci_low)`%. Among the heated tanks, those with less oxygen did not have lower Fv/Fm, fewer symbionts or less growth. Readings were taken between late morning and evening, so night-time oxygen, when it is lowest, is unknown.
+- **Does clipping change symbiont loss under heat?** The direction is consistent, but its size is not settled. Under heat, clipped fragments kept somewhat more symbionts late in the experiment: `r est("zoox_heated_wound_ratio_day10")` times the unclipped mean on Day 10 and `r est("zoox_heated_wound_ratio_day15")` times on Day 15. Clipped fragments had more on both days in `r cnt("zoox_heated_tanks_wounded_higher")` of 4 heated tanks. Clipping did not speed symbiont loss; if anything, it slowed it. The model test (`r fF("zoox_temp_x_wound_x_day")`) shifts with which tank is left out, and each tank contributes only three fragments per group and day. A run with more tanks per temperature would settle it.
 
 ## How much confidence to place in the results
 

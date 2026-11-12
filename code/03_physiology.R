@@ -355,4 +355,27 @@ rows <- list(
             test = "exact permutation of 4 vs 4 tank means", p_value = tank$p_two_sided,
             source = "output/tables/05_buoyant_weight_tank_test.csv")
 )
+# Direction of the clipping difference in heated symbionts (open question):
+# wounded / unwounded mean density on Days 10 and 15, and the number of heated
+# tanks where wounded fragments kept more symbionts on both days.
+wound_ratio <- sym |>
+  filter(treatment == "31C", biopsy_day %in% c(10, 15)) |>
+  group_by(tank, biopsy_day, wound) |>
+  summarise(m = mean(cells_per_cm2), .groups = "drop") |>
+  tidyr::pivot_wider(names_from = wound, values_from = m) |>
+  group_by(tank) |>
+  summarise(both_higher = all(yes > no), .groups = "drop")
+for (d in c(10, 15)) {
+  z <- sym |> filter(treatment == "31C", biopsy_day == d) |>
+    group_by(wound) |> summarise(m = mean(cells_per_cm2))
+  rows[[length(rows) + 1]] <- paper_row(
+    paste0("zoox_heated_wound_ratio_day", d),
+    paste0("Symbionts at 31 C, Day ", d, ": wounded / unwounded mean density"),
+    estimate = z$m[z$wound == "yes"] / z$m[z$wound == "no"],
+    source = "data/processed/symbiont_chl_clean.rds")
+}
+rows[[length(rows) + 1]] <- paper_row(
+  "zoox_heated_tanks_wounded_higher", "Heated tanks where wounded fragments had more symbionts on both Day 10 and Day 15",
+  estimate = sum(wound_ratio$both_higher), n = nrow(wound_ratio),
+  source = "data/processed/symbiont_chl_clean.rds")
 write_paper(rows, "physiology")

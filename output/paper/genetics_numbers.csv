@@ -1,0 +1,4 @@
+key,description,estimate,ci_low,ci_high,test,statistic,df1,df2,p_value,n,source
+sym_D_over5pct_28C_patch_A,28 C samples from patch A with more than 5% of symbiont reads in group D (statistic = median D share),0,,,,0.00823694,,,,24,output/tables/43_final_snp_rnaseq_covariates.csv
+sym_D_over5pct_28C_patch_C,28 C samples from patch C with more than 5% of symbiont reads in group D (statistic = median D share),20,,,,0.12768,,,,24,output/tables/43_final_snp_rnaseq_covariates.csv
+sym_D_over5pct_28C_patch_D,28 C samples from patch D with more than 5% of symbiont reads in group D (statistic = median D share),2,,,,0.0130731,,,,24,output/tables/43_final_snp_rnaseq_covariates.csv

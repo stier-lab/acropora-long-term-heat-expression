@@ -21,7 +21,8 @@
 #         14_cox_hazard_ratios.csv,
 #         14_cox_genet_LRT.csv, 36_stage_timing.csv, 36_stage_timing_mean_iqr.csv,
 #         39_stage_cumulative_percent.csv
-#         figures/39b_stage_timing_cumulative_option (Figure 1B), 36_stage_timing,
+#         figures/39b_stage_timing_cumulative_option (Figure 1B),
+#         39d_stage_cumulative_all_stages, 36_stage_timing,
 #         36b_stage_violin, 14_morphology_KM
 #         output/paper/regeneration_numbers.csv
 # =============================================================================
@@ -853,7 +854,14 @@ save_fig(p_stage_violin, "36b_stage_violin",
 
 # ---- 4. Figure 1B: cumulative percent reached ------------------------------
 # Every fragment stays in the denominator, including those that had not
-# reached a stage by Day 15.
+# reached a stage by Day 15. Stage names and numbers follow the manuscript
+# (healing, then regeneration stages 1-5). Healing (coenosarc cover) comes
+# from the microscope experiment (8 per temperature) and appears only in the
+# all-stage version (39d); stages 1-5 come from the main experiment (12
+# wounded fragments per temperature). Put those sample sizes in the legend.
+STAGE_LABELS <- c("Healing: coenosarc\ncovers wound", "1. Axial polyp\nforms",
+                  "2. Wound surface\nremodels", "3. Axial corallite\nforms",
+                  "4. Axial corallite\nextends", "5. Radial corallites\nform")
 stage_events <- readr::read_csv(
   file.path(TBL_DIR, "36_stage_timing.csv"),
   show_col_types = FALSE
@@ -869,16 +877,14 @@ stage_events <- readr::read_csv(
     stage_short = factor(
       dplyr::recode(
         as.character(stage),
-        `Coenosarc barrier re-established` = "Living tissue\ncovers wound",
-        `Axial polyp forms` = "Main polyp\nforms",
-        `Wound surface remodels` = "Wound surface\nremodels",
-        `Axial corallite or tip forms` = "Tip\nforms",
-        `Axial corallite or tip extends` = "Tip\nextends",
-        `New radial corallites bud` = "New skeletal\ncups bud"
+        `Coenosarc barrier re-established` = STAGE_LABELS[1],
+        `Axial polyp forms` = STAGE_LABELS[2],
+        `Wound surface remodels` = STAGE_LABELS[3],
+        `Axial corallite or tip forms` = STAGE_LABELS[4],
+        `Axial corallite or tip extends` = STAGE_LABELS[5],
+        `New radial corallites bud` = STAGE_LABELS[6]
       ),
-      levels = c("Living tissue\ncovers wound", "Main polyp\nforms",
-                 "Wound surface\nremodels", "Tip\nforms",
-                 "Tip\nextends", "New skeletal\ncups bud")
+      levels = STAGE_LABELS
     ),
     event_status = factor(if_else(event, "Reached", "Not reached by Day 15"),
                           levels = c("Reached", "Not reached by Day 15"))
@@ -909,32 +915,37 @@ cumulative <- tidyr::expand_grid(
   mutate(treatment = factor(treatment, levels = c("28C", "31C")))
 write_csv(cumulative, file.path(TBL_DIR, "39_stage_cumulative_percent.csv"))
 stopifnot(all(cumulative$n_reached <= cumulative$n_scored))
-p_cumulative <- ggplot(cumulative, aes(day, pct_reached, colour = treatment,
-                                      linetype = treatment, shape = treatment)) +
-  geom_step(linewidth = 0.75, direction = "hv") +
-  geom_point(size = 1.5) +
-  facet_wrap(~ stage_short, ncol = 3) +
-  scale_colour_manual(values = PAL_TEMP, name = "Temperature",
-                      labels = c(`28C` = "28 °C", `31C` = "31 °C")) +
-  scale_linetype_manual(values = c(`28C` = "solid", `31C` = "dashed"),
-                        name = "Temperature", labels = c(`28C` = "28 °C", `31C` = "31 °C")) +
-  scale_shape_manual(values = c(`28C` = 16, `31C` = 17),
-                     name = "Temperature", labels = c(`28C` = "28 °C", `31C` = "31 °C")) +
-  scale_x_continuous(breaks = c(0, 1, 3, 5, 10, 15),
-                     limits = c(0, 15)) +
-  scale_y_continuous(labels = \(x) paste0(x, "%"),
-                     limits = c(0, 100),
-                     breaks = c(0, 25, 50, 75, 100)) +
-  labs(
-    title = "Fewer heated fragments reached the final regrowth step by Day 15",
-    subtitle = "All fragments stay in the denominator, including those that had not reached a stage",
-    x = "Day",
-    y = "Fragments first seen at this stage by each day",
-    caption = "Tissue cover: 8 fragments per temperature in a separate photo experiment, all covered on Day 1.\nOther panels: 12 fragments per temperature in the main experiment."
-  ) +
-  theme_pub(10) +
-  theme(legend.position = "bottom")
+plot_cumulative <- function(dat, ncol) {
+  ggplot(dat, aes(day, pct_reached, colour = treatment,
+                  linetype = treatment, shape = treatment)) +
+    geom_step(linewidth = 0.75, direction = "hv") +
+    geom_point(size = 1.5) +
+    facet_wrap(~ stage_short, ncol = ncol) +
+    scale_colour_manual(values = PAL_TEMP, name = "Temperature",
+                        labels = c(`28C` = "28 °C", `31C` = "31 °C")) +
+    scale_linetype_manual(values = c(`28C` = "solid", `31C` = "dashed"),
+                          name = "Temperature", labels = c(`28C` = "28 °C", `31C` = "31 °C")) +
+    scale_shape_manual(values = c(`28C` = 16, `31C` = 17),
+                       name = "Temperature", labels = c(`28C` = "28 °C", `31C` = "31 °C")) +
+    scale_x_continuous(breaks = c(0, 1, 3, 5, 10, 15),
+                       limits = c(0, 15)) +
+    scale_y_continuous(labels = \(x) paste0(x, "%"),
+                       limits = c(0, 100),
+                       breaks = c(0, 25, 50, 75, 100)) +
+    labs(x = "Days after wounding", y = "Fragments that had reached the stage (%)") +
+    theme_pub(10) +
+    theme(legend.position = "bottom")
+}
+# Figure 1B in the working draft: the four regeneration milestones (axial
+# polyp, axial corallite forms, axial corallite extends, radial corallites),
+# all from the main experiment. Stage numbers match Supplementary figure 3.
+FIG1B_STAGES <- STAGE_LABELS[c(2, 4, 5, 6)]
+p_cumulative <- plot_cumulative(filter(cumulative, stage_short %in% FIG1B_STAGES), ncol = 2)
 save_fig(p_cumulative, "39b_stage_timing_cumulative_option",
+         width = 150, height = 135)
+# All six stages, including healing and wound-surface remodelling (supplement).
+p_cumulative_all <- plot_cumulative(cumulative, ncol = 3)
+save_fig(p_cumulative_all, "39d_stage_cumulative_all_stages",
          width = 200, height = 145)
 
 # ---- 5. Numbers for the results text ---------------------------------------
@@ -1052,6 +1063,58 @@ for (i in seq_len(nrow(by_patch))) {
     estimate = by_patch$k[i], n = by_patch$n[i], source = "data/processed/physio_clean.rds")
 }
 
+# Numbers for the Figure 1 text: share reached by a given day, and the
+# range of first days among fragments that reached the stage.
+fig1 <- read_csv(file.path(TBL_DIR, "39_stage_cumulative_percent.csv"), show_col_types = FALSE)
+pct_at <- function(stage, d, trt) fig1 |> dplyr::filter(stage_order == stage, day == d, treatment == trt)
+for (spec in list(list(5, 8, "tip_extension_pct_day8"), list(6, 12, "budding_pct_day12"))) {
+  for (trt in c("28C", "31C")) {
+    r <- pct_at(spec[[1]], spec[[2]], trt)
+    lab <- if (trt == "28C") "ambient" else "heated"
+    rows[[length(rows) + 1]] <- paper_row(
+      paste0(spec[[3]], "_", lab),
+      sprintf("Wounded fragments that had reached stage %d by Day %d, %s (%%)", spec[[1]] - 1, spec[[2]], lab),
+      estimate = r$pct_reached, statistic = r$n_reached, n = r$n_scored,
+      source = "output/tables/39_stage_cumulative_percent.csv")
+  }
+}
+st <- read_csv(file.path(TBL_DIR, "36_stage_timing.csv"), show_col_types = FALSE)
+for (s in c(5, 6)) for (trt in c("28C", "31C")) {
+  r <- st |> dplyr::filter(stage_order == s, treatment == trt, event)
+  key <- c(`5` = "tip_extension", `6` = "budding")[as.character(s)]
+  lab <- if (trt == "28C") "ambient" else "heated"
+  rows[[length(rows) + 1]] <- paper_row(
+    paste0(key, "_first_day_range_", lab),
+    paste0("First day seen, among fragments that reached it, ", lab, " (estimate = earliest, statistic = latest)"),
+    estimate = min(r$first_yes_day), statistic = max(r$first_yes_day), n = nrow(r),
+    source = "output/tables/36_stage_timing.csv")
+}
+
+# Was budding delayed or stalled? (open question). At 28 C every fragment
+# budded within a few days of its tip extending. Count heated fragments whose
+# tip had been extending for longer than the slowest ambient fragment needed,
+# and that still had not budded by Day 15.
+ext_bud <- st |>
+  dplyr::filter(stage_order %in% c(5, 6)) |>
+  dplyr::mutate(s = ifelse(stage_order == 5, "ext", "bud")) |>
+  dplyr::select(id, treatment, s, event, first_yes_day) |>
+  tidyr::pivot_wider(names_from = s, values_from = c(event, first_yes_day))
+lag_amb <- ext_bud |>
+  dplyr::filter(treatment == "28C", event_ext, event_bud) |>
+  dplyr::mutate(lag = first_yes_day_bud - first_yes_day_ext) |>
+  dplyr::pull(lag)
+stalled <- ext_bud |>
+  dplyr::filter(treatment == "31C", event_ext, !event_bud,
+                15 - first_yes_day_ext > max(lag_amb))
+rows[[length(rows) + 1]] <- paper_row(
+  "bud_lag_ambient", "28 C: days from tip extension to budding (estimate = shortest, statistic = longest)",
+  estimate = min(lag_amb), statistic = max(lag_amb), n = length(lag_amb),
+  source = "output/tables/36_stage_timing.csv")
+rows[[length(rows) + 1]] <- paper_row(
+  "bud_stalled_heated", "31 C: fragments with an extending tip for longer than any 28 C fragment needed, but no budding by Day 15",
+  estimate = nrow(stalled), n = sum(ext_bud$treatment == "31C"),
+  source = "output/tables/36_stage_timing.csv")
+
 # Tissue cover, separate microscope experiment
 mic <- readRDS(file.path(DATA_PROC, "microscope_physio_clean.rds"))
 first_cover <- mic |>
@@ -1062,5 +1125,16 @@ rows[[length(rows) + 1]] <- paper_row(
   "tissue_cover_by_day1", "Microscope experiment: fragments with tissue covering the cut by Day 1",
   estimate = sum(first_cover$first_day <= 1), n = dplyr::n_distinct(mic$id),
   source = "data/processed/microscope_physio_clean.rds")
+# Budding in the microscope experiment, a second cohort (open question)
+for (trt in c("28C", "31C")) {
+  b <- mic |>
+    dplyr::filter(treatment == trt, wound == "yes") |>
+    dplyr::group_by(id) |>
+    dplyr::summarise(bud = any(new_corallites_on_tip %in% c("yes", 1, TRUE)), .groups = "drop")
+  rows[[length(rows) + 1]] <- paper_row(
+    paste0("micro_budding_day15_", if (trt == "28C") "ambient" else "heated"),
+    paste("Microscope experiment: wounded fragments that budded by Day 15,", trt),
+    estimate = sum(b$bud), n = nrow(b), source = "data/processed/microscope_physio_clean.rds")
+}
 
 write_paper(rows, "regeneration")

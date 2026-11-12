@@ -26,4 +26,16 @@ budding_ambient_patch_D,"Budding by Day 15, ambient, source patch D: wounded fra
 budding_heated_patch_A,"Budding by Day 15, heated, source patch A: wounded fragments that budded",0,,,,,,,,4,data/processed/physio_clean.rds
 budding_heated_patch_C,"Budding by Day 15, heated, source patch C: wounded fragments that budded",3,,,,,,,,4,data/processed/physio_clean.rds
 budding_heated_patch_D,"Budding by Day 15, heated, source patch D: wounded fragments that budded",1,,,,,,,,4,data/processed/physio_clean.rds
+tip_extension_pct_day8_ambient,"Wounded fragments that had reached stage 4 by Day 8, ambient (%)",91.6667,,,,11,,,,12,output/tables/39_stage_cumulative_percent.csv
+tip_extension_pct_day8_heated,"Wounded fragments that had reached stage 4 by Day 8, heated (%)",58.3333,,,,7,,,,12,output/tables/39_stage_cumulative_percent.csv
+budding_pct_day12_ambient,"Wounded fragments that had reached stage 5 by Day 12, ambient (%)",75,,,,9,,,,12,output/tables/39_stage_cumulative_percent.csv
+budding_pct_day12_heated,"Wounded fragments that had reached stage 5 by Day 12, heated (%)",8.33333,,,,1,,,,12,output/tables/39_stage_cumulative_percent.csv
+tip_extension_first_day_range_ambient,"First day seen, among fragments that reached it, ambient (estimate = earliest, statistic = latest)",8,,,,8,,,,11,output/tables/36_stage_timing.csv
+tip_extension_first_day_range_heated,"First day seen, among fragments that reached it, heated (estimate = earliest, statistic = latest)",8,,,,15,,,,10,output/tables/36_stage_timing.csv
+budding_first_day_range_ambient,"First day seen, among fragments that reached it, ambient (estimate = earliest, statistic = latest)",12,,,,15,,,,12,output/tables/36_stage_timing.csv
+budding_first_day_range_heated,"First day seen, among fragments that reached it, heated (estimate = earliest, statistic = latest)",12,,,,14,,,,4,output/tables/36_stage_timing.csv
+bud_lag_ambient,"28 C: days from tip extension to budding (estimate = shortest, statistic = longest)",4,,,,6,,,,11,output/tables/36_stage_timing.csv
+bud_stalled_heated,"31 C: fragments with an extending tip for longer than any 28 C fragment needed, but no budding by Day 15",5,,,,,,,,12,output/tables/36_stage_timing.csv
 tissue_cover_by_day1,Microscope experiment: fragments with tissue covering the cut by Day 1,16,,,,,,,,16,data/processed/microscope_physio_clean.rds
+micro_budding_day15_ambient,"Microscope experiment: wounded fragments that budded by Day 15, 28C",8,,,,,,,,8,data/processed/microscope_physio_clean.rds
+micro_budding_day15_heated,"Microscope experiment: wounded fragments that budded by Day 15, 31C",2,,,,,,,,8,data/processed/microscope_physio_clean.rds
