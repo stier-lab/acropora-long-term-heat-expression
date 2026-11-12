@@ -32,7 +32,7 @@ the `cov` column, so not all cluster assignments should be treated as final.
 When the full SNP set arrives, replace or supersede this file rather than
 treating it as confirmed genet identity.
 
-Historical use (superseded by script 43):
+Historical use (superseded by `code/06_genetics.R`):
 
 - Read by `extras/code/rnaseq/32_prelim_snp_integration.R`.
 - Joined to `output/tables/31_rnaseq_phenotype_covariates.csv` by parsed coral

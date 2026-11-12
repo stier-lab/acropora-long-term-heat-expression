@@ -118,8 +118,7 @@ p_react <- ggplot(emm_long, aes(treatment, mean, colour = thicket, group = thick
   scale_colour_manual(values = PAL_GENO, name = "Source patch",
                       labels = c("A", "C", "D")) +
   labs(x = NULL, y = "Mean at end of experiment (\u00b1 1 SE)") +
-  theme_pub(9) +
-  theme(legend.position = "bottom")
+  theme_pub(9)
 save_fig(p_react, "13_genet_response_panel", width = 200, height = 90)
 
 # ---- 3. Numbers for the results text ---------------------------------------

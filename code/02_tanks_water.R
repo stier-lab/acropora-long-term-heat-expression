@@ -149,9 +149,7 @@ p_apex <- ggplot(temp_daily, aes(day, value_mean, group = tank, colour = treatme
                       labels = c('28C' = "28 °C", '31C' = "31 °C"), name = "Treatment") +
   scale_x_continuous(breaks = c(-7, -3, 0, 5, 10, 15)) +
   labs(x = "Day relative to tip clipping (Day 0 = 4 June 2025)",
-       y = "Daily mean tank temperature (°C)",
-       title = "Tank temperatures through the final sampling day",
-       subtitle = "One line per tank; shaded area precedes clipping; dashed lines mark targets") +
+       y = "Daily mean tank temperature (°C)") +
   theme_pub(10)
 save_fig(p_apex, "08_apex_temperature", width = 180, height = 105)
 
@@ -233,8 +231,7 @@ p <- ggplot(plot_data, aes(date,value,colour=treatment,group=tank)) +
   scale_colour_manual(values=PAL_TEMP, name="Temperature treatment") +
   facet_wrap(~variable,scales="free_y",ncol=2) +
   scale_x_date(limits=as.Date(c("2025-06-04","2025-06-19")),date_breaks="5 days",date_labels="%b %d") +
-  labs(x=NULL,y=NULL,title="Water-quality spot checks during the study",
-       subtitle="Eight tanks; 14 sampled dates. June 4 and June 7 were not recorded.") +
+  labs(x=NULL,y=NULL) +
   theme_pub(9)
 save_fig(p,"09_ysi_water_chem",width=185,height=140)
 
@@ -277,7 +274,8 @@ for (tr in c("28C", "31C")) {
 }
 # Oxygen in the heated tanks (open question). Warm water holds less oxygen, so
 # part of the lower concentration is expected at any saturation. Solubility
-# from Garcia & Gordon (1992, combined fit), converted from ml/L to mg/L.
+# from Garcia & Gordon (1992), their recommended fit to the Benson & Krause
+# data (the coefficients below), converted from ml/L to mg/L.
 o2_sat_mgl <- function(t_c, s) {
   ts <- log((298.15 - t_c) / (273.15 + t_c))
   ln <- 2.00907 + 3.22014 * ts + 4.0501 * ts^2 + 4.94457 * ts^3 - 0.256847 * ts^4 +

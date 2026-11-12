@@ -2,6 +2,17 @@
 
 Updated 2026-11-12. Every figure in this folder is rebuilt by `code/run_all.R` (each as `.pdf` and `.png`). Frozen figures from exploratory and older analyses are in `extras/figures/`, with the previous index at `extras/figures/FIGURE_INDEX_before_merge.md`. Reader-facing text says **source patch** for A, C and D; some file names still say `genet`.
 
+## Key (no figure carries an embedded legend)
+
+Since 2026-11-12 the artwork has no titles, subtitles, captions or legends; keys and sample sizes belong in the caption text. Mapping used by every script (`code/00_setup.R` palettes):
+
+- **Temperature:** blue `#56B4E9` = 28 °C, orange `#D55E00` = 31 °C. In Figure 1B and `39d`, 28 °C is also solid with circles and 31 °C dashed with triangles.
+- **Wounding:** Figure 2 and its panels: open symbols, white boxes, dashed lines = unwounded; filled symbols, gray boxes, solid lines = wounded. `47`: dashed = unwounded, solid = wounded. `03_color_trajectory`: gray = unwounded, black = wounded. `43_final_snp_symbiont_density`: circles = unwounded, triangles = clipped.
+- **Source patch:** gold `#E69F00` = A, green `#009E73` = C, dark blue `#0072B2` = D (`13`, `05`, `43_final_snp_structure`).
+- **Symbiont read group** (`43_final_snp_symbiont_typing`): green = A, pink = B, gold = C, dark blue = D.
+- **Stage figures** (`36`, `36b`): X = not reached by Day 15; right-side labels in `36` are reached/total.
+- **Multi-panel files** use letter tags (A, B, C): `45_physiology_figure2`, `43_final_snp_structure`, `43_final_snp_diagnostics`.
+
 ## Paper
 
 | Figure | Content | Script |

@@ -1,6 +1,6 @@
 # extras/: frozen analyses
 
-Frozen 2026-11-11. Nothing here is run by `code/run_all.R`, and the paper doesn't depend on it. The one exception is `output/tables/19_genet_resilience_summary.csv`, which `code/06_genetics.R` reads as a fixed input (three source-level heat-sensitivity scores carried into the RNA-seq library table).
+Frozen 2026-11-11. Nothing here is run by `code/run_all.R`, and the paper doesn't depend on it. (Until 2026-11-12, `code/06_genetics.R` read `output/tables/19_genet_resilience_summary.csv` from here; that import was removed when the resilience composites were retired.)
 
 | Folder | What it is |
 |---|---|

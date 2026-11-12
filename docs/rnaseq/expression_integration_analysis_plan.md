@@ -1,6 +1,6 @@
 # Tentative RNA-seq expression-phenotype integration plan
 
-Updated: 2026-09-04
+Updated: 2026-11-12 (Section 3 anchors, H3 and the covariate list revised to the November 11 models and the October 12 final host clusters, before any expression counts were delivered; see the decision log)
 
 This is a planning document for the LTH heat x wound RNA-seq analysis. It is
 written before the expression counts arrive so the analysis does not drift toward
@@ -75,7 +75,7 @@ Before differential expression:
    host/symbiont split.
 4. Record genome/annotation version, read-processing workflow, and mapping rules.
 5. Verify sample IDs against the plate map, raw library lookup, phenotype
-   covariate table, and preliminary/final SNP metadata.
+   covariate table, and the final (2026-10-12) SNP metadata.
 6. Check whether any plate, extraction batch, library batch, lane, or well-position
    variable is confounded with temperature, wound state, day, source patch, or
    tank.
@@ -98,9 +98,9 @@ pipeline itself changes.
 | Anchor | Phenotype result | Expression question |
 |---|---|---|
 | Regeneration decoupling | Tissue closure proceeds, but new corallite regeneration is suppressed at 31 C | Does heat suppress the skeletal/regenerative program more than early wound closure? |
-| Day 10 transition | New corallite formation diverges most clearly by Day 10 | Does the Day 10 wounded-margin expression state differ between 28 C and 31 C? |
+| Day 10 transition | Regrowth has diverged by Day 10 but no fragment has budded yet: by Day 8, 11/12 ambient vs 7/12 heated wounded fragments had an extending tip; budding was first seen on Day 12 (by Day 12, 9/12 vs 1/12) | Does the Day 10 wounded-margin expression state, sampled between tip extension and budding, differ between 28 C and 31 C? |
 | Chronic heat stress | 31 C is chronic/sublethal rather than an acute heat-shock challenge | Do expression patterns show sustained stress/acclimation rather than only an acute HSP spike? |
-| Source-patch/genetic resilience | Source patch C is the most resilient phenotype; preliminary SNPs show C is coherent while A/D are mixed | Does C show a smaller heat-induced expression shift, or a different protective state, after accounting for final genetic structure? |
+| Source-patch differences | Heat effects on Fv/Fm, color, symbiont density and growth differed by source patch, with C least affected; 3 of the 4 heated fragments that budded came from C. In the final host clusters all 48 patch C samples form one cluster, while A and D each span several, so patch C's host genotype, symbionts and field history are confounded | Does C show a smaller heat-induced expression shift, or a different protective state? |
 | Whole-organism physiology | Heat affects PAM, color, symbiont density, and growth | Do expression modules track photochemistry, pigment, symbiont density, growth, or multivariate condition? |
 
 ## 4. Competing hypotheses
@@ -149,13 +149,13 @@ Falsifiers:
 - Heat effects are mostly restricted to wounded Day 10 samples.
 - Unwounded 31 C margins show little sustained expression shift.
 
-### H3. Source-Patch/Genetic-Resilience Hypothesis
+### H3. Source-Patch Heat-Tolerance Hypothesis
 
 Source patch C resists chronic heat stress better than A or D, either through a
 smaller heat-induced transcriptome shift or a different protective expression
-state. The preliminary SNP file suggests C may also be genetically coherent,
-whereas A and D are mixed source-patch labels; the final genetic analysis should
-separate source-patch effects from genotype/kinship effects. The preliminary
+state. The final host clusters (2026-10-12) put all patch C samples in one
+cluster, whereas A and D each span several, so within this design a patch C
+effect cannot be separated from that one host genotype or its symbionts. The preliminary
 Trinity/Ross Hauru table gives a candidate external match for C (`Apul-115`,
 10.5 m away), but this remains a candidate until DNA markers are compared
 directly.
@@ -165,7 +165,7 @@ Predictions:
 - C has a smaller 31 C vs 28 C expression displacement than A/D.
 - C differs from A/D in stress-response, redox, proteostasis, symbiosis, or
   calcification-associated modules.
-- C's module scores correlate with the pre-defined source-patch resilience summaries.
+- C's heat-response modules align with the organismal traits where C was least affected (Fv/Fm, color, symbiont density, growth), tested at the source-patch level.
 
 Falsifiers:
 
@@ -257,7 +257,6 @@ Run these after the genome-wide tests.
    - color score
    - symbiont density
    - growth
-   - source-resilience score
 4. Host/symbiont split or host:symbiont fraction analysis if mapping supports it.
 
 Candidate genes from `docs/rnaseq/candidate_genes_reference.csv` should be used
@@ -278,9 +277,9 @@ pre-analysis addendum before counts are inspected.
   possible, match A/C/D-derived samples to Trinity/Ross or Cunning CBASS
   genotypes. Use coordinates only to prioritize candidates such as `Apul-115`,
   `Apul-111`, and clonal group 2.
-- Preliminary SNP clusters/PCs from `data/raw/rnaseq/PRELIM_LTH_genoclusters.csv`
-  are useful for exploratory balance checks and same-fragment symbiont-density
-  checks, but should not be treated as final genotype calls.
+- The preliminary SNP clusters (`data/raw/rnaseq/PRELIM_LTH_genoclusters.csv`)
+  are superseded by the final 2026-10-12 file; host memberships did not change,
+  but use the final PCs.
 - Parallel symbiont expression or symbiont-fraction analysis, if read mapping
   supports it.
 
@@ -322,8 +321,8 @@ The first expression paper or analysis handoff should include:
 3. Day 10 heat effect in wounded margins.
 4. Heat x wound x day expression summary, preferably as module scores or an
    interpretable heatmap.
-5. Source C vs A/D heat-response summary, with final SNP PCs/kinship added; use
-   the 2026-09-02 preliminary SNP clusters only as a flagged exploratory layer.
+5. Source C vs A/D heat-response summary, with final (2026-10-12) SNP PCs or
+   host cluster added where the design allows.
 6. Expression-module to phenotype map using the pre-defined organismal traits.
 
 ## 10. Decision log
@@ -336,3 +335,4 @@ Fill this in as choices are made.
 | 2026-09-02 | Candidate-gene evidence table uses tiers A-D | Keeps direct Acropora evidence separate from reviews, web-only sources, and lab-only candidates | Adrian/Codex draft |
 | 2026-09-02 | Add Rachael Bay's preliminary SNP cluster file as an exploratory covariate layer | The file joins cleanly to all 144 RNA-seq libraries, but Rachael marked it preliminary and flagged low-coverage singleton concerns | Adrian/Codex draft |
 | 2026-09-04 | Add Trinity/Ross Hauru colony table as preliminary candidate-match context only | The coordinate screen makes `Apul-115` the first candidate for source patch C, but exact identity requires SNP comparison to Trinity/Ross whole-genome data | Adrian/Codex draft |
+| 2026-11-12 | Revise anchors to the November 11 models and final host clusters; drop the source-resilience score covariate | Composite resilience scores were retired from the team summary and pipeline; the Day 10 anchor now uses the observed stage counts; counts not yet delivered, so the anchors are still pre-data | Adrian/Claude |

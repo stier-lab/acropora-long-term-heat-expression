@@ -23,10 +23,11 @@ A 15-day experiment at Gump Station, Mo'orea (May–July 2025). Fragments were h
 ## Run it
 
 ```bash
-Rscript code/run_all.R   # about a minute; rebuilds every number, table and figure
+Rscript -e 'renv::restore()'   # once: installs the pinned package versions
+Rscript code/run_all.R         # about a minute; rebuilds every number, table and figure
 ```
 
-Requires R ≥ 4.3 and the packages loaded at the top of `code/00_setup.R`. Never hand-edit numbers; change the code and rerun. Older and exploratory analyses are frozen in `extras/` and are not run.
+Package versions are pinned in `renv.lock` (R 4.6.2). Restore them before rerunning: the simulation-based residual checks (DHARMa) give different outlier sets under other versions. Never hand-edit numbers; change the code and rerun. Older and exploratory analyses are frozen in `extras/` and are not run.
 
 ## Design
 

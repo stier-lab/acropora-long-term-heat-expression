@@ -64,8 +64,7 @@ p_micro <- ggplot(prop_df, aes(day, prop, colour = treatment,
                      limits = c(0, 1)) +
   facet_wrap(~ label, ncol = 3, labeller = label_wrap_gen(width = 22)) +
   labs(x = "Days after wounding", y = "Fragments showing the stage (%)") +
-  theme_pub(9) +
-  theme(legend.position = "bottom")
+  theme_pub(9)
 save_fig(p_micro, "11_microscope_trait_trajectories",
          width = 190, height = 130)
 
@@ -110,8 +109,7 @@ p_obs <- ggplot(daily_obs, aes(day, pct, colour = treatment, linetype = wound,
   scale_x_continuous(breaks = seq(0, 15, by = 3), limits = c(0, 15)) +
   scale_y_continuous(limits = c(0, 100)) +
   labs(x = "Days after wounding", y = "Fragments (%)") +
-  theme_pub(9) +
-  theme(legend.position = "bottom")
+  theme_pub(9)
 save_fig(p_obs, "47_other_daily_observations", width = 180, height = 130)
 
 # ---- 2. Results without the flagged fragments and tank ---------------------
@@ -186,9 +184,11 @@ out <- bind_rows(results)
 write_csv(out, file.path(TBL_DIR, "22_sensitivity_flagged.csv"))
 
 # ---- 2b. How much do two results depend on single fragments or tanks? -------
-# (a) Symbionts, temperature x wound x day: the five fragments the residual
-#     check flags as outliers are all heated, Day 15, patch A, three of them
-#     nearly bleached out. They look like real bleaching, so they stay in the
+# (a) Symbionts, temperature x wound x day: the fragments the residual
+#     check flags as outliers (two or three, depending on the DHARMa version)
+#     are all heated: 163 (patch A, Day 15, low), 212 (patch A, Day 3, high)
+#     and, under DHARMa 0.5.0, 215 (patch D, Day 10). Nothing marks them as
+#     errors, so they stay in the
 #     reported model; this shows how the wound result moves without them.
 # (b) Growth, temperature: ambient tank 3 (slow to equilibrate) grew like the
 #     heated tanks.

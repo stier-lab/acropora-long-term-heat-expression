@@ -109,6 +109,9 @@ tank_treatment <- function(tank) {
 #   single-col (55-89 mm)  → base_size = 8
 #   1.5-col   (115-170 mm) → base_size = 9-10
 #   double-col(170-183 mm) → base_size = 10-11
+# Artwork default (2026-11-12): no embedded titles, subtitles, captions or
+# legends. Colour/shape keys, sample sizes and findings go in the separate
+# caption text (figures/FIGURE_INDEX.md, Key section; manuscript legends).
 theme_pub <- function(base_size = 10) {
   theme_bw(base_size = base_size, base_family = "") %+replace%
     theme(
@@ -126,7 +129,7 @@ theme_pub <- function(base_size = 10) {
                                       margin = margin(b = 6), colour = "grey30"),
       plot.tag         = element_text(size = base_size + 1, face = "bold"),
       plot.caption     = element_text(size = base_size - 2, hjust = 0, colour = "grey40"),
-      legend.position  = "bottom",
+      legend.position  = "none",
       legend.title     = element_text(size = base_size - 1),
       legend.text      = element_text(size = base_size - 2),
       legend.key       = element_blank(),

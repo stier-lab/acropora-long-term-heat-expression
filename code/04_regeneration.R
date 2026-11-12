@@ -470,10 +470,7 @@ p_km <- ggplot(km_curves, aes(day, cum_event,
   scale_y_continuous(labels = scales::percent_format(accuracy = 1),
                      limits = c(0, 1)) +
   labs(x = "Days after wounding",
-       y = "Cumulative % corals expressing trait",
-       title = "Heat delays the regenerative-tip program but not wound closure",
-       subtitle = sprintf("Kaplan-Meier curves for each wound-healing milestone (n = %s corals per treatment)",
-                          n_km_per_trt)) +
+       y = "Cumulative % corals expressing trait") +
   theme_pub(9)
 save_fig(p_km, "14_morphology_KM", width = 200, height = 130)
 
@@ -696,17 +693,13 @@ p_stage <- ggplot() +
   ) +
   labs(
     x = "First day the stage was seen",
-    y = NULL,
-    title = "Heat mostly affects the late regeneration stage",
-    subtitle = "Small stacks separate corals that reached the same stage on the same day. X marks corals that never reached the stage.",
-    caption = "Each point is one wounded coral. Right labels show reached/total corals.\nThe healing row uses microscope photos; regeneration rows use the main morphology data set."
+    y = NULL
   ) +
   coord_cartesian(clip = "off") +
   theme_pub(8) +
   theme(
     panel.grid.major.y = element_line(colour = "grey90", linewidth = 0.25),
     panel.grid.minor = element_blank(),
-    legend.position = "bottom",
     plot.margin = margin(8, 40, 8, 8, "pt")
   )
 save_fig(p_stage, "36_stage_timing", width = 190, height = 110)
@@ -835,17 +828,13 @@ p_stage_violin <- ggplot() +
   ) +
   labs(
     x = "Healing or regeneration stage",
-    y = "Day first seen",
-    title = "Heat reduced how many corals reached the final regrowth stage",
-    subtitle = "Violin width scales with the number of corals that reached each stage; X marks corals still short of a stage by Day 15.",
-    caption = "Boxes and means appear only where all fragments at both temperatures reached the stage.\nPoints and violin shapes for incomplete stages describe only fragments that reached them; X marks retain the others."
+    y = "Day first seen"
   ) +
   coord_cartesian(ylim = c(0.5, 18.15), clip = "on") +
   theme_pub(8) +
   theme(
     panel.grid.major.x = element_blank(),
     panel.grid.minor = element_blank(),
-    legend.position = "right",
     axis.text.x = element_text(lineheight = 0.9, margin = margin(t = 4)),
     plot.margin = margin(8, 12, 8, 8, "pt")
   )
@@ -858,7 +847,7 @@ save_fig(p_stage_violin, "36b_stage_violin",
 # (healing, then regeneration stages 1-5). Healing (coenosarc cover) comes
 # from the microscope experiment (8 per temperature) and appears only in the
 # all-stage version (39d); stages 1-5 come from the main experiment (12
-# wounded fragments per temperature). Put those sample sizes in the legend.
+# wounded fragments per temperature). Those sample sizes go in the caption.
 STAGE_LABELS <- c("Healing: coenosarc\ncovers wound", "1. Axial polyp\nforms",
                   "2. Wound surface\nremodels", "3. Axial corallite\nforms",
                   "4. Axial corallite\nextends", "5. Radial corallites\nform")
@@ -933,8 +922,7 @@ plot_cumulative <- function(dat, ncol) {
                        limits = c(0, 100),
                        breaks = c(0, 25, 50, 75, 100)) +
     labs(x = "Days after wounding", y = "Fragments that had reached the stage (%)") +
-    theme_pub(10) +
-    theme(legend.position = "bottom")
+    theme_pub(10)
 }
 # Figure 1B in the working draft: the four regeneration milestones (axial
 # polyp, axial corallite forms, axial corallite extends, radial corallites),

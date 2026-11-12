@@ -291,10 +291,7 @@ saveRDS(wax, file.path(DATA_PROC, "wax_clean.rds"))
 p_sc <- ggplot(sc_fit, aes(wax_g, sa)) +
   geom_point(size = 2, alpha = 0.85) +
   geom_smooth(method = "lm", se = TRUE, colour = "#0072B2") +
-  labs(x = "Wax mass (g)", y = expression(Surface~area~(cm^2)),
-       title = "Wax-dipping standard curve",
-       subtitle = sprintf("SA = %.1f + %.1f · wax  (R² = %.3f, n = %d)",
-                          coef(cal)[1], coef(cal)[2], summary(cal)$r.squared, nobs(cal))) +
+  labs(x = "Wax mass (g)", y = expression(Surface~area~(cm^2))) +
   theme_pub(10)
 save_fig(p_sc, "07_wax_standard_curve", width = 120, height = 95)
 

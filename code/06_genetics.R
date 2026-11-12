@@ -2,10 +2,9 @@
 # 06_genetics.R: final genetic clusters and the RNA-seq handoff table
 #
 # Section 1 builds one row per RNA-seq library (144) with its temperature,
-# wound status, tank, day and symbiont density. It also carries three
-# source-level heat-sensitivity scores from a frozen exploratory table
-# (extras/output/tables/19_genet_resilience_summary.csv; not shown in the team summary; last rebuilt before
-# the 2026-11-11 reorganization).
+# wound status, tank, day and symbiont density. (Until 2026-11-12 it also
+# carried source-level resilience scores from a frozen exploratory table in
+# extras/; those composites were retired and are no longer joined.)
 # Section 2 joins Rachael Bay's final host clusters (2026-10-12) and rough
 # symbiont read-mapping shares, checks every join, and fits the symbiont
 # density model within clusters (exploratory; clusters are unevenly spread
@@ -16,7 +15,6 @@
 # =============================================================================
 
 source(here::here("code", "00_setup.R"))
-FROZEN_TBL <- here::here("extras", "output", "tables")
 
 # ---- 1. RNA-seq library table ----------------------------------------------
 sel_raw <- read_csv(file.path(DATA_RAW, "plate_layout", "Selected_Samples.csv"),
@@ -41,15 +39,8 @@ libs <- sel_raw |>
 sym <- readRDS(file.path(DATA_PROC, "symbiont_chl_clean.rds")) |>
   distinct(id, .keep_all = TRUE) |>
   transmute(id, symbiont_cells_per_cm2 = cells_per_cm2)
-res <- read_csv(file.path(FROZEN_TBL, "19_genet_resilience_summary.csv"),
-                show_col_types = FALSE) |>
-  transmute(genet                       = thicket,
-            genet_mean_heat_sensitivity = round(mean_sensitivity, 3),
-            genet_pca_displacement      = round(pca_displacement, 3),
-            genet_resilience_rank       = rank_overall)
 covariates <- libs |>
   left_join(sym, by = "id") |>
-  left_join(res, by = "genet") |>
   arrange(plate, library_id)
 write_csv(covariates, file.path(TBL_DIR, "31_rnaseq_phenotype_covariates.csv"))
 
@@ -76,8 +67,7 @@ fractions <- as.matrix(select(snp,starts_with("sym_read_")))
 stopifnot(all(fractions>=0 & fractions<=1),all(abs(rowSums(fractions)-1)<1e-8),
           all(c("A","B","C","D")[max.col(fractions)]==snp$sym_dominant_reported))
 cov <- read_csv(file.path(TBL_DIR,"31_rnaseq_phenotype_covariates.csv"),show_col_types=FALSE) |>
-  rename(source_patch=genet,source_mean_heat_sensitivity=genet_mean_heat_sensitivity,
-         source_pca_displacement=genet_pca_displacement,source_resilience_rank=genet_resilience_rank)
+  rename(source_patch=genet)
 stopifnot(!anyDuplicated(cov$id),setequal(snp$id,cov$id))
 j <- left_join(cov,snp,by="id",relationship="one-to-one")
 stopifnot(all(j$source_patch==j$snp_source_patch),all(j$day==j$snp_day),
@@ -153,7 +143,7 @@ write_csv(res |> group_by(treatment,cluster,day_f) |>
 q <- ggplot(res,aes(fitted,residual,colour=treatment))+geom_point()+
   geom_hline(yintercept=0)+scale_colour_manual(values=PAL_TEMP)+theme_pub(10)
 qq <- ggplot(res,aes(sample=residual))+stat_qq()+stat_qq_line()+theme_pub(10)
-save_fig(q+qq,"43_final_snp_diagnostics",width=180,height=90)
+save_fig(q+qq+plot_annotation(tag_levels="A"),"43_final_snp_diagnostics",width=180,height=90)
 counts <- j |> count(host_cluster,source_patch) |>
   mutate(host_cluster=factor(host_cluster,levels=as.character(1:8)))
 p1 <- ggplot(j,aes(snp_pc1,snp_pc2,colour=source_patch))+
@@ -163,15 +153,14 @@ p2 <- ggplot(counts,aes(host_cluster,n,fill=source_patch))+
   geom_col()+geom_text(aes(label=ifelse(n>=6,n,"")),position=position_stack(vjust=.5),size=3)+
   scale_fill_manual(values=PAL_GENO,name="Source patch",labels=toupper)+
   labs(x="Final host cluster",y="Fragments")+theme_pub(10)
-save_fig(p1+p2+plot_annotation(title="Final host clusters retain the same memberships"),
+save_fig(p1+p2+plot_annotation(tag_levels="A"),
          "43_final_snp_structure",width=190,height=100)
 bp <- balance |> mutate(cell=factor(paste(day,wound,sep=" / "),
   levels=c("1 / no","1 / yes","3 / no","3 / yes","10 / no","10 / yes")))
 p3 <- ggplot(bp,aes(cell,host_cluster,fill=n))+geom_tile(colour="white")+
   geom_text(aes(label=n),size=3)+facet_wrap(~treatment)+
   scale_fill_gradient(low="white",high="#66B2A3")+
-  labs(x="Sampling day / clipped (no or yes)",y="Final host cluster",
-       title="Genetic clusters have uneven treatment coverage")+theme_pub(10)+
+  labs(x="Sampling day / clipped (no or yes)",y="Final host cluster")+theme_pub(10)+
   theme(axis.text.x=element_text(angle=45,hjust=1))
 save_fig(p3,"43_final_snp_design",width=190,height=110)
 typ <- j |> arrange(host_cluster,sym_read_A,id) |>
@@ -183,15 +172,14 @@ p4 <- ggplot(typ,aes(sample_order,fraction,fill=type))+geom_col(width=1)+
   facet_wrap(~host_cluster,scales="free_x",ncol=4,labeller=as_labeller(cluster_labels))+
   scale_fill_manual(values=c(A="#009E73",B="#CC79A7",C="#E69F00",D="#0072B2"),name="Mapping group")+
   scale_y_continuous(labels=scales::percent)+
-  labs(x="One bar per fragment; panels are host clusters",y="Relative mapped-read share",
-       title="Most fragments map predominantly to symbiont group A")+
+  labs(x="One bar per fragment; panels are host clusters",y="Relative mapped-read share")+
   theme_pub(10)+theme(axis.text.x=element_blank(),axis.ticks.x=element_blank())
 save_fig(p4,"43_final_snp_symbiont_typing",width=190,height=135)
 p5 <- ggplot(j,aes(factor(day),symbiont_cells_per_cm2/1e6,colour=treatment,shape=wound))+
   geom_point(position=position_jitterdodge(jitter.width=.12,dodge.width=.5,seed=42),alpha=.75,size=1.6)+
   facet_wrap(~host_cluster,ncol=4)+scale_colour_manual(values=PAL_TEMP)+
   scale_y_log10()+labs(x="Sampling day",y="Symbionts (million cells per sq. cm; log scale)",
-    title="Symbiont density within final host clusters",shape="Clipped",colour="Temperature")+theme_pub(10)
+    shape="Clipped",colour="Temperature")+theme_pub(10)
 save_fig(p5,"43_final_snp_symbiont_density",width=190,height=130)
 print(summary); print(table(j$sym_dominant_reported)); print(ct)
 

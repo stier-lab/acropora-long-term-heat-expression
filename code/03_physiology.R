@@ -134,9 +134,7 @@ p_color <- ggplot(traj, aes(day, mean_color,
   scale_fill_manual(values   = PAL_WOUND,
                     guide = "none") +
   labs(x = "Day relative to wounding (D0)",
-       y = "Color score (Siebeck D-scale; lower = paler)",
-       title = "Pigmentation trajectory",
-       subtitle = "Mean ± 1 SE; paler scores appear higher on the reversed axis") +
+       y = "Color score (Siebeck D-scale; lower = paler)") +
   theme_pub(10)
 save_fig(p_color, "03_color_trajectory", width = 170, height = 90)
 
@@ -159,9 +157,7 @@ p_zoox <- ggplot(sym, aes(factor(biopsy_day), cells_per_cm2 / 1e6,
   scale_fill_manual(values = c(`28C` = "#56B4E9", `31C` = "#D55E00"),
                     name = "Temperature") +
   labs(x = "Biopsy day",
-       y = expression(Symbionts~(10^6~cells~cm^{-2})),
-       title = "Symbiont density loss under heating",
-       subtitle = expression(italic(A.~pulchra)~"biopsies, n = 192 across 4 timepoints")) +
+       y = expression(Symbionts~(10^6~cells~cm^{-2}))) +
   theme_pub(10)
 set.seed(42)   # geom_jitter: keep point positions stable between runs
 save_fig(p_zoox, "06_symbiont_density_by_day", width = 140, height = 100)
@@ -204,9 +200,7 @@ p_bw <- ggplot(bw_a, aes(interaction(treatment, wound, sep = " · "),
                     name = "Temperature") +
   scale_colour_manual(values = PAL_GENO, name = "Genotype") +
   labs(x = NULL,
-       y = "Growth (% skeletal mass change over 15 d)",
-       title = "Coral growth under heating × wounding",
-       subtitle = "Buoyant-weight % mass change (Davies 1989; Jokiel et al. 1978)") +
+       y = "Growth (% skeletal mass change over 15 d)") +
   theme_pub(10) +
   theme(axis.text.x = element_text(angle = 0))
 set.seed(42)   # geom_jitter
@@ -247,9 +241,8 @@ common <- function(lines = TRUE) list(
   if (lines) scale_linetype_manual(values = c(no = "dashed", yes = "solid"), name = NULL,
                                   labels = c(no = "Unwounded", yes = "Wounded")),
   theme_pub(11),
-  theme(legend.position = "bottom", plot.title = element_text(size = 13, face = "bold"),
-        panel.grid.minor = element_blank(), strip.text = element_text(face = "bold")))
-trajectory <- function(response_name, title, ylab, breaks) {
+  theme(panel.grid.minor = element_blank(), strip.text = element_text(face = "bold")))
+trajectory <- function(response_name, ylab, breaks) {
   d <- filter(means, response == response_name)
   ggplot(d, aes(day, mean, colour = treatment, shape = wound,
                 linetype = wound, group = wound)) +
@@ -260,9 +253,9 @@ trajectory <- function(response_name, title, ylab, breaks) {
                   linewidth = 0.45, show.legend = FALSE) +
     geom_point(size = 2.6, stroke = 0.9, position = position_dodge(width = 0.3)) +
     scale_x_continuous(breaks = breaks, limits = c(-1.5, 15.5)) +
-    labs(title = title, x = "Day relative to clipping (Day 0)", y = ylab) + common()
+    labs(x = "Day relative to clipping (Day 0)", y = ylab) + common()
 }
-a <- trajectory("PAM", "A  Photosynthesis efficiency", expression(F[v]/F[m]),
+a <- trajectory("PAM", expression(F[v]/F[m]),
                 c(-1, 0, 3, 6, 9, 12, 14))
 box_style <- list(
   scale_fill_manual(values = c(no = "white", yes = "grey65"), name = NULL,
@@ -275,19 +268,20 @@ b <- ggplot(sym_f2, aes(factor(day), value, colour = treatment,
   geom_point(aes(shape = wound), colour = "grey35", size = 1.2,
              position = position_jitterdodge(jitter.width = 0.12,
                                            dodge.width = 0.8, seed = 42)) +
-  labs(title = "B  Algal symbiont density", x = "Sampling day",
+  labs(x = "Sampling day",
        y = expression(10^6~cells~cm^{-2})) + box_style
 c <- ggplot(growth, aes(wound, value, colour = treatment, fill = wound)) +
   geom_boxplot(width = 0.55, outlier.shape = NA, linewidth = 0.5) +
   geom_point(aes(shape = wound), colour = "grey35", size = 1.7,
              position = position_jitter(width = 0.12, height = 0, seed = 42)) +
   scale_x_discrete(labels = c(no = "Unwounded", yes = "Wounded")) +
-  labs(title = "C  Skeletal growth over 15 days", x = NULL,
-       y = "Skeletal mass gain (%)") + box_style + theme(legend.position = "none")
-figure2 <- (a / (b + guides(fill = "none", shape = "none")) /
-              (c + guides(fill = "none", shape = "none"))) +
-  plot_layout(guides = "collect", heights = c(1, 1, 0.95)) &
-  theme(legend.position = "bottom")
+  labs(x = NULL, y = "Skeletal mass gain (%)") + box_style
+# Panel letters as tags; the key (colour, symbols, line types) is in
+# manuscript/FIGURE_2_LEGEND.md, not in the artwork.
+figure2 <- (a / b / c) +
+  plot_layout(heights = c(1, 1, 0.95)) +
+  plot_annotation(tag_levels = "A") &
+  theme(legend.position = "none")
 save_fig(figure2, "45_physiology_figure2", width = 185, height = 235)
 save_fig(a, "45a_photosynthesis", width = 185, height = 85)
 save_fig(b, "45b_symbiont_boxplots", width = 185, height = 85)

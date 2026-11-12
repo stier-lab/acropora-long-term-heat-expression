@@ -24,12 +24,12 @@ What changed in the code:
 - `03_physiology.R`: Fv/Fm and color use `(1 + day || tank) + (1 | id)`; symbionts use `(1 + biopsy_day_c || tank)`. Per-patch heat contrasts gain a Holm-adjusted `p_holm` column (6 per response).
 - `05_source_patches.R`: the reduced model drops only the terms containing source patch × temperature (8 df; 4 for growth), with the same random effects as 03. This now matches the methods text.
 - `04_regeneration.R`: interval-censored models use the log-logistic distribution (best or within 0.6 AIC for every reported stage; pigment over the wound falls back to lognormal). `14_interval_survreg_distributions.csv` records the AIC comparison. One correction to the audit below: lognormal is *not* within 2.3 AIC of the best for every stage (it is 7.8 behind for tip formation), so log-logistic was used instead.
-- `07_supplement.R`: the flagged-fragment refits use the 03 structure (Fv/Fm p = 0.028, color p = 0.007 without fragments 116, 121 and tank 3). The new `22b_sensitivity_wound_growth.csv` covers the symbiont wound term (with the new model, two fragments are flagged as outliers, 163 and 212; without them p = 0.009) and growth's dependence on tank 3 (without it p = 0.002; leaving out tank 12 gives p = 0.108; 7 of 48 single-fragment drops give p > 0.05).
+- `07_supplement.R`: the flagged-fragment refits use the 03 structure (Fv/Fm p = 0.028, color p = 0.007 without fragments 116, 121 and tank 3). The new `22b_sensitivity_wound_growth.csv` covers the symbiont wound term (with the new model and the pinned DHARMa 0.5.0, three fragments are flagged as outliers, 163, 212 and 215; without them p = 0.010. Under DHARMa 0.4.7 it was 163 and 212, p = 0.009) and growth's dependence on tank 3 (without it p = 0.002; leaving out tank 12 gives p = 0.108; 7 of 48 single-fragment drops give p > 0.05).
 - Team summary: methods and results text updated (tank slopes, log-logistic, tip extension "no clear difference", the symbiont wound caveat, growth and tank 3), plus "out of date" notes listing the superseded numbers.
 
 Status after the fixes: A, C, F and I move from partial to handled; E becomes yes (Holm reported); N becomes handled. Remaining partial: J (Cox p-values are fragment-level; cite the tank permutation) and O (exploratory genetics).
 
-## Bottom line (audit as run, before the fixes)
+## Bottom line (audit as run, before the fixes; superseded by the section above)
 
 No headline conclusion changes. Heat lowered Fv/Fm, color and symbiont density over time and stopped most wounded fragments from budding by Day 15, under every check. Four things need fixing before the numbers go into the manuscript:
 
@@ -110,4 +110,6 @@ Already handled: the budding patch × temperature Cox test (K, now reported as c
 | `scripts/diag_surv.R` | this audit | G–J: events and censoring, separation, AFT distributions, clustered SEs, ties |
 | `scripts/diag_rest.R` | this audit | D, E, G, H, N, O: influence, contrast families, Fisher tables, permutations |
 
-Not yet in the pipeline: the tank-slope refits, leave-one-tank-out and AFT distribution checks exist only in `scripts/`. Once the models are updated, the ones that support reported numbers should move into `08_checks.R`.
+Version sensitivity (found and fixed 2026-11-12): outputs before 2026-11-12 were built with R 4.5.2, lme4 2.0-1 and DHARMa 0.4.7. Under R 4.6.2, lme4 2.1-0 and DHARMa 0.5.0 every reported test statistic agrees to within 0.05%, but the simulation-based DHARMa results move: the symbiont outlier sensitivity flags 163, 212 and 215 instead of 163 and 212 (p = 0.010 instead of 0.009), and the `18_model_checks.csv` residual p-values shift (color uniformity is flagged under both; the symbiont outlier test is p = 0.042 under 0.5.0 vs 0.18 under 0.4.7). No conclusion changes. Package versions are now pinned in `renv.lock` (R 4.6.2, DHARMa 0.5.0) and all outputs were regenerated under it; run `renv::restore()` before rerunning.
+
+Pipeline status (updated 2026-11-12): the checks that support reported numbers are now in the pipeline. Tank-slope models are the reported models in `03_physiology.R`, `05_source_patches.R` and `07_supplement.R`; the AFT distribution comparison is in `04_regeneration.R` (`14_interval_survreg_distributions.csv`); leave-one-tank-out and leave-one-fragment-out checks for symbionts and growth are in `07_supplement.R` (`22b_sensitivity_wound_growth.csv`). The `scripts/` files reproduce the audit as run on 2026-11-11 and are not part of `run_all.R`.

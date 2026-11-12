@@ -1,6 +1,6 @@
 # Manuscript Figure Map
 
-Updated 2026-11-12. This page maps each figure in Molly's working draft and supplement (Google Docs `working_draft` and `Supplemental`) to the file and script that produce it. Every data figure is rebuilt by `Rscript code/run_all.R`. The September plan this replaces is in `docs/provenance/MAIN_FIGURE_PLAN_2026-09-16.md`; its numbers are out of date.
+Updated 2026-11-12. This page maps each figure in Molly's working draft and supplement (Google Docs `working_draft` and `Supplemental`) to the file and script that produce it. Every data figure is rebuilt by `Rscript code/run_all.R`. The September plan this replaces was removed on 2026-11-12; recover it with `git show 281f4f9:docs/provenance/MAIN_FIGURE_PLAN_2026-09-16.md` if needed. Its numbers are out of date.
 
 ## Main figures
 

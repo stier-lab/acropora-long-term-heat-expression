@@ -1,6 +1,6 @@
 response,term,version,F_value,p_value,note
 symbionts,treatment:wound:biopsy_day_c,as reported (03_physiology.R),3.133,0.07858,NA
-symbionts,treatment:wound:biopsy_day_c,without residual outliers,7.075,0.008614,"dropped fragments 163, 212"
+symbionts,treatment:wound:biopsy_day_c,without residual outliers,6.798,0.009996,"dropped fragments 163, 212, 215"
 symbionts,treatment:wound:biopsy_day_c,separate residual variance by temperature (nlme),3.123,0.07909,NA
 symbionts,treatment:wound:biopsy_day_c,leave one tank out: lowest p,NA,0.008555,tank 11 dropped
 symbionts,treatment:wound:biopsy_day_c,leave one tank out: highest p,NA,0.2919,tank 4 dropped

@@ -80,5 +80,6 @@ folder has a matching codebook in `data/metadata/*_codebook.csv`.
 - The microscope `pigment_over_wound` column is scored only through day 7 in
   the current sheet; blanks after day 7 mean not scored, not no pigmentation.
 - Raw color-card and microscope image files live on the lab NAS, not in Drive.
-  Checked paths and file counts are recorded in
-  `docs/provenance/nas_image_sources.md`.
+  The NAS location is in `docs/DATA_NOTES.md` (Photographs); the older
+  path-and-count log was removed on 2026-11-12 and is in git history
+  (`git show 281f4f9:docs/provenance/nas_image_sources.md`).

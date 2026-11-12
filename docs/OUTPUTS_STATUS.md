@@ -11,7 +11,8 @@ Updated 2026-11-12. Use this page to tell current results from historical files 
 | Manuscript figure map | `manuscript/MAIN_FIGURE_PLAN.md` | Each figure in Molly's working draft and supplement, with the file and script that make it. |
 | Figure 1B | `figures/39b_stage_timing_cumulative_option.*` | The four regeneration milestones, main experiment. All six stages: `39d_stage_cumulative_all_stages`. |
 | Figure 2 | `figures/45_physiology_figure2.*` | Legend: `manuscript/FIGURE_2_LEGEND.md`. |
-| Genetics | `figures/43_final_snp_*`, `output/tables/43_final_snp_*` | Final host clusters from Rachael (2026-10-13). Symbiont read shares are rough. |
+| Figure artwork | `figures/*` | Rebuilt 2026-11-12 with no embedded titles, subtitles, captions or legends; the colour/shape key is in `figures/FIGURE_INDEX.md`. All outputs regenerated the same day under the package versions pinned in `renv.lock`; this moved test statistics by under 0.05% and changed the simulation-based DHARMa checks (see the diagnostics audit). |
+| Genetics | `figures/43_final_snp_*`, `output/tables/43_final_snp_*` | Final host clusters from Rachael (2026-10-13). Symbiont read shares are rough. Since 2026-11-12 the RNA-seq covariate tables (`31_*`, `43_final_snp_rnaseq_covariates`) no longer carry the retired source-resilience scores. |
 | Morphology scores | `data/raw/physio_morphology/data.csv`, `data/raw/microscope_physio/data.csv` | October 16 corrected exports. |
 | Model checks | `docs/diagnostics/MODEL_DIAGNOSTICS_2026-11-11.md` | Model structure decisions and diagnostics for every reported model. |
 | Figure catalog | `figures/FIGURE_INDEX.md` | |
