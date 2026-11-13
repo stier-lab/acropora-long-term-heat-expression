@@ -871,7 +871,9 @@ p_stage <- ggplot() +
   theme(
     panel.grid.major.y = element_line(colour = "grey90", linewidth = 0.25),
     panel.grid.minor = element_blank(),
-    plot.margin = margin(8, 40, 8, 8, "pt")
+    # Extra room on the right for the reached/total labels drawn outside
+    # the panel (clip = "off").
+    plot.margin = margin(10, 18, 10, 10, "mm")
   )
 
 save_fig(p_stage, "36_stage_timing", width = 190, height = 110)
@@ -1017,8 +1019,7 @@ p_stage_violin <- ggplot() +
   theme(
     panel.grid.major.x = element_blank(),
     panel.grid.minor = element_blank(),
-    axis.text.x = element_text(lineheight = 0.9, margin = margin(t = 4)),
-    plot.margin = margin(8, 12, 8, 8, "pt")
+    axis.text.x = element_text(lineheight = 0.9, margin = margin(t = 4))
   )
 
 save_fig(p_stage_violin, "36b_stage_violin",

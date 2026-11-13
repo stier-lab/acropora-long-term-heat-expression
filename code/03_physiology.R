@@ -393,10 +393,13 @@ c <- ggplot(growth, aes(wound, value, colour = treatment, fill = wound)) +
 # Panel letters as tags; the key (colour, symbols, line types) is in
 # manuscript/FIGURE_2_LEGEND.md, not in the artwork. In patchwork, `/` stacks
 # panels and `&` applies the theme to every panel.
-figure2 <- (a / b / c) +
-  plot_layout(heights = c(1, 1, 0.95)) +
-  plot_annotation(tag_levels = "A") &
-  theme(legend.position = "none")
+# patch_margins() (00_setup.R) gives 3 mm between panels and 10 mm outside.
+figure2 <- patch_margins(
+  (a / b / c) +
+    plot_layout(heights = c(1, 1, 0.95)) +
+    plot_annotation(tag_levels = "A") &
+    theme(legend.position = "none")
+)
 save_fig(figure2, "45_physiology_figure2", width = 185, height = 235)
 save_fig(a, "45a_photosynthesis", width = 185, height = 85)
 save_fig(b, "45b_symbiont_boxplots", width = 185, height = 85)

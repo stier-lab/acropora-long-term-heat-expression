@@ -140,7 +140,7 @@ tank_treatment <- function(tank) {
 # (figures/FIGURE_INDEX.md, Key section; manuscript legends). The legend.*
 # text settings below only matter if a script turns a legend back on.
 # `%+replace%` swaps whole theme elements rather than merging them.
-theme_pub <- function(base_size = 10) {
+theme_pub <- function(base_size = 10, margin_mm = 10) {
   theme_bw(base_size = base_size, base_family = "") %+replace%
     theme(
       panel.grid.minor  = element_blank(),
@@ -160,8 +160,21 @@ theme_pub <- function(base_size = 10) {
       legend.text       = element_text(size = base_size - 2),
       legend.key        = element_blank(),
       legend.background = element_blank(),
-      plot.margin       = margin(8, 8, 8, 8, "pt")
+      # 10 mm outer margin on every side (lab figure rule) so nothing is
+      # clipped at the page edge. Multi-panel figures use patch_margins().
+      plot.margin       = margin(margin_mm, margin_mm, margin_mm, margin_mm, "mm")
     )
+}
+
+# patch_margins(): spacing for patchwork (multi-panel) figures. Each panel
+# gets a small margin (3 mm, so facing panels sit ~6 mm apart) and the whole
+# assembled figure gets the 10 mm outer margin. Without this, every panel
+# would carry the full 10 mm and the gaps between panels would be 20 mm.
+# Use as: save_fig(patch_margins(p1 + p2 + plot_annotation(tag_levels = "A")), ...)
+patch_margins <- function(patch, panel_mm = 3, outer_mm = 10) {
+  (patch & theme(plot.margin = margin(panel_mm, panel_mm, panel_mm, panel_mm, "mm"))) +
+    plot_annotation(theme = theme(plot.margin = margin(outer_mm, outer_mm, outer_mm,
+                                                       outer_mm, "mm")))
 }
 
 

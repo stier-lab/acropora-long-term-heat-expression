@@ -299,7 +299,7 @@ qq <- ggplot(res, aes(sample = residual)) +
   stat_qq() +
   stat_qq_line() +
   theme_pub(10)
-save_fig(q + qq + plot_annotation(tag_levels = "A"), "43_final_snp_diagnostics",
+save_fig(patch_margins(q + qq + plot_annotation(tag_levels = "A")), "43_final_snp_diagnostics",
          width = 180, height = 90)
 
 
@@ -324,7 +324,7 @@ p2 <- ggplot(counts, aes(host_cluster, n, fill = source_patch)) +
   scale_fill_manual(values = PAL_GENO, name = "Source patch", labels = toupper) +
   labs(x = "Final host cluster", y = "Fragments") +
   theme_pub(10)
-save_fig(p1 + p2 + plot_annotation(tag_levels = "A"),
+save_fig(patch_margins(p1 + p2 + plot_annotation(tag_levels = "A")),
          "43_final_snp_structure", width = 190, height = 100)
 
 ## 6b. Design balance --------------------------------------------------------
