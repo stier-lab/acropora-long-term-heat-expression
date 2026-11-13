@@ -1,38 +1,54 @@
 # =============================================================================
 # 04_regeneration.R: healing and regeneration stages (Figure 1B)
 #
-# Only wounded fragments are used. Main experiment: 12 per temperature, scored
-# daily Days 0-15. Microscope experiment: 8 per temperature, analysed
-# separately (only it recorded living tissue covering the cut).
+# Asks whether heat (31 °C vs 28 °C ambient) changes whether, and how fast,
+# wounded fragments heal and regrow. Only wounded fragments are used. Main
+# experiment: 12 per temperature, scored daily Days 0-15. Microscope
+# experiment: 8 per temperature, analysed separately (only it recorded living
+# tissue, the coenosarc, covering the cut). Stages in order: healing
+# (coenosarc covers the wound), then 1 axial polyp forms, 2 wound surface
+# remodels, 3 axial corallite/tip forms, 4 tip extends, 5 new radial
+# corallites bud. "Source patch" = the thicket (A/C/D) a fragment came from.
 #
-#   1 Day 15 counts: Fisher's exact test per stage; log-rank test on the first
-#     day each stage was seen. Each experiment tested on its own.
-#   2 Timing models (main experiment): interval-censored log-logistic models (the
-#     stage began between the last "no" and the first "yes"), Cox models
-#     stratified by source patch, and a likelihood-ratio test for source patch
-#     x temperature. Kaplan-Meier curves as a supporting figure.
-#   3 Stage table: first day each fragment reached each of six stages; counts
-#     and first-day summaries (averages only where every fragment reached it).
-#   4 Figure 1B: cumulative percent of fragments that reached each stage by day.
-#   5 Numbers for the results text, including the tank-level budding check.
+# Sections
+#   1. Day 15 counts and log-rank tests (both experiments)
+#   2. Timing models (main experiment)
+#   3. Stage table and stage figures
+#   4. Figure 1B: cumulative percent reached
+#   5. Numbers for the results text
 #
+# Reads:  data/processed/physio_clean.rds,
+#         data/processed/microscope_physio_clean.rds
 # Writes: output/tables/11f_morphology_dataset_{endpoint,logrank}_tests.csv,
-#         14_event_intervals.csv, 14_interval_survreg.csv, 14_interval_survreg_distributions.csv,
-#         14_cox_hazard_ratios.csv,
-#         14_cox_genet_LRT.csv, 36_stage_timing.csv, 36_stage_timing_mean_iqr.csv,
-#         39_stage_cumulative_percent.csv
+#         14_event_intervals.csv, 14_interval_survreg.csv,
+#         14_interval_survreg_distributions.csv, 14_cox_hazard_ratios.csv,
+#         14_cox_genet_LRT.csv, 36_stage_timing.csv,
+#         36_stage_timing_mean_iqr.csv, 39_stage_cumulative_percent.csv
 #         figures/39b_stage_timing_cumulative_option (Figure 1B),
 #         39d_stage_cumulative_all_stages, 36_stage_timing,
 #         36b_stage_violin, 14_morphology_KM
 #         output/paper/regeneration_numbers.csv
+# Run:    sourced by code/run_all.R (or: Rscript code/run_all.R)
 # =============================================================================
 
 source(here::here("code", "00_setup.R"))
+
 suppressPackageStartupMessages(library(survival))
 
+
 # ---- 1. Day 15 counts and log-rank tests (both experiments) ----------------
+# Two simple tests per trait, each experiment tested on its own: (i) Fisher's
+# exact test on how many fragments showed the trait on the last scored day,
+# and (ii) a log-rank test on the first day each trait was seen. Fisher's
+# exact test: an exact test for a 2 x 2 table, safe with small counts.
+# Log-rank test: compares two curves of "time until the event" between groups.
+
+## 1a. Load data and describe the traits -------------------------------------
 ph <- readRDS(file.path(DATA_PROC, "physio_clean.rds"))
 micro <- readRDS(file.path(DATA_PROC, "microscope_physio_clean.rds"))
+
+# One row per scored trait: display labels, the healing phase it belongs to,
+# and which experiment(s) scored it (main / micro columns).
 trait_meta <- tibble::tribble(
   ~trait,                  ~short_label,       ~label,                    ~phase,              ~main, ~micro,
   "tissue_over_wound",     "Tissue cover",     "Tissue over wound",       "Wound covering",    FALSE, TRUE,
@@ -47,6 +63,7 @@ trait_meta <- tibble::tribble(
 ) |>
   mutate(
     trait_order = row_number(),
+    # factor(levels = x) keeps the table's row order in plots and tables
     trait = factor(trait, levels = trait),
     short_label = factor(short_label, levels = short_label),
     phase = factor(phase, levels = c("General condition", "Wound covering",
@@ -60,6 +77,10 @@ trait_meta <- tibble::tribble(
       Fouling = "Fouling"
     )
   )
+
+## 1b. Reshape both experiments to one row per fragment x day x trait --------
+# Keeps wounded fragments only. dataset_id makes fragment IDs unique across
+# the two experiments (the same id number can occur in both).
 prep_long <- function(dat, dataset, dataset_label, trait_cols) {
   dat |>
     filter(as.character(wound) == "yes") |>
@@ -77,8 +98,10 @@ prep_long <- function(dat, dataset, dataset_label, trait_cols) {
     left_join(trait_meta, by = "trait") |>
     filter(!is.na(expressed))
 }
+
 main_traits <- trait_meta |> filter(main) |> pull(trait) |> as.character()
 micro_traits <- trait_meta |> filter(micro) |> pull(trait) |> as.character()
+
 long <- bind_rows(
   prep_long(ph, "physio_morphology", "Main morphology", main_traits),
   prep_long(micro, "microscope_physio", "Microscope photos", micro_traits)
@@ -86,9 +109,12 @@ long <- bind_rows(
   mutate(
     dataset_label = factor(dataset_label,
                            levels = c("Main morphology", "Microscope photos")),
-    facet_trait = paste(dataset_short, short_label, sep = ": "),
     facet_event = paste(dataset_short, phase_short, sep = "\n")
   )
+
+## 1c. Summarise each fragment's record for each trait -----------------------
+# One row per fragment x trait: was the trait ever seen, the first day it
+# was seen, and whether it was present on the last scored day.
 events_by_coral <- long |>
   arrange(dataset, trait, treatment, dataset_id, day) |>
   group_by(dataset, dataset_label, dataset_id, id, treatment, thicket, tank,
@@ -104,6 +130,12 @@ events_by_coral <- long |>
     endpoint_yes = expressed[which.max(day)],
     .groups = "drop"
   )
+
+## 1d. Fisher's exact test on the last scored day ----------------------------
+# For each trait: 2 x 2 table of temperature x present/absent on the last day.
+# group_modify() runs the function on each trait's rows (.x) and stacks the
+# one-row results. The odds ratio adds 0.5 to every cell so that a zero count
+# does not give an infinite ratio.
 endpoint_tests <- events_by_coral |>
   group_by(dataset, dataset_label, trait, short_label, label, trait_order,
            phase, phase_short) |>
@@ -117,6 +149,8 @@ endpoint_tests <- events_by_coral |>
     no_28 <- n_28 - yes_28
     no_31 <- n_31 - yes_31
     endpoint_day <- if (nrow(d) > 0) max(d$endpoint_day, na.rm = TRUE) else NA_real_
+
+    # No fragments in one temperature: nothing to compare, return NAs
     if (n_28 == 0 || n_31 == 0) {
       return(tibble(
         endpoint_day = endpoint_day,
@@ -128,13 +162,16 @@ endpoint_tests <- events_by_coral |>
         test_status = "not_estimable"
       ))
     }
+
     mat <- matrix(c(yes_28, no_28, yes_31, no_31),
                   nrow = 2, byrow = TRUE,
                   dimnames = list(treatment = c("28C", "31C"),
                                   endpoint = c("yes", "no")))
+    # tryCatch(): if the test errors, return NULL instead of stopping the script
     ft <- tryCatch(fisher.test(mat), error = function(e) NULL)
     odds_31 <- (yes_31 + 0.5) / (no_31 + 0.5)
     odds_28 <- (yes_28 + 0.5) / (no_28 + 0.5)
+
     tibble(
       endpoint_day = endpoint_day,
       n_28 = n_28,
@@ -155,8 +192,15 @@ endpoint_tests <- events_by_coral |>
     test_scope = "cohorts tested separately"
   ) |>
   arrange(dataset, trait_order)
+
 write_csv(endpoint_tests,
           file.path(TBL_DIR, "11f_morphology_dataset_endpoint_tests.csv"))
+
+## 1e. Log-rank test on the first day each trait was seen --------------------
+# event_time = first day seen, or the last scored day for fragments that never
+# showed it (these are "censored": we only know it had not happened yet).
+# This treats the first-seen day as the exact event day; section 2 uses the
+# better interval-censored models for the main experiment.
 logrank_tests <- events_by_coral |>
   mutate(event_time = if_else(event, first_yes_day, last_scored_day)) |>
   group_by(dataset, dataset_label, trait, short_label, label, trait_order,
@@ -171,6 +215,8 @@ logrank_tests <- events_by_coral |>
     n_31 <- sum(d$treatment == "31C")
     n_event_28 <- sum(d$event_int[d$treatment == "28C"])
     n_event_31 <- sum(d$event_int[d$treatment == "31C"])
+
+    # Missing a temperature, or no events at all: test not possible
     if (n_28 == 0 || n_31 == 0 || sum(d$event_int) == 0) {
       return(tibble(
         n_28 = n_28, n_31 = n_31,
@@ -180,6 +226,8 @@ logrank_tests <- events_by_coral |>
         test_status = "not_estimable"
       ))
     }
+
+    # survdiff() is the log-rank test; Surv(time, status) marks censoring
     fit <- tryCatch(
       survdiff(Surv(event_time, event_int) ~ treatment, data = d),
       error = function(e) NULL
@@ -193,6 +241,8 @@ logrank_tests <- events_by_coral |>
         test_status = "not_estimable"
       ))
     }
+
+    # df = number of groups - 1; p from the chi-square distribution
     df <- length(fit$n) - 1
     tibble(
       n_28 = n_28,
@@ -214,19 +264,32 @@ logrank_tests <- events_by_coral |>
     )
   ) |>
   arrange(dataset, trait_order)
+
 write_csv(logrank_tests,
           file.path(TBL_DIR, "11f_morphology_dataset_logrank_tests.csv"))
 
+
 # ---- 2. Timing models (main experiment) ------------------------------------
-# A stage is "reached" on the first day it was scored yes. Fragments that never
-# reached it by Day 15 stay in as censored (not reached yet), not dropped.
+# How much does heat speed up or slow down each stage? A stage is "reached" on
+# the first day it was scored yes. Fragments that never reached it by Day 15
+# stay in as censored (not reached yet), not dropped. Three model types:
+#   - interval-censored AFT models (the main timing result),
+#   - Cox models stratified by source patch (hazard ratios),
+#   - likelihood-ratio tests for source patch x temperature.
+# Kaplan-Meier curves are drawn as a supporting figure.
+
+## 2a. Reload data and list the timing traits --------------------------------
 ph <- readRDS(file.path(DATA_PROC, "physio_clean.rds")) |>
   mutate(
     treatment = factor(treatment, levels = c("28C", "31C")),
     wound = factor(wound, levels = c("no", "yes")),
     thicket = factor(thicket)
   )
+
+# Treatment contrasts: 28C is the reference, so model coefficients are 31C vs 28C
 contrasts(ph$treatment) <- contr.treatment(nlevels(ph$treatment))
+
+# Note: this replaces the section 1 trait_meta with the six timing traits
 trait_meta <- tibble::tribble(
   ~trait,                  ~label,                  ~event_interpretation,
   "axial_polyp_formation", "Axial polyp formation", "first observed axial polyp / central hole",
@@ -238,6 +301,12 @@ trait_meta <- tibble::tribble(
 )
 traits <- trait_meta$trait
 trait_interpretation <- trait_meta |> select(trait, event_interpretation)
+
+## 2b. Event intervals: when could each stage have started? ------------------
+# Interval-censored: we only know the stage began between the last "no" day
+# (event_lower) and the first "yes" day (event_upper). Not reached by the end:
+# lower = last scored day, upper = Inf (right-censored). Seen on the first
+# visit: lower = 0.
 compute_events <- function(d, trait) {
   d |>
     filter(wound == "yes", !is.na(day), day >= 0) |>
@@ -252,7 +321,8 @@ compute_events <- function(d, trait) {
       },
       event_lower = {
         first1 <- which(y == 1)[1]
-        if (is.na(first1)) max(day, na.rm = TRUE) else if (first1 == 1) 0 else day[first1 - 1]
+        if (is.na(first1)) max(day, na.rm = TRUE) else if (first1 == 1) 0 else
+          day[first1 - 1]
       },
       event_upper = {
         first1 <- which(y == 1)[1]
@@ -263,6 +333,7 @@ compute_events <- function(d, trait) {
     ) |>
     mutate(trait = trait)
 }
+
 events <- map_dfr(traits, ~ compute_events(ph, .x))
 events <- events |>
   mutate(
@@ -270,41 +341,64 @@ events <- events |>
     thicket = factor(thicket)
   ) |>
   left_join(trait_interpretation, by = "trait")
+
+# Guarantee no stage was already present on Day 0 (the day of clipping). That
+# would give an event time of exactly 0, which the log-scale timing models
+# cannot fit; the fit would fail and silently return a row of NAs.
+stopifnot(all(events$event_upper > 0))
+
 write_csv(events, file.path(TBL_DIR, "14_event_intervals.csv"))
+
 contrasts(events$treatment) <- contr.treatment(nlevels(events$treatment))
-n_km_per_trt  <- events |> distinct(id, treatment) |> count(treatment) |>
-  pull(n) |> (\(x) if (length(unique(x)) == 1) unique(x) else paste(range(x), collapse = "–"))()
-# Distribution: log-logistic. Compared by AIC across Weibull, lognormal,
-# log-logistic and exponential (14_interval_survreg_distributions.csv), it is
-# the best fit or within 0.6 AIC of it for every reported stage. It does not
-# converge for pigment over the wound (not reported), which falls back to
-# lognormal; the `model` column says which was used. Weibull, used until
-# 2026-11-11, fitted worst for tip formation and tip extension (dAIC 22, 12)
-# and made tip extension look slower under heat.
+
+
+## 2c. Interval-censored log-logistic AFT models -----------------------------
+# AFT (accelerated failure time) model: models log(time to the stage), so
+# exp(coefficient) is a time ratio. Time ratio > 1 = heated fragments took
+# longer. Source patch (thicket) is included as a fixed effect.
+#
+# Distribution: log-logistic (chosen 2026-11-11). Compared by AIC across
+# Weibull, lognormal, log-logistic and exponential
+# (14_interval_survreg_distributions.csv), it is the best fit or within 0.6
+# AIC of it for every reported stage. It does not converge for pigment over
+# the wound (not reported), which falls back to lognormal; the `model` column
+# says which was used. Weibull, used until 2026-11-11, fitted worst for tip
+# formation and tip extension (dAIC 22, 12) and made tip extension look slower
+# under heat.
 AFT_DIST <- "loglogistic"
 AFT_FALLBACK <- "lognormal"
+
 fit_interval_survreg <- function(tr) {
   d <- events |> filter(trait == tr)
+  # Skip stages with fewer than 5 events or only one temperature
   if (sum(d$event) < 5 || length(unique(d$treatment)) < 2) return(NULL)
+
+  # A warning (e.g. non-convergence) counts as failure, like an error
   fit_dist <- function(dist) tryCatch(
     survreg(Surv(event_lower, event_upper, type = "interval2") ~ treatment + thicket,
             data = d, dist = dist),
     error = function(e) NULL, warning = function(w) NULL
   )
+
+  # Try log-logistic first; if it fails, use the lognormal fallback
   used <- AFT_DIST
   fit <- fit_dist(AFT_DIST)
   if (is.null(fit)) { used <- AFT_FALLBACK; fit <- fit_dist(AFT_FALLBACK) }
+
+  # Both failed: return a row of NAs with a note
   if (is.null(fit)) {
     return(tibble(
       trait = tr, term = "treatment", n = nrow(d), n_event = sum(d$event),
       time_ratio_31_vs28 = NA_real_, ratio_lo = NA_real_, ratio_hi = NA_real_,
-      z = NA_real_, p = NA_real_, model = paste("interval-censored", AFT_DIST, "AFT"),
+      z = NA_real_, p = NA_real_, model = paste("interval-censored", used, "AFT"),
       event_interpretation = trait_interpretation$event_interpretation[
         match(tr, trait_interpretation$trait)
       ],
       note = "survreg failed or treatment coefficient unavailable"
     ))
   }
+
+  # Find the 31C-vs-28C coefficient row in the model summary
   tab <- summary(fit)$table
   trt_row <- if ("treatment31C" %in% rownames(tab)) {
     "treatment31C"
@@ -315,13 +409,16 @@ fit_interval_survreg <- function(tr) {
     return(tibble(
       trait = tr, term = "treatment", n = nrow(d), n_event = sum(d$event),
       time_ratio_31_vs28 = NA_real_, ratio_lo = NA_real_, ratio_hi = NA_real_,
-      z = NA_real_, p = NA_real_, model = paste("interval-censored", AFT_DIST, "AFT"),
+      z = NA_real_, p = NA_real_, model = paste("interval-censored", used, "AFT"),
       event_interpretation = trait_interpretation$event_interpretation[
         match(tr, trait_interpretation$trait)
       ],
       note = "treatment coefficient unavailable"
     ))
   }
+
+  # Coefficient is on the log-time scale: exp() gives the time ratio, and
+  # exp(estimate +/- 1.96 SE) gives its 95% confidence interval
   est <- tab[trt_row, "Value"]
   se <- tab[trt_row, "Std. Error"]
   tibble(
@@ -341,10 +438,14 @@ fit_interval_survreg <- function(tr) {
     note = "time ratio >1 means later first expression at 31C"
   )
 }
+
 interval_survreg <- map_dfr(traits, fit_interval_survreg)
 write_csv(interval_survreg, file.path(TBL_DIR, "14_interval_survreg.csv"))
 
-# Distribution check: AIC and time ratio for each candidate distribution.
+## 2d. Distribution check: AIC for each candidate distribution ---------------
+# Fits the same model under four distributions and records AIC (lower = better
+# fit) and the time ratio, so the choice above can be checked. delta_AIC =
+# AIC minus the best AIC for that stage; `used` marks the one reported.
 aft_dists <- map_dfr(traits, function(tr) {
   d <- events |> filter(trait == tr)
   map_dfr(c("weibull", "lognormal", "loglogistic", "exponential"), function(dist) {
@@ -356,11 +457,26 @@ aft_dists <- map_dfr(traits, function(tr) {
            time_ratio_31_vs28 = exp(tab[r, "Value"]), p = tab[r, "p"])
   })
 }) |>
-  group_by(trait) |> mutate(delta_AIC = AIC - min(AIC, na.rm = TRUE)) |> ungroup() |>
-  left_join(interval_survreg |> transmute(trait, used_dist = sub("interval-censored (.*) AFT", "\\1", model)), by = "trait") |>
-  mutate(used = dist == used_dist) |> select(-used_dist) |>
+  group_by(trait) |>
+  mutate(delta_AIC = AIC - min(AIC, na.rm = TRUE)) |>
+  ungroup() |>
+  left_join(
+    interval_survreg |>
+      transmute(trait, used_dist = sub("interval-censored (.*) AFT", "\\1", model)),
+    by = "trait"
+  ) |>
+  mutate(used = dist == used_dist) |>
+  select(-used_dist) |>
   mutate(across(where(is.double), \(x) signif(x, 4)))
+
 write_csv(aft_dists, file.path(TBL_DIR, "14_interval_survreg_distributions.csv"))
+
+## 2e. Cox models: hazard ratio for heat -------------------------------------
+# Cox proportional-hazards model: hazard ratio (HR) > 1 = heated fragments
+# reached the stage sooner. strata(thicket) lets each source patch have its own
+# baseline timing, so the heat effect is compared within patches. Uses the
+# first-seen day as the event time (an approximation; the AFT models above
+# handle the interval properly).
 fit_cox_overall <- function(tr) {
   d <- events |> filter(trait == tr)
   if (sum(d$event) < 5) return(NULL)
@@ -382,11 +498,14 @@ fit_cox_overall <- function(tr) {
     p          = s$coefficients[1, "Pr(>|z|)"]
   )
 }
+
+# Same Cox model fitted separately within each source patch ("genet")
 fit_cox_per_genet <- function(tr) {
   events |>
     filter(trait == tr) |>
     group_by(thicket) |>
     group_modify(\(d, k) {
+      # Too few events in this patch: return NAs
       if (sum(d$event) < 3) {
         return(tibble(HR_31_vs28 = NA_real_, HR_lo = NA_real_,
                       HR_hi = NA_real_, z = NA_real_, p = NA_real_,
@@ -413,11 +532,19 @@ fit_cox_per_genet <- function(tr) {
     mutate(trait = tr, scope = paste0("genet=", thicket)) |>
     select(trait, scope, n, n_event, HR_31_vs28, HR_lo, HR_hi, z, p)
 }
+
 cox_overall   <- map_dfr(traits, fit_cox_overall)
 cox_per_genet <- map_dfr(traits, fit_cox_per_genet)
 cox_results   <- bind_rows(cox_overall, cox_per_genet) |>
   mutate(time_scale = "first-observed-day approximation")
+
 write_csv(cox_results, file.path(TBL_DIR, "14_cox_hazard_ratios.csv"))
+
+## 2f. Likelihood-ratio tests for source patch and patch x temperature -------
+# Likelihood-ratio test (LRT): compares nested models; a small p means the
+# larger model fits meaningfully better. Base (temperature only) vs +patch
+# tests the patch main effect; +patch vs patch x temperature tests whether the
+# heat effect differs among patches. Needs at least 10 events.
 fit_lrt <- function(tr) {
   d <- events |> filter(trait == tr)
   if (sum(d$event) < 10) return(NULL)
@@ -440,8 +567,14 @@ fit_lrt <- function(tr) {
     p_genet_trt_int     = lrt_gi$`Pr(>|Chi|)`[2]
   )
 }
+
 cox_lrt <- map_dfr(traits, fit_lrt)
 write_csv(cox_lrt, file.path(TBL_DIR, "14_cox_genet_LRT.csv"))
+
+## 2g. Kaplan-Meier curves (supporting figure) -------------------------------
+# Kaplan-Meier: the share of fragments that have NOT yet reached a stage,
+# updated each day an event happens. Computed by hand here; we plot
+# 1 - survival = cumulative share that reached the stage.
 km_curves <- events |>
   group_by(trait, treatment) |>
   group_modify(\(d, k) {
@@ -461,6 +594,7 @@ km_curves <- events |>
   mutate(trait = factor(trait,
                         levels = trait_meta$trait,
                         labels = trait_meta$label))
+
 p_km <- ggplot(km_curves, aes(day, cum_event,
                               colour = treatment, group = treatment)) +
   geom_step(linewidth = 0.7) +
@@ -470,15 +604,23 @@ p_km <- ggplot(km_curves, aes(day, cum_event,
   scale_y_continuous(labels = scales::percent_format(accuracy = 1),
                      limits = c(0, 1)) +
   labs(x = "Days after wounding",
-       y = "Cumulative % corals expressing trait") +
+       y = "Cumulative % of fragments that reached the stage") +
   theme_pub(9)
+
 save_fig(p_km, "14_morphology_KM", width = 200, height = 130)
 
+
 # ---- 3. Stage table and stage figures --------------------------------------
-# Stage 1 (tissue cover) comes from the microscope experiment; stages 2-6 from
-# the main experiment.
+# Builds the stage table: the first day each fragment reached each of six
+# stages, then counts and first-day summaries per temperature (averages only
+# where every fragment reached the stage). Stage 1 (tissue cover) comes from
+# the microscope experiment; stages 2-6 from the main experiment. (In the
+# manuscript these are "healing" and stages 1-5; see section 4.)
+
+## 3a. Define the six stages and which data each comes from ------------------
 physio <- readRDS(file.path(DATA_PROC, "physio_clean.rds"))
 micro <- readRDS(file.path(DATA_PROC, "microscope_physio_clean.rds"))
+
 stage_map <- tibble::tribble(
   ~stage_order, ~phase,          ~stage,                                ~dataset,              ~dataset_label,        ~trait,                  ~measurement_note,
   1L,           "Healing",       "Coenosarc barrier re-established",    "microscope_physio",   "Microscope photos",   "tissue_over_wound",     "microscope-only coenosarc/tissue-cover score",
@@ -492,6 +634,9 @@ stage_map <- tibble::tribble(
     phase = factor(phase, levels = c("Healing", "Regeneration")),
     stage = factor(stage, levels = stage)
   )
+
+## 3b. First day each fragment reached each stage ----------------------------
+# One row per fragment x stage, Days 0-15 only, wounded fragments only.
 compute_stage_events <- function(dat, stage_row) {
   tr <- stage_row$trait
   dat |>
@@ -520,6 +665,10 @@ compute_stage_events <- function(dat, stage_row) {
       measurement_note = stage_row$measurement_note
     )
 }
+
+# pmap_dfr() runs the function once per row of stage_map (columns become
+# arguments) and stacks the results. Fragments not reached are placed at
+# plot_day 16.35, the "not reached" column of the dot plot.
 stage_events <- purrr::pmap_dfr(stage_map, function(stage_order, phase, stage,
                                                     dataset, dataset_label,
                                                     trait, measurement_note) {
@@ -541,8 +690,14 @@ stage_events <- purrr::pmap_dfr(stage_map, function(stage_order, phase, stage,
                                              stage_map$stage)))
   ) |>
   arrange(stage_order, treatment, id)
+
 write_csv(stage_events,
           file.path(TBL_DIR, "36_stage_timing.csv"))
+
+## 3c. Counts and first-day summaries per stage x temperature ----------------
+# Mean/median/IQR of the first day are kept only when every fragment at both
+# temperatures reached the stage; otherwise they would describe only the
+# faster fragments and are set to NA.
 stage_summary <- stage_events |>
   group_by(stage_order, phase, stage, dataset_label, trait, measurement_note,
            treatment) |>
@@ -572,9 +727,11 @@ stage_summary <- stage_events |>
   mutate(complete_both_temperatures = all(n_reached == n_corals),
          across(c(mean_first_day, median_first_day, q25_first_day,
                   q75_first_day, iqr_first_day),
-                ~if_else(complete_both_temperatures, .x, NA_real_))) |>
+                ~ if_else(complete_both_temperatures, .x, NA_real_))) |>
   ungroup() |>
   arrange(stage_order, treatment)
+
+# Reader-friendly version of the same table
 stage_summary_display <- stage_summary |>
   transmute(
     stage_order,
@@ -596,8 +753,13 @@ stage_summary_display <- stage_summary |>
       NA_character_
     )
   )
+
 write_csv(stage_summary_display,
           file.path(TBL_DIR, "36_stage_timing_mean_iqr.csv"))
+
+## 3d. Dot plot of first day per fragment (figure 36) ------------------------
+# One row per stage; 28 °C dots sit just below the row line and 31 °C just
+# above (-/+ 0.18). "n reached / n scored" labels go to the right.
 label_data <- stage_summary |>
   mutate(
     stage_label = paste0(as.character(phase), ": ", as.character(stage)),
@@ -608,7 +770,12 @@ label_data <- stage_summary |>
     y_plot = as.numeric(stage_label) +
       if_else(treatment == "28C", -0.18, 0.18)
   )
+
 stage_levels <- levels(stage_events$stage_label)
+
+# Fragments with the same stage, temperature and day would overlap, so stack
+# them in a small grid (up to 4 per row) around the true position.
+# %% = remainder, %/% = integer division.
 stage_events_plot <- stage_events |>
   group_by(stage_label, treatment, event_status, plot_day) |>
   arrange(id, .by_group = TRUE) |>
@@ -628,12 +795,16 @@ stage_events_plot <- stage_events |>
     x_plot = plot_day + x_offset
   ) |>
   ungroup()
+
+# Invisible points (NA x/y) that exist only to build the shape key
 status_key <- tibble(
   x = NA_real_,
   y = NA_real_,
   event_status = factor(c("Reached", "Not reached by final day"),
                         levels = c("Reached", "Not reached by final day"))
 )
+
+# Grey band on the right = the "not reached" column; dotted line = Day 15
 p_stage <- ggplot() +
   annotate("rect", xmin = 15.75, xmax = 16.85, ymin = -Inf, ymax = Inf,
            fill = "grey94", colour = NA) +
@@ -695,14 +866,21 @@ p_stage <- ggplot() +
     x = "First day the stage was seen",
     y = NULL
   ) +
-  coord_cartesian(clip = "off") +
+  coord_cartesian(clip = "off") +   # clip = "off" lets the n labels sit outside
   theme_pub(8) +
   theme(
     panel.grid.major.y = element_line(colour = "grey90", linewidth = 0.25),
     panel.grid.minor = element_blank(),
     plot.margin = margin(8, 40, 8, 8, "pt")
   )
+
 save_fig(p_stage, "36_stage_timing", width = 190, height = 110)
+
+## 3e. Violin plot of first day per stage (figure 36b) -----------------------
+# Violins show the spread of first days among fragments that reached each
+# stage; boxplots and mean diamonds are added only for stages every fragment
+# reached. Fragments not reached are crosses in the grey band at the top, with
+# the % not reached printed above.
 stage_axis_levels <- paste0("Stage ", seq_len(nrow(stage_map)))
 stage_axis_labels <- c(
   "1\nCoenosarc\ncover",
@@ -712,7 +890,8 @@ stage_axis_labels <- c(
   "5\nTip\nextends",
   "6\nNew corallites\nbud"
 )
-dodge_width <- 0.72
+dodge_width <- 0.72   # side-by-side spacing of the two temperatures
+
 stage_events_violin <- stage_events |>
   mutate(
     stage_axis = factor(paste0("Stage ", stage_order),
@@ -722,6 +901,7 @@ stage_events_violin <- stage_events |>
                           levels = c("Reached",
                                      "Not reached by Day 15"))
   )
+
 stage_summary_violin <- stage_summary |>
   mutate(
     stage_axis = factor(paste0("Stage ", stage_order),
@@ -732,6 +912,8 @@ stage_summary_violin <- stage_summary |>
       NA_character_
     )
   )
+
+# Jittered points use fixed seeds (36, 37) so the figure is reproducible
 p_stage_violin <- ggplot() +
   annotate("rect", xmin = -Inf, xmax = Inf, ymin = 16.05, ymax = Inf,
            fill = "grey94", colour = NA) +
@@ -838,30 +1020,31 @@ p_stage_violin <- ggplot() +
     axis.text.x = element_text(lineheight = 0.9, margin = margin(t = 4)),
     plot.margin = margin(8, 12, 8, 8, "pt")
   )
+
 save_fig(p_stage_violin, "36b_stage_violin",
          width = 190, height = 130)
 
+
 # ---- 4. Figure 1B: cumulative percent reached ------------------------------
+# For each day, the percent of fragments that had reached each stage by then.
 # Every fragment stays in the denominator, including those that had not
 # reached a stage by Day 15. Stage names and numbers follow the manuscript
 # (healing, then regeneration stages 1-5). Healing (coenosarc cover) comes
 # from the microscope experiment (8 per temperature) and appears only in the
 # all-stage version (39d); stages 1-5 come from the main experiment (12
 # wounded fragments per temperature). Those sample sizes go in the caption.
+
+## 4a. Read the stage table and attach manuscript stage names ----------------
 STAGE_LABELS <- c("Healing: coenosarc\ncovers wound", "1. Axial polyp\nforms",
                   "2. Wound surface\nremodels", "3. Axial corallite\nforms",
                   "4. Axial corallite\nextends", "5. Radial corallites\nform")
+
 stage_events <- readr::read_csv(
   file.path(TBL_DIR, "36_stage_timing.csv"),
   show_col_types = FALSE
 ) |>
   mutate(
     treatment = factor(treatment, levels = c("28C", "31C")),
-    treatment_label = factor(
-      dplyr::recode(as.character(treatment),
-                    `28C` = "28 °C", `31C` = "31 °C"),
-      levels = c("28 °C", "31 °C")
-    ),
     stage_order = as.integer(stage_order),
     stage_short = factor(
       dplyr::recode(
@@ -878,9 +1061,19 @@ stage_events <- readr::read_csv(
     event_status = factor(if_else(event, "Reached", "Not reached by Day 15"),
                           levels = c("Reached", "Not reached by Day 15"))
   )
+
+## 4b. Cumulative percent reached on each scoring day ------------------------
 score_days <- 0:15
+
+# Guarantee: one row per stage x fragment, and every fragment that never
+# reached a stage was still being scored on Day 15 (so it is truly "not
+# reached", not lost early).
 stopifnot(!anyDuplicated(select(stage_events, stage_order, id)),
           all(stage_events$event | stage_events$last_scored_day == 15))
+
+# Build every stage x temperature x day combination, attach all fragments to
+# each day (relationship = "many-to-many" says the row duplication is
+# intended), and count those whose first day is on or before that day.
 cumulative <- tidyr::expand_grid(
   stage_order = sort(unique(stage_events$stage_order)),
   treatment = levels(stage_events$treatment),
@@ -902,8 +1095,15 @@ cumulative <- tidyr::expand_grid(
     .groups = "drop"
   ) |>
   mutate(treatment = factor(treatment, levels = c("28C", "31C")))
+
 write_csv(cumulative, file.path(TBL_DIR, "39_stage_cumulative_percent.csv"))
+
+# Guarantee: never more fragments reached than were scored
 stopifnot(all(cumulative$n_reached <= cumulative$n_scored))
+
+## 4c. Plot the cumulative curves --------------------------------------------
+# Step lines (the percent jumps on scoring days). Colour, line type and point
+# shape all mark temperature, so the figure still reads in greyscale.
 plot_cumulative <- function(dat, ncol) {
   ggplot(dat, aes(day, pct_reached, colour = treatment,
                   linetype = treatment, shape = treatment)) +
@@ -913,9 +1113,11 @@ plot_cumulative <- function(dat, ncol) {
     scale_colour_manual(values = PAL_TEMP, name = "Temperature",
                         labels = c(`28C` = "28 °C", `31C` = "31 °C")) +
     scale_linetype_manual(values = c(`28C` = "solid", `31C` = "dashed"),
-                          name = "Temperature", labels = c(`28C` = "28 °C", `31C` = "31 °C")) +
+                          name = "Temperature",
+                          labels = c(`28C` = "28 °C", `31C` = "31 °C")) +
     scale_shape_manual(values = c(`28C` = 16, `31C` = 17),
-                       name = "Temperature", labels = c(`28C` = "28 °C", `31C` = "31 °C")) +
+                       name = "Temperature",
+                       labels = c(`28C` = "28 °C", `31C` = "31 °C")) +
     scale_x_continuous(breaks = c(0, 1, 3, 5, 10, 15),
                        limits = c(0, 15)) +
     scale_y_continuous(labels = \(x) paste0(x, "%"),
@@ -924,26 +1126,50 @@ plot_cumulative <- function(dat, ncol) {
     labs(x = "Days after wounding", y = "Fragments that had reached the stage (%)") +
     theme_pub(10)
 }
+
 # Figure 1B in the working draft: the four regeneration milestones (axial
 # polyp, axial corallite forms, axial corallite extends, radial corallites),
 # all from the main experiment. Stage numbers match Supplementary figure 3.
 FIG1B_STAGES <- STAGE_LABELS[c(2, 4, 5, 6)]
-p_cumulative <- plot_cumulative(filter(cumulative, stage_short %in% FIG1B_STAGES), ncol = 2)
+p_cumulative <- plot_cumulative(filter(cumulative, stage_short %in% FIG1B_STAGES),
+                                ncol = 2)
 save_fig(p_cumulative, "39b_stage_timing_cumulative_option",
          width = 150, height = 135)
+
 # All six stages, including healing and wound-surface remodelling (supplement).
 p_cumulative_all <- plot_cumulative(cumulative, ncol = 3)
 save_fig(p_cumulative_all, "39d_stage_cumulative_all_stages",
          width = 200, height = 145)
 
-# ---- 5. Numbers for the results text ---------------------------------------
-endpoint <- readr::read_csv(file.path(TBL_DIR, "11f_morphology_dataset_endpoint_tests.csv"), show_col_types = FALSE)
-logrank  <- readr::read_csv(file.path(TBL_DIR, "11f_morphology_dataset_logrank_tests.csv"), show_col_types = FALSE)
-aft      <- readr::read_csv(file.path(TBL_DIR, "14_interval_survreg.csv"), show_col_types = FALSE)
-cox      <- readr::read_csv(file.path(TBL_DIR, "14_cox_hazard_ratios.csv"), show_col_types = FALSE)
-cox_gx   <- readr::read_csv(file.path(TBL_DIR, "14_cox_genet_LRT.csv"), show_col_types = FALSE)
-stages   <- readr::read_csv(file.path(TBL_DIR, "36_stage_timing_mean_iqr.csv"), show_col_types = FALSE)
 
+# ---- 5. Numbers for the results text ---------------------------------------
+# Collects every number quoted in the results text into one table
+# (output/paper/regeneration_numbers.csv). paper_row() (from 00_setup.R) makes
+# one row; rows are appended to the list `rows` and written at the end. Most
+# numbers are re-read from the tables written above so the text always matches
+# them. In the labels, "estimate" and "statistic" are reused as two slots
+# (e.g. ambient count, heated count); each label says what they hold.
+
+## 5a. Re-read the result tables ---------------------------------------------
+endpoint <- readr::read_csv(
+  file.path(TBL_DIR, "11f_morphology_dataset_endpoint_tests.csv"),
+  show_col_types = FALSE
+)
+logrank  <- readr::read_csv(
+  file.path(TBL_DIR, "11f_morphology_dataset_logrank_tests.csv"),
+  show_col_types = FALSE
+)
+aft      <- readr::read_csv(file.path(TBL_DIR, "14_interval_survreg.csv"),
+                            show_col_types = FALSE)
+cox      <- readr::read_csv(file.path(TBL_DIR, "14_cox_hazard_ratios.csv"),
+                            show_col_types = FALSE)
+cox_gx   <- readr::read_csv(file.path(TBL_DIR, "14_cox_genet_LRT.csv"),
+                            show_col_types = FALSE)
+stages   <- readr::read_csv(file.path(TBL_DIR, "36_stage_timing_mean_iqr.csv"),
+                            show_col_types = FALSE)
+
+# Plain-language names for the five main-experiment stages (replaces the
+# section 2 `traits` vector)
 traits <- c(axial_polyp_formation = "Axial polyp forms",
             wound_smoothed = "Cut surface smooths over",
             tip_exist = "New tip forms",
@@ -951,7 +1177,9 @@ traits <- c(axial_polyp_formation = "Axial polyp forms",
             new_corallites_on_tip = "New radial corallites bud")
 rows <- list()
 
-# Stage present on the last scored day (Fisher's exact test), main experiment
+## 5b. Day 15 counts, stages reached and log-rank ----------------------------
+# Stage present on the last scored day (Fisher's exact test), main experiment.
+# stopifnot(): stop if there is not exactly one matching row.
 for (tr in names(traits)) {
   d <- endpoint[endpoint$dataset == "physio_morphology" & endpoint$trait == tr, ]
   stopifnot(nrow(d) == 1)
@@ -963,8 +1191,9 @@ for (tr in names(traits)) {
     source = "output/tables/11f_morphology_dataset_endpoint_tests.csv")
 }
 
-# Stage reached at any point by Day 15, main experiment
-stage_trait <- c(`2` = "axial_polyp_formation", `3` = "wound_smoothed", `4` = "tip_exist",
+# Stage reached at any point by Day 15, main experiment (stage_order 2-6)
+stage_trait <- c(`2` = "axial_polyp_formation", `3` = "wound_smoothed",
+                 `4` = "tip_exist",
                  `5` = "tip_extension", `6` = "new_corallites_on_tip")
 for (so in names(stage_trait)) {
   d28 <- stages[stages$stage_order == as.integer(so) & grepl("^28", stages$treatment), ]
@@ -978,49 +1207,71 @@ for (so in names(stage_trait)) {
     source = "output/tables/36_stage_timing_mean_iqr.csv")
 }
 
-d <- logrank[logrank$dataset == "physio_morphology" & logrank$trait == "new_corallites_on_tip", ]
+# Log-rank test for budding, main experiment
+d <- logrank[logrank$dataset == "physio_morphology" &
+               logrank$trait == "new_corallites_on_tip", ]
 rows[[length(rows) + 1]] <- paper_row(
   "budding_logrank", "Budding: log-rank test", test = "log-rank",
   statistic = d$logrank_chisq, df1 = d$logrank_df, p_value = d$logrank_p,
   source = "output/tables/11f_morphology_dataset_logrank_tests.csv")
 
-# Time to each stage (interval-censored log-logistic; time ratio > 1 = slower under heat)
+## 5c. Timing models: time ratios, hazard ratio, patch x temperature ---------
+# Time to each stage (interval-censored log-logistic; time ratio > 1 = slower
+# under heat)
 for (tr in names(traits)) {
   d <- aft[aft$trait == tr, ]
   if (nrow(d) != 1) next
   rows[[length(rows) + 1]] <- paper_row(
     paste0(tr, "_time_ratio"), paste0(traits[[tr]], ": time ratio, heated / ambient"),
     estimate = d$time_ratio_31_vs28, ci_low = d$ratio_lo, ci_high = d$ratio_hi,
-    test = paste0(sub(" AFT$", "", d$model), " model"), statistic = d$z, p_value = d$p, n = d$n,
+    test = paste0(sub(" AFT$", "", d$model), " model"),
+    statistic = d$z, p_value = d$p, n = d$n,
     source = "output/tables/14_interval_survreg.csv")
 }
+
+# Budding hazard ratio from the overall (patch-stratified) Cox model
 d <- cox[cox$trait == "new_corallites_on_tip" & grepl("^overall", cox$scope), ]
 stopifnot(nrow(d) == 1)
 rows[[length(rows) + 1]] <- paper_row(
   "budding_hazard_ratio", "Budding: hazard ratio, heated / ambient (Cox)",
   estimate = d$HR_31_vs28, ci_low = d$HR_lo, ci_high = d$HR_hi,
-  test = "Cox model, stratified by source patch", statistic = d$z, p_value = d$p, n = d$n,
+  test = "Cox model, stratified by source patch",
+  statistic = d$z, p_value = d$p, n = d$n,
   source = "output/tables/14_cox_hazard_ratios.csv")
+
+# Budding source patch x temperature LRT (unstable; see the label)
 d <- cox_gx[cox_gx$trait == "new_corallites_on_tip", ]
 rows[[length(rows) + 1]] <- paper_row(
   "budding_patch_x_temp", "Budding: source patch x temperature (unstable: no heated patch A fragment budded, so the model cannot estimate it; report the counts below)",
-  test = "likelihood-ratio test", statistic = d$chisq_genet_trt_int, df1 = d$df_genet_trt_int,
+  test = "likelihood-ratio test",
+  statistic = d$chisq_genet_trt_int, df1 = d$df_genet_trt_int,
   p_value = d$p_genet_trt_int, source = "output/tables/14_cox_genet_LRT.csv")
 
-# Budding tank by tank (temperature was applied to tanks)
+## 5d. Budding tank by tank: exact permutation test --------------------------
+# Temperature was applied to tanks (4 per temperature), so tanks, not
+# fragments, are the true replicates. Compare the proportion of fragments that
+# budded per tank, 4 vs 4 tanks. Exact permutation test: try all 70 ways
+# (choose(8, 4)) of labelling 4 of the 8 tanks "ambient", and ask how often
+# the difference is at least as large as the real one. The 1e-12 guards
+# against rounding error in the >= comparison.
 ph <- readRDS(file.path(DATA_PROC, "physio_clean.rds"))
 by_tank <- ph |>
   dplyr::filter(wound == "yes") |>
   dplyr::group_by(treatment, tank, id) |>
-  dplyr::summarise(budded = any(new_corallites_on_tip %in% c("yes", 1, TRUE)), .groups = "drop") |>
+  dplyr::summarise(budded = any(new_corallites_on_tip %in% c("yes", 1, TRUE)),
+                   .groups = "drop") |>
   dplyr::group_by(treatment, tank) |>
   dplyr::summarise(n = dplyr::n(), k = sum(budded), prop = k / n, .groups = "drop")
+
 props <- setNames(by_tank$prop, by_tank$tank)
 amb <- as.character(by_tank$tank[by_tank$treatment == "28C"])
 diff_for <- function(set) mean(props[set]) - mean(props[setdiff(names(props), set)])
 all_sets <- utils::combn(names(props), length(amb), simplify = FALSE)
 obs <- diff_for(amb)
-perm_p <- mean(vapply(all_sets, function(s) abs(diff_for(s)) >= abs(obs) - 1e-12, logical(1)))
+perm_p <- mean(vapply(all_sets, function(s) abs(diff_for(s)) >= abs(obs) - 1e-12,
+                      logical(1)))
+
+# Range of budded fragments per tank, for each temperature
 for (tr in c("28C", "31C")) {
   lab <- if (tr == "28C") "ambient" else "heated"
   d <- by_tank[by_tank$treatment == tr, ]
@@ -1030,42 +1281,55 @@ for (tr in c("28C", "31C")) {
     estimate = min(d$k), statistic = max(d$k), n = d$n[1], df1 = nrow(d),
     source = "data/processed/physio_clean.rds")
 }
+
 rows[[length(rows) + 1]] <- paper_row(
   "budding_tank_permutation", "Budding: exact permutation test of tank proportions, 4 vs 4 tanks",
   estimate = obs, test = "exact permutation (70 assignments); smallest possible p = 2/70",
   p_value = perm_p, n = length(props), source = "data/processed/physio_clean.rds")
 
-# Budding by source patch (counts behind the patch x temperature pattern)
+## 5e. Budding by source patch -----------------------------------------------
+# Counts behind the patch x temperature pattern
 by_patch <- ph |>
   dplyr::filter(wound == "yes") |>
   dplyr::group_by(treatment, thicket, id) |>
-  dplyr::summarise(budded = any(new_corallites_on_tip %in% c("yes", 1, TRUE)), .groups = "drop") |>
+  dplyr::summarise(budded = any(new_corallites_on_tip %in% c("yes", 1, TRUE)),
+                   .groups = "drop") |>
   dplyr::group_by(treatment, thicket) |>
   dplyr::summarise(n = dplyr::n(), k = sum(budded), .groups = "drop")
+
 for (i in seq_len(nrow(by_patch))) {
   lab <- if (by_patch$treatment[i] == "28C") "ambient" else "heated"
   rows[[length(rows) + 1]] <- paper_row(
     paste0("budding_", lab, "_patch_", toupper(by_patch$thicket[i])),
     paste0("Budding by Day 15, ", lab, ", source patch ", toupper(by_patch$thicket[i]),
            ": wounded fragments that budded"),
-    estimate = by_patch$k[i], n = by_patch$n[i], source = "data/processed/physio_clean.rds")
+    estimate = by_patch$k[i], n = by_patch$n[i],
+    source = "data/processed/physio_clean.rds")
 }
 
-# Numbers for the Figure 1 text: share reached by a given day, and the
-# range of first days among fragments that reached the stage.
-fig1 <- read_csv(file.path(TBL_DIR, "39_stage_cumulative_percent.csv"), show_col_types = FALSE)
-pct_at <- function(stage, d, trt) fig1 |> dplyr::filter(stage_order == stage, day == d, treatment == trt)
-for (spec in list(list(5, 8, "tip_extension_pct_day8"), list(6, 12, "budding_pct_day12"))) {
+## 5f. Numbers for the Figure 1 text -----------------------------------------
+# Share reached by a given day, and the range of first days among fragments
+# that reached the stage. Each spec is (stage_order, day, key); the label
+# prints stage_order - 1 to match the manuscript stage numbers.
+fig1 <- read_csv(file.path(TBL_DIR, "39_stage_cumulative_percent.csv"),
+                 show_col_types = FALSE)
+pct_at <- function(stage, d, trt) fig1 |>
+  dplyr::filter(stage_order == stage, day == d, treatment == trt)
+for (spec in list(list(5, 8, "tip_extension_pct_day8"),
+                  list(6, 12, "budding_pct_day12"))) {
   for (trt in c("28C", "31C")) {
     r <- pct_at(spec[[1]], spec[[2]], trt)
     lab <- if (trt == "28C") "ambient" else "heated"
     rows[[length(rows) + 1]] <- paper_row(
       paste0(spec[[3]], "_", lab),
-      sprintf("Wounded fragments that had reached stage %d by Day %d, %s (%%)", spec[[1]] - 1, spec[[2]], lab),
+      sprintf("Wounded fragments that had reached stage %d by Day %d, %s (%%)",
+              spec[[1]] - 1, spec[[2]], lab),
       estimate = r$pct_reached, statistic = r$n_reached, n = r$n_scored,
       source = "output/tables/39_stage_cumulative_percent.csv")
   }
 }
+
+# Earliest and latest first day for tip extension (5) and budding (6)
 st <- read_csv(file.path(TBL_DIR, "36_stage_timing.csv"), show_col_types = FALSE)
 for (s in c(5, 6)) for (trt in c("28C", "31C")) {
   r <- st |> dplyr::filter(stage_order == s, treatment == trt, event)
@@ -1078,22 +1342,27 @@ for (s in c(5, 6)) for (trt in c("28C", "31C")) {
     source = "output/tables/36_stage_timing.csv")
 }
 
-# Was budding delayed or stalled? (open question). At 28 C every fragment
-# budded within a few days of its tip extending. Count heated fragments whose
-# tip had been extending for longer than the slowest ambient fragment needed,
-# and that still had not budded by Day 15.
+## 5g. Was budding delayed or stalled under heat? (open question) ------------
+# At 28 C every fragment budded within a few days of its tip extending. Count
+# heated fragments whose tip had been extending for longer than the slowest
+# ambient fragment needed, and that still had not budded by Day 15.
+# pivot_wider() gives one row per fragment with ext/bud columns side by side.
 ext_bud <- st |>
   dplyr::filter(stage_order %in% c(5, 6)) |>
   dplyr::mutate(s = ifelse(stage_order == 5, "ext", "bud")) |>
   dplyr::select(id, treatment, s, event, first_yes_day) |>
   tidyr::pivot_wider(names_from = s, values_from = c(event, first_yes_day))
+
+# Days from tip extension to budding, ambient fragments that did both
 lag_amb <- ext_bud |>
   dplyr::filter(treatment == "28C", event_ext, event_bud) |>
   dplyr::mutate(lag = first_yes_day_bud - first_yes_day_ext) |>
   dplyr::pull(lag)
+
 stalled <- ext_bud |>
   dplyr::filter(treatment == "31C", event_ext, !event_bud,
                 15 - first_yes_day_ext > max(lag_amb))
+
 rows[[length(rows) + 1]] <- paper_row(
   "bud_lag_ambient", "28 C: days from tip extension to budding (estimate = shortest, statistic = longest)",
   estimate = min(lag_amb), statistic = max(lag_amb), n = length(lag_amb),
@@ -1103,26 +1372,32 @@ rows[[length(rows) + 1]] <- paper_row(
   estimate = nrow(stalled), n = sum(ext_bud$treatment == "31C"),
   source = "output/tables/36_stage_timing.csv")
 
-# Tissue cover, separate microscope experiment
+## 5h. Microscope experiment: tissue cover and budding -----------------------
+# Tissue cover: first day living tissue covered the cut, per fragment
 mic <- readRDS(file.path(DATA_PROC, "microscope_physio_clean.rds"))
 first_cover <- mic |>
   dplyr::filter(tissue_over_wound %in% c("yes", 1, TRUE)) |>
   dplyr::group_by(id) |>
   dplyr::summarise(first_day = min(day), .groups = "drop")
+
 rows[[length(rows) + 1]] <- paper_row(
   "tissue_cover_by_day1", "Microscope experiment: fragments with tissue covering the cut by Day 1",
   estimate = sum(first_cover$first_day <= 1), n = dplyr::n_distinct(mic$id),
   source = "data/processed/microscope_physio_clean.rds")
+
 # Budding in the microscope experiment, a second cohort (open question)
 for (trt in c("28C", "31C")) {
   b <- mic |>
     dplyr::filter(treatment == trt, wound == "yes") |>
     dplyr::group_by(id) |>
-    dplyr::summarise(bud = any(new_corallites_on_tip %in% c("yes", 1, TRUE)), .groups = "drop")
+    dplyr::summarise(bud = any(new_corallites_on_tip %in% c("yes", 1, TRUE)),
+                     .groups = "drop")
   rows[[length(rows) + 1]] <- paper_row(
     paste0("micro_budding_day15_", if (trt == "28C") "ambient" else "heated"),
     paste("Microscope experiment: wounded fragments that budded by Day 15,", trt),
-    estimate = sum(b$bud), n = nrow(b), source = "data/processed/microscope_physio_clean.rds")
+    estimate = sum(b$bud), n = nrow(b),
+    source = "data/processed/microscope_physio_clean.rds")
 }
 
+# Write all rows to output/paper/regeneration_numbers.csv
 write_paper(rows, "regeneration")

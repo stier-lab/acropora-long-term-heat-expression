@@ -2,4 +2,4 @@ model,n_obs,singular_fit,convergence_messages,residual_uniformity_p,residual_dis
 pam_fvfm,288,TRUE,none,0.3073,0.872,1,p < 0.05 flags a departure worth a look; with these sample sizes small departures are common
 color_dscale,288,FALSE,none,2.372e-8,0.776,1,p < 0.05 flags a departure worth a look; with these sample sizes small departures are common
 log_zoox_density,192,TRUE,none,0.06138,0.488,0.04239,p < 0.05 flags a departure worth a look; with these sample sizes small departures are common
-growth_pct,48,FALSE,none,0.6962,0.716,1,p < 0.05 flags a departure worth a look; with these sample sizes small departures are common
+growth_pct,48,FALSE,none,0.671,0.708,1,p < 0.05 flags a departure worth a look; with these sample sizes small departures are common

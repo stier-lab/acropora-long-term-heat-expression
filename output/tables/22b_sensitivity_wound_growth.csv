@@ -5,9 +5,9 @@ symbionts,treatment:wound:biopsy_day_c,separate residual variance by temperature
 symbionts,treatment:wound:biopsy_day_c,leave one tank out: lowest p,NA,0.008555,tank 11 dropped
 symbionts,treatment:wound:biopsy_day_c,leave one tank out: highest p,NA,0.2919,tank 4 dropped
 symbionts,"Day 15 heated geometric mean, wounded / unwounded",direction of the wound difference,NA,NA,wounded 134723 vs unwounded 105280 cells per cm2
-growth,treatment,as reported (03_physiology.R),6.329,0.04555,NA
-growth,treatment,leave one tank out: lowest p,NA,0.001806,tank 3 dropped
-growth,treatment,leave one tank out: highest p,NA,0.1084,tank 12 dropped
-growth,treatment,without ambient tank 3,36.36,0.001806,NA
-growth,treatment,leave one fragment out: range of p,NA,NA,p from 0.023 to 0.069; 7 of 48 single-fragment drops give p > 0.05
-growth,tank means (% mass gained),ambient tanks vs heated tanks,NA,NA,"ambient 3: 3.9, 6: 6.7, 9: 6.7, 12: 7.0; heated 4: 3.9, 5: 3.4, 10: 3.7, 11: 5.2"
+growth,treatment,as reported (03_physiology.R),6.463,0.04395,NA
+growth,treatment,leave one tank out: lowest p,NA,7.108e-4,tank 3 dropped
+growth,treatment,leave one tank out: highest p,NA,0.105,tank 12 dropped
+growth,treatment,without ambient tank 3,54.7,7.108e-4,NA
+growth,treatment,leave one fragment out: range of p,NA,NA,p from 0.018 to 0.066; 6 of 48 single-fragment drops give p > 0.05
+growth,tank means (% mass gained),ambient tanks vs heated tanks,NA,NA,"ambient 3: 9.7, 6: 17.9, 9: 17.8, 12: 18.4; heated 4: 10.0, 5: 8.5, 10: 9.7, 11: 12.7"

@@ -1,13 +1,13 @@
 # Which outputs are current
 
-Updated 2026-11-12. Use this page to tell current results from historical files before reading figures or tables.
+Updated 2026-11-13. Use this page to tell current results from historical files before reading figures or tables.
 
 ## Current
 
 | What | Where | Notes |
 |---|---|---|
 | Every reported number | `output/paper/*_numbers.csv` | Single source of truth, written by the core scripts. The team summary reads its numbers from here. |
-| Plain-language results | `docs/team_summary/LTH_results_summary.html` | Rebuilt 2026-11-12. |
+| Plain-language results | `docs/team_summary/LTH_results_summary.html` | Rebuilt 2026-11-13. |
 | Manuscript figure map | `manuscript/MAIN_FIGURE_PLAN.md` | Each figure in Molly's working draft and supplement, with the file and script that make it. |
 | Figure 1B | `figures/39b_stage_timing_cumulative_option.*` | The four regeneration milestones, main experiment. All six stages: `39d_stage_cumulative_all_stages`. |
 | Figure 2 | `figures/45_physiology_figure2.*` | Legend: `manuscript/FIGURE_2_LEGEND.md`. |
@@ -48,6 +48,9 @@ Commit code, raw-data and output changes together, with a message that says what
 
 ## Reporting decisions
 
-- **Growth temperature test (2026-11-10, Adrian):** report the model test (temperature, F1,6 = 6.33, p = 0.046, from `03_physiology.R`). The tank permutation (p = 0.057, `05_buoyant_weight_tank_test.csv`) goes in the supplement as a check.
+- **Growth temperature test (2026-11-10, Adrian):** report the model test (temperature, F1,6 = 6.46, p = 0.044, from `03_physiology.R`). The tank permutation (p = 0.086, `05_buoyant_weight_tank_test.csv`) goes in the supplement as a check. (Numbers updated 2026-11-13 after the growth correction below; they were F = 6.33, p = 0.046 and p = 0.057.)
 - **Figure 1B (2026-11-12):** follows Molly's working draft: four regeneration milestones (axial polyp, axial corallite forms, axial corallite extends, radial corallites), main experiment only. Healing and wound-surface remodelling go in the all-stage version (`39d`) for the supplement.
 - **Old AI-written docs removed (2026-11-12):** RESULTS.docx, the local manuscript draft and its source extracts, session logs in `docs/provenance/`, email drafts, the roadmap, the diagnostic inventory and `notes/archive/`. Facts worth keeping went to `docs/DATA_NOTES.md`; the rest is in git history. Molly's Google Doc is the manuscript draft.
+
+- **Oxygen and artwork check (2026-11-13):** raw YSI readings independently reproduce treatment oxygen concentration and saturation summaries. The summary no longer infers a small oxygen contribution; temperature and oxygen effects cannot be separated by these data. Color/shape keys and genetic-cluster sample sizes are in captions, with titles, subtitles, captions and legends suppressed by the figure theme. Full pipeline and HTML rebuild completed; numerical output tables were unchanged.
+- **Growth calculation corrected (2026-11-13):** `01_clean_data.R` now follows Molly's buoyant-weight sheet: seawater density from the glass reference object at each weighing, and the aragonite plug subtracted from Day 0 and Day 15 dry mass. Earlier code used the freshwater density curve as seawater density and kept the plug (~60% of starting mass), which shrank % growth about 2.6-fold. Growth is now 16.0% (28 °C) vs 10.2% (31 °C), 36% lower under heat; the code checks every fragment against the metadata column `percent_growth_bw`. Only growth outputs changed.

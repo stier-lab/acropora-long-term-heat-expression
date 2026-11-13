@@ -16,14 +16,14 @@ color,D-scale range,INFO,"[1.5, 5]","[1, 6]",
 color,28C tank IDs,PASS,"3,6,9,12","3,6,9,12",
 color,31C tank IDs,PASS,"4,5,10,11","4,5,10,11",
 buoyant_weight,n corals,PASS,48,48,physiology subset
-buoyant_weight,% growth range,INFO,"[1.9, 9.1]",positive for growing corals,
+buoyant_weight,% growth range,INFO,"[5.2, 25.9]",positive for growing corals,
 symbionts,n biopsies,PASS,192,~192,
 symbionts,finite densities,PASS,192/192 finite,192,
 symbionts,median (cells/cm²),INFO,7.98e+05,~7e5–1e6,
 wax_dipping,n corals,PASS,192,~192,
 wax_dipping,caliper-curve SA correlation,HANDLED,r = 0.653,> 0.7,below threshold; standard curve retained and plotted in figure 07 for transparency
 morphology,n observations,PASS,768,~768,
-morphology,date parsing,PASS,2025-06-04 to 2025-06-19,all physio morphology rows retain calendar dates,
+morphology,date parsing,PASS,2025-06-04 to 2025-06-19,no missing dates,all physio morphology rows retain calendar dates
 morphology,wounded corals tracked,INFO,24,~24 (per treatment),
 morphology,28C tank IDs,PASS,"3,6,9,12","3,6,9,12",
 morphology,31C tank IDs,PASS,"4,5,10,11","4,5,10,11",
@@ -36,7 +36,7 @@ microscope,28C tank IDs,PASS,"6,9","6,9",photo-only subset uses two of the four 
 microscope,31C tank IDs,PASS,"4,5","4,5",photo-only subset uses two of the four heated tanks
 microscope,pigment D8-D15 blanks,HANDLED,128/128 missing after D7,"blank = not scored, not no",
 ysi,n study spot checks,PASS,112,112,8 tanks × 14 dates; June 4 and 7 missing
-ysi,temperature (°C) range,INFO,"[27.2, 31.7]","[27, 33] reasonable",
+ysi,temperature (°C) range,INFO,"[27.2, 31.3]","[27, 33] reasonable",
 apex,n daily probe-records,INFO,612,thousands across 6 datalog files,
 worms,total worm-positive obs,INFO,22,0–few,21 unique corals contaminated; concentrated in 31C tanks on 06/07 — treated with Worm Exit
 cross-stream,PAM ids in metadata,PASS,0,0,Orphans: 

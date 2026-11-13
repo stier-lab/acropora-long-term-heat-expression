@@ -3,5 +3,5 @@ PAM Fv/Fm (full data),treatment:day,18.23,0.00368,NA,NA
 PAM Fv/Fm (flagged dropped),treatment:day,8.61,0.0282,NA,NA
 Color D-scale (full data),treatment:day,34.31,9.91e-4,NA,NA
 Color D-scale (flagged dropped),treatment:day,19.16,0.007,NA,NA
-Growth % (full data),treatment (tank permutation),NA,0.0571,2.071,8
-Growth % (flagged dropped),treatment (tank permutation),NA,0.0286,2.926,7
+Growth % (full data),treatment (tank permutation),NA,0.0857,5.747,8
+Growth % (flagged dropped),treatment (tank permutation),NA,0.0286,8.365,7
