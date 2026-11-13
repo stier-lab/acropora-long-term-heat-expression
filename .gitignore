@@ -52,3 +52,6 @@ data/raw/sequencing/*.cram
 # Regenerable diagnostic QA layer (rebuilt by code/_run_all.R)
 figures/diagnostics/
 output/diagnostics/
+
+# Reference PDFs live on Google Drive (copyright; public repo). See literature/README.md.
+literature/pdfs/

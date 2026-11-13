@@ -9,3 +9,7 @@ A verified second copy of this project lives on the lab NAS:
 Copied from Drive 2026-08-25 and sha256-verified file by file (`/Volumes/Stier_Lab/Archive/MIGRATION_LOG.md`). The NAS holds the imaging and bulk
 data that cannot go in git. Three homes, one project: **GitHub = code, Drive = working
 folder, NAS = backup.** repo-catalog ruling #149.
+
+## Literature PDFs
+
+The reference PDFs moved from `literature/pdfs/` in the repo to the Drive folder `literature_pdfs/` on 2026-11-13 (public repo; copyrighted copies). Index: `literature/library_map.csv`.

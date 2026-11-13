@@ -48,7 +48,7 @@ Package versions are pinned in `renv.lock` (R 4.6.2). Restore them before rerunn
 | `output/`, `figures/` | Everything the code writes; figures are listed in `figures/FIGURE_INDEX.md` |
 | `manuscript/` | Figure map, Figure 2 legend, `references.bib` |
 | `docs/` | Team summary, diagnostics, data notes, RNA-seq plan, Drive method exports |
-| `literature/` | Reference PDFs and `library_map.csv` |
+| `literature/` | `library_map.csv` (citation, theme and file name for each reference). The PDFs live on Google Drive, not in this public repo (see `literature/README.md`). |
 | `extras/` | Three small exploratory analyses kept for context (see `extras/README.md`) |
 | `tools/` | `check_output_changes.py`, which sorts real output changes from rerun noise |
 
