@@ -1,6 +1,6 @@
 # Figure Index
 
-Updated 2026-11-12. Every figure in this folder is rebuilt by `code/run_all.R` (each as `.pdf` and `.png`). Frozen figures from exploratory and older analyses are in `extras/figures/`, with the previous index at `extras/figures/FIGURE_INDEX_before_merge.md`. Reader-facing text says **source patch** for A, C and D; some file names still say `genet`.
+Updated 2026-11-12. Every figure in this folder is rebuilt by `code/run_all.R` (each as `.pdf` and `.png`). The few kept exploratory figures are in `extras/figures/`; older figures were deleted on 2026-11-13 and can be recovered from the `pre-prune-2026-11-13` tag. Reader-facing text says **source patch** for A, C and D; some file names still say `genet`.
 
 ## Key (no figure carries an embedded legend)
 

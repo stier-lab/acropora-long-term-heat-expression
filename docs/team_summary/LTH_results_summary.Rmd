@@ -516,7 +516,7 @@ cat(vid("morphology_ambient_healing.mp4",
 
 **Don't report:**
 
-- *p*-values from the daily yes/no models (frozen in `extras/`: `12_morph_*`, `12c_*`, and the "Morphology" rows of `20_master_results.csv`), including the planned tip-extension test. Their results change with the computer and package versions (2026-11-10 rerun check; see `code/README.md`).
+- *p*-values from the daily yes/no models (`12_morph_*`, `12c_*`, and the "Morphology" rows of `20_master_results.csv`; deleted 2026-11-13, recoverable from the `pre-prune-2026-11-13` tag), including the planned tip-extension test. Their results change with the computer and package versions (2026-11-10 rerun check; see `code/README.md`).
 - the average day each stage was reached, for stages some fragments never reached. For budding under heat, that average describes only 4 of 12 fragments.
 
 **Source patches:** every ambient fragment budded, but under heat budding differed by source patch: `r cnt("budding_heated_patch_A")` of `r nn("budding_heated_patch_A")` from patch A, `r cnt("budding_heated_patch_C")` of `r nn("budding_heated_patch_C")` from C and `r cnt("budding_heated_patch_D")` of `r nn("budding_heated_patch_D")` from D. With four fragments per group, and no budding at all in heated patch A, the Cox source patch × temperature test cannot be estimated reliably, so report these counts rather than its *p*-value. Treat this as a pattern to follow up, not a result.

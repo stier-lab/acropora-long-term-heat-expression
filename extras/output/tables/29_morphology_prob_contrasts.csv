@@ -1,7 +1,0 @@
-trait,day,prob_28,prob_31,delta_prob,or_31_vs_28,or_lo,or_hi,p_value
-hole_in_center,10,1,1,0,NA,NA,NA,NA
-new_corallites_on_tip,10,0,0,0,NA,NA,NA,NA
-pigment_over_wound,10,2e-4,0,2e-4,NA,NA,NA,NA
-polyps_out,10,0.9186,0.8626,0.056,0.5566,0.1836,1.6871,0.3004
-tip_exist,10,1,1,0,NA,NA,NA,NA
-tip_extension,10,0.9463,0,0.9463,NA,NA,NA,NA

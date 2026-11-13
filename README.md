@@ -27,7 +27,7 @@ Rscript -e 'renv::restore()'   # once: installs the pinned package versions
 Rscript code/run_all.R         # about a minute; rebuilds every number, table and figure
 ```
 
-Package versions are pinned in `renv.lock` (R 4.6.2). Restore them before rerunning: the simulation-based residual checks (DHARMa) give different outlier sets under other versions. Never hand-edit numbers; change the code and rerun. Older and exploratory analyses are frozen in `extras/` and are not run.
+Package versions are pinned in `renv.lock` (R 4.6.2). Restore them before rerunning: the simulation-based residual checks (DHARMa) give different outlier sets under other versions. Never hand-edit numbers; change the code and rerun. A few exploratory analyses are kept in `extras/` and are not run; older deprecated material was removed on 2026-11-13 (tag `pre-prune-2026-11-13`).
 
 ## Design
 
@@ -49,7 +49,7 @@ Package versions are pinned in `renv.lock` (R 4.6.2). Restore them before rerunn
 | `manuscript/` | Figure map, Figure 2 legend, `references.bib` |
 | `docs/` | Team summary, diagnostics, data notes, RNA-seq plan, Drive method exports |
 | `literature/` | Reference PDFs and `library_map.csv` |
-| `extras/` | Frozen older analyses |
+| `extras/` | Three small exploratory analyses kept for context (see `extras/README.md`) |
 | `tools/` | `check_output_changes.py`, which sorts real output changes from rerun noise |
 
 Google Drive (`17. LTH_expression_by_temperature_2025`, ID `1sXfnHN-vmSBuwMEfERiYOWDeKRmjFWJP`) holds the raw Sheets, field notes and Molly's manuscript draft. Photographs are on the lab NAS (see `docs/DATA_NOTES.md`). RNA-seq processing is at UC Davis (Bay lab).

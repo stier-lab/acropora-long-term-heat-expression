@@ -1,7 +1,0 @@
-metric,term,F_value,p_value
-pct_growth,treatment,23.1,1.99e-5
-pct_growth,wound,0.34,0.563
-pct_growth,thicket,0.36,0.701
-sgr,treatment,23.05,2.02e-5
-sgr,wound,0.33,0.571
-sgr,thicket,0.34,0.712

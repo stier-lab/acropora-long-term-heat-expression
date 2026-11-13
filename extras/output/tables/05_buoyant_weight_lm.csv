@@ -1,7 +1,0 @@
-term,model_scope,estimate,std.error,statistic,p.value,conf.low,conf.high
-(Intercept),coral-level descriptive coefficients,5.0688,0.2154,23.5272,0,4.6341,5.5036
-treatment1,coral-level descriptive coefficients,1.0354,0.2154,4.8059,0,0.6006,1.4702
-wound1,coral-level descriptive coefficients,0.1255,0.2154,0.5826,0.5633,-0.3093,0.5603
-thicket1,coral-level descriptive coefficients,0.2538,0.3047,0.8329,0.4096,-0.3611,0.8687
-thicket2,coral-level descriptive coefficients,-0.1668,0.3047,-0.5473,0.5871,-0.7816,0.4481
-treatment1:wound1,coral-level descriptive coefficients,5e-4,0.2154,0.0024,0.9981,-0.4343,0.4353

@@ -34,7 +34,7 @@ treating it as confirmed genet identity.
 
 Historical use (superseded by `code/06_genetics.R`):
 
-- Read by `extras/code/rnaseq/32_prelim_snp_integration.R`.
+- Read by `code/rnaseq/32_prelim_snp_integration.R` (deleted 2026-11-13; in the `pre-prune-2026-11-13` tag).
 - Joined to `output/tables/31_rnaseq_phenotype_covariates.csv` by parsed coral
   fragment ID.
 - Used for exploratory summaries of preliminary SNP cluster structure, design

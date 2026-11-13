@@ -21,8 +21,8 @@ Updated 2026-11-13. Use this page to tell current results from historical files 
 
 | What | Superseded by |
 |---|---|
-| Everything in `extras/` (old scripts, figures, tables, the master results table and the daily yes/no models) | The 10 core scripts in `code/` (merged 2026-11-11) |
-| `extras/figures/39a_*`, `39c_*`, `40_stage_mean_review*`, `41_stage_progression*` | `39b` (Figure 1B) and `39d`. The older options can misrepresent the 12/12 vs 4/12 budding result (commit 2ffa570). |
+| Old scripts, figures, tables, the master results table and the daily yes/no models (deleted from `extras/` on 2026-11-13; tag `pre-prune-2026-11-13`) | The 10 core scripts in `code/` (merged 2026-11-11) |
+| Old stage-timing displays `39a`, `39c`, `40`, `41` (deleted 2026-11-13) | `39b` (Figure 1B) and `39d`. The older options can misrepresent the 12/12 vs 4/12 budding result (commit 2ffa570). |
 | `data/raw/*/data_before_2026-10-16.csv` | The October 16 corrected `data.csv` in the same folder |
 
 ## Why files show as changed after running the pipeline

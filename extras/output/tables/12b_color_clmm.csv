@@ -1,5 +1,0 @@
-term,Df,AIC,LRT,Pr(>Chi),response
-<none>,NA,165.49593014984976,NA,NA,color_dscale_ordinal
-day:thicket,2,162.34464442873283,0.8487142788830795,0.654190203059594,color_dscale_ordinal
-treatment:wound:day,1,163.4783970146788,-0.017533135170964442,1,color_dscale_ordinal
-treatment:wound:thicket,2,161.70979804462888,0.2138678947791277,0.8985850249167037,color_dscale_ordinal

@@ -1,24 +1,36 @@
-# extras/: frozen analyses
+# extras/: kept exploratory analyses
 
-Frozen 2026-11-11. Nothing here is run by `code/run_all.R`, and the paper doesn't depend on it. (Until 2026-11-12, `code/06_genetics.R` read `output/tables/19_genet_resilience_summary.csv` from here; that import was removed when the resilience composites were retired.)
+*Last updated: 2026-11-13*
 
-| Folder | What it is |
+Nothing here is run by `code/run_all.R`, and the paper doesn't depend on it.
+Only two exploratory analyses are kept, because they give outside context the
+team may still want:
+
+| Files | What it is |
 |---|---|
-| `code/exploratory/` | Analyses run to explore, not planned for the paper: physiology PCA, source-patch dashboard, published heat-tolerance context (Cunning et al. 2024; Trinity/Ross Hauru colonies), growth-versus-regeneration trade-offs, alternative stage-timing figures (40, 41). |
-| `code/checks/` | Earlier audits and model diagnostics: figure audit, time-series and model-comparison checks, variance partitioning, multiple testing, manuscript audit, analysis inventory, PAM probe-position audit (42), Oct 16 scoring-correction audit (44), fragment 119 label check (46), and diagnostic suites A–H. |
-| `code/rnaseq/` | Optional RNA-seq import starter code (21), the September preliminary SNP integration (32, superseded by `code/06_genetics.R`), and the plate-layout figure. |
-| `code/archive/` | An earlier Figure 1 draft and Molly's first PAM, growth, color and morphology scripts. |
-| `code/analysis_before_merge/` | The analysis and paper scripts exactly as they were before they were merged into `code/01`–`08`. They also made the frozen outputs below that no current script writes: the daily yes/no regeneration models (`12_morph_*`, `12c_*`, `04_morphology_trait_*`), the master results table (`20_master_results*.csv`), the PAM location test (`02b_*`), the milestone-lag tables (`14_milestone_lag_*`), and similar. |
-| `data/processed/` | `coral_physio_wide.rds`, a wide table used only by the frozen PCA and manuscript audit. |
-| `output/tables/`, `figures/` | Every output those scripts wrote, as last rebuilt before the freeze. The team summary no longer uses any of them (removed 2026-11-11). |
+| `code/exploratory/15_physiology_pca.R`, `figures/15*`, `output/tables/15_*`, `data/processed/coral_physio_wide.rds` | A principal-components summary of the physiology measures (an exploratory overview, not used in the paper). |
+| `code/exploratory/26_thermal_context.R`, `26b_trinity_hauru_context.R`, `figures/26*`, `output/tables/26*`, `output/tables/19_genet_resilience_summary.csv` | How our 28 and 31 °C treatments compare with published heat-tolerance data (Cunning et al. 2024) and Trinity/Ross's Hauru colonies. Script 26 reads the retired source-patch resilience table, which is kept only for that reason. Inputs are in `data/external/`. |
+| `code/rnaseq/21_rnaseq_import_stub.R`, `plate_layout_figure.R` | Starter code for importing the expression counts, and the sequencing plate-layout figure. |
 
-## Running something here
+These scripts expect the folder layout from before the 2026-11-11 merge, so
+most won't run in place.
 
-These scripts expect the folder layout from before the merge, so most won't run in place. To rerun one:
+## Removed 2026-11-13
+
+Everything else that used to be here was deleted as deprecated: the scripts
+as they were before the merge, earlier audit scripts, Molly's first scripts,
+the retired trade-off and resilience analyses, the preliminary SNP
+integration, the old stage-timing display options, the daily yes/no
+regeneration models (their p-values change between computers), the master
+results table, and all their figures and tables. Nothing current used them.
+
+They are all recoverable from these tags (on GitHub):
+
+- `pre-prune-2026-11-13`: the repo just before the deletion.
+- `pre-merge-2026-11-11`: the full pre-merge layout, which still runs.
+- `pre-refactor-2026-11-11`: the flat layout before that.
 
 ```bash
 git worktree add ../lth-pre-merge pre-merge-2026-11-11
 cd ../lth-pre-merge && Rscript code/run_all.R
 ```
-
-Then copy the outputs you need back into `extras/`. Don't report p-values from the daily yes/no regeneration models; they change with the computer and package versions (found in a 2026-11-10 rerun check).

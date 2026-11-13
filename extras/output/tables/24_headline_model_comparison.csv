@@ -1,6 +1,0 @@
-response,model,AIC,trt_time_p,day14_effect,day14_CI,day14_p
-PAM Fv/Fm,"current (linear, rand-intercept)",-1243.6,2.4100000000000002e-29,0.0887,"[0.063, 0.115]",3.16e-6
-PAM Fv/Fm,upgraded (quad time + rand-slope),-1251.8,4.55e-18,0.0939,"[0.070, 0.118]",1.17e-9
-PAM Fv/Fm,AR(1) + rand-slope (nlme),-1251.3,2.38e-14,0.0887,"[0.069, 0.108]",3.84e-11
-Color (D-scale),"current (linear, rand-intercept)",68.7,8.239999999999998e-68,1.2122,"[0.893, 1.531]",2.21e-6
-Color (D-scale),upgraded (quad time + rand-slope),27.6,1.36e-32,1.249,"[0.970, 1.528]",1.16e-12

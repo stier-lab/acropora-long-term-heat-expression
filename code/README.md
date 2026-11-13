@@ -51,7 +51,7 @@ Output files kept the names they had before the scripts were merged, so links in
 
 ## Not reported
 
-- **Daily yes/no regeneration models.** Their p-values change with the computer and package versions (found in a 2026-11-10 rerun check). They are frozen in `extras/`. The regeneration results use stage counts, tank counts and the timing models instead.
+- **Daily yes/no regeneration models.** Their p-values change with the computer and package versions (found in a 2026-11-10 rerun check). They were removed on 2026-11-13 (recover them from the `pre-prune-2026-11-13` tag). The regeneration results use stage counts, tank counts and the timing models instead.
 - **The average day a stage was reached** for stages some fragments never reached. For budding under heat, that average describes only 4 of 12 fragments.
 
 ## After a run
@@ -67,7 +67,7 @@ PDFs change on every run even when nothing real did (R embeds the time and a ran
 
 ## `extras/`
 
-Everything else is in `extras/`: exploratory analyses, older audits and diagnostics, the RNA-seq starter code, Molly's original scripts, and the scripts as they were before the merge. Those scripts are frozen and `run_all.R` does not run them. See `extras/README.md`.
+`extras/` keeps only three small exploratory pieces: a physiology principal-components summary, the published heat-tolerance context (Cunning et al. 2024; Hauru colonies), and RNA-seq starter code. `run_all.R` does not run them. Everything else that used to be there (pre-merge scripts, older audits, retired analyses and their outputs) was deleted on 2026-11-13 and can be recovered from the `pre-prune-2026-11-13` tag. See `extras/README.md`.
 
 ## Where things went (Nov 11, 2026)
 
@@ -83,5 +83,5 @@ The 26 scripts the paper used were merged into 01–08. Two tags mark the earlie
 | `rnaseq/31_rnaseq_covariate_table`, `analysis/43_genetic_clusters` | `06_genetics.R` |
 | `analysis/11_microscope_experiment` (figure), `checks/22_sensitivity_flagged` | `07_supplement.R`, which also adds a tank-level color check in place of the ordinal color model (that model could not be estimated) |
 | `checks/18_data_validation`, `analysis/14_stage_timing_models` (PH tests), `checks/diagnostics/A` (residual checks, rewritten shorter) | `08_checks.R` |
-| `analysis/12_models` and `04_regeneration_scores` (daily yes/no models), `20_master_results_table`, everything in `exploratory/`, other `checks/`, `rnaseq/21`, `32`, plate figure, `archive/` | `extras/` (frozen) |
+| `analysis/12_models` and `04_regeneration_scores` (daily yes/no models), `20_master_results_table`, everything in `exploratory/`, other `checks/`, `rnaseq/21`, `32`, plate figure, `archive/` | Deleted 2026-11-13 (tag `pre-prune-2026-11-13`), except `exploratory/15`, `26`, `26b` and `rnaseq/21` and the plate figure, which stay in `extras/` |
 | `run_paper.R`, `tools/check_output_changes.py` | `run_all.R` now takes under a minute; the checker moved to `tools/` at the repo root |
