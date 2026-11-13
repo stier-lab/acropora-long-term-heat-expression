@@ -4,7 +4,7 @@
 # Analyses that appear only in the supplement. They describe the microscope
 # experiment and the other daily observations, and test how much the main
 # results depend on a few fragments or tanks ("sensitivity analyses": refit
-# the same model on a reduced data set and see whether the answer changes).
+# the same model on a smaller data set and see whether the answer changes).
 # Tank is the replicate for temperature: the 4 ambient and 4 heated tanks, not
 # the fragments, received the temperature treatment.
 #
@@ -14,15 +14,16 @@
 #   2. Other daily observations: polyps, pigment, algae, flatworms
 #      (Supp. fig. 2)
 #   3. Results without the flagged fragments: refit the Fv/Fm and color
-#      temperature x day tests and the growth tank permutation without
-#      fragments 116 and 121 and without tank 3 (slow to equilibrate)
+#      temperature x day tests and the growth tank-shuffling test without
+#      fragments 116 and 121 and without tank 3 (slow to reach temperature)
 #   4. How much the symbiont wound result and the growth result depend on
 #      single fragments or tanks
-#   5. Color: tank-level permutation check (no distribution assumed)
+#   5. Color: tank-level shuffling check (no bell curve assumed)
 #
-# Other supplement material is written by the main scripts: the growth tank
-# permutation (03_physiology.R), Kaplan-Meier curves and Cox models
-# (04_regeneration.R), and the wax standard curve (01_clean_data.R).
+# Other supplement material is written by the main scripts: the growth
+# tank-shuffling test (03_physiology.R), the time-to-stage curves and models
+# (Kaplan-Meier and Cox; 04_regeneration.R), and the wax standard curve
+# (01_clean_data.R).
 #
 # Reads:  data/processed/microscope_physio_clean.rds, physio_clean.rds,
 #         pam_clean.rds, color_clean.rds, buoyant_weight_clean.rds,
@@ -41,10 +42,12 @@ source(here::here("code", "00_setup.R"))
 # ---- 1. Microscope experiment: stage trajectories --------------------------
 # Supplementary figure 3 (Molly's numbering): healing plus the five
 # regeneration stages, in manuscript order and terms. Plots the share of the
-# 8 fragments per temperature scored "yes" on each day.
+# 8 fragments per temperature scored "yes" on each day. In the labels,
+# coenosarc = the living tissue sheet between polyps; corallite = the skeletal
+# cup a polyp sits in (axial = the tip cup, radial = the side cups).
 micro <- readRDS(file.path(DATA_PROC, "microscope_physio_clean.rds"))
 
-# Lookup table: raw column name -> stage label. Setting the factor levels in
+# Lookup table: raw column name -> stage label. Setting the label order to
 # this row order fixes the panel order in the figure.
 trait_meta <- tibble::tribble(
   ~trait,                  ~label,
@@ -144,20 +147,24 @@ save_fig(p_obs, "47_other_daily_observations", width = 180, height = 130)
 
 # ---- 3. Results without the flagged fragments and tank ---------------------
 # Refit each main test on the full data and on the data without fragments 116
-# and 121 and tank 3, and put the two side by side. Fv/Fm and color use the
-# 03_physiology.R models (a separate day slope per tank); growth uses the
-# tank permutation test.
+# and 121 and tank 3, and put the two side by side. Fv/Fm (how efficiently the
+# algae's photosynthesis works, 0-1, measured with the PAM fluorometer) and
+# color use the 03_physiology.R models (each tank has its own change over
+# days); growth uses the tank-shuffling test.
 
-# Optimizer settings shared by every lmer() fit in this script; singular-fit
-# messages are silenced because the 03 models already report them.
+# Fitting settings shared by every lmer() fit in this script. lme4's
+# "singular fit" warning (it estimated no difference among tanks) is switched
+# off because the 03 models already report it.
 ctrl <- lme4::lmerControl(check.conv.singular = .makeCC("ignore", tol = 1e-4),
                           optimizer = "bobyqa")
 FLAGGED_IDS  <- c(116, 121)   # two fragments flagged as behaving anomalously
-FLAGGED_TANK <- 3             # ambient tank that warmed/equilibrated slowly
-results <- list()             # one tibble per (response × full-or-dropped) goes here
+FLAGGED_TANK <- 3             # ambient tank that was slow to reach temperature
+results <- list()             # one table per (response × full-or-dropped) goes here
 
-# grab(): pull the F and p for one term from a Type-III ANOVA table
-# (Satterthwaite df, from lmerTest). Returns NULL if the term is absent.
+# grab(): pull the F and p for one term from the model's test table. type = 3
+# tests each term after allowing for all the others; lmerTest supplies the
+# p-values (using the Satterthwaite method to estimate how much information
+# each test has). Returns NULL if the term is absent.
 grab <- function(model, label, term) {
   av <- as.data.frame(anova(model, type = 3))
   av$term <- rownames(av)
@@ -173,9 +180,10 @@ grab <- function(model, label, term) {
 
 ## 3a. Fv/Fm and color: temperature x day ------------------------------------
 # Day -1 / Day -4 baselines are dropped (day >= 0), as in 03_physiology.R.
-# In the formulas, `(1 + day || tank)` gives each tank its own intercept and
-# day slope with no correlation between them (`||` = uncorrelated random
-# effects); `(1 | id)` accounts for repeated measures on each fragment.
+# In the formulas, `(1 + day || tank)` lets each tank have its own starting
+# level and its own change over days (`||` = the two are estimated
+# separately); `(1 | id)` accounts for measuring the same fragment many
+# times. REML = TRUE is lme4's standard (restricted-likelihood) fit.
 pam <- readRDS(file.path(DATA_PROC, "pam_clean.rds")) |>
   mutate(thicket = factor(thicket)) |>
   filter(day >= 0)
@@ -202,17 +210,18 @@ c_drop <- lmerTest::lmer(color_num ~ treatment * wound * day * thicket +
 results$col_full <- grab(c_full, "Color D-scale (full data)",     "treatment:day")
 results$col_drop <- grab(c_drop, "Color D-scale (flagged dropped)","treatment:day")
 
-## 3b. Growth: tank permutation ----------------------------------------------
+## 3b. Growth: tank-shuffling test -------------------------------------------
 bw <- readRDS(file.path(DATA_PROC, "buoyant_weight_clean.rds")) |>
   mutate(thicket = factor(thicket)) |>
   filter(is.finite(pct_growth))                 # drop NA/Inf growth values
 bw_drop <- bw |> filter(!id %in% FLAGGED_IDS, tank != FLAGGED_TANK)
 
-# tank_perm(): exact permutation test on tank means. Average growth within
-# each tank, take the ambient-minus-heated difference, and compare it with
-# the difference from every possible way of relabelling the tanks (combn()
-# lists them all). p = share of relabellings at least as extreme. Returns NA
-# if either temperature has fewer than 2 tanks.
+# tank_perm(): a permutation (shuffling) test on tank means. Average growth
+# within each tank, take the ambient-minus-heated difference, and compare it
+# with the difference from every possible way of relabelling the tanks as
+# ambient or heated (combn() lists them all). p = share of relabellings with a
+# difference at least as large. Returns NA if either temperature has fewer
+# than 2 tanks.
 tank_perm <- function(dat, label) {
   tank_growth <- dat |>
     group_by(tank, treatment) |>
@@ -245,25 +254,26 @@ write_csv(out, file.path(TBL_DIR, "22_sensitivity_flagged.csv"))
 
 
 # ---- 4. How much do two results depend on single fragments or tanks? -------
-# (a) Symbionts, temperature x wound x day: the fragments the residual
-#     check flags as outliers (two or three, depending on the DHARMa version;
-#     versions are pinned in renv.lock) are all heated: 163 (patch A, Day 15,
-#     low), 212 (patch A, Day 3, high) and, under DHARMa 0.5.0, 215 (patch D,
-#     Day 10). Nothing marks them as errors, so they stay in the reported
-#     model; this shows how the wound result moves without them.
-# (b) Growth, temperature: ambient tank 3 (slow to equilibrate) grew like the
-#     heated tanks.
+# (a) Symbionts (the algae in the coral tissue), temperature x wound x day:
+#     the fragments the outlier check flags (two or three, depending on the
+#     DHARMa package version; versions are pinned in renv.lock) are all
+#     heated: 163 (patch A, Day 15, low), 212 (patch A, Day 3, high) and,
+#     under DHARMa 0.5.0, 215 (patch D, Day 10). Nothing marks them as errors,
+#     so they stay in the reported model; this shows how the wound result
+#     moves without them.
+# (b) Growth, temperature: ambient tank 3 (slow to reach temperature) grew
+#     like the heated tanks.
 
 ## 4a. Setup: symbiont data, model formulas and helpers ----------------------
-# Same data and model as 03_physiology.R: log density, biopsy day centred on
-# the first biopsy (Day 1), and a separate day slope per tank.
+# Same data and model as 03_physiology.R: log density, biopsy day counted from
+# the first biopsy (Day 1 = 0), and each tank with its own change over days.
 sym <- readRDS(file.path(DATA_PROC, "symbiont_chl_clean.rds")) |>
   filter(is.finite(cells_per_cm2), cells_per_cm2 > 0) |>
   mutate(thicket = factor(thicket), biopsy_day_c = biopsy_day - 1)
 f_sym <- log(cells_per_cm2) ~ treatment * wound * biopsy_day_c * thicket +
   (1 + biopsy_day_c || tank)
 
-# term_p(): F and p for one term of a Type-III ANOVA table.
+# term_p(): F and p for one term from the same type = 3 test table.
 term_p <- function(m, term) {
   a <- as.data.frame(anova(m, type = 3)); c(F = a[term, "F value"], p = a[term, "Pr(>F)"])
 }
@@ -281,9 +291,9 @@ k3 <- "treatment:wound:biopsy_day_c"
 m_sym <- lmerTest::lmer(f_sym, data = sym, control = ctrl)
 add_sens("symbionts", k3, "as reported (03_physiology.R)", term_p(m_sym, k3))
 
-# DHARMa simulates new data from the fitted model and flags observations
-# outside every simulated value. The seed is reset so the same rows are
-# flagged on every run.
+# DHARMa simulates 500 new data sets from the fitted model and flags any
+# observation that falls outside every simulated value. The random seed is
+# reset so the same rows are flagged on every run.
 set.seed(42)
 out_rows <- DHARMa::outliers(DHARMa::simulateResiduals(m_sym, n = 500))
 # If nothing is flagged, sym[-integer(0), ] would return zero rows, so keep
@@ -297,9 +307,10 @@ add_sens("symbionts", k3, "without residual outliers",
            "no fragments flagged; same as reported model"
          })
 
-# Same fixed effects in nlme, letting the residual variance differ between
-# temperatures (varIdent), in case heated fragments are simply more variable.
-# pdDiag = uncorrelated tank intercept and slope, like `||` in lme4.
+# The same model refitted with the nlme package, letting the scatter around
+# the model differ between temperatures (varIdent), in case heated fragments
+# are simply more variable. pdDiag gives each tank its own starting level and
+# change over days, estimated separately, like `||` in lme4.
 m_var <- nlme::lme(log(cells_per_cm2) ~ treatment * wound * biopsy_day_c * thicket,
                    random = list(tank = nlme::pdDiag(~ 1 + biopsy_day_c)),
                    weights = nlme::varIdent(form = ~ 1 | treatment), data = sym,
@@ -371,12 +382,13 @@ write_csv(bind_rows(sens) |> mutate(across(where(is.double), \(x) signif(x, 4)))
 
 
 # ---- 5. Color: tank-level check --------------------------------------------
-# Color is a 1-6 card score and ambient fragments almost all stayed at 4, so
-# the Gaussian model's residuals are not normal (18_model_checks.csv) and an
-# ordered-category model cannot be estimated (near-complete separation). The
-# check that needs no distribution: compare final mean color of the 4 ambient
-# and 4 heated tanks against all 70 ways of splitting 8 tanks into two groups
-# of 4, as for growth (03_physiology.R) and budding (04_regeneration.R).
+# Color is a 1-6 card score (the D-scale) and ambient fragments almost all
+# stayed at 4. So the main model's leftovers are not bell-shaped, as that
+# model assumes (18_model_checks.csv), and a model for ordered scores cannot
+# be fitted (the ambient group sits almost entirely in one score). This check
+# needs no bell curve: compare the final mean color of the 4 ambient and 4
+# heated tanks against all 70 ways of splitting 8 tanks into two groups of 4,
+# as for growth (03_physiology.R) and budding (04_regeneration.R).
 color_final <- readRDS(file.path(DATA_PROC, "color_clean.rds")) |>
   filter(day == max(day, na.rm = TRUE))
 tank_color <- color_final |>
@@ -385,7 +397,7 @@ tank_color <- color_final |>
             n_paled = sum(color_num < 4), .groups = "drop")
 
 # Observed ambient-minus-heated difference, then the same difference for
-# every possible split of the 8 tank means (the permutation null).
+# every possible split of the 8 tank means (what chance alone would give).
 obs_diff <- with(tank_color,
                  mean(mean_color[treatment == "28C"]) - mean(mean_color[treatment == "31C"]))
 vals <- tank_color$mean_color

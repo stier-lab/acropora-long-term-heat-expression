@@ -5,10 +5,13 @@
 # wounded fragments heal and regrow. Only wounded fragments are used. Main
 # experiment: 12 per temperature, scored daily Days 0-15. Microscope
 # experiment: 8 per temperature, analysed separately (only it recorded living
-# tissue, the coenosarc, covering the cut). Stages in order: healing
-# (coenosarc covers the wound), then 1 axial polyp forms, 2 wound surface
-# remodels, 3 axial corallite/tip forms, 4 tip extends, 5 new radial
-# corallites bud. "Source patch" = the thicket (A/C/D) a fragment came from.
+# tissue, the coenosarc, covering the cut; coenosarc = the living tissue sheet
+# between polyps). Stages in order: healing (coenosarc covers the wound), then
+# 1 axial polyp forms, 2 wound surface remodels, 3 axial corallite/tip forms,
+# 4 tip extends, 5 new radial corallites bud. A corallite is the skeletal cup
+# a polyp sits in; axial = the tip cup, radial = the side cups. "Source patch"
+# = the field patch (A/C/D) a fragment's parent branch came from; older column
+# names say `thicket` or `genet`.
 #
 # Sections
 #   1. Day 15 counts and log-rank tests (both experiments)
@@ -37,11 +40,13 @@ suppressPackageStartupMessages(library(survival))
 
 
 # ---- 1. Day 15 counts and log-rank tests (both experiments) ----------------
-# Two simple tests per trait, each experiment tested on its own: (i) Fisher's
-# exact test on how many fragments showed the trait on the last scored day,
-# and (ii) a log-rank test on the first day each trait was seen. Fisher's
-# exact test: an exact test for a 2 x 2 table, safe with small counts.
-# Log-rank test: compares two curves of "time until the event" between groups.
+# Two simple tests per trait, each experiment tested on its own:
+# (i) Fisher's exact test on how many fragments showed the trait on the last
+# scored day. It compares yes/no counts between the two temperatures and works
+# even with small counts.
+# (ii) A log-rank test on the first day each trait was seen. It asks whether
+# fragments at one temperature tended to show the trait earlier than at the
+# other, using every fragment, including those that never showed it.
 
 ## 1a. Load data and describe the traits -------------------------------------
 ph <- readRDS(file.path(DATA_PROC, "physio_clean.rds"))
@@ -134,8 +139,9 @@ events_by_coral <- long |>
 ## 1d. Fisher's exact test on the last scored day ----------------------------
 # For each trait: 2 x 2 table of temperature x present/absent on the last day.
 # group_modify() runs the function on each trait's rows (.x) and stacks the
-# one-row results. The odds ratio adds 0.5 to every cell so that a zero count
-# does not give an infinite ratio.
+# one-row results. The odds ratio (how many times higher the odds of "yes"
+# are at 31 °C) adds 0.5 to every cell so a zero count does not give an
+# infinite ratio.
 endpoint_tests <- events_by_coral |>
   group_by(dataset, dataset_label, trait, short_label, label, trait_order,
            phase, phase_short) |>
@@ -198,9 +204,10 @@ write_csv(endpoint_tests,
 
 ## 1e. Log-rank test on the first day each trait was seen --------------------
 # event_time = first day seen, or the last scored day for fragments that never
-# showed it (these are "censored": we only know it had not happened yet).
-# This treats the first-seen day as the exact event day; section 2 uses the
-# better interval-censored models for the main experiment.
+# showed it (for these we only know it had not happened yet; they stay in the
+# test as "not yet"). This treats the first-seen day as the exact day it
+# happened; section 2 uses better models for the main experiment that allow
+# for it having happened any time since the previous check.
 logrank_tests <- events_by_coral |>
   mutate(event_time = if_else(event, first_yes_day, last_scored_day)) |>
   group_by(dataset, dataset_label, trait, short_label, label, trait_order,
@@ -227,7 +234,8 @@ logrank_tests <- events_by_coral |>
       ))
     }
 
-    # survdiff() is the log-rank test; Surv(time, status) marks censoring
+    # survdiff() runs the log-rank test; Surv(time, status) pairs each day
+    # with whether the trait was seen (1) or not yet (0)
     fit <- tryCatch(
       survdiff(Surv(event_time, event_int) ~ treatment, data = d),
       error = function(e) NULL
@@ -242,7 +250,8 @@ logrank_tests <- events_by_coral |>
       ))
     }
 
-    # df = number of groups - 1; p from the chi-square distribution
+    # Degrees of freedom = number of groups - 1; the p-value comes from the
+    # test statistic's chi-square distribution
     df <- length(fit$n) - 1
     tibble(
       n_28 = n_28,
@@ -272,11 +281,14 @@ write_csv(logrank_tests,
 # ---- 2. Timing models (main experiment) ------------------------------------
 # How much does heat speed up or slow down each stage? A stage is "reached" on
 # the first day it was scored yes. Fragments that never reached it by Day 15
-# stay in as censored (not reached yet), not dropped. Three model types:
-#   - interval-censored AFT models (the main timing result),
-#   - Cox models stratified by source patch (hazard ratios),
-#   - likelihood-ratio tests for source patch x temperature.
-# Kaplan-Meier curves are drawn as a supporting figure.
+# stay in as "not reached yet", not dropped. Three model types:
+#   - time-to-stage models (the main timing result): how many times longer a
+#     stage took at 31 °C,
+#   - Cox models, compared within each source patch: how much less (or more)
+#     likely a heated fragment was to reach a stage on any given day,
+#   - tests of whether the heat effect differs among source patches.
+# Kaplan-Meier curves (share of fragments that reached a stage, day by day)
+# are drawn as a supporting figure.
 
 ## 2a. Reload data and list the timing traits --------------------------------
 ph <- readRDS(file.path(DATA_PROC, "physio_clean.rds")) |>
@@ -286,7 +298,7 @@ ph <- readRDS(file.path(DATA_PROC, "physio_clean.rds")) |>
     thicket = factor(thicket)
   )
 
-# Treatment contrasts: 28C is the reference, so model coefficients are 31C vs 28C
+# 28C is the baseline, so each model's temperature effect reads as 31C vs 28C
 contrasts(ph$treatment) <- contr.treatment(nlevels(ph$treatment))
 
 # Note: this replaces the section 1 trait_meta with the six timing traits
@@ -303,10 +315,11 @@ traits <- trait_meta$trait
 trait_interpretation <- trait_meta |> select(trait, event_interpretation)
 
 ## 2b. Event intervals: when could each stage have started? ------------------
-# Interval-censored: we only know the stage began between the last "no" day
-# (event_lower) and the first "yes" day (event_upper). Not reached by the end:
-# lower = last scored day, upper = Inf (right-censored). Seen on the first
-# visit: lower = 0.
+# Fragments were checked on set days, so we only know a stage began somewhere
+# between the last "no" day (event_lower) and the first "yes" day
+# (event_upper); statisticians call this "interval-censored" data. Not reached
+# by the end: lower = last scored day, upper = Inf (some time after the
+# experiment ended). Seen on the first visit: lower = 0.
 compute_events <- function(d, trait) {
   d |>
     filter(wound == "yes", !is.na(day), day >= 0) |>
@@ -328,7 +341,7 @@ compute_events <- function(d, trait) {
         first1 <- which(y == 1)[1]
         if (is.na(first1)) Inf else day[first1]
       },
-      event = as.integer(any(y == 1, na.rm = TRUE)),  # 1 = observed, 0 = censored
+      event = as.integer(any(y == 1, na.rm = TRUE)),  # 1 = reached, 0 = not yet
       .groups = "drop"
     ) |>
     mutate(trait = trait)
@@ -343,8 +356,8 @@ events <- events |>
   left_join(trait_interpretation, by = "trait")
 
 # Guarantee no stage was already present on Day 0 (the day of clipping). That
-# would give an event time of exactly 0, which the log-scale timing models
-# cannot fit; the fit would fail and silently return a row of NAs.
+# would give a time of exactly 0, which the timing models cannot fit (they
+# work on the log of time); the fit would fail and quietly return a row of NAs.
 stopifnot(all(events$event_upper > 0))
 
 write_csv(events, file.path(TBL_DIR, "14_event_intervals.csv"))
@@ -352,18 +365,22 @@ write_csv(events, file.path(TBL_DIR, "14_event_intervals.csv"))
 contrasts(events$treatment) <- contr.treatment(nlevels(events$treatment))
 
 
-## 2c. Interval-censored log-logistic AFT models -----------------------------
-# AFT (accelerated failure time) model: models log(time to the stage), so
-# exp(coefficient) is a time ratio. Time ratio > 1 = heated fragments took
-# longer. Source patch (thicket) is included as a fixed effect.
+## 2c. Time-to-stage models (log-logistic) -----------------------------------
+# These model the time each fragment took to reach a stage, using the window
+# between checks (section 2b). Formally they are interval-censored
+# "accelerated failure time" models, fitted with survreg(). The result is a
+# time ratio: how many times longer the stage took at 31 °C than at 28 °C
+# (> 1 = heated fragments took longer). Source patch is included so the heat
+# effect is not confused with patch differences.
 #
-# Distribution: log-logistic (chosen 2026-11-11). Compared by AIC across
-# Weibull, lognormal, log-logistic and exponential
-# (14_interval_survreg_distributions.csv), it is the best fit or within 0.6
-# AIC of it for every reported stage. It does not converge for pigment over
-# the wound (not reported), which falls back to lognormal; the `model` column
-# says which was used. Weibull, used until 2026-11-11, fitted worst for tip
-# formation and tip extension (dAIC 22, 12) and made tip extension look slower
+# Shape of the timing curve: log-logistic (chosen 2026-11-11). We compared
+# four shapes (Weibull, lognormal, log-logistic, exponential) by AIC, a fit
+# score where lower is better (14_interval_survreg_distributions.csv).
+# Log-logistic is the best fit, or within 0.6 AIC of it, for every reported
+# stage. It fails to fit for pigment over the wound (not reported), which
+# falls back to lognormal; the `model` column says which was used. Weibull,
+# used until 2026-11-11, fitted worst for tip formation and tip extension
+# (AIC 22 and 12 worse than the best) and made tip extension look slower
 # under heat.
 AFT_DIST <- "loglogistic"
 AFT_FALLBACK <- "lognormal"
@@ -373,7 +390,8 @@ fit_interval_survreg <- function(tr) {
   # Skip stages with fewer than 5 events or only one temperature
   if (sum(d$event) < 5 || length(unique(d$treatment)) < 2) return(NULL)
 
-  # A warning (e.g. non-convergence) counts as failure, like an error
+  # A warning (e.g. the fit never settled on an answer) counts as failure,
+  # like an error
   fit_dist <- function(dist) tryCatch(
     survreg(Surv(event_lower, event_upper, type = "interval2") ~ treatment + thicket,
             data = d, dist = dist),
@@ -398,7 +416,7 @@ fit_interval_survreg <- function(tr) {
     ))
   }
 
-  # Find the 31C-vs-28C coefficient row in the model summary
+  # Find the 31C-vs-28C row in the model summary
   tab <- summary(fit)$table
   trt_row <- if ("treatment31C" %in% rownames(tab)) {
     "treatment31C"
@@ -417,8 +435,9 @@ fit_interval_survreg <- function(tr) {
     ))
   }
 
-  # Coefficient is on the log-time scale: exp() gives the time ratio, and
-  # exp(estimate +/- 1.96 SE) gives its 95% confidence interval
+  # The model's estimate is on the log-time scale: exp() turns it into the
+  # time ratio, and exp(estimate +/- 1.96 standard errors) gives its 95%
+  # confidence interval
   est <- tab[trt_row, "Value"]
   se <- tab[trt_row, "Std. Error"]
   tibble(
@@ -442,10 +461,11 @@ fit_interval_survreg <- function(tr) {
 interval_survreg <- map_dfr(traits, fit_interval_survreg)
 write_csv(interval_survreg, file.path(TBL_DIR, "14_interval_survreg.csv"))
 
-## 2d. Distribution check: AIC for each candidate distribution ---------------
-# Fits the same model under four distributions and records AIC (lower = better
-# fit) and the time ratio, so the choice above can be checked. delta_AIC =
-# AIC minus the best AIC for that stage; `used` marks the one reported.
+## 2d. Shape check: fit score (AIC) for each candidate curve shape -----------
+# Fits the same model with each of the four curve shapes and records AIC
+# (lower = better fit) and the time ratio, so the choice above can be checked.
+# delta_AIC = AIC minus the best AIC for that stage; `used` marks the one
+# reported.
 aft_dists <- map_dfr(traits, function(tr) {
   d <- events |> filter(trait == tr)
   map_dfr(c("weibull", "lognormal", "loglogistic", "exponential"), function(dist) {
@@ -471,12 +491,15 @@ aft_dists <- map_dfr(traits, function(tr) {
 
 write_csv(aft_dists, file.path(TBL_DIR, "14_interval_survreg_distributions.csv"))
 
-## 2e. Cox models: hazard ratio for heat -------------------------------------
-# Cox proportional-hazards model: hazard ratio (HR) > 1 = heated fragments
-# reached the stage sooner. strata(thicket) lets each source patch have its own
-# baseline timing, so the heat effect is compared within patches. Uses the
-# first-seen day as the event time (an approximation; the AFT models above
-# handle the interval properly).
+## 2e. Cox models: daily chance of reaching a stage under heat ---------------
+# Cox model: compares, day by day, the chance that a fragment not yet at a
+# stage reaches it. Its result, the hazard ratio (HR), says how many times as
+# likely a heated fragment was to reach the stage on any given day: HR > 1 =
+# sooner under heat, HR < 1 = less likely (later). strata(thicket) lets each
+# source patch have its own baseline timing, so heat is compared within
+# patches. Uses the first-seen day as the day the stage was reached (an
+# approximation; the time-to-stage models above use the window between
+# checks).
 fit_cox_overall <- function(tr) {
   d <- events |> filter(trait == tr)
   if (sum(d$event) < 5) return(NULL)
@@ -541,10 +564,11 @@ cox_results   <- bind_rows(cox_overall, cox_per_genet) |>
 write_csv(cox_results, file.path(TBL_DIR, "14_cox_hazard_ratios.csv"))
 
 ## 2f. Likelihood-ratio tests for source patch and patch x temperature -------
-# Likelihood-ratio test (LRT): compares nested models; a small p means the
-# larger model fits meaningfully better. Base (temperature only) vs +patch
-# tests the patch main effect; +patch vs patch x temperature tests whether the
-# heat effect differs among patches. Needs at least 10 events.
+# Likelihood-ratio test: asks whether adding a term makes the model fit
+# clearly better (small p = yes). Temperature-only vs temperature + patch
+# tests whether patches differ overall; temperature + patch vs patch x
+# temperature tests whether the heat effect differs among patches. Needs at
+# least 10 fragments that reached the stage.
 fit_lrt <- function(tr) {
   d <- events |> filter(trait == tr)
   if (sum(d$event) < 10) return(NULL)
@@ -555,8 +579,8 @@ fit_lrt <- function(tr) {
   m_inter <- tryCatch(coxph(Surv(event_day, event) ~ treatment * thicket, data = d),
                       error = function(e) NULL)
   if (any(sapply(list(m_base, m_add, m_inter), is.null))) return(NULL)
-  lrt_g  <- anova(m_base, m_add)    # genet main effect
-  lrt_gi <- anova(m_add, m_inter)   # genet × treatment interaction
+  lrt_g  <- anova(m_base, m_add)    # do source patches differ overall?
+  lrt_gi <- anova(m_add, m_inter)   # does the heat effect differ by patch?
   tibble(
     trait               = tr,
     chisq_genet_main    = lrt_g$Chisq[2],
@@ -572,9 +596,9 @@ cox_lrt <- map_dfr(traits, fit_lrt)
 write_csv(cox_lrt, file.path(TBL_DIR, "14_cox_genet_LRT.csv"))
 
 ## 2g. Kaplan-Meier curves (supporting figure) -------------------------------
-# Kaplan-Meier: the share of fragments that have NOT yet reached a stage,
-# updated each day an event happens. Computed by hand here; we plot
-# 1 - survival = cumulative share that reached the stage.
+# Kaplan-Meier curve: the share of fragments that have NOT yet reached a
+# stage, updated each day one reaches it. Computed by hand here; we plot
+# 1 minus that share = the running share that reached the stage.
 km_curves <- events |>
   group_by(trait, treatment) |>
   group_modify(\(d, k) {
@@ -582,8 +606,8 @@ km_curves <- events |>
     times <- sort(unique(d$event_day))         # distinct days something happened
     n_at_risk <- sapply(times, \(t) sum(d$event_day >= t))         # still eligible
     n_events  <- sapply(times, \(t) sum(d$event_day == t & d$event == 1))  # events that day
-    haz       <- n_events / pmax(n_at_risk, 1)  # day-specific hazard (pmax avoids /0)
-    surv      <- cumprod(1 - haz)               # KM survival = running product
+    haz       <- n_events / pmax(n_at_risk, 1)  # daily share reaching it (pmax: no /0)
+    surv      <- cumprod(1 - haz)               # share not yet there: running product
     out_day   <- c(0, times)
     out_surv  <- c(1, surv)
     tibble(day = out_day,
@@ -695,7 +719,8 @@ write_csv(stage_events,
           file.path(TBL_DIR, "36_stage_timing.csv"))
 
 ## 3c. Counts and first-day summaries per stage x temperature ----------------
-# Mean/median/IQR of the first day are kept only when every fragment at both
+# Mean, median and interquartile range (the middle 50% of values) of the
+# first day are kept only when every fragment at both
 # temperatures reached the stage; otherwise they would describe only the
 # faster fragments and are set to NA.
 stage_summary <- stage_events |>
@@ -1217,8 +1242,8 @@ rows[[length(rows) + 1]] <- paper_row(
   source = "output/tables/11f_morphology_dataset_logrank_tests.csv")
 
 ## 5c. Timing models: time ratios, hazard ratio, patch x temperature ---------
-# Time to each stage (interval-censored log-logistic; time ratio > 1 = slower
-# under heat)
+# Time to each stage (log-logistic time-to-stage model; time ratio > 1 =
+# slower under heat)
 for (tr in names(traits)) {
   d <- aft[aft$trait == tr, ]
   if (nrow(d) != 1) next
@@ -1230,7 +1255,7 @@ for (tr in names(traits)) {
     source = "output/tables/14_interval_survreg.csv")
 }
 
-# Budding hazard ratio from the overall (patch-stratified) Cox model
+# Budding hazard ratio from the overall Cox model (compared within patches)
 d <- cox[cox$trait == "new_corallites_on_tip" & grepl("^overall", cox$scope), ]
 stopifnot(nrow(d) == 1)
 rows[[length(rows) + 1]] <- paper_row(
@@ -1240,7 +1265,7 @@ rows[[length(rows) + 1]] <- paper_row(
   statistic = d$z, p_value = d$p, n = d$n,
   source = "output/tables/14_cox_hazard_ratios.csv")
 
-# Budding source patch x temperature LRT (unstable; see the label)
+# Budding: does the heat effect differ by source patch? (unstable; see label)
 d <- cox_gx[cox_gx$trait == "new_corallites_on_tip", ]
 rows[[length(rows) + 1]] <- paper_row(
   "budding_patch_x_temp", "Budding: source patch x temperature (unstable: no heated patch A fragment budded, so the model cannot estimate it; report the counts below)",
@@ -1250,11 +1275,11 @@ rows[[length(rows) + 1]] <- paper_row(
 
 ## 5d. Budding tank by tank: exact permutation test --------------------------
 # Temperature was applied to tanks (4 per temperature), so tanks, not
-# fragments, are the true replicates. Compare the proportion of fragments that
+# fragments, are the true replicates. Compare the share of fragments that
 # budded per tank, 4 vs 4 tanks. Exact permutation test: try all 70 ways
-# (choose(8, 4)) of labelling 4 of the 8 tanks "ambient", and ask how often
-# the difference is at least as large as the real one. The 1e-12 guards
-# against rounding error in the >= comparison.
+# (choose(8, 4)) to split the 8 tanks into two groups of 4, and ask how often
+# a split gives a difference at least as large as the real one. The 1e-12
+# guards against rounding error in the >= comparison.
 ph <- readRDS(file.path(DATA_PROC, "physio_clean.rds"))
 by_tank <- ph |>
   dplyr::filter(wound == "yes") |>

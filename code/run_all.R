@@ -1,16 +1,17 @@
 # =============================================================================
 # run_all.R: rebuild every number, table and figure the paper uses
 #
-# Runs the eight numbered scripts in order. Each runs in its own fresh
-# environment, so nothing leaks from one script into the next; each starts by
-# loading 00_setup.R (packages, paths, colours, random seed). Run R in a UTF-8
-# locale (the Mac default) so symbols such as ° and × are written correctly.
-# Before the first run on a new machine, run `renv::restore()` once to install
-# the package versions pinned in renv.lock.
+# Runs the eight numbered scripts in order. Each runs in its own empty
+# workspace, so no leftover objects carry from one script into the next;
+# each starts by loading 00_setup.R (packages, paths, colours, random seed).
+# Run R with UTF-8 text encoding (the Mac default) so symbols such as ° and
+# × are written correctly. Before the first run on a new machine, run
+# `renv::restore()` once: it installs the exact package versions recorded in
+# renv.lock.
 #
 # Afterwards, `python3 tools/check_output_changes.py` separates real changes
 # from files that change on every run (PDF timestamps). Scripts in extras/ are
-# frozen and are not run here.
+# kept for the record, no longer updated, and are not run here.
 #
 # Sections
 #   1. Scripts to run
@@ -24,7 +25,8 @@
 
 
 # ---- 1. Scripts to run -----------------------------------------------------
-# Work from the project root so the relative paths below resolve.
+# Work from the project folder so the file paths below, written from there,
+# point to the right place.
 project_root <- here::here()
 setwd(project_root)
 
@@ -57,5 +59,5 @@ cat("Numbers for the results text are in output/paper/.\n")
 
 # ---- 3. Session log --------------------------------------------------------
 # Record the R and package versions that made these outputs; trimws() strips
-# trailing spaces so the file does not churn in git.
+# trailing spaces so git does not show changes where nothing real changed.
 writeLines(trimws(capture.output(sessionInfo()), which = "right"), "output/session_info.txt")

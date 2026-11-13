@@ -1,8 +1,8 @@
 # =============================================================================
 # 08_checks.R: data validation and model checks
 #
-# Checks that the cleaned data look the way the design says they should, and
-# that the main models meet their assumptions well enough to trust. Nothing
+# Checks that the cleaned data match the experimental design, and that the
+# main models fit the data well enough to trust. Nothing
 # here changes a result; it writes tables that say which checks pass.
 # Each validation row gets a status: PASS (as expected), FAIL (must be fixed
 # before results are shared), WARN (worth a look), HANDLED (a known issue
@@ -10,12 +10,14 @@
 #
 # Sections
 #   1. Data validation: sample sizes, tank-temperature assignments, value
-#      ranges, IDs that match the metadata, and provenance files
-#   2. Mixed-model checks for the four 03_physiology.R models: convergence,
-#      singular fits, and simulated-residual tests (DHARMa; uniformity,
-#      dispersion, outliers). Residual plots go to figures/diagnostics/ (not
-#      tracked)
-#   3. Proportional-hazards checks for the Cox models in 04_regeneration.R
+#      ranges, IDs that match the metadata, and the files that trace each
+#      input to its source
+#   2. Mixed-model checks for the four 03_physiology.R models: did the fit
+#      finish cleanly, is any grouping term estimated at zero, and do
+#      simulated-data checks (DHARMa) flag problems? Check plots go to
+#      figures/diagnostics/ (not tracked by git)
+#   3. Proportional-hazards checks for the Cox models in 04_regeneration.R:
+#      does the heat effect on stage timing stay steady over the 15 days?
 #
 # Reads:  data/processed/*.rds, data/metadata/source_inventory.csv and
 #         codebooks, docs/provenance/drive_methods/, output/models/12_*.rds,
@@ -37,11 +39,12 @@ dir.create(DIAG_DIR, recursive = TRUE, showWarnings = FALSE)
 # silent errors in 01_clean_data.R: a lost or duplicated fragment, a tank
 # assigned to the wrong temperature, a value outside its possible range, or
 # an ID that does not match the metadata (a typo that would drop a fragment
-# from a join).
+# when tables are matched up by ID).
 
 ## 1a. Helpers ---------------------------------------------------------------
-# add(): append one row to `results`. `<<-` writes to the `results` list
-# defined here, outside the function, rather than to a local copy.
+# add(): append one row to `results`. `<<-` adds to the `results` list made
+# here, outside the function; a plain `<-` would only change a throwaway
+# copy inside the function.
 results <- list()
 add <- function(stream, check, status, value, expected = "", notes = "") {
   results[[length(results) + 1]] <<- tibble(
@@ -58,7 +61,7 @@ EXPECTED_31C_TANKS <- c(4L, 5L, 10L, 11L)
 EXPECTED_GENETS    <- c("a", "c", "d")
 
 # check_tanks(): do the tanks labelled 28C (and 31C) in a data set match the
-# design exactly? A mismatch means temperature labels were joined wrongly.
+# design exactly? A mismatch means temperature labels went to the wrong tanks.
 # `if (length(obs_28))` skips a temperature that is absent from the data.
 check_tanks <- function(stream, d) {
   obs_28 <- sort(unique(d$tank[d$treatment == "28C"]))
@@ -88,8 +91,9 @@ check_tanks <- function(stream, d) {
 }
 
 ## 1b. Fragment metadata -----------------------------------------------------
-# The master list of fragments: right total, right factor levels, right
-# genets and tanks. Every other data stream is checked against it in 1f.
+# The master list of fragments: right total, right group labels, right
+# source patches (the field patches the parent branches came from; columns
+# say `thicket`) and tanks. Every other data stream is checked against it in 1f.
 meta <- readRDS(file.path(DATA_PROC, "coral_metadata.rds"))
 add("metadata", "n total fragments", if (nrow(meta) == 208) "PASS" else "FAIL",
     nrow(meta), 208, "192 destructive + 16 microscope = 208")
@@ -115,7 +119,9 @@ add("metadata", "chl-a populated",
 
 ## 1c. Physiology streams: PAM, color, growth, symbionts, wax ----------------
 # Row counts guard against lost or duplicated observations; ranges catch unit
-# or data-entry errors (Fv/Fm must lie in 0-1, the color card runs 1-6).
+# or data-entry errors. Fv/Fm (how efficiently the algae's photosynthesis
+# works, read with the PAM fluorometer) must lie in 0-1; the colour card's
+# D-scale runs 1-6.
 pam <- readRDS(file.path(DATA_PROC, "pam_clean.rds"))
 add("pam", "n observations (top+bottom averaged)",
     if (nrow(pam) > 300) "PASS" else "WARN",
@@ -143,8 +149,9 @@ add("buoyant_weight", "% growth range", "INFO",
     sprintf("[%.1f, %.1f]", min(bw$pct_growth), max(bw$pct_growth)),
     "positive for growing corals")
 
-# Symbiont densities: count finite values separately from the total, since
-# NA or Inf densities are dropped from the models.
+# Symbiont (the algae living in coral tissue) densities: count usable values
+# separately from the total, since missing (NA) or infinite (Inf) densities
+# are dropped from the models.
 sym <- readRDS(file.path(DATA_PROC, "symbiont_chl_clean.rds"))
 add("symbionts", "n biopsies", if (nrow(sym) >= 150) "PASS" else "WARN",
     nrow(sym), "~192")
@@ -156,8 +163,9 @@ add("symbionts", "median (cells/cm²)", "INFO",
     sprintf("%.2e", median(sym$cells_per_cm2[is.finite(sym$cells_per_cm2)])),
     "~7e5–1e6")
 
-# Wax dipping: surface area estimated two ways (calipers vs the wax standard
-# curve) should agree; poor agreement is known and documented (HANDLED).
+# Wax dipping: surface area measured two ways (calipers vs the wax-weight
+# calibration curve) should agree; the poor agreement is known and
+# documented (HANDLED).
 wax <- readRDS(file.path(DATA_PROC, "wax_clean.rds"))
 add("wax_dipping", "n corals", if (nrow(wax) >= 150) "PASS" else "WARN",
     nrow(wax), "~192")
@@ -169,8 +177,9 @@ add("wax_dipping", "caliper-curve SA correlation",
     "below threshold; standard curve retained and plotted in figure 07 for transparency")
 
 ## 1d. Daily morphology and the microscope experiment ------------------------
-# Morphology: enough rows, every date parsed (a failed date parse would
-# silently drop rows from any day-based analysis), and right tanks.
+# Morphology: enough rows, every date read correctly (a date R could not
+# read would silently drop rows from any day-based analysis), and right
+# tanks.
 ph <- readRDS(file.path(DATA_PROC, "physio_clean.rds"))
 add("morphology", "n observations", if (nrow(ph) > 700) "PASS" else "WARN",
     nrow(ph), "~768")
@@ -184,7 +193,8 @@ add("morphology", "wounded corals tracked", "INFO",
 check_tanks("morphology", ph)
 
 # Microscope experiment: a separate cohort of 16 wounded "photo" fragments
-# from genets a and c in two tanks per temperature, scored every day 0-15.
+# from source patches a and c in two tanks per temperature, scored every day
+# 0-15.
 # These checks guard against it being mixed up with the main experiment.
 micro <- readRDS(file.path(DATA_PROC, "microscope_physio_clean.rds"))
 add("microscope", "n observations", if (nrow(micro) == 256) "PASS" else "WARN",
@@ -223,7 +233,8 @@ add("microscope", "pigment D8-D15 blanks",
     "blank = not scored, not no")
 
 ## 1e. Water quality, temperature logs and worms -----------------------------
-# YSI handheld spot checks during the study window (June 4-19, 2025).
+# YSI (handheld water-quality meter) spot checks during the study window
+# (June 4-19, 2025).
 ysi <- readRDS(file.path(DATA_PROC, "ysi_clean.rds"))
 ysi_study <- ysi |> filter(date >= as.Date("2025-06-04"), date <= as.Date("2025-06-19"))
 add("ysi", "n study spot checks", if (nrow(ysi_study) == 112) "PASS" else "WARN",
@@ -233,7 +244,8 @@ add("ysi", "temperature (°C) range", "INFO",
                             max(ysi_study$temp_c, na.rm = TRUE)),
     "[27, 33] reasonable")
 
-# Apex controller probe logs, summarised to daily records.
+# Apex (the tank controller that logs temperature) probe logs, summarised to
+# daily records.
 apex <- readRDS(file.path(DATA_PROC, "apex_temperature_daily.rds"))
 add("apex", "n daily probe-records", "INFO", nrow(apex),
     "thousands across 6 datalog files")
@@ -248,7 +260,7 @@ add("worms", "total worm-positive obs", "INFO",
 ## 1f. Cross-stream ID matching ----------------------------------------------
 # "Orphan" IDs appear in a data stream but not in the metadata. An orphan
 # usually means a typo in a fragment ID, and that fragment would silently
-# lose its treatment labels when the streams are joined.
+# lose its treatment labels when the data tables are matched up by ID.
 ids_in_meta <- meta$id
 ids_in_pam  <- unique(pam$id)
 ids_in_bw   <- unique(bw$id)
@@ -273,10 +285,10 @@ add("cross-stream", "microscope ids in metadata",
     length(orphan_micro), 0)
 
 ## 1g. Provenance files ------------------------------------------------------
-# Can a reader trace every input back to its source? Checks that the source
-# inventory exists, that every raw-data folder has a codebook (column
-# definitions), that the Drive method documents were copied in, and that the
-# paths and scripts the inventory lists actually exist.
+# Can a reader trace every input back to its source (its provenance)? Checks
+# that the source inventory exists, that every raw-data folder has a codebook
+# (column definitions), that the Drive method documents were copied in, and
+# that the paths and scripts the inventory lists actually exist.
 source_inventory_path <- file.path(DATA_META, "source_inventory.csv")
 add("provenance", "source inventory exists",
     if (file.exists(source_inventory_path)) "PASS" else "FAIL",
@@ -372,18 +384,20 @@ if (n_fail > 0) cat("⚠ Address FAILs before publishing results.\n")
 
 
 # ---- 2. Mixed-model checks -------------------------------------------------
-# For the four 03_physiology.R models (all lmer fits, read back from
-# output/models/):
-#   - convergence messages: the optimizer may not have found the best fit;
-#   - singular fit: a random-effect variance estimated at (or near) zero, so
-#     that random effect is not doing anything;
-#   - DHARMa residuals: simulate 500 new data sets from the fitted model and
-#     ask where each real observation falls among them. If the model is
-#     right, these "scaled residuals" are uniform between 0 and 1.
-#     Uniformity tests the overall shape, dispersion tests whether the data
-#     spread more or less than the model expects, and outliers counts points
-#     outside every simulated value.
-# The seed is reset so the simulations, and hence the p-values, repeat.
+# For the four 03_physiology.R models (all mixed models fitted with lmer(),
+# read back from output/models/):
+#   - convergence messages: warnings that the fitting routine may have
+#     stopped before it found the best fit;
+#   - singular fit: the model puts the variation among tanks or fragments
+#     (its random effects) at or near zero, so that term is doing nothing;
+#   - DHARMa checks: simulate 500 new data sets from the fitted model and
+#     ask where each real observation falls among them (its "scaled
+#     residual", from 0 to 1). If the model is right, these positions are
+#     spread evenly between 0 and 1. The uniformity test checks that even
+#     spread, the dispersion test asks whether the data vary more or less
+#     than the model expects, and the outlier test counts points beyond
+#     every simulated value.
+# The seed is reset so the simulations, and so the p-values, repeat.
 model_files <- c(pam_fvfm = "12_pam_lmm.rds", color_dscale = "12_color_lmm.rds",
                  log_zoox_density = "12_zoox_lmm.rds", growth_pct = "12_bw_lmm.rds")
 set.seed(42)
@@ -392,9 +406,9 @@ set.seed(42)
 # and stack the one-row results into one table.
 model_checks <- purrr::imap_dfr(model_files, function(file, name) {
   m <- readRDS(file.path(MOD_DIR, file))
-  conv <- m@optinfo$conv$lme4$messages   # `@` reads a slot of an S4 object
+  conv <- m@optinfo$conv$lme4$messages   # `@` reads a stored part of the model
 
-  # Save the standard DHARMa residual plots for a visual check.
+  # Save the standard DHARMa check plots to look at by eye.
   sim <- DHARMa::simulateResiduals(m, n = 500)
   png(file.path(DIAG_DIR, paste0("08_dharma_", name, ".png")),
       width = 1600, height = 800, res = 160)
@@ -418,31 +432,36 @@ print(as.data.frame(model_checks))
 
 
 # ---- 3. Proportional-hazards checks (Cox models) ---------------------------
-# A Cox model summarises the temperature effect on the timing of each stage
-# as one hazard ratio, which assumes the ratio stays constant over the 15
-# days ("proportional hazards"). cox.zph() tests this with Schoenfeld
-# residuals: if the temperature effect drifts with time, the residuals trend
-# and p < 0.05. Event intervals come from 04_regeneration.R.
+# A Cox model sums up the temperature effect on the timing of each stage as
+# one number, the hazard ratio: how many times higher the daily chance of
+# reaching the stage is for heated than for ambient fragments that have not
+# reached it yet. This assumes the ratio stays the same over the 15 days
+# (the "proportional hazards" assumption). cox.zph() tests this with
+# Schoenfeld residuals (how far the model's prediction misses at each event
+# time): if the temperature effect drifts over time, these trend and
+# p < 0.05. Event intervals come from 04_regeneration.R.
 events <- read_csv(file.path(TBL_DIR, "14_event_intervals.csv"), show_col_types = FALSE) |>
   mutate(treatment = factor(treatment, levels = c("28C", "31C")), thicket = factor(thicket))
 
-# Override the project-wide sum contrasts for this factor so the model has
-# a single "treatment" term (31C vs 28C) that zph$table can be indexed by.
+# Switch this factor back to R's usual coding (31C compared with the 28C
+# baseline), overriding the sum-to-zero coding set in 00_setup.R, so the
+# model has a single "treatment" term that zph$table can be looked up by.
 contrasts(events$treatment) <- contr.treatment(nlevels(events$treatment))
 traits <- c("axial_polyp_formation", "wound_smoothed", "pigment_over_wound",
             "tip_exist", "tip_extension", "new_corallites_on_tip")
 ph_rows <- list()
 
-# One Cox model per stage, stratified by genet (strata(): each genet gets its
-# own baseline hazard). Stages with fewer than 5 events, or fits that fail,
-# are skipped; tryCatch() turns an error into NULL so the loop continues.
+# One Cox model per stage, split by source patch (strata(): each source patch
+# gets its own underlying daily chance of reaching the stage). Stages with
+# fewer than 5 events, or fits that fail, are skipped; tryCatch() turns an
+# error into NULL so the loop continues.
 for (tr in traits) {
   d <- events |> filter(trait == tr)
   if (sum(d$event) < 5) next
   fit <- tryCatch(coxph(Surv(event_day, event) ~ treatment + strata(thicket),
                         data = d), error = function(e) NULL)
   if (is.null(fit)) next
-  zph <- tryCatch(cox.zph(fit), error = function(e) NULL)  # the Schoenfeld PH test
+  zph <- tryCatch(cox.zph(fit), error = function(e) NULL)  # steady-effect test
   if (is.null(zph)) next
   ph_rows[[tr]] <- tibble(
     trait      = tr,
@@ -453,8 +472,9 @@ for (tr in traits) {
   )
 
   # Residual-vs-time plot. plot(zph) needs more than 4 distinct event times;
-  # otherwise (or if it errors) fall back to a plain scatter with a lowess
-  # trend line. A flat cloud around 0 supports proportional hazards.
+  # otherwise (or if it errors) fall back to a plain scatter with a smoothed
+  # (lowess) trend line. A flat cloud around 0 means the heat effect held
+  # steady.
   ttl <- sprintf("PH check: %s (zph p=%.3f)", tr, zph$table["treatment", "p"])
   tt  <- as.numeric(zph$time); yy <- as.numeric(zph$y)
   png(file.path(DIAG_DIR, paste0("14_cox_ph_", tr, ".png")),

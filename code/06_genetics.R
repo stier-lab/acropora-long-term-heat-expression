@@ -1,19 +1,20 @@
 # =============================================================================
 # 06_genetics.R: final genetic clusters and the RNA-seq handoff table
 #
-# Builds one row per RNA-seq library (144 libraries; a "library" is one
-# sequenced tissue sample) with its temperature, wound status, tank, day and
-# symbiont density. It then joins Rachael Bay's final host clusters
-# (2026-10-12; groups of fragments that are genetically similar, from DNA
-# markers called SNPs) and her rough symbiont read-mapping shares (the share of
-# symbiont reads that map to reference groups A-D; only group A is confirmed as
-# Symbiodinium). Every join is checked, and a symbiont density model is fitted
-# within clusters. That model is exploratory: clusters are unevenly spread
-# across treatments.
+# Builds one row per RNA-seq library (RNA-seq reads which genes are switched
+# on; 144 libraries, a "library" being one sequenced tissue sample) with its
+# temperature, wound status, tank, day and symbiont density (symbionts = the
+# algae living in the coral tissue). It then joins Rachael Bay's final host
+# clusters (2026-10-12; groups of genetically similar fragments, found from
+# DNA markers called SNPs) and her rough symbiont read shares (the share of
+# symbiont DNA reads that match each of four reference groups, A-D; only group
+# A is confirmed as Symbiodinium). Every join is checked, and a symbiont
+# density model is fitted within clusters. That model is exploratory: clusters
+# are unevenly spread across treatments.
 #
-# Until 2026-11-12 the library table also carried source-level resilience
-# scores from a frozen exploratory table in extras/; those composites were
-# retired and are no longer joined.
+# Until 2026-11-12 the library table also carried resilience scores for each
+# source patch from a frozen exploratory table in extras/; those combined
+# scores were retired and are no longer joined.
 #
 # Sections
 #   1. RNA-seq library table
@@ -40,9 +41,9 @@ source(here::here("code", "00_setup.R"))
 
 
 # ---- 1. RNA-seq library table ----------------------------------------------
-# One row per gene-expression library, with the treatment information that the
-# expression analysis needs as covariates. The raw lookup keeps the plate
-# layout's own column names so it can be checked against the lab sheet.
+# One row per gene-expression library, with the treatment information the
+# expression analysis needs as explanatory columns. The raw lookup keeps the
+# plate layout's own column names so it can be checked against the lab sheet.
 sel_raw <- read_csv(file.path(DATA_RAW, "plate_layout", "Selected_Samples.csv"),
                     show_col_types = FALSE) |>
   filter(SampleType == "gene")
@@ -60,7 +61,8 @@ libs <- sel_raw |>
     id         = as.integer(Fragment_ID),
     treatment  = paste0(as.integer(Temp_C), "C"),     # 28C / 31C
     wound      = if_else(Wound == "W", "yes", "no"),  # U/W -> no/yes
-    # `genet` is a legacy name: it holds the source patch, A/C/D -> a/c/d
+    # `genet` is an old name: it holds the source patch (the field patch the
+    # parent branch came from), A/C/D -> a/c/d
     genet      = str_to_lower(Genotype),
     tank       = as.integer(Tank),
     day        = as.integer(Day),
@@ -81,9 +83,9 @@ write_csv(covariates, file.path(TBL_DIR, "31_rnaseq_phenotype_covariates.csv"))
 
 # ---- 2. Final host clusters: read and check --------------------------------
 # Rachael Bay's final file (2026-10-12): one row per library with the host
-# cluster, the first four principal-component axes of the SNP data (PCs:
-# summary axes of genetic variation), sequencing coverage, and rough symbiont
-# read-mapping shares for groups A-D.
+# cluster, the first four summary axes of genetic variation from the DNA
+# markers (principal components, PC1-PC4), sequencing coverage (how many reads
+# back each marker), and the rough symbiont read shares for groups A-D.
 # name_repair = "minimal" keeps the unnamed first column (a row index), which
 # select(-1) then drops.
 raw <- read_csv(file.path(DATA_RAW, "rnaseq", "FINAL_LTH_genoclusters_syms.csv"),
@@ -91,7 +93,7 @@ raw <- read_csv(file.path(DATA_RAW, "rnaseq", "FINAL_LTH_genoclusters_syms.csv")
   select(-1) |>
   janitor::clean_names()
 
-# Guarantee every column used below is present in the file.
+# Stop if any column used below is missing from the file.
 stopifnot(all(c("sample", "id", "pc1", "pc2", "pc3", "pc4", "thicket", "cov",
                 "cluster", "a", "b", "c", "d", "total_ab", "dom_sym") %in% names(raw)))
 
@@ -112,14 +114,14 @@ snp <- raw |>
     host_assignment_status = "final_2026-10-12", sym_typing_status = "rough_read_mapping"
   )
 
-# Guarantee 144 libraries, one per fragment, ids that agree between the two
-# label columns, no missing values, and positive coverage.
+# Stop unless there are 144 libraries, one per fragment, with ids that agree
+# between the two label columns, no missing values, and coverage above zero.
 stopifnot(nrow(snp) == 144, !anyDuplicated(snp$id), all(snp$id == snp$sample_id),
           !anyNA(snp), all(snp$snp_cov > 0))
 
-# Guarantee the read shares are proportions that sum to 1 per library, and that
-# the group with the largest share (max.col = column of the row maximum)
-# matches Rachael's reported dominant group.
+# Stop unless the read shares lie between 0 and 1 and add to 1 per library,
+# and the group with the largest share (max.col() finds the column holding each
+# row's largest value) matches Rachael's reported dominant group.
 fractions <- as.matrix(select(snp, starts_with("sym_read_")))
 stopifnot(all(fractions >= 0 & fractions <= 1), all(abs(rowSums(fractions) - 1) < 1e-8),
           all(c("A", "B", "C", "D")[max.col(fractions)] == snp$sym_dominant_reported))
@@ -132,14 +134,15 @@ lib_tbl <- read_csv(file.path(TBL_DIR, "31_rnaseq_phenotype_covariates.csv"),
                 show_col_types = FALSE) |>
   rename(source_patch = genet)
 
-# Guarantee one row per fragment and the same set of fragments in both tables.
+# Stop unless there is one row per fragment and both tables hold the same
+# fragments.
 stopifnot(!anyDuplicated(lib_tbl$id), setequal(snp$id, lib_tbl$id))
 
 # relationship = "one-to-one": the join stops with an error if any row would
 # match more than one row in the other table.
 j <- left_join(lib_tbl, snp, by = "id", relationship = "one-to-one")
 
-# Guarantee the two sources agree on source patch, day and wound status
+# Stop unless the two sources agree on source patch, day and wound status
 # (unwounded library labels contain "_U_id").
 stopifnot(all(j$source_patch == j$snp_source_patch), all(j$day == j$snp_day),
           all(ifelse(str_detect(j$library_id, "_U_id"), "no", "yes") == j$wound))
@@ -157,7 +160,7 @@ old <- read_csv(file.path(DATA_RAW, "rnaseq", "PRELIM_LTH_genoclusters.csv"),
   transmute(id = as.integer(str_extract(id, "^[0-9]+")),
             previous_cluster = as.character(cluster))
 
-# Guarantee the preliminary file covers exactly the same fragments.
+# Stop unless the preliminary file covers exactly the same fragments.
 stopifnot(!anyDuplicated(old$id), setequal(old$id, j$id))
 
 comparison <- j |>
@@ -191,7 +194,7 @@ write_csv(tibble(check = c("unique libraries", "metadata joins",
 
 # ---- 4. Design balance and cluster summaries -------------------------------
 # Clusters were not part of the design, so check how they fall across
-# temperature, wound and day. complete() adds the empty cells as n = 0.
+# temperature, wound and day. complete() adds the empty combinations as n = 0.
 balance <- j |>
   count(host_cluster, treatment, wound, day, name = "n") |>
   complete(host_cluster, treatment, wound, day, fill = list(n = 0))
@@ -205,8 +208,8 @@ cluster_summary <- j |>
             n_tanks = n_distinct(tank), .groups = "drop")
 write_csv(cluster_summary, file.path(TBL_DIR, "43_final_snp_cluster_summary.csv"))
 
-# Dominant symbiont group by treatment cell, and the libraries not dominated by
-# the confirmed group A.
+# Dominant symbiont group for each treatment combination, and the libraries
+# not dominated by the confirmed group A.
 write_csv(j |> count(treatment, wound, day, sym_dominant_reported, name = "n"),
           file.path(TBL_DIR, "43_final_snp_symbiont_typing_counts.csv"))
 write_csv(j |> filter(sym_dominant_reported != "A"),
@@ -215,7 +218,8 @@ write_csv(j |> filter(sym_dominant_reported != "A"),
 
 # ---- 5. Exploratory symbiont model within clusters -------------------------
 # Does heat lower symbiont density within each host cluster? Only clusters with
-# at least 3 libraries at each temperature can support a heat contrast.
+# at least 3 libraries at each temperature can support a heated-vs-ambient
+# comparison.
 eligible <- cluster_summary |>
   filter(n_28 >= 3, n_31 >= 3) |>
   pull(host_cluster)
@@ -225,42 +229,46 @@ dat <- j |>
          wound = factor(wound), day_f = factor(day), tank = factor(tank),
          log_density = log10(symbiont_cells_per_cm2))
 
-# Guarantee no zero or missing densities (log10 of those is not finite).
+# Stop if any density is zero or missing (its log10 would not be a number).
 stopifnot(all(is.finite(dat$log_density)))
 
 ## 5a. Fit the model ---------------------------------------------------------
-# Linear mixed model: day is a factor (day_f), and (1 | tank) is a random
-# intercept for each tank, since fragments in a tank share conditions.
-# REML = TRUE: restricted maximum likelihood, the usual fit for estimating
-# variance components.
+# A mixed model (a regression that also allows for shared groups, here
+# tanks). Day is treated as separate categories (day_f), and (1 | tank) gives
+# each tank its own baseline, since fragments in a tank share conditions.
+# REML = TRUE picks the restricted-likelihood fit, the usual choice when the
+# model also estimates how much tanks vary.
 form <- log_density ~ treatment * cluster + treatment * day_f + wound * day_f + (1 | tank)
 fit <- function(d) lmerTest::lmer(form, data = d, REML = TRUE)
 m <- fit(dat)
 
-# Guarantee no fixed-effect columns were dropped (that would mean some
-# treatment x cluster combinations cannot be estimated).
+# Stop if lme4 dropped any model term (that would mean some treatment x
+# cluster combinations have no data to estimate them from).
 stopifnot(is.null(attr(lme4::getME(m, "X"), "col.dropped")))
 saveRDS(m, file.path(MOD_DIR, "43_final_snp_symbiont_lmm.rds"))
 
-## 5b. Heat contrasts within each cluster ------------------------------------
-# emmeans gives the model's mean for each temperature within each cluster;
-# the pairwise contrast is 28C minus 31C. Holm adjustment controls the chance
-# of any false positive across the clusters.
+## 5b. Heat comparisons within each cluster ----------------------------------
+# emmeans() gives the model's average for each temperature within each
+# cluster; the comparison is 28C minus 31C. The Holm adjustment raises the
+# p-values so that, across all clusters together, the chance of any false
+# positive stays at 5%.
 heat_contrasts <- function(m, label)
   as_tibble(summary(contrast(emmeans(m, ~ treatment | cluster), "pairwise"),
                     infer = TRUE)) |>
   mutate(model = label, p_holm = p.adjust(p.value, "holm"))
 ct <- heat_contrasts(m, "all eligible samples")
 
-# Sensitivity check: refit using only libraries dominated by symbiont group A.
+# Check: refit using only libraries dominated by symbiont group A, to see
+# whether the answer changes.
 ma <- fit(filter(dat, sym_dominant_reported == "A"))
 saveRDS(ma, file.path(MOD_DIR, "43_final_snp_symbiont_A_only_lmm.rds"))
 write_csv(bind_rows(ct, heat_contrasts(ma, "dominant A only")),
           file.path(TBL_DIR, "43_final_snp_symbiont_contrasts.csv"))
 
 ## 5c. Model diagnostics -----------------------------------------------------
-# Singular = a variance component estimated at zero; also record convergence
-# messages, dropped columns and the largest standardised residual.
+# Record whether the fit is "singular" (lme4 estimated no difference among
+# tanks), any warnings that the fit did not settle, dropped terms, and the
+# largest gap between a point and the model, in units of the typical gap.
 model_diag <- function(m, label)
   tibble(model = label, n = nobs(m), singular = isSingular(m),
          convergence = paste(m@optinfo$conv$lme4$messages, collapse = "; "),
@@ -269,9 +277,9 @@ model_diag <- function(m, label)
 write_csv(bind_rows(model_diag(m, "all eligible samples"), model_diag(ma, "dominant A only")),
           file.path(TBL_DIR, "43_final_snp_model_diagnostics.csv"))
 
-# Leave-one-tank-out: refit without each tank in turn to see whether one tank
-# drives the contrasts. tryCatch() records the error message instead of
-# stopping the script if a refit fails.
+# Leave one tank out: refit without each tank in turn to see whether one tank
+# drives the heat comparisons. tryCatch() records the error message instead
+# of stopping the script if a refit fails.
 loo <- map_dfr(levels(dat$tank), function(t) {
   tryCatch({
     mm <- fit(filter(dat, tank != t));
@@ -281,15 +289,17 @@ loo <- map_dfr(levels(dat$tank), function(t) {
 })
 write_csv(loo, file.path(TBL_DIR, "43_final_snp_leave_one_tank_out.csv"))
 
-# Residual spread by treatment x cluster x day: similar SDs support the
-# equal-variance assumption.
+# Spread of the leftovers (residuals: observed minus model value) for each
+# treatment x cluster x day. Similar standard deviations support the model's
+# assumption that the scatter is the same in every group.
 res <- dat |> mutate(fitted = fitted(m), residual = residuals(m))
 write_csv(res |>
             group_by(treatment, cluster, day_f) |>
             summarise(n = n(), sd_residual = sd(residual), .groups = "drop"),
           file.path(TBL_DIR, "43_final_snp_residual_spread.csv"))
 
-# Diagnostic plots: residuals vs fitted (A) and a normal Q-Q plot (B).
+# Check plots: residuals against model values (A), and residuals against a
+# normal bell curve (B; points on the line = bell-shaped).
 q <- ggplot(res, aes(fitted, residual, colour = treatment)) +
   geom_point() +
   geom_hline(yintercept = 0) +
@@ -307,7 +317,7 @@ save_fig(patch_margins(q + qq + plot_annotation(tag_levels = "A")), "43_final_sn
 # No titles or legends in the artwork; keys go in the figure captions.
 
 ## 6a. Genetic structure -----------------------------------------------------
-# A: fragments on the first two SNP axes, coloured by source patch.
+# A: fragments on the first two DNA-marker axes, coloured by source patch.
 # B: number of fragments from each source patch in each final cluster.
 counts <- j |>
   count(host_cluster, source_patch) |>
@@ -388,8 +398,8 @@ print(cluster_summary); print(table(j$sym_dominant_reported)); print(ct)
 
 # ---- 7. Numbers for the results text ---------------------------------------
 # Symbionts by source patch. Open question on patch C: rough read shares
-# (Rachael's mapping) for reference group D, in the 28 C samples, where heat has
-# not shifted them. Only group A is confirmed (Symbiodinium); confirm with
+# (Rachael's matching) for reference group D, in the 28 C samples, where heat
+# has not shifted them. Only group A is confirmed (Symbiodinium); confirm with
 # Rachael what group D is.
 rows <- list()
 for (p in sort(unique(j$source_patch))) {

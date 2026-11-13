@@ -5,13 +5,15 @@
 # from. Patches are field labels, not confirmed genotypes (see 06_genetics.R).
 #
 # For each physiology response, the 03_physiology.R model is compared with the
-# same model minus every term containing source patch x temperature, using a
-# likelihood-ratio test (LRT: does the bigger model fit the data significantly
-# better than the smaller one?). LRTs need ML fits, not REML; 8 df, 4 for
-# growth. Until 2026-11-11 the reduced model also dropped patch x wound and
-# patch x day terms, so the test was broader than its name; see
-# docs/diagnostics/. The per-patch heat effects (ambient minus heated, Day 14)
-# come from the 03_physiology.R models.
+# same model minus every term that combines source patch and temperature. The
+# comparison is a likelihood-ratio test (it asks whether the bigger model fits
+# the data clearly better than the smaller one). This test needs the plain
+# maximum-likelihood fit (REML = FALSE), not the restricted fit (REML) used for
+# reporting. The test removes 8 terms (4 for growth). Until 2026-11-11 the
+# smaller model also dropped the patch x wound and patch x day terms, so the
+# test was broader than its name; see docs/diagnostics/. The heat effect within
+# each patch (ambient minus heated, Day 14) comes from the 03_physiology.R
+# models.
 #
 # Sections
 #   1. Likelihood-ratio tests
@@ -49,14 +51,16 @@ phys  <- readRDS(file.path(DATA_PROC, "symbiont_chl_clean.rds")) |>
          biopsy_day_c = biopsy_day - 1)   # centred on Day 1, as in 03_physiology.R
 
 ## 1b. The test --------------------------------------------------------------
-# Full model = the 03_physiology.R model (same random effects, ML fit).
-# Reduced model = full minus every term that contains source patch x
-# temperature: patch:temp, patch:temp:wound, patch:temp:day and
-# patch:temp:wound:day (8 df; 4 for growth, which has no day term).
+# Bigger model = the 03_physiology.R model (same tank and fragment terms,
+# maximum-likelihood fit).
+# Smaller model = the bigger one minus every term that combines source patch
+# and temperature: patch:temp, patch:temp:wound, patch:temp:day and
+# patch:temp:wound:day (8 terms; 4 for growth, which has no day term).
 # Patch x wound and patch x day terms stay in both models, so the test is only
 # about whether the heat effect differs among patches.
-# Singular-fit messages are silenced (a zero variance estimate is expected for
-# some tank intercepts); bobyqa is the optimiser.
+# Some tanks are expected to differ by almost nothing from the average tank,
+# so lme4's warning about that ("singular fit") is switched off. bobyqa is the
+# fitting method lme4 uses to search for the best estimates.
 ctrl <- lme4::lmerControl(check.conv.singular = .makeCC("ignore", tol = 1e-4),
                           optimizer = "bobyqa")
 lrt_patch_temp <- function(data, response, name, time = "day", re) {
@@ -77,8 +81,9 @@ lrt_patch_temp <- function(data, response, name, time = "day", re) {
   m0 <- lme4::lmer(f0, data = data, REML = FALSE, control = ctrl)
   saveRDS(m1, file.path(MOD_DIR, paste0("13_", name, "_genet_lmm.rds")))
 
-  # anova(m0, m1) on two nested models = the likelihood-ratio test; row 2
-  # holds the comparison.
+  # anova(m0, m1) runs the likelihood-ratio test on the two models (the smaller
+  # one is the bigger one with terms removed); row 2 holds the result, which is
+  # stored as a one-row table.
   lrt <- anova(m0, m1)
   tibble(
     response  = name,
@@ -95,9 +100,10 @@ lrt_patch_temp <- function(data, response, name, time = "day", re) {
 }
 
 ## 1c. Run it for the four responses -----------------------------------------
-# Random effects match 03_physiology.R: `(1 + day || tank)` gives each tank its
-# own intercept and day slope (`||` = uncorrelated), because temperature was
-# applied to tanks; `(1 | id)` handles repeated measures on each fragment.
+# Tank and fragment terms match 03_physiology.R. `(1 + day || tank)` lets each
+# tank have its own starting level and its own change over days (`||` = the
+# two are estimated separately), because temperature was applied to whole
+# tanks. `(1 | id)` accounts for measuring the same fragment many times.
 bw_a <- bw |> filter(is.finite(pct_growth))
 genet_tests <- bind_rows(
   lrt_patch_temp(pam,   "fv_fm",              "pam_fvfm",
@@ -114,8 +120,9 @@ write_csv(genet_tests, file.path(TBL_DIR, "13_genet_anova.csv"))
 
 # ---- 2. End-of-experiment means by patch (figure) --------------------------
 # Raw means (not model estimates) at the last measurement of each response,
-# with SE across fragments. Lines that are not parallel mean the heat effect
-# differs among patches (a "reaction norm" plot).
+# with the standard error (SE: how precisely the mean is known) across
+# fragments. Lines that are not parallel mean the heat effect differs among
+# patches (a "reaction norm" plot).
 
 # Mean and SE by temperature x patch on the last measurement day. Uses `day`
 # if present, else `biopsy_day`, else all rows.
@@ -182,7 +189,7 @@ lrt <- readr::read_csv(file.path(TBL_DIR, "13_genet_anova.csv"), show_col_types 
 eff <- readr::read_csv(file.path(TBL_DIR, "12_genet_treatment_effects.csv"),
                        show_col_types = FALSE)
 
-# One row per response: the source patch x temperature LRT.
+# One row per response: the source patch x temperature likelihood-ratio test.
 labels <- c(pam_fvfm = "Fv/Fm", color_dscale = "Color", log_zoox = "Symbionts",
             growth_pct = "Growth")
 rows <- list()

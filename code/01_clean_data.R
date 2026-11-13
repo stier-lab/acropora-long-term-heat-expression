@@ -3,10 +3,11 @@
 #
 # Reads each raw spreadsheet in data/raw/ and writes one clean .rds file per
 # data stream to data/processed/. There are no statistics here; the later
-# scripts read these files. Cleaning means: standard column names, the right
-# type for each column (numbers, dates, factors), lower-case source patch codes,
-# and the same 28C/31C and no/yes factor levels in every table so they join
-# cleanly. Fragment 119's wound label is corrected at import by
+# scripts read these files. Cleaning means: standard column names, each column
+# stored as the right kind of value (number, date or category), lower-case
+# source patch codes, and the same 28C/31C and no/yes labels in every table so
+# tables match up by fragment id. Fragment 119's wound label is corrected at
+# import by
 # correct_wound_labels() in 00_setup.R (confirmed by Molly, 2026-10-19).
 # Tank temperature and water quality are cleaned in 02_tanks_water.R.
 #
@@ -38,12 +39,13 @@ dir.create(TBL_DIR, recursive = TRUE, showWarnings = FALSE)
 
 
 # ---- 1. Fragment metadata --------------------------------------------------
-# One row per fragment: id, source patch (`thicket` = a/c/d), temperature,
-# wound status, tank and biopsy day. Every other data stream joins back to
-# this table by fragment id, so it is cleaned first.
+# One row per fragment: id, source patch (the field patch a fragment's parent
+# branch came from; column `thicket`, coded a/c/d), temperature, wound status,
+# tank and biopsy day (the day its tissue sample was taken). Every other data
+# stream is matched back to this table by fragment id, so it is cleaned first.
 
-# suppressWarnings() hides readr's column-type guessing messages; guess_max
-# makes readr look at more rows before deciding each column's type.
+# suppressWarnings() hides read_csv()'s messages about how it guessed each
+# column's kind of value; guess_max makes it look at more rows before guessing.
 meta_raw <- suppressWarnings(
   read_csv(file.path(DATA_RAW, "metadata", "metadata.csv"),
            show_col_types = FALSE, guess_max = 5000)
@@ -51,9 +53,9 @@ meta_raw <- suppressWarnings(
   janitor::clean_names() |>
   filter(!is.na(species) & !is.na(id))          # drop blank trailing rows
 
-# Temperature is stored as the number 28 or 31; it becomes the factor
-# 28C/31C used everywhere downstream. Chlorophyll and symbiont columns lose
-# the awkward "_cm_2" suffix that clean_names() produced.
+# Temperature is stored as the number 28 or 31; it becomes the label 28C or
+# 31C used in every later script. Chlorophyll and symbiont columns lose the
+# awkward "_cm_2" ending that clean_names() (which tidies column names) added.
 meta <- meta_raw |>
   rename(thicket = matches("^thicket")) |>      # header is "thicket " with a space
   mutate(
@@ -88,11 +90,13 @@ write_csv(meta |> count(treatment, wound, thicket, name = "n") |>
 
 
 # ---- 2. Photosynthesis (Fv/Fm) ---------------------------------------------
-# Fv/Fm is the maximum efficiency of photosystem II, measured with a PAM
-# fluorometer: about 0.6-0.7 in a healthy fragment, falling under heat stress.
-# Some Fv/Fm cells were spreadsheet formulas that export as text; for those
-# rows Fv/Fm is recomputed from the raw Y reading (Y / 1000). Values outside
-# (0, 1) are reading errors and are dropped.
+# Fv/Fm is how efficiently the symbionts (the algae living in the coral
+# tissue) can photosynthesise, on a 0-1 scale (formally, the maximum
+# efficiency of photosystem II). It is read with a PAM fluorometer, the meter
+# that measures Fv/Fm: about 0.6-0.7 in a healthy fragment, falling under heat
+# stress. Some Fv/Fm cells were spreadsheet formulas that export as text; for
+# those rows Fv/Fm is recalculated from the meter's raw Y reading (Y / 1000).
+# Values not between 0 and 1 are reading errors and are dropped.
 pam <- read_csv(file.path(DATA_RAW, "pam", "PAM_data.csv"), show_col_types = FALSE) |>
   janitor::clean_names() |>
   rename(thicket = matches("^thicket"), fv_fm = matches("^fv_fm")) |>
@@ -122,8 +126,9 @@ saveRDS(pam_avg, file.path(DATA_PROC, "pam_clean.rds"))
 
 # ---- 3. Color score --------------------------------------------------------
 # Fragment color scored against the CoralWatch color card (1 = palest,
-# 6 = darkest), a field proxy for bleaching. Card codes such as "D4" or
-# "D3/D4" become numbers: the mean of the digits, so "D3/D4" = 3.5.
+# 6 = darkest), a quick field measure of bleaching. The card's D-scale codes,
+# such as "D4" or "D3/D4", become numbers: the mean of the digits, so
+# "D3/D4" = 3.5.
 
 # str_extract_all() pulls out every run of digits; vapply() then averages
 # them per cell and returns NA when a cell has no digits at all.
@@ -155,7 +160,8 @@ cc <- read_csv(file.path(DATA_RAW, "color_card", "data.csv"), show_col_types = F
 # (before clipping). Use each fragment's assigned wound group from the metadata
 # so the baseline is grouped like every other day (as in the Fv/Fm data).
 # stopifnot() stops the run if a check fails: here, every color-sheet
-# fragment must exist in the metadata, so the join below cannot leave NAs.
+# fragment must exist in the metadata, so the left_join() below (which adds
+# each fragment's wound group by id) cannot leave any blanks.
 stopifnot(all(cc$id %in% meta$id))
 cc <- cc |>
   select(-wound) |>
@@ -203,7 +209,7 @@ ph <- suppressWarnings(
            ~ as.integer(str_to_lower(str_squish(.x)) == "yes"))
   )
 
-# Guarantee the two duplicate columns are identical, then keep one copy under
+# Stop unless the two duplicate columns are identical, then keep one copy under
 # a clearer name: the axial (tip) polyp forming in the cut.
 stopifnot(identical(ph$hole_in_center, ph$polyp_in_hole))
 ph <- ph |> mutate(axial_polyp_formation = hole_in_center)
@@ -211,28 +217,30 @@ saveRDS(ph, file.path(DATA_PROC, "physio_clean.rds"))
 
 
 # ---- 5. Growth (buoyant weight) --------------------------------------------
-# Buoyant weight is a fragment's weight while submerged in seawater. It is
-# converted to dry skeletal mass with the buoyant-weight method (Davies 1989),
-# following Molly's calculation sheet (`calcuations` in
-# Buoyant_Weight_-_complete.xlsx) step by step:
-#   1. Freshwater density at the freshwater temperature (the quadratic below).
+# Buoyant weight is a fragment's weight while hanging under seawater. Because
+# water holds part of the weight up, it is converted back to the dry weight of
+# skeleton with the buoyant-weight method (Davies 1989), following Molly's
+# calculation sheet (`calcuations` in Buoyant_Weight_-_complete.xlsx) step by
+# step:
+#   1. Freshwater density at the freshwater temperature (the formula below).
 #   2. Density of a glass reference object, from its weight in air and in
 #      freshwater.
 #   3. Seawater density, from the same object's weight in seawater. This is
-#      measured at every weighing, so it tracks the real salinity and
+#      measured at every weighing, so it follows the real salinity and
 #      temperature of the tank water.
-#   4. Dry mass = buoyant weight / (1 - seawater density / aragonite density),
-#      with aragonite density 2.93 g/cm3.
-#   5. Each fragment is glued to an aragonite plug, weighed separately. The
-#      plug's dry mass is subtracted from the Day 0 and Day 15 masses, so
-#      growth is measured on the coral's own skeleton (plugs are ~60% of the
-#      Day 0 total; see metadata codebook, percent_growth_bw).
+#   4. Dry mass = buoyant weight / (1 - seawater density / aragonite density).
+#      Aragonite is the mineral coral skeleton is made of (2.93 g/cm3).
+#   5. Each fragment is glued to an aragonite plug (a small base), weighed
+#      separately. The plug's dry mass is subtracted from the Day 0 and Day 15
+#      masses, so growth is measured on the coral's own skeleton (plugs are
+#      ~60% of the Day 0 total; see metadata codebook, percent_growth_bw).
 # The reported growth measure is % change in skeletal mass, Day 0 to Day 15.
 #
-# Fixed 2026-11-13: earlier versions used the freshwater curve as if it were
-# seawater density and did not subtract the plug. The plug omission shrank
-# % growth about 2.6-fold (e.g. 6.1% vs 16.0% at 28 C). The calculation now
-# reproduces Molly's sheet and the metadata column percent_growth_bw.
+# Fixed 2026-11-13: earlier versions used the freshwater formula in place of
+# seawater density and did not subtract the plug. Leaving the plug in made
+# % growth look about 2.6 times smaller (e.g. 6.1% vs 16.0% at 28 C). The
+# calculation now gives the same numbers as Molly's sheet and the metadata
+# column percent_growth_bw.
 
 # Freshwater density (g/cm3) as a function of temperature (degrees C).
 rho_fw_temp <- function(t_c) -5e-6 * t_c^2 + 7e-6 * t_c + 1.0001
@@ -275,8 +283,9 @@ bw <- read_csv(file.path(DATA_RAW, "buoyant_weight", "data.csv"), show_col_types
                                 final_temp_fw)
   ) |>
   # Dry masses with the plug removed. Three growth measures follow: % change
-  # (the one reported), specific growth rate (sgr, % per day on the log scale)
-  # and grams per day. pmax(biopsy_day, 1) guards against dividing by zero days.
+  # (the one reported), specific growth rate (sgr: % growth per day, worked out
+  # from the log of mass) and grams per day. pmax(biopsy_day, 1) makes the day
+  # count at least 1, so nothing is divided by zero.
   mutate(
     plug_dry    = dry_mass(plug_buoyant_weight_uncorrected, plug_rho_sw),
     initial_dry = dry_mass(initial_w, initial_rho_sw) - plug_dry,
@@ -287,7 +296,7 @@ bw <- read_csv(file.path(DATA_RAW, "buoyant_weight", "data.csv"), show_col_types
     sgr         = 100 * (log(final_dry) - log(initial_dry)) / days,
     g_per_day   = delta_g / days
   )
-# Guarantee the calculation matches the growth Molly reported in the
+# Stop unless the calculation matches the growth Molly reported in the
 # metadata sheet (percent_growth_bw, plug subtracted) for every fragment.
 bw_check <- bw |>
   select(id, pct_growth) |>
@@ -299,14 +308,16 @@ saveRDS(bw, file.path(DATA_PROC, "buoyant_weight_clean.rds"))
 
 
 # ---- 6. Symbiont density ---------------------------------------------------
-# Symbionts (zooxanthellae) were counted on a hemocytometer, a counting slide
-# with a grid of four quadrants. Average the four quadrants within each count,
-# then the replicate counts within each fragment. Where raw counts are missing,
-# the spreadsheet's average is used (count_source says which).
-# cells per cm2 = mean count x 1e4 x slurry volume (mL) / surface area (cm2).
+# Symbionts (zooxanthellae, the algae in the coral tissue) were counted on a
+# hemocytometer, a counting slide with a grid of four squares. Average the four
+# squares within each count, then the repeat counts within each fragment. Where
+# raw counts are missing, the spreadsheet's average is used (count_source says
+# which).
+# cells per cm2 = mean count x 1e4 (10,000) x slurry volume (mL of tissue
+# removed into water) / surface area (cm2).
 
 ## 6a. Mean hemocytometer count per fragment ---------------------------------
-# rowwise() makes mean() work across the four quadrant columns within a row;
+# rowwise() makes mean() work across the four square columns within a row;
 # ungroup() switches that off again.
 reps <- suppressWarnings(
   read_csv(file.path(DATA_RAW, "symbiont_counts", "Raw_counts.csv"),
@@ -363,8 +374,9 @@ saveRDS(sym, file.path(DATA_PROC, "symbiont_chl_clean.rds"))
 
 # ---- 7. Surface area (wax dipping) -----------------------------------------
 # Fragment surface area comes from wax dipping: the mass of wax a fragment
-# picks up is proportional to its surface area. A standard curve, fitted on
-# calibration cylinders of known surface area, converts wax mass to cm2.
+# picks up rises in step with its surface area. A calibration line (the
+# "standard curve"), fitted on cylinders of known surface area, converts wax
+# mass to cm2.
 
 ## 7a. Standard curve: wax mass on cylinders vs their known surface area -----
 # Cylinder side area = 2 * pi * radius * height; dividing by 100 turns mm2
@@ -383,8 +395,9 @@ sc_fit <- suppressWarnings(
   filter(!is.na(wax_minus_dry), !is.na(sa_cm2), wax_minus_dry > 0, sa_cm2 > 0) |>
   transmute(wax_g = wax_minus_dry, sa = sa_cm2)
 
-# Linear fit of surface area on wax mass; broom::tidy() saves the slope and
-# intercept with 95% confidence intervals.
+# Straight-line fit of surface area against wax mass; broom::tidy() saves the
+# slope and intercept with their 95% confidence intervals (the range the true
+# value likely falls in).
 cal <- lm(sa ~ wax_g, data = sc_fit)
 write_csv(broom::tidy(cal, conf.int = TRUE), file.path(TBL_DIR, "07_wax_curve_fit.csv"))
 
@@ -446,7 +459,7 @@ if (length(missing_cols)) stop("Microscope export missing columns: ",
                                paste(missing_cols, collapse = ", "), call. = FALSE)
 
 ## 8b. Convert yes/no scores to 1/0, refusing unexpected codes ---------------
-# Blank, "na" and "nan" become NA (not scored); "yes" = 1, "no" = 0; any
+# Blank, "na" and "nan" become missing (not scored); "yes" = 1, "no" = 0; any
 # other code stops the run and names the column it came from.
 yn_to_int <- function(x, column) {
   y <- stringr::str_to_lower(stringr::str_squish(as.character(x)))
@@ -484,7 +497,7 @@ saveRDS(micro, file.path(DATA_PROC, "microscope_physio_clean.rds"))
 # One row per microscope fragment, with its tank, temperature, source patch,
 # wound and sample type from both sources side by side. matches_metadata is
 # TRUE only when all five agree. A mismatch gives a warning, not an error,
-# so the rest of the pipeline still runs; the table shows which ids differ.
+# so the later scripts still run; the table shows which fragments differ.
 crosswalk <- micro |>
   distinct(id, tank, treatment, thicket, wound, sample) |>
   mutate(treatment = as.character(treatment), wound = as.character(wound)) |>
@@ -509,11 +522,11 @@ if (any(!crosswalk$matches_metadata)) {
 
 
 # ---- 9. Flatworm checks ----------------------------------------------------
-# Acropora-eating flatworm counts from three inspections (methods detail).
-# The sheet is wide (one worms_<date> column per inspection);
-# pivot_longer() turns it into one row per fragment per inspection.
+# Counts of Acropora-eating flatworms (a coral pest) from three inspections
+# (a methods detail). The sheet has one worms_<date> column per inspection;
+# pivot_longer() reshapes it to one row per fragment per inspection.
 # Temperature comes from the tank number via tank_treatment() in 00_setup.R;
-# rows from tanks outside the experiment get NA and are dropped.
+# rows from tanks outside the experiment get no temperature and are dropped.
 worms <- read_csv(file.path(DATA_RAW, "worm_presence", "Sheet1.csv"),
                   show_col_types = FALSE) |>
   janitor::clean_names() |>

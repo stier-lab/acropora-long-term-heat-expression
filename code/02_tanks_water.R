@@ -2,11 +2,12 @@
 # 02_tanks_water.R: tank temperature and water quality
 #
 # The experiment used eight tanks: four held at 28 °C (ambient) and four at
-# 31 °C (heated). Because tanks, not fragments, received the temperature, the
-# tank is the replicate when comparing treatments. Section 1 rebuilds tank
-# temperatures from the Apex controller logs (one reading every 10 min) and
-# checks them against Molly's compiled sheet and the tank assignments.
-# Section 2 cleans the handheld YSI meter readings (salinity, dissolved
+# 31 °C (heated). Because tanks, not fragments, received the temperature, each
+# tank counts as one independent unit when comparing treatments. Section 1
+# rebuilds tank temperatures from the logs of the Apex (the tank controller
+# that logs temperature; one reading every 10 min) and checks them against
+# Molly's compiled sheet and the tank assignments. Section 2 cleans the
+# readings from the YSI (a handheld water-quality meter: salinity, dissolved
 # oxygen, pH). Section 3 writes the numbers for the results text, including
 # the oxygen drop expected from warmer water alone. Day 0 = 4 June 2025, the
 # day tips were clipped.
@@ -33,21 +34,22 @@ suppressPackageStartupMessages(library(xml2))   # reads the Apex .xml logs
 
 
 # ---- 1. Tank temperature (Apex logs) ---------------------------------------
-# The Apex aquarium controller logs every temperature probe (one per tank)
-# every 10 minutes. Readings above 60 are Fahrenheit and are converted.
-# Readings outside 15-40 °C are probe errors and are dropped (listed in
-# 08_apex_excluded_readings.csv). Every step leaves an audit table in
+# The Apex logs every temperature probe (one per tank) every 10 minutes.
+# Readings above 60 are Fahrenheit and are converted to °C. Readings outside
+# 15-40 °C are probe errors and are dropped (listed in
+# 08_apex_excluded_readings.csv). Every step saves a check table in
 # output/tables/ so the cleaning can be checked without rerunning it.
 
 ## 1a. Parse every Apex XML log ----------------------------------------------
 recovered <- file.path(DATA_RAW, "apex", "recovered_2026-09-10")
 xml_files <- list.files(file.path(DATA_RAW, "apex"), pattern = "\\.xml$",
                         recursive = TRUE, full.names = TRUE)
-stopifnot(length(xml_files) > 0)   # guarantee the logs were found
+stopifnot(length(xml_files) > 0)   # stop if no logs were found
 
-# A malformed file is skipped (and recorded) instead of stopping the run.
-# `<<-` writes to parse_failures outside the function, so the failures
-# collected inside tryCatch() survive after the function returns.
+# A broken file is skipped (and recorded) instead of stopping the run:
+# tryCatch() catches the read error. `<<-` adds the failure to the
+# parse_failures list kept outside the function, so the list still holds it
+# after the function finishes.
 parse_failures <- list()
 parse_apex <- function(path) {
   doc <- tryCatch(read_xml(path), error = function(e) {
@@ -109,7 +111,7 @@ readings <- filter(readings, valid)
 
 ## 1d. Cross-check against Molly's compiled temperature sheet ----------------
 # Every row of the compiled sheet must match an XML reading exactly.
-# relationship = "many-to-one" makes the join stop with an error if one
+# relationship = "many-to-one" makes left_join() stop with an error if one
 # compiled row would match more than one XML reading.
 compiled <- read_csv(file.path(recovered, "compiled_temperature.csv"),
                      show_col_types = FALSE) |>
@@ -163,10 +165,10 @@ saveRDS(hourly, file.path(DATA_PROC, "apex_temperature.rds"))
 saveRDS(daily, file.path(DATA_PROC, "apex_temperature_daily.rds"))
 
 ## 1f. Match daily means to the tank assignment sheet ------------------------
-# The assignment sheet says which treatment and phase (acclimation, ramp or
-# hold) each tank was in on each date. Its treatments must agree with the
-# fixed tank map in tank_treatment() (00_setup.R), with one row per tank per
-# date.
+# The assignment sheet says which treatment and phase each tank was in on each
+# date: acclimation (settling in), ramp (heating up) or hold (at target). Its
+# treatments must agree with the fixed tank map in tank_treatment()
+# (00_setup.R), with one row per tank per date.
 assignments <- read_csv(file.path(recovered, "tank_assignments.csv"),
                        show_col_types = FALSE) |>
   filter(project == "17. LTH expression by temperature") |>
@@ -175,7 +177,8 @@ assignments <- read_csv(file.path(recovered, "tank_assignments.csv"),
 stopifnot(!anyDuplicated(select(assignments, date, tank)),
           all(assignments$treatment == tank_treatment(assignments$tank)))
 
-# relationship = "one-to-one": error if any tank-day would match twice.
+# relationship = "one-to-one": stop with an error if any tank-day would match
+# twice.
 temp_daily <- daily |>
   mutate(tank = as.integer(str_extract(probe, "[0-9]+"))) |>
   inner_join(assignments, by = c("date", "tank"), relationship = "one-to-one") |>
@@ -206,9 +209,10 @@ stopifnot(all(filter(coverage, day <= 15)$n == 144),
           all(filter(coverage, day <= 15)$n_hours == 24))
 
 ## 1h. Clock sensitivity -----------------------------------------------------
-# Timestamps are parsed as UTC. To check that the treatment means do not
-# depend on where the day boundary falls, they are recomputed with every
-# time shifted back 3 hours. Each tank-day mean is taken first, then averaged per treatment.
+# Timestamps are read as UTC (universal time). To check that the treatment
+# means do not depend on where midnight falls, they are recalculated with
+# every time shifted back 3 hours. Each tank's daily mean is taken first, then
+# those are averaged per treatment.
 clock_sensitivity <- map_dfr(c(0, -3), function(offset) {
   readings |>
     mutate(date = as.Date(datetime + hours(offset)),
@@ -245,17 +249,17 @@ save_fig(p_apex, "08_apex_temperature", width = 180, height = 105)
 # ---- 2. Water quality (YSI meter) ------------------------------------------
 # One reading per tank per day on 14 of the 16 study days (none on June 4 or 7).
 # The October 27 daily log is the source; the older Sheet1 export must agree
-# wherever the two overlap. Note that `raw` and `coverage` are reused names:
-# from here on they hold the YSI data, not the Apex data.
+# wherever the two overlap. `raw` and `coverage` are reused names: from here
+# on they hold the YSI data, not the Apex data.
 
 ## 2a. Read the daily log and parse numbers ----------------------------------
 # Every column is read as text first, so cells that will not convert to a
-# number can be listed (09_ysi_parse_audit.csv) instead of silently becoming NA.
+# number can be listed (09_ysi_parse_audit.csv) instead of silently going blank.
 raw <- read_csv(file.path(DATA_RAW, "ysi", "daily_log_2026-10-27.csv"),
                 col_types = cols(.default = col_character())) |>
   janitor::clean_names()
 
-# Guarantee the units are what the code assumes (oxygen in mg/L, salinity
+# Stop unless the units are what the code assumes (oxygen in mg/L, salinity
 # unitless on the practical salinity scale).
 units <- read_csv(file.path(DATA_RAW, "ysi", "daily_log_units_2026-10-27.csv"),
                   show_col_types = FALSE)
@@ -303,7 +307,7 @@ stopifnot(nrow(study) == 112L, n_distinct(study$date) == 14L,
           all(study$ph > 0 & study$ph < 14))
 
 ## 2c. The older Sheet1 export must agree with the daily log -----------------
-# Join the two on date and tank; every value present in both must be equal.
+# Match the two by date and tank; every value present in both must be equal.
 old <- read_csv(file.path(DATA_RAW, "ysi", "Sheet1.csv"), show_col_types = FALSE) |>
   janitor::clean_names() |>
   mutate(date = as_date(date), tank = as.integer(tank)) |>
@@ -318,13 +322,14 @@ for (v in numeric_fields) {
 }
 
 ## 2d. Summaries: pooled, by treatment and by tank ---------------------------
-# Long format: one row per reading per variable.
+# Reshape to one row per reading per variable.
 long <- study |>
   select(date, tank, treatment, temp_c, do_mgl, do_pct, sal, ph) |>
   pivot_longer(c(temp_c, do_mgl, do_pct, sal, ph),
                names_to = "variable", values_to = "value")
 
-# pool() summarises every reading of each variable (n, mean, SD, range).
+# pool() summarises every reading of each variable (count, mean, standard
+# deviation (SD, the typical spread of readings) and range).
 pool <- function(d) d |>
   group_by(variable) |>
   summarise(n_readings = n(), n_dates = n_distinct(date), n_tanks = n_distinct(tank),
@@ -334,10 +339,11 @@ overall <- pool(long)
 # group_modify() runs pool() separately within each treatment.
 by_treatment <- long |> group_by(treatment) |> group_modify(~ pool(.x)) |> ungroup()
 
-# Tank means first, then the SD and SE of those means: tanks, not single
-# readings, are the replicate, so this is the uncertainty to report when
-# comparing treatments. Each tank mean appears twice: once under "All tanks"
-# and once under its own treatment.
+# Tank means first, then the SD and the standard error (SE = SD / square root
+# of the number of tanks; how uncertain the average is) of those means. Tanks,
+# not single readings, are the independent units, so this is the uncertainty
+# to report when comparing treatments. Each tank mean appears twice: once
+# under "All tanks" and once under its own treatment.
 tank_means <- long |>
   group_by(variable, treatment, tank) |>
   summarise(mean = mean(value), n_dates = n(), .groups = "drop")
@@ -378,8 +384,8 @@ save_fig(p, "09_ysi_water_chem", width = 185, height = 140)
 # ---- 3. Numbers for the results text ---------------------------------------
 # Reads back the summary tables written above and turns them into rows of
 # output/paper/tanks_water_numbers.csv via paper_row() and write_paper()
-# (both in 00_setup.R). "ambient" = 28 °C, "heated" = 31 °C. Note that `ysi`
-# is reused here for the summary table, not the clean readings.
+# (both in 00_setup.R). "ambient" = 28 °C, "heated" = 31 °C. `ysi` is reused
+# here for the summary table, not the clean readings.
 apex <- readr::read_csv(file.path(TBL_DIR, "08_apex_treatment_summary.csv"),
                         show_col_types = FALSE)
 ysi  <- readr::read_csv(file.path(TBL_DIR, "09_ysi_study_summary.csv"),
@@ -426,11 +432,14 @@ for (tr in c("28C", "31C")) {
 }
 
 ## 3c. Oxygen in the heated tanks: how much is temperature alone? ------------
-# Oxygen in the heated tanks (open question). Warm water holds less oxygen, so
-# part of the lower concentration is expected at any saturation. Solubility
-# from Garcia & Gordon (1992), their recommended fit to the Benson & Krause
-# data (the coefficients below), converted from ml/L to mg/L (x 1.42905).
-# t_c = temperature (°C), s = salinity; ts is their scaled temperature.
+# Oxygen in the heated tanks (an open question). Warm water can hold less
+# oxygen, so some of the lower oxygen in the heated tanks is expected even if
+# both were equally saturated (equally full relative to what the water can
+# hold). The most oxygen water can hold (its solubility) comes from Garcia &
+# Gordon (1992): their recommended formula fitted to the Benson & Krause data
+# (the numbers below), converted from ml/L to mg/L (x 1.42905).
+# t_c = temperature (°C), s = salinity; ts is the rescaled temperature their
+# formula uses.
 o2_sat_mgl <- function(t_c, s) {
   ts <- log((298.15 - t_c) / (273.15 + t_c))
   ln <- 2.00907 + 3.22014 * ts + 4.0501 * ts^2 + 4.94457 * ts^3 - 0.256847 * ts^4 +
@@ -449,9 +458,9 @@ for (tr in c("28C", "31C")) {
     source = "output/tables/09_ysi_treatment_summary.csv")
 }
 
-# Expected drop = saturation at the ambient tanks' mean temperature and
-# salinity minus saturation at the heated tanks'. It is compared with the
-# observed drop in mean mg/L (stored as `statistic`).
+# Expected drop = the most oxygen water can hold at the ambient tanks' mean
+# temperature and salinity, minus the same at the heated tanks'. It is
+# compared with the observed drop in mean mg/L (stored as `statistic`).
 sol_drop <- o2_sat_mgl(yt("28C", "temp_c")$mean, yt("28C", "sal")$mean) -
   o2_sat_mgl(yt("31C", "temp_c")$mean, yt("31C", "sal")$mean)
 rows[[length(rows) + 1]] <- paper_row(
