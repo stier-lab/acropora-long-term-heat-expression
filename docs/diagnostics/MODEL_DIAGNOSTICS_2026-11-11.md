@@ -4,7 +4,7 @@
 
 Status labels: **yes** = adequate for the current claim; **handled** = a concern exists but a specific check shows it doesn't change the conclusion; **partial** = a specific gap remains; **not applicable** = no fitted model (counts, summaries).
 
-## Fixes applied (2026-11-11, commit after 785a06b)
+## Fixes applied (2026-11-11, commit after a9e8d4b)
 
 All four fixes and the three "state in the text" items below were applied the same day. Numbers now in `output/paper/`:
 
