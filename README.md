@@ -27,7 +27,7 @@ Rscript -e 'renv::restore()'   # once: installs the pinned package versions
 Rscript code/run_all.R         # about a minute; rebuilds every number, table and figure
 ```
 
-Package versions are pinned in `renv.lock` (R 4.6.2). Restore them before rerunning: the simulation-based residual checks (DHARMa) give different outlier sets under other versions. Never hand-edit numbers; change the code and rerun. A few exploratory analyses are kept in `extras/` and are not run; older deprecated material was removed on 2026-11-13 (tag `pre-prune-2026-11-13`).
+Package versions are pinned in `renv.lock` (R 4.6.2). Restore them before rerunning: the simulation-based residual checks (DHARMa) give different outlier sets under other versions. Never hand-edit numbers; change the code and rerun. Older and exploratory analyses were removed on 2026-11-13 and 2026-11-14; recover them from the tags `pre-prune-2026-11-13` and `pre-cleanup-2026-11-14`.
 
 ## Design
 
@@ -46,10 +46,9 @@ Package versions are pinned in `renv.lock` (R 4.6.2). Restore them before rerunn
 | `data/raw/` | Exports from Google Drive; never hand-edited. Codebooks are in `data/metadata/`. |
 | `data/external/` | Collaborator and published reference tables (Cunning et al. 2024; Trinity Conn's Hauru colonies) |
 | `output/`, `figures/` | Everything the code writes; figures are listed in `figures/FIGURE_INDEX.md` |
-| `manuscript/` | Figure map, Figure 2 legend, `references.bib` |
+| `manuscript/` | Figure map and Figure 2 legend |
 | `docs/` | Team summary, diagnostics, data notes, RNA-seq plan, Drive method exports |
 | `literature/` | `library_map.csv` (citation, theme and file name for each reference). The PDFs live on Google Drive, not in this public repo (see `literature/README.md`). |
-| `extras/` | Three small exploratory analyses kept for context (see `extras/README.md`) |
 | `tools/` | `check_output_changes.py`, which sorts real output changes from rerun noise |
 
 Google Drive (`17. LTH_expression_by_temperature_2025`, ID `1sXfnHN-vmSBuwMEfERiYOWDeKRmjFWJP`) holds the raw Sheets, field notes and Molly's manuscript draft. Photographs are on the lab NAS (see `docs/DATA_NOTES.md`). RNA-seq processing is at UC Davis (Bay lab).

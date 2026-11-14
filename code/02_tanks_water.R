@@ -98,8 +98,17 @@ duplicates <- raw |>
   group_by(serial, datetime, probe) |>
   summarise(n_copies = n(), n_values = n_distinct(value), .groups = "drop") |>
   filter(n_copies > 1)
-write_csv(duplicates, file.path(TBL_DIR, "08_apex_duplicate_audit.csv"))
 stopifnot(all(duplicates$n_values == 1), n_distinct(raw$serial) == 1)
+
+# Save a short summary rather than every duplicated reading (that full list
+# was ~46,000 rows and nothing used it): how many readings were repeated,
+# by how many copies, per probe.
+duplicate_summary <- duplicates |>
+  group_by(probe, n_copies) |>
+  summarise(n_readings = n(),
+            first_datetime = min(datetime), last_datetime = max(datetime),
+            all_copies_agree = all(n_values == 1), .groups = "drop")
+write_csv(duplicate_summary, file.path(TBL_DIR, "08_apex_duplicate_summary.csv"))
 
 ## 1c. Drop probe errors -----------------------------------------------------
 readings <- raw |>

@@ -13,7 +13,7 @@
 # are unevenly spread across treatments.
 #
 # Until 2026-11-12 the library table also carried resilience scores for each
-# source patch from a frozen exploratory table in extras/; those combined
+# source patch from a frozen exploratory table (now deleted); those combined
 # scores were retired and are no longer joined.
 #
 # Sections

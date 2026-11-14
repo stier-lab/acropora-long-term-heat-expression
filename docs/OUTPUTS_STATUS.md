@@ -7,7 +7,7 @@ Updated 2026-11-13. Use this page to tell current results from historical files 
 | What | Where | Notes |
 |---|---|---|
 | Every reported number | `output/paper/*_numbers.csv` | Single source of truth, written by the core scripts. The team summary reads its numbers from here. |
-| Plain-language results | `docs/team_summary/LTH_results_summary.html` | Rebuilt 2026-11-13. |
+| Plain-language results | `docs/team_summary/LTH_results_summary.html` | Rebuilt 2026-11-14. |
 | Manuscript figure map | `manuscript/MAIN_FIGURE_PLAN.md` | Each figure in Molly's working draft and supplement, with the file and script that make it. |
 | Figure 1B | `figures/39b_stage_timing_cumulative_option.*` | The four regeneration milestones, main experiment. All six stages: `39d_stage_cumulative_all_stages`. |
 | Figure 2 | `figures/45_physiology_figure2.*` | Legend: `manuscript/FIGURE_2_LEGEND.md`. |
@@ -21,7 +21,7 @@ Updated 2026-11-13. Use this page to tell current results from historical files 
 
 | What | Superseded by |
 |---|---|
-| Old scripts, figures, tables, the master results table and the daily yes/no models (deleted from `extras/` on 2026-11-13; tag `pre-prune-2026-11-13`) | The 10 core scripts in `code/` (merged 2026-11-11) |
+| Old scripts, figures, tables, the master results table and the daily yes/no models (deleted with `extras/` on 2026-11-13/14; tags `pre-prune-2026-11-13`, `pre-cleanup-2026-11-14`) | The 10 core scripts in `code/` (merged 2026-11-11) |
 | Old stage-timing displays `39a`, `39c`, `40`, `41` (deleted 2026-11-13) | `39b` (Figure 1B) and `39d`. The older options can misrepresent the 12/12 vs 4/12 budding result (commit 2ffa570). |
 | `data/raw/*/data_before_2026-10-16.csv` | The October 16 corrected `data.csv` in the same folder |
 
@@ -54,3 +54,4 @@ Commit code, raw-data and output changes together, with a message that says what
 
 - **Oxygen and artwork check (2026-11-13):** raw YSI readings independently reproduce treatment oxygen concentration and saturation summaries. The summary no longer infers a small oxygen contribution; temperature and oxygen effects cannot be separated by these data. Color/shape keys and genetic-cluster sample sizes are in captions, with titles, subtitles, captions and legends suppressed by the figure theme. Full pipeline and HTML rebuild completed; numerical output tables were unchanged.
 - **Growth calculation corrected (2026-11-13):** `01_clean_data.R` now follows Molly's buoyant-weight sheet: seawater density from the glass reference object at each weighing, and the aragonite plug subtracted from Day 0 and Day 15 dry mass. Earlier code used the freshwater density curve as seawater density and kept the plug (~60% of starting mass), which shrank % growth about 2.6-fold. Growth is now 16.0% (28 °C) vs 10.2% (31 °C), 36% lower under heat; the code checks every fragment against the metadata column `percent_growth_bw`. Only growth outputs changed.
+- **Final cleanup (2026-11-14):** deleted the rest of `extras/`, the Nov 11 audit scripts (`docs/diagnostics/scripts/`; they no longer match the current models), `manuscript/references.bib` (unused; the manuscript is Molly's Google Doc) and `.Renviron`. The 1.8 MB Apex duplicate list was replaced by `08_apex_duplicate_summary.csv`. All recoverable from tag `pre-cleanup-2026-11-14`.

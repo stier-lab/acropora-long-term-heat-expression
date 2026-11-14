@@ -10,8 +10,7 @@
 # renv.lock.
 #
 # Afterwards, `python3 tools/check_output_changes.py` separates real changes
-# from files that change on every run (PDF timestamps). Scripts in extras/ are
-# kept for the record, no longer updated, and are not run here.
+# from files that change on every run (PDF timestamps).
 #
 # Sections
 #   1. Scripts to run

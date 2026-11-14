@@ -1,6 +1,6 @@
 # Model diagnostics audit: LTH core analyses
 
-2026-11-11. Run with the `stats-diagnostics` skill on every statistical result in `code/01`–`08`. Full table: `model_diagnostics_2026-11-11.csv` (18 analysis families). Call scan: `stats_call_scan_2026-11-11.csv`. Scripts to reproduce: `scripts/` (run from the repo root after `code/run_all.R`).
+2026-11-11. Run with the `stats-diagnostics` skill on every statistical result in `code/01`–`08`. Full table: `model_diagnostics_2026-11-11.csv` (18 analysis families). Call scan: `stats_call_scan_2026-11-11.csv`. The audit scripts (`scripts/diag_*.R`) were removed on 2026-11-14 because the models have changed since; recover them from tag `pre-cleanup-2026-11-14`.
 
 Status labels: **yes** = adequate for the current claim; **handled** = a concern exists but a specific check shows it doesn't change the conclusion; **partial** = a specific gap remains; **not applicable** = no fitted model (counts, summaries).
 
@@ -104,14 +104,9 @@ Already handled: the budding patch × temperature Cox test (K, now reported as c
 | `output/tables/05_buoyant_weight_tank_test.csv` | `03_physiology.R` | Tank permutation for D |
 | `output/tables/22_sensitivity_flagged.csv` | `07_supplement.R` | N |
 | `output/tables/43_final_snp_model_diagnostics.csv`, `43_final_snp_design_balance.csv` | `06_genetics.R` | O |
-| `scripts/diag_lmm.R` | this audit | A–D: variance components, heteroscedasticity, autocorrelation, curvature, random slopes, leave-one-tank-out |
-| `scripts/diag_lmm2.R`, `diag_lmm3.R` | this audit | A–C: slopes per tank and fragment, unequal variance (nlme), symbiont outliers |
-| `scripts/diag_patch.R` | this audit | F: reported vs targeted patch × temperature tests |
-| `scripts/diag_surv.R` | this audit | G–J: events and censoring, separation, AFT distributions, clustered SEs, ties |
-| `scripts/diag_rest.R` | this audit | D, E, G, H, N, O: influence, contrast families, Fisher tables, permutations |
 
 Growth correction (2026-11-13): growth (D) was recomputed with the aragonite plug subtracted and seawater density taken from the reference object, matching Molly's sheet and `percent_growth_bw`. Temperature F₁,₆ = 6.46, p = 0.044 (was 6.33, 0.046); tank permutation p = 0.086 (was 0.057); patch × temperature χ²₄ = 15.8, p = 0.003 (was 13.0, 0.011). The growth residual checks still pass. Read growth numbers in the audit below as pre-correction.
 
 Version sensitivity (found and fixed 2026-11-12): outputs before 2026-11-12 were built with R 4.5.2, lme4 2.0-1 and DHARMa 0.4.7. Under R 4.6.2, lme4 2.1-0 and DHARMa 0.5.0 every reported test statistic agrees to within 0.05%, but the simulation-based DHARMa results move: the symbiont outlier sensitivity flags 163, 212 and 215 instead of 163 and 212 (p = 0.010 instead of 0.009), and the `18_model_checks.csv` residual p-values shift (color uniformity is flagged under both; the symbiont outlier test is p = 0.042 under 0.5.0 vs 0.18 under 0.4.7). No conclusion changes. Package versions are now pinned in `renv.lock` (R 4.6.2, DHARMa 0.5.0) and all outputs were regenerated under it; run `renv::restore()` before rerunning.
 
-Pipeline status (updated 2026-11-12): the checks that support reported numbers are now in the pipeline. Tank-slope models are the reported models in `03_physiology.R`, `05_source_patches.R` and `07_supplement.R`; the AFT distribution comparison is in `04_regeneration.R` (`14_interval_survreg_distributions.csv`); leave-one-tank-out and leave-one-fragment-out checks for symbionts and growth are in `07_supplement.R` (`22b_sensitivity_wound_growth.csv`). The `scripts/` files reproduce the audit as run on 2026-11-11 and are not part of `run_all.R`.
+Pipeline status (updated 2026-11-12): the checks that support reported numbers are now in the pipeline. Tank-slope models are the reported models in `03_physiology.R`, `05_source_patches.R` and `07_supplement.R`; the AFT distribution comparison is in `04_regeneration.R` (`14_interval_survreg_distributions.csv`); leave-one-tank-out and leave-one-fragment-out checks for symbionts and growth are in `07_supplement.R` (`22b_sensitivity_wound_growth.csv`). The audit scripts that reproduced the 2026-11-11 run were removed on 2026-11-14 (tag `pre-cleanup-2026-11-14`).
