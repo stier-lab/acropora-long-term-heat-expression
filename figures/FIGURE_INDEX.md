@@ -1,6 +1,8 @@
 # Figure Index
 
-Updated 2026-11-12. Every figure in this folder is rebuilt by `code/run_all.R` (each as `.pdf` and `.png`). Older and exploratory figures were deleted on 2026-11-13 and 2026-11-14; recover them from the tags `pre-prune-2026-11-13` and `pre-cleanup-2026-11-14`. Reader-facing text says **source patch** for A, C and D; some file names still say `genet`.
+Updated 2026-11-14. Every figure in this folder is rebuilt by `code/run_all.R` (each as `.pdf` and `.png`). Older and exploratory figures were deleted on 2026-11-13 and 2026-11-14; recover them from the tags `pre-prune-2026-11-13` and `pre-cleanup-2026-11-14`. Reader-facing text says **source patch** for A, C and D; some file names still say `genet`.
+
+Screen-reader descriptions of Figures 1B and 2 are in the repo `README.md` (image alt text). Terms are defined in `docs/GLOSSARY.md`.
 
 ## Key (no figure carries an embedded legend)
 
@@ -17,8 +19,8 @@ Since 2026-11-12 the artwork has no titles, subtitles, captions or legends; keys
 
 | Figure | Content | Script |
 |---|---|---|
-| `39b_stage_timing_cumulative_option` | **Figure 1B.** Percent of wounded fragments (12 per temperature, main experiment) that had reached each of the four regeneration milestones by each day: 1 axial polyp forms, 3 axial corallite forms, 4 axial corallite extends, 5 radial corallites form. Fragments that never reached a milestone stay in the denominator. | `04_regeneration.R` |
-| `45_physiology_figure2` | **Figure 2.** Fv/Fm (A), symbiont density (B) and 15-day skeletal growth (C) by temperature and wound status; error bars use the four tank means per temperature. Legend: `manuscript/FIGURE_2_LEGEND.md`. | `03_physiology.R` |
+| `39b_stage_timing_cumulative_option` | **Figure 1B.** Percent of wounded fragments (12 per temperature, main experiment) that had reached each of the four regeneration milestones by each day: 1 axial polyp forms, 3 axial corallite forms, 4 axial corallite extends, 5 radial corallites form. Fragments that never reached a milestone stay in the denominator. *Shows:* the temperatures track together for milestones 1–4 (heated slightly behind on 4); by Day 15 all 12 ambient fragments had radial corallites against 4 of 12 heated. | `04_regeneration.R` |
+| `45_physiology_figure2` | **Figure 2.** Fv/Fm (A), symbiont density (B) and 15-day skeletal growth (C) by temperature and wound status; error bars use the four tank means per temperature. *Shows:* heat lowered all three (Fv/Fm 0.67 vs 0.56 on Day 14; symbionts 0.97 vs 0.21 million cells cm⁻² on Day 15; growth 16.0% vs 10.2%); wounding made little difference. Legend: `manuscript/FIGURE_2_LEGEND.md`. | `03_physiology.R` |
 
 ## Supplement
 

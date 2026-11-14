@@ -1,8 +1,8 @@
 # **LTH\_expression\_by\_temperature\_2025 \- README**
 
 > **Historical Drive export.** This file preserves an early project README.
-> Use the repo root `README.md`, `docs/README.md`, and `RESULTS.docx` for
-> current analysis status. It still contains early-plan language about
+> Use the repo root `README.md`, `docs/README.md`, and `docs/OUTPUTS_STATUS.md`
+> for current analysis status. It still contains early-plan language about
 > chlorophyll-a, D15 RNA-seq, and A/C/D as confirmed genetic labels.
 
 ## **Project Information**

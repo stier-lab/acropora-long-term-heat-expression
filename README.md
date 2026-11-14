@@ -8,11 +8,31 @@ A 15-day experiment at Gump Station, Mo'orea (May–July 2025). Fragments were h
   <sub>Both temperatures re-cover the wound and rebuild a tip; by Day 15 the 31 °C fragment has not budded new corallites.</sub>
 </p>
 
+## Main results
+
+Heat at 31 °C did not stop wounds from healing, but it slowed the last step of regrowth and stressed the corals.
+
+<p align="center">
+  <img src="figures/39b_stage_timing_cumulative_option.png" width="600"
+       alt="Four step plots of the percent of wounded fragments that had reached each regeneration milestone by each day, 28 °C versus 31 °C. The two temperatures track closely for the first three milestones. For radial corallites, 28 °C reaches 100% by Day 15 while 31 °C reaches about 33%."><br>
+  <sub><b>Figure 1B.</b> Share of wounded fragments (12 per temperature) that had reached each regeneration milestone. Blue solid = 28 °C, orange dashed = 31 °C. Both temperatures re-formed a tip polyp and corallite; by Day 15 all 12 ambient fragments had budded new side corallites, against 4 of 12 heated ones.</sub>
+</p>
+
+<p align="center">
+  <img src="figures/45_physiology_figure2.png" width="600"
+       alt="Three rows of panels comparing 28 °C and 31 °C. A: photosynthetic efficiency stays near 0.67 at 28 °C but falls to about 0.56 by Day 14 at 31 °C. B: symbiont density holds near 1 million cells per square centimetre at 28 °C but drops to about 0.2 by Day 15 at 31 °C. C: skeletal mass gain is about 16% at 28 °C and 10% at 31 °C, similar for wounded and unwounded fragments."><br>
+  <sub><b>Figure 2.</b> Photosynthetic efficiency (A), symbiont density (B) and 15-day skeletal growth (C). Blue = 28 °C, orange = 31 °C; open/white = unwounded, filled/gray = wounded. Heat lowered photosynthetic efficiency (0.67 vs 0.56 on Day 14), symbiont density (0.97 vs 0.21 million cells cm⁻² on Day 15) and growth (16.0% vs 10.2%, p = 0.044). Wounding made little difference to any of the three. Full legend: <code>manuscript/FIGURE_2_LEGEND.md</code>.</sub>
+</p>
+
+The full plain-language write-up is the [results summary](https://stier-lab.github.io/acropora-long-term-heat-expression/team_summary/LTH_results_summary.html). Every number comes from `output/paper/*_numbers.csv`.
+
 ## Start here
 
 | Need | File |
 |---|---|
-| Results in plain language | `docs/team_summary/LTH_results_summary.html` |
+| Results in plain language | [Results summary (opens in browser)](https://stier-lab.github.io/acropora-long-term-heat-expression/team_summary/LTH_results_summary.html) · source: `docs/team_summary/` |
+| What a term means | [`docs/GLOSSARY.md`](docs/GLOSSARY.md) |
+| How to rerun or change the analysis | [`docs/HOW_TO_CHANGE.md`](docs/HOW_TO_CHANGE.md) |
 | Every number reported in the text | `output/paper/*_numbers.csv` |
 | Which figure is which in Molly's draft | `manuscript/MAIN_FIGURE_PLAN.md` |
 | How the code is organized | `code/README.md` |
@@ -53,6 +73,8 @@ Package versions are pinned in `renv.lock` (R 4.6.2). Restore them before rerunn
 
 Google Drive (`17. LTH_expression_by_temperature_2025`, ID `1sXfnHN-vmSBuwMEfERiYOWDeKRmjFWJP`) holds the raw Sheets, field notes and Molly's manuscript draft. Photographs are on the lab NAS (see `docs/DATA_NOTES.md`). RNA-seq processing is at UC Davis (Bay lab).
 
-## License and funding
+## Citing, license and funding
+
+To cite this code and data, use GitHub's "Cite this repository" button (from `CITATION.cff`).
 
 Code MIT · data CC-BY 4.0 · images CC BY-NC 4.0 · manuscript all rights reserved. NSF support to the project investigators; fieldwork at the UC Berkeley Gump Research Station.

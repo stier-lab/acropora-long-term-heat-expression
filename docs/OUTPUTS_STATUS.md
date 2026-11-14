@@ -1,6 +1,6 @@
 # Which outputs are current
 
-Updated 2026-11-13. Use this page to tell current results from historical files before reading figures or tables.
+Updated 2026-11-14. Use this page to tell current results from historical files before reading figures or tables.
 
 ## Current
 
@@ -55,3 +55,4 @@ Commit code, raw-data and output changes together, with a message that says what
 - **Oxygen and artwork check (2026-11-13):** raw YSI readings independently reproduce treatment oxygen concentration and saturation summaries. The summary no longer infers a small oxygen contribution; temperature and oxygen effects cannot be separated by these data. Color/shape keys and genetic-cluster sample sizes are in captions, with titles, subtitles, captions and legends suppressed by the figure theme. Full pipeline and HTML rebuild completed; numerical output tables were unchanged.
 - **Growth calculation corrected (2026-11-13):** `01_clean_data.R` now follows Molly's buoyant-weight sheet: seawater density from the glass reference object at each weighing, and the aragonite plug subtracted from Day 0 and Day 15 dry mass. Earlier code used the freshwater density curve as seawater density and kept the plug (~60% of starting mass), which shrank % growth about 2.6-fold. Growth is now 16.0% (28 °C) vs 10.2% (31 °C), 36% lower under heat; the code checks every fragment against the metadata column `percent_growth_bw`. Only growth outputs changed.
 - **Final cleanup (2026-11-14):** deleted the rest of `extras/`, the Nov 11 audit scripts (`docs/diagnostics/scripts/`; they no longer match the current models), `manuscript/references.bib` (unused; the manuscript is Molly's Google Doc) and `.Renviron`. The 1.8 MB Apex duplicate list was replaced by `08_apex_duplicate_summary.csv`. All recoverable from tag `pre-cleanup-2026-11-14`.
+- **Accessibility pass (2026-11-14):** added `docs/GLOSSARY.md`, `docs/HOW_TO_CHANGE.md` and `CITATION.cff`; the README now shows Figures 1B and 2 with plain-language captions and screen-reader descriptions; the results summary is served as a web page through GitHub Pages (from `docs/`). Deleted 49 stale local plots in `figures/diagnostics/` (untracked; written by the removed audit scripts). No code or outputs changed.

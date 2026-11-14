@@ -1,0 +1,36 @@
+# Author list and order follow the project README's investigators and
+# collaborators; confirm both before minting a DOI.
+cff-version: 1.2.0
+message: "If you use this code or data, please cite it as below."
+title: "LTH: heat × wounding in Acropora cf. pulchra (analysis code and data)"
+type: software
+authors:
+  - given-names: Molly
+    family-names: Brzezinski
+    affiliation: "University of California, Santa Barbara"
+  - given-names: Michelle
+    family-names: Diminuco
+    affiliation: "University of Georgia"
+  - given-names: Rachael
+    family-names: Bay
+    affiliation: "University of California, Davis"
+  - given-names: Ashley
+    family-names: Seifert
+    affiliation: "University of Kentucky"
+  - given-names: Craig
+    family-names: Osenberg
+    affiliation: "University of Georgia"
+  - given-names: Adrian C.
+    family-names: Stier
+    affiliation: "University of California, Santa Barbara"
+repository-code: "https://github.com/stier-lab/acropora-long-term-heat-expression"
+url: "https://stier-lab.github.io/acropora-long-term-heat-expression/"
+license: MIT
+date-released: "2026-11-14"
+keywords:
+  - coral
+  - Acropora
+  - regeneration
+  - wound healing
+  - thermal stress
+  - Moorea
