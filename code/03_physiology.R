@@ -227,7 +227,7 @@ p_color <- ggplot(traj, aes(day, mean_color,
                       name = "Wound") +
   scale_fill_manual(values   = PAL_WOUND,
                     guide = "none") +
-  labs(x = "Day relative to clipping (Day 0)",
+  labs(x = "Day relative to wounding (Day 0)",
        y = "Color score (D-scale; lower = paler)") +
   theme_pub(10)
 save_fig(p_color, "03_color_trajectory", width = 170, height = 90)
@@ -319,10 +319,10 @@ p_bw <- ggplot(bw_a, aes(interaction(treatment, wound, sep = " · "),
   scale_fill_manual(values  = c(`28C` = "#56B4E9", `31C` = "#D55E00"),
                     name = "Temperature") +
   scale_colour_manual(values = PAL_GENO, name = "Source patch") +
-  scale_x_discrete(labels = c(`28C · no` = "28 \u00b0C\nunclipped",
-                              `31C · no` = "31 \u00b0C\nunclipped",
-                              `28C · yes` = "28 \u00b0C\nclipped",
-                              `31C · yes` = "31 \u00b0C\nclipped")) +
+  scale_x_discrete(labels = c(`28C · no` = "28 \u00b0C\nunwounded",
+                              `31C · no` = "31 \u00b0C\nunwounded",
+                              `28C · yes` = "28 \u00b0C\nwounded",
+                              `31C · yes` = "31 \u00b0C\nwounded")) +
   labs(x = NULL,
        y = "Growth (% skeletal mass change over 15 days)") +
   theme_pub(10) +
@@ -379,9 +379,9 @@ common <- function(lines = TRUE) list(
              labeller = as_labeller(c(`28C` = "28 \u00b0C", `31C` = "31 \u00b0C"))),
   scale_colour_manual(values = PAL_TEMP, guide = "none"),
   scale_shape_manual(values = c(no = 1, yes = 16), name = NULL,
-                     labels = c(no = "Unclipped", yes = "Clipped")),
+                     labels = c(no = "Unwounded", yes = "Wounded")),
   if (lines) scale_linetype_manual(values = c(no = "dashed", yes = "solid"), name = NULL,
-                                  labels = c(no = "Unclipped", yes = "Clipped")),
+                                  labels = c(no = "Unwounded", yes = "Wounded")),
   theme_pub(11),
   theme(panel.grid.minor = element_blank(), strip.text = element_text(face = "bold")))
 
@@ -398,10 +398,10 @@ trajectory <- function(response_name, ylab, breaks) {
                   linewidth = 0.45, show.legend = FALSE) +
     geom_point(size = 2.6, stroke = 0.9, position = position_dodge(width = 0.3)) +
     scale_x_continuous(breaks = breaks, limits = c(-1.5, 15.5)) +
-    labs(x = "Day relative to clipping (Day 0)", y = ylab) +
+    labs(x = "Day relative to wounding (Day 0)", y = ylab) +
     common()
 }
-# Day -1 (the pre-clipping reading) is plotted but not labelled: its label
+# Day -1 (the pre-wounding reading) is plotted but not labelled: its label
 # ran into the Day 0 label one day away. The dotted line marks Day 0.
 a <- trajectory("PAM", expression(F[v]/F[m]),
                 c(0, 3, 6, 9, 12, 14))
@@ -410,7 +410,7 @@ a <- trajectory("PAM", expression(F[v]/F[m]),
 # raw points on top. The jitter seeds keep point positions the same every run.
 box_style <- list(
   scale_fill_manual(values = c(no = "white", yes = "grey65"), name = NULL,
-                    labels = c(no = "Unclipped", yes = "Clipped")),
+                    labels = c(no = "Unwounded", yes = "Wounded")),
   common(lines = FALSE))
 b <- ggplot(sym_f2, aes(factor(day), value, colour = treatment,
                      fill = wound, group = interaction(day, wound))) +
@@ -426,7 +426,7 @@ c <- ggplot(growth, aes(wound, value, colour = treatment, fill = wound)) +
   geom_boxplot(width = 0.55, outlier.shape = NA, linewidth = 0.5) +
   geom_point(aes(shape = wound), colour = "grey35", size = 1.7,
              position = position_jitter(width = 0.12, height = 0, seed = 42)) +
-  scale_x_discrete(labels = c(no = "Unclipped", yes = "Clipped")) +
+  scale_x_discrete(labels = c(no = "Unwounded", yes = "Wounded")) +
   labs(x = NULL, y = "Skeletal mass gain (%)") +
   box_style
 

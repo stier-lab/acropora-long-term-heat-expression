@@ -11,8 +11,8 @@ Plain-language meanings for the terms used in this repo's code, tables and figur
 | Fragment | One small branch of coral in its own spot in a tank. The unit everything is measured on. |
 | Ambient / heated | The two temperature treatments: 28 °C and 31 °C. Heated tanks were ramped up 1 °C per day. |
 | Tank | Temperature was set per tank (four tanks per temperature), so tanks, not fragments, are the true replicates for the temperature effect. |
-| Wounded / clipped | About 1 cm cut from the branch tip on Day 0. Unwounded fragments were not cut. |
-| Day 0, Day −1 | Day 0 is the day of clipping. Day −1 is just before clipping, not an unheated baseline. |
+| Wounded / unwounded | Wounded fragments had about 1 cm clipped from the branch tip on Day 0. Unwounded fragments were handled but not cut. |
+| Day 0, Day −1 | Day 0 is the day of wounding. Day −1 is just before wounding, not an unheated baseline. |
 | Source patch | The field patch (A, C or D) a fragment's parent branch came from. Older column names say `thicket` or `genet`. These are field labels, not confirmed genotypes. |
 | Host cluster | A group of fragments that DNA markers (SNPs) show are genetically similar. These come from Rachael Bay's lab and do not line up exactly with source patches. |
 | Main experiment / microscope experiment | 192 fragments in tanks (48 followed daily), versus a separate set of 16 wounded fragments photographed under a microscope. |

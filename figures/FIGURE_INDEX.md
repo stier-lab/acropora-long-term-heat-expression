@@ -14,14 +14,14 @@ Since 2026-11-15 every figure uses an "Information is Beautiful" look, set once 
 - left-aligned bold panel labels;
 - Helvetica Neue throughout, including text drawn inside panels.
 
-Figure labels use the summary's terms: "28 °C / 31 °C", "clipped / unclipped", "Days after clipping", and healing followed by regeneration stages 1–5 with the names used in `39b` and `39d`. The data files keep their original codes (`28C`, `wound = yes/no`).
+Figure labels use the summary's terms: "28 °C / 31 °C", "wounded / unwounded", "Days after wounding", and healing followed by regeneration stages 1–5 with the names used in `39b` and `39d`. The data files keep their original codes (`28C`, `wound = yes/no`).
 
 ## Key (no figure carries an embedded legend)
 
 Since 2026-11-12 the artwork has no titles, subtitles, captions or legends; keys and sample sizes belong in the caption text. Mapping used by every script (`code/00_setup.R` palettes):
 
 - **Temperature:** blue `#56B4E9` = 28 °C, orange `#D55E00` = 31 °C. In Figure 1B and `39d`, 28 °C is also solid with circles and 31 °C dashed with triangles.
-- **Wounding:** Figure 2 and its panels: open symbols, white boxes, dashed lines = unwounded; filled symbols, gray boxes, solid lines = wounded. `47`: dashed = unwounded, solid = wounded. `03_color_trajectory`: gray = unwounded, black = wounded. `43_final_snp_symbiont_density`: circles = unwounded, triangles = clipped.
+- **Wounding:** Figure 2 and its panels: open symbols, white boxes, dashed lines = unwounded; filled symbols, gray boxes, solid lines = wounded. `47`: dashed = unwounded, solid = wounded. `03_color_trajectory`: gray = unwounded, black = wounded. `43_final_snp_symbiont_density`: circles = unwounded, triangles = wounded.
 - **Source patch:** gold `#E69F00` = A, green `#009E73` = C, dark blue `#0072B2` = D (`13`, `05`, `43_final_snp_structure`).
 - **Symbiont read group** (`43_final_snp_symbiont_typing`): green = A, pink = B, gold = C, dark blue = D.
 - **Stage figures** (`36`, `36b`): X = not reached by Day 15; right-side labels in `36` are reached/total.

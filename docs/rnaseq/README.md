@@ -9,4 +9,4 @@
 | Per-library covariates: treatment, tank, day, symbiont density, host cluster, symbiont read shares | `output/tables/43_final_snp_rnaseq_covariates.csv` |
 | Notes on the genetic and symbiont data | `docs/DATA_NOTES.md` |
 
-The expression samples are destructively sampled fragments, not the 48 fragments followed to Day 15, and they come from before any fragment budded. Expression can test group differences (heat, clipping, patch), but it can't be matched to an individual fragment's regrowth.
+The expression samples are destructively sampled fragments, not the 48 fragments followed to Day 15, and they come from before any fragment budded. Expression can test group differences (heat, wounding, patch), but it can't be matched to an individual fragment's regrowth.

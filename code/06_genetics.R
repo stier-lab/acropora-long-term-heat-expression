@@ -350,7 +350,7 @@ p3 <- ggplot(bp, aes(cell, host_cluster, fill = n)) +
   facet_wrap(~ treatment, axes = "all", axis.labels = "margins",
              labeller = as_labeller(c(`28C` = "28 \u00b0C", `31C` = "31 \u00b0C"))) +
   scale_fill_gradient(low = "white", high = "#66B2A3") +
-  labs(x = "Sampling day / clipped (no or yes)", y = "Final host cluster") +
+  labs(x = "Sampling day / wounded (no or yes)", y = "Final host cluster") +
   theme_pub(10) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 save_fig(p3, "43_final_snp_design", width = 190, height = 110)
@@ -391,7 +391,7 @@ p5 <- ggplot(j, aes(factor(day), symbiont_cells_per_cm2 / 1e6, colour = treatmen
   scale_colour_manual(values = PAL_TEMP) +
   scale_y_log10() +
   labs(x = "Sampling day", y = "Symbionts (million cells per cm\u00b2; log scale)",
-       shape = "Clipped", colour = "Temperature") +
+       shape = "Wounded", colour = "Temperature") +
   theme_pub(10)
 save_fig(p5, "43_final_snp_symbiont_density", width = 190, height = 130)
 

@@ -249,7 +249,7 @@ p_apex <- ggplot(temp_daily, aes(day, value_mean, group = tank, colour = treatme
   scale_colour_manual(values = c('28C' = "#56B4E9", '31C' = "#D55E00"),
                       labels = c('28C' = "28 °C", '31C' = "31 °C"), name = "Treatment") +
   scale_x_continuous(breaks = c(-7, -3, 0, 5, 10, 15)) +
-  labs(x = "Day relative to tip clipping (Day 0 = 4 June 2025)",
+  labs(x = "Day relative to wounding (Day 0 = 4 June 2025)",
        y = "Daily mean tank temperature (°C)") +
   theme_pub(10)
 save_fig(p_apex, "08_apex_temperature", width = 180, height = 105)

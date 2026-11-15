@@ -627,7 +627,7 @@ p_km <- ggplot(km_curves, aes(day, cum_event,
                       name = "Temperature") +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1),
                      limits = c(0, 1)) +
-  labs(x = "Days after clipping",
+  labs(x = "Days after wounding",
        y = "Cumulative % of fragments that reached the stage") +
   theme_pub(9)
 
@@ -1155,7 +1155,7 @@ plot_cumulative <- function(dat, ncol) {
     scale_y_continuous(labels = \(x) paste0(x, "%"),
                        limits = c(0, 100),
                        breaks = c(0, 25, 50, 75, 100)) +
-    labs(x = "Days after clipping", y = "Fragments that had reached the stage (%)") +
+    labs(x = "Days after wounding", y = "Fragments that had reached the stage (%)") +
     theme_pub(10)
 }
 
