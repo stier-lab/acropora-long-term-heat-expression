@@ -1712,21 +1712,29 @@ tank every 10 min. We raised the four heated tanks from 28 °C to 31 °C
 over four days (May 28–31, 2025) and held them at 31 °C from June 1; the
 four ambient tanks stayed at 28 °C. We averaged the readings for each
 tank on each day, then averaged those daily values across the four tanks
-in each treatment for Days 0–15. We measured salinity, dissolved oxygen
-and pH with a handheld YSI meter (ProQuatro) in all eight tanks on 14
-days between June 4 and 19, 2025; we took no readings on June 4 or 7.
+in each treatment. We report Days 0–15, the period after clipping; the
+heated fragments had already spent three days at 31 °C before Day 0. We
+measured salinity, dissolved oxygen and pH with a handheld YSI ProQuatro
+multiparameter meter, once in each of the eight tanks on 14 days from
+June 5 to 19, 2025 (no readings on June 7). [VERIFY: how the Apex probes
+were checked against a reference thermometer; time of day of the YSI
+readings; pH scale.]
 </div>
 </div>
 <div id="results-text-draft" class="section level5">
 <h5>Results text (draft)</h5>
 <div class="ms">
 Ambient tanks averaged 27.78 °C and heated tanks 30.87 °C, a difference
-of 3.09 °C. Daily tank means stayed between 27.35 and 28.10 °C in
-ambient tanks and between 30.38 and 31.20 °C in heated tanks. Across all
-112 meter readings (mean ± SD), salinity was 36.44 ± 0.04, dissolved
-oxygen 7.06 ± 0.46 mg/L, and pH 8.05 ± 0.04. Dissolved oxygen was lower
-in heated tanks (6.75 vs 7.38 mg/L), but saturation was similar (111% vs
-115%).
+of 3.09 °C. Daily means for single tanks ranged from 27.35 to 28.10 °C
+in ambient tanks and from 30.38 to 31.20 °C in heated tanks. Across all
+112 meter readings (mean ± SD across tanks and days), salinity was 36.44
+± 0.04, dissolved oxygen 7.06 ± 0.46 mg/L, and pH 8.05 ± 0.04. Dissolved
+oxygen was lower in heated tanks (6.75 vs 7.38 mg/L). Warmer water alone
+would explain a drop of about 0.29 mg/L at the same saturation; the
+observed drop was 0.63 mg/L, because saturation was also a little lower
+in heated tanks (111% vs 115%). Both treatments were above 100%
+saturation. Because oxygen fell with temperature, our design cannot
+separate the effects of heat from those of lower oxygen.
 </div>
 </details>
 </div>
@@ -1852,59 +1860,78 @@ order.</li>
 <div id="methods-text-draft-1" class="section level5">
 <h5>Methods text (draft)</h5>
 <div class="ms">
-We analysed Fv/Fm and color score with linear mixed models. Fixed
-effects were temperature, clipping, day and source patch, with all their
-interactions, and day entered as a linear trend. Because we applied
-temperature to whole tanks and measured fragments repeatedly, each model
-included a random intercept and a random day slope for each tank, and a
-random intercept for each fragment. Giving each tank its own slope means
-the test of temperature × day compares tanks, not fragments. We
-log-transformed symbiont density because it varied several-fold among
-fragments, and analysed it with the same fixed effects and a random
-intercept and day slope for each tank; we sampled each fragment once. We
-analysed growth with temperature, clipping, source patch and their
-interactions, and a random intercept for tank, so the temperature test
-for growth also compares tanks (4 per temperature). We fitted models
-with lme4 and lmerTest in R and used Satterthwaite degrees of freedom.
-As a check on growth, we compared the four ambient and four heated tank
-means against all 70 possible ways of assigning four tanks to each
-treatment (an exact permutation test; reported in the supplement).
+We analyzed Fv/Fm and color score with linear mixed models of Days 0–14.
+The readings taken before clipping (Day −1 for Fv/Fm, Day −4 for color)
+appear in the figures but not in the models. Fixed effects were
+temperature, clipping, day and source patch, with all their
+interactions; the full set lets one model test whether clipping or
+source patch changed the effect of heat over time. Day entered as a
+linear trend, so the temperature × day term tests whether heated
+fragments declined faster than ambient ones. Color is the CoralWatch
+D-scale score (1 = palest, 6 = darkest); a fragment scored between two
+cards (for example D3/D4) took the midpoint, and we analyzed the score
+as continuous. Because we applied temperature to whole tanks and
+measured fragments repeatedly, each model allowed each tank its own
+starting value and its own rate of change over time (a random intercept
+and day slope), and each fragment its own starting value. Giving each
+tank its own slope means the test of temperature × day compares tanks,
+not fragments. We analyzed symbiont density on a log scale, because
+treatment effects were proportional and the spread grew with the mean,
+with the same fixed effects and a random intercept and day slope for
+each tank; we sampled each fragment once. We analyzed growth with
+temperature, clipping, source patch and their interactions, and a random
+intercept for tank, so the temperature test for growth also compares
+tanks (4 per temperature). We fitted models with lme4 2.1-0 and lmerTest
+3.2-1 in R 4.6.2 and used Satterthwaite degrees of freedom, an
+adjustment suited to small numbers of tanks. We checked residuals of
+every model with simulation-based diagnostics (DHARMa). Because the
+growth test rests on only four tanks per temperature, we also compared
+the four ambient and four heated tank means against all 70 possible ways
+of assigning four tanks to each treatment (an exact permutation test).
 </div>
 </div>
 <div id="results-text-draft-1" class="section level5">
 <h5>Results text (draft)</h5>
 <div class="ms">
-<p>Fv/Fm declined over time in heated fragments but not in ambient
-fragments (temperature × day, F<sub>1,7</sub> = 18.2, <em>p</em> =
-0.004). By Day 14, heated fragments averaged 0.56 and ambient fragments
-0.67. Clipped and unclipped fragments declined at similar rates
-(temperature × clipping × day, F<sub>1,225</sub> = 1.9, <em>p</em> =
-0.174).</p>
-<p>Heated fragments also became paler over time (temperature × day,
-F<sub>1,6</sub> = 34.3, <em>p</em> &lt; 0.001), ending at a mean color
-score of 2.7 compared with 3.9 in ambient fragments. The change in color
-again did not differ between clipped and unclipped fragments
-(temperature × clipping × day, F<sub>1,223</sub> = 2.2, <em>p</em> =
-0.141).</p>
-<p>Symbiont density fell over time in heated fragments (temperature ×
-day, F<sub>1,7</sub> = 19.7, <em>p</em> = 0.003). By Day 15, heated
-fragments held 0.21 million cells per cm², compared with 0.97 million in
-ambient fragments. Clipping did not clearly change this decline
-(temperature × clipping × day, F<sub>1,162</sub> = 3.1, <em>p</em> =
-0.079), and leaving out one tank at a time moves this <em>p</em> value
-from 0.009 to 0.292. Where there was a difference, heated clipped
-fragments kept more symbionts than heated unclipped ones.</p>
-Heated fragments gained 36% less skeletal mass over 15 days than ambient
-fragments (10.21% vs 15.95%; temperature, F<sub>1,6</sub> = 6.5,
-<em>p</em> = 0.044). Clipped and unclipped fragments grew similarly
-(clipping, F<sub>1,30</sub> = 0.1, <em>p</em> = 0.733; temperature ×
-clipping, F<sub>1,30</sub> = 0.0, <em>p</em> = 0.906).
+<p>Fv/Fm declined faster in heated than in ambient fragments
+(temperature × day, F<sub>1,7</sub> = 18.2, <em>p</em> = 0.004). On Day
+14, observed means were 0.56 in heated and 0.67 in ambient fragments.
+The decline did not detectably differ between clipped and unclipped
+fragments (temperature × clipping × day, F<sub>1,225</sub> = 1.9,
+<em>p</em> = 0.174).</p>
+<p>Heated fragments also became paler faster (temperature × day,
+F<sub>1,6</sub> = 34.3, <em>p</em> &lt; 0.001). On the last day they
+averaged 2.7 on the 1–6 color card, compared with 3.9 for ambient
+fragments. Again, the change did not detectably differ between clipped
+and unclipped fragments (temperature × clipping × day, F<sub>1,223</sub>
+= 2.2, <em>p</em> = 0.141).</p>
+<p>Symbiont density fell faster in heated fragments (temperature × day,
+F<sub>1,7</sub> = 19.7, <em>p</em> = 0.003). On Day 15, heated fragments
+held 0.21 million cells per cm², compared with 0.97 million in ambient
+fragments. Clipping did not detectably change this decline (temperature
+× clipping × day, F<sub>1,162</sub> = 3.1, <em>p</em> = 0.079). If
+anything, heated clipped fragments kept more symbionts than heated
+unclipped ones: 1.30 times as many on Day 10 and 1.12 times as many on
+Day 15, with more in clipped fragments on both days in 3 of 4 heated
+tanks. This difference depends on which tanks we include: leaving out
+one tank at a time moves the <em>p</em> value from 0.009 to 0.292.</p>
+Heated fragments grew 36% less than ambient fragments (10.2% vs 16.0%
+gain in skeletal mass over 15 days; temperature, F<sub>1,6</sub> = 6.5,
+<em>p</em> = 0.044). The exact permutation test of tank means gave
+<em>p</em> = 0.086, and the test depends on which tanks are included:
+ambient tank 3 grew about as little as the heated tanks, and leaving it
+out gives <em>p</em> &lt; 0.001, while leaving out tank 12 instead gives
+<em>p</em> = 0.105. We therefore treat the growth effect as moderate
+evidence. Clipping did not detectably change growth (clipping,
+F<sub>1,30</sub> = 0.12, <em>p</em> = 0.733; temperature × clipping,
+F<sub>1,30</sub> = 0.01, <em>p</em> = 0.906).
 </div>
 <div class="dont">
-<p><strong>Growth test:</strong> we report the model test in the text
-and put the tank permutation (<em>p</em> = 0.086) in the supplement as a
-check. Both point the same way, but only the model test is below 0.05,
-so we call the growth effect moderate evidence.</p>
+<p><strong>Growth test:</strong> the model test is the main result; the
+tank permutation (<em>p</em> = 0.086) and the tank 3 check go in the
+text as a caveat, with full details in the supplement. Both tests point
+the same way, but only the model test is below 0.05, so we call the
+growth effect moderate evidence.</p>
 <p><strong>Wording:</strong> “no difference between clipped and
 unclipped” means we found no evidence of one with 12 fragments per
 group. It does not show that clipping has no effect.</p>
@@ -2205,55 +2232,71 @@ present.</p>
 clipped fragments (8 per temperature, patches A and C, two tanks per
 temperature) daily under a dissecting microscope from July 5 to 20,
 2025, and scored healing and the regeneration stages from the photos.
-Because it used different fragments, tanks and dates, we analysed it
+Because it used different fragments, tanks and dates, we analyzed it
 separately.</p>
 </div>
 <div id="methods-text-draft-2" class="section level5">
 <h5>Methods text (draft)</h5>
 <div class="ms">
-For each fragment and stage, we recorded the first day we saw the stage.
-We compared the number of fragments that reached each stage by Day 15
-between temperatures with Fisher’s exact tests. To compare how long
-fragments took to reach a stage, we used time-to-event models. Because
-we scored fragments once a day, each stage began at some point between
-the last check without it and the first check with it. Interval-censored
-log-logistic models use that interval rather than assuming the stage
-began exactly on the day we first saw it. We chose the log-logistic
-distribution because it fitted best, or within 0.6 AIC of the best, for
-every stage among Weibull, lognormal, log-logistic and exponential. We
-kept fragments that had not reached a stage by Day 15 in the analysis as
-“not yet reached” rather than dropping them. Models included source
-patch, and we checked the results with Cox proportional-hazards models
-and log-rank tests on the first day we saw each stage (survival package
-in R). Because we applied temperature to whole tanks, we also report the
-outcome for each tank and an exact permutation test of the four ambient
-and four heated tanks.
+We scored each clipped fragment once a day [VERIFY: scored live or from
+photos, and whether the scorer knew each fragment’s temperature] and
+recorded the first day we saw each stage. We compared the number of
+fragments showing each stage on Day 15 between temperatures with
+Fisher’s exact tests; we used presence on Day 15, rather than ever
+reaching the stage, because it is the fragment’s state at the end of the
+experiment (the two counts differ by one fragment, for stage 4 only). To
+compare how long fragments took to reach a stage, we used time-to-event
+models. Because we scored fragments once a day, each stage began at some
+point between the last check without it and the first check with it.
+Interval-censored log-logistic models use that interval rather than
+assuming the stage began exactly on the day we first saw it. Among
+Weibull, lognormal, log-logistic and exponential models, the
+log-logistic fitted best, or within 0.6 AIC units of the best, for every
+stage. We kept fragments that had not reached a stage by Day 15 in the
+analysis as “not yet reached” rather than dropping them. The
+time-to-event models included source patch. We checked them with Cox
+proportional-hazards models stratified by source patch and with log-rank
+tests on the first day we saw each stage (survival 3.8-12 in R 4.6.2).
+Because we applied temperature to whole tanks, we also report the
+outcome for each tank and an exact permutation test comparing the
+proportion of clipped fragments in each tank that formed radial
+corallites between the four ambient and four heated tanks. In the
+separate microscope experiment, we compared the number of fragments that
+formed radial corallites by Day 15 between temperatures with a Fisher’s
+exact test; it had only two tanks per temperature, too few for a
+tank-level test.
 </div>
 </div>
 <div id="results-text-draft-2" class="section level5">
 <h5>Results text (draft)</h5>
 <div class="ms">
 In the microscope experiment, tissue covered the wound by Day 1 in all
-16 of 16 fragments at both temperatures. In the main experiment, nearly
-every fragment at both temperatures formed an axial polyp (12/12
-ambient, 12/12 heated), remodelled the wound surface (12/12, 12/12) and
-formed a new axial corallite (11/12, 11/12). Heat mainly affected the
-last stage. By Day 15, 12 of 12 ambient fragments had formed new radial
-corallites, compared with 4 of 12 heated fragments (Fisher’s exact test,
-<em>p</em> = 0.001). The pattern held tank by tank: in every ambient
-tank, 3 of 3 clipped fragments formed radial corallites; in every heated
-tank, 1 of 3 did (exact tank permutation, <em>p</em> = 0.029, the
-smallest value possible with four tanks per temperature). A
-time-to-event model estimated that radial corallites took about 1.3
-times as long to appear under heat (time ratio 1.28; 95% CI 1.17–1.41;
-<em>p</em> &lt; 0.001). On any given day, heated fragments were about
-one-fifth as likely as ambient fragments to form them (Cox hazard ratio
-0.22; 95% CI 0.07–0.69; <em>p</em> = 0.010). The axial corallite
-extended in 11 of 12 ambient and 10 of 12 heated fragments, and the
-timing did not differ clearly between temperatures (time ratio 1.16; 95%
-CI 0.95–1.42; <em>p</em> = 0.135). In the microscope experiment, 8 of 8
-ambient and 2 of 8 heated fragments formed new radial corallites by Day
-15.
+16 of 16 fragments at both temperatures. In the main experiment, every
+fragment at both temperatures formed an axial polyp (12 of 12 ambient,
+12 of 12 heated) and remodeled the wound surface (12 of 12, 12 of 12),
+and 11 of 12 at each temperature formed a new axial corallite. Heat
+detectably affected only the last stage. By Day 15, 12 of 12 ambient
+fragments had formed new radial corallites, compared with 4 of 12 heated
+fragments (Fisher’s exact test, <em>p</em> = 0.001). The pattern held
+tank by tank: in every ambient tank, 3 of 3 clipped fragments formed
+radial corallites; in every heated tank, 1 of 3 did (exact tank
+permutation, <em>p</em> = 0.029, the smallest value possible with four
+tanks per temperature). Most heated fragments never formed them in the
+15 days, so the effect is mainly in how many fragments got there.
+Treating the 8 heated fragments without radial corallites as “not yet by
+Day 15”, a time-to-event model estimated that the stage took about 1.3
+times as long under heat (time ratio 1.28; 95% CI 1.17–1.41; <em>p</em>
+&lt; 0.001). On any given day, heated fragments were about one-fifth as
+likely as ambient fragments to form them (Cox hazard ratio 0.22; 95% CI
+0.07–0.69; <em>p</em> = 0.010). The axial corallite extended in 11 of 12
+ambient and 10 of 12 heated fragments, and the timing did not detectably
+differ between temperatures (time ratio 1.16; 95% CI 0.95–1.42;
+<em>p</em> = 0.135). Flatworms, which we recorded only on heated
+fragments, do not explain the stage 5 result: among heated clipped
+fragments with no flatworm record, 3 of 9 formed new radial corallites.
+In the microscope experiment, 8 of 8 ambient and 2 of 8 heated fragments
+formed new radial corallites by Day 15 (Fisher’s exact test, <em>p</em>
+= 0.007; two tanks per temperature).
 </div>
 <div class="dont">
 <p><strong>Fragments 115 and 121:</strong> 121 was scored with radial
@@ -2329,12 +2372,19 @@ across temperatures and clipping.</p>
 <div id="methods-text-draft-3" class="section level5">
 <h5>Methods text (draft)</h5>
 <div class="ms">
-To test whether the effect of heat differed among source patches, we
-refitted each model without every term containing source patch ×
-temperature (including their interactions with clipping and day). We
-compared the full and reduced models with likelihood-ratio tests. We
-then estimated the ambient-minus-heated difference for each patch at Day
-14 from the full model.
+The three source patches could hold different genotypes, so we tested
+whether the effect of heat differed among them [VERIFY: whether this
+test was planned before the data came in]. For each measure, we compared
+the full model with one that dropped the source patch × temperature term
+and all its higher-order interactions (with clipping and day), using a
+likelihood-ratio test. For Fv/Fm, color and symbiont density this
+removes eight terms, and for growth four, which sets the degrees of
+freedom of each test. We then estimated the ambient-minus-heated
+difference for each patch and clipping group from the full model: on Day
+14 for Fv/Fm and color, on Day 15 for symbiont density, and over Days
+0–15 for growth. Each measure has six such differences (three patches ×
+two clipping groups), so we adjusted their <em>p</em> values for
+multiple tests with the Hochberg method.
 </div>
 </div>
 <div id="results-text-draft-3" class="section level5">
@@ -2346,10 +2396,20 @@ The effect of heat differed among source patches for Fv/Fm
 54.6, <em>p</em> &lt; 0.001). The temperature effect on growth also
 differed among patches (χ²<sub>4</sub> = 15.8, <em>p</em> = 0.003),
 because patch C grew less than A and D at 28 °C; at 31 °C the three
-patches grew similarly. Heat affected fragments from patch C least. By
-Day 14, heat lowered Fv/Fm by 0.036 in patch C, compared with 0.118 in A
-and 0.112 in D (model estimates averaged over clipping). Color fell by
-0.3 points in C, compared with 1.8 in A and 1.5 in D.
+patches grew similarly. The heat effect was smallest in patch C for all
+three condition measures. By Day 14, heat lowered Fv/Fm by 0.036 in
+patch C, compared with 0.118 in A and 0.112 in D (model estimates
+averaged over clipping). Color fell by 0.3 points on the 1–6 card in C,
+compared with 1.8 in A and 1.5 in D. On Day 15, ambient fragments held
+about 3 times as many symbionts as heated fragments in patch C, compared
+with 12 times in A and 10 times in D. The patch C differences are the
+least certain: Hochberg-adjusted <em>p</em> values for the heat effect
+in C were <em>p</em> = 0.052 (unclipped) and <em>p</em> = 0.699
+(clipped) for Fv/Fm, and <em>p</em> = 0.153 (unclipped) and <em>p</em> =
+0.612 (clipped) for color. All 48 sequenced patch C fragments fell in
+one host cluster, and patch C came from one spot on the reef, so its
+smaller heat effect could reflect genotype, collection site or
+symbionts; these data cannot separate them.
 </div>
 <div class="dont">
 <p><strong>Source patches vs genotypes:</strong> source patches are
@@ -2358,7 +2418,7 @@ field labels, not confirmed genotypes. Rachael’s host clusters put all
 contain several.</p>
 <p><strong>Per-patch heat effects:</strong> we tested six contrasts per
 measure (three patches × two clipping groups) and adjusted the
-<em>p</em>-values for multiple tests (Holm method). The patch C
+<em>p</em>-values for multiple tests (Hochberg method). The patch C
 estimates are the smallest and least certain.</p>
 <p><strong>What this can show:</strong> with three patches, we can
 describe differences among these patches. We cannot estimate how much
@@ -2585,12 +2645,20 @@ fragments or from the color-card photos, which exist for only 7 of the
 (Molly).</li>
 <li>Confirmation that we weighed fragments after clipping on Day 0, and
 what handling the unclipped fragments received on Day 0 (Molly).</li>
-<li>Where on each fragment we cut the symbiont biopsy, relative to the
-wound (Molly).</li>
+<li>Where on clipped fragments we cut the symbiont biopsy. Molly’s draft
+puts the 1 cm disk between the “tip” and “middle” disks, but clipped
+fragments have no tip disk (Molly).</li>
 <li>Dark-adaptation time before Fv/Fm readings, and the order of
 measurements on days with several (Molly).</li>
-<li>Tank volume, light level, flow and feeding; collection site
-(Molly).</li>
+<li>Tank volume and feeding (Molly). Light (~200 µmol photons m⁻² s⁻¹,
+12:12), flow (0.4 L/min) and the collection site (Hauru public beach)
+are in Molly’s draft.</li>
+<li>Whether the daily regeneration scorer knew each fragment’s
+temperature (Molly).</li>
+<li>How the Apex temperature probes were checked, and the time of day of
+the YSI readings (Molly).</li>
+<li>Whether we planned the source-patch test before seeing the data (for
+us to write).</li>
 <li>Why we ran the microscope experiment as a separate set of fragments
 (Molly).</li>
 <li>Why we chose 31 °C and a 15-day run (for us to write).</li>

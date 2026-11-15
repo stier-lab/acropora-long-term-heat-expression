@@ -46,5 +46,5 @@ file,line,call_group,call_type,code
 04_regeneration.R,400,model_or_test,aov_anova,"lrt_gi <- anova(m_add, m_inter)   # genet × treatment interaction"
 06_genetics.R,125,model_or_test,lmer,"fit <- function(d) lmerTest::lmer(form,data=d,REML=TRUE)"
 06_genetics.R,130,model_or_test,posthoc_contrasts,"contrast(emmeans(m,~treatment|cluster),""pairwise""),infer=TRUE)) |>"
-06_genetics.R,131,diagnostic,multiplicity,"mutate(model=label,p_holm=p.adjust(p.value,""holm""))"
+06_genetics.R,131,diagnostic,multiplicity,"mutate(model=label,p_holm=p.adjust(p.value,""holm"")) [now p_hochberg / ""hochberg"" since 2026-11-15]"
 # scanned /home/claude/lth_core/code; found 35 model/test calls and 13 diagnostic calls,,,,

@@ -60,5 +60,5 @@ Plain-language meanings for the terms used in this repo's code, tables and figur
 | Time ratio | From the log-logistic model: how much longer heated fragments take to reach a stage. Above 1 means slower. |
 | DHARMa checks | Simulation-based checks that a model's leftover scatter looks the way it should. Results can shift slightly between package versions, which is why versions are pinned. |
 | Fisher's exact test | Compares two counts out of small totals, such as 12/12 vs 4/12 fragments. |
-| Holm adjustment | A correction to p-values when several related tests are run at once. |
+| Hochberg adjustment | A correction to p-values when several related tests are run at once, so fewer differences turn up by chance. We use it for the per-patch and per-cluster heat comparisons. It assumes the tests are independent or positively related, and is a little less strict than the Holm adjustment it replaced on 2026-11-15. |
 | renv | The R tool that records the exact package versions (`renv.lock`) so the analysis reruns the same way. |

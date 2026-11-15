@@ -249,13 +249,14 @@ saveRDS(m, file.path(MOD_DIR, "43_final_snp_symbiont_lmm.rds"))
 
 ## 5b. Heat comparisons within each cluster ----------------------------------
 # emmeans() gives the model's average for each temperature within each
-# cluster; the comparison is 28C minus 31C. The Holm adjustment raises the
-# p-values so that, across all clusters together, the chance of any false
-# positive stays at 5%.
+# cluster; the comparison is 28C minus 31C. The Hochberg adjustment raises
+# the p-values so that, across all clusters together, the chance of any false
+# positive stays at 5% (assuming the comparisons are independent or
+# positively related, as contrasts from one model usually are).
 heat_contrasts <- function(m, label)
   as_tibble(summary(contrast(emmeans(m, ~ treatment | cluster), "pairwise"),
                     infer = TRUE)) |>
-  mutate(model = label, p_holm = p.adjust(p.value, "holm"))
+  mutate(model = label, p_hochberg = p.adjust(p.value, "hochberg"))
 ct <- heat_contrasts(m, "all eligible samples")
 
 # Check: refit using only libraries dominated by symbiont group A, to see

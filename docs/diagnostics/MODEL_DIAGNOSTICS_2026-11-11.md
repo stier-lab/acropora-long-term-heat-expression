@@ -2,6 +2,8 @@
 
 2026-11-11. Run with the `stats-diagnostics` skill on every statistical result in `code/01`–`08`. Full table: `model_diagnostics_2026-11-11.csv` (18 analysis families). Call scan: `stats_call_scan_2026-11-11.csv`. The audit scripts (`scripts/diag_*.R`) were removed on 2026-11-14 because the models have changed since; recover them from tag `pre-cleanup-2026-11-14`.
 
+**Update 2026-11-15:** the per-patch heat contrasts (`03_physiology.R`) and the per-cluster symbiont contrasts (`06_genetics.R`) now use the Hochberg adjustment instead of Holm (column `p_hochberg`). Hochberg is valid when the tests are independent or positively related, as contrasts from one model usually are, and is slightly less strict. Mentions of Holm below describe the code as it was on 2026-11-11.
+
 Status labels: **yes** = adequate for the current claim; **handled** = a concern exists but a specific check shows it doesn't change the conclusion; **partial** = a specific gap remains; **not applicable** = no fitted model (counts, summaries).
 
 ## Fixes applied (2026-11-11, commit after a9e8d4b)
@@ -21,13 +23,13 @@ All four fixes and the three "state in the text" items below were applied the sa
 
 What changed in the code:
 
-- `03_physiology.R`: Fv/Fm and color use `(1 + day || tank) + (1 | id)`; symbionts use `(1 + biopsy_day_c || tank)`. Per-patch heat contrasts gain a Holm-adjusted `p_holm` column (6 per response).
+- `03_physiology.R`: Fv/Fm and color use `(1 + day || tank) + (1 | id)`; symbionts use `(1 + biopsy_day_c || tank)`. Per-patch heat contrasts gain an adjusted p-value column (6 per response; Holm `p_holm` then, Hochberg `p_hochberg` since 2026-11-15).
 - `05_source_patches.R`: the reduced model drops only the terms containing source patch × temperature (8 df; 4 for growth), with the same random effects as 03. This now matches the methods text.
 - `04_regeneration.R`: interval-censored models use the log-logistic distribution (best or within 0.6 AIC for every reported stage; pigment over the wound falls back to lognormal). `14_interval_survreg_distributions.csv` records the AIC comparison. One correction to the audit below: lognormal is *not* within 2.3 AIC of the best for every stage (it is 7.8 behind for tip formation), so log-logistic was used instead.
 - `07_supplement.R`: the flagged-fragment refits use the 03 structure (Fv/Fm p = 0.028, color p = 0.007 without fragments 116, 121 and tank 3). The new `22b_sensitivity_wound_growth.csv` covers the symbiont wound term (with the new model and the pinned DHARMa 0.5.0, three fragments are flagged as outliers, 163, 212 and 215; without them p = 0.010. Under DHARMa 0.4.7 it was 163 and 212, p = 0.009) and growth's dependence on tank 3 (without it p = 0.0007; leaving out tank 12 gives p = 0.105; 6 of 48 single-fragment drops give p > 0.05; values after the 2026-11-13 growth correction, previously 0.002, 0.108 and 7 of 48).
 - Team summary: methods and results text updated (tank slopes, log-logistic, tip extension "no clear difference", the symbiont wound caveat, growth and tank 3), plus "out of date" notes listing the superseded numbers.
 
-Status after the fixes: A, C, F and I move from partial to handled; E becomes yes (Holm reported); N becomes handled. Remaining partial: J (Cox p-values are fragment-level; cite the tank permutation) and O (exploratory genetics).
+Status after the fixes: A, C, F and I move from partial to handled; E becomes yes (adjusted p reported; Hochberg since 2026-11-15); N becomes handled. Remaining partial: J (Cox p-values are fragment-level; cite the tank permutation) and O (exploratory genetics).
 
 ## Bottom line (audit as run, before the fixes; superseded by the section above)
 
@@ -77,7 +79,7 @@ Already handled: the budding patch × temperature Cox test (K, now reported as c
 | B | Color over time | primary | handled | No; F overstated, wound term unstable |
 | C | Symbiont density | primary | partial | No for heat; wound result fragile |
 | D | Growth | primary | handled | No; depends on tank 3 |
-| E | Heat effect per patch | support | partial | No; state family and Holm p |
+| E | Heat effect per patch | support | partial | No; state family and adjusted p (Hochberg since 2026-11-15) |
 | F | Patch × temperature | primary | partial | No; test mislabeled |
 | G | Stage present Day 15 (Fisher) | primary | handled | No |
 | H | Budding by tank (permutation) | primary | yes | No |

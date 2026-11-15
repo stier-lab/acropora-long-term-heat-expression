@@ -1,6 +1,6 @@
 # Which outputs are current
 
-Updated 2026-11-14. Use this page to tell current results from historical files before reading figures or tables.
+Updated 2026-11-15. Use this page to tell current results from historical files before reading figures or tables.
 
 ## Current
 
@@ -74,4 +74,15 @@ Commit code, raw-data and output changes together, with a message that says what
   A "Methods details still to add" list holds what only Molly can supply. No reported numbers changed.
 
   Follow-up: `code/07_supplement.R` calls tank 3 "slow to reach temperature", but the Apex record from 28 May shows it at 28.1 °C throughout. Also, figures 36 and 36b label the healing stage "Coenosarc barrier re-established", while figures 39b and 39d call it "coenosarc covers wound".
+- **Draft Methods and Results text revised after a second Craig-style pre-review (2026-11-15):** the eight draft boxes in the summary's Statistics drop-downs now give:
+  - the modelled days (Days 0–14 for Fv/Fm and color);
+  - the reasons for the main model choices, and R and package versions;
+  - the growth caveat (permutation p and tank 3) in the Results text itself;
+  - the clipped-vs-unclipped symbiont ratios;
+  - the flatworm check and a Fisher's test for the microscope repeat (p = 0.007);
+  - the oxygen drop against what warmer water alone would cause;
+  - the multiple-test adjustment and adjusted p for patch C.
+
+  "Similar" and "did not differ" now read "did not detectably differ". Items only Molly can answer are marked [VERIFY] and added to the "Methods details still to add" list. No reported numbers changed, apart from rounding growth to one decimal and showing two decimals for the near-zero growth F values.
+- **Hochberg replaces Holm (2026-11-15, Adrian):** every multiple-test adjustment now uses the Hochberg method. This covers the six per-patch heat contrasts per measure (`03_physiology.R`, `12_genet_treatment_effects.csv`) and the per-cluster symbiont contrasts (`06_genetics.R`, `43_final_snp_symbiont_contrasts.csv`, `43_final_snp_leave_one_tank_out.csv`). The column `p_holm` is now `p_hochberg`. Hochberg is valid when the tests are independent or positively related, as contrasts from one model usually are, and is slightly less strict. Only adjusted p-values changed, and only slightly (the largest drop is 0.187 to 0.141 for growth, patch A and D unclipped); the patch C values quoted in the summary are unchanged, and no conclusion changed.
 - **Literature PDFs removed from git history (2026-11-14):** the 101 PDFs (moved to Drive on 2026-11-13) were stripped from every past commit with `git filter-repo`, so the public history no longer carries copyrighted papers. All commit IDs and the recovery tags changed; files at every commit are otherwise identical. The repo's history shrank from 571 MB to 97 MB. A full backup of the old history is at `~/repo-backups/acropora-lth-before-history-rewrite-2026-11-14.bundle` on Adrian's laptop. Anyone with an older clone should re-clone.

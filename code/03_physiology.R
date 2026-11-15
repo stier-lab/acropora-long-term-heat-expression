@@ -61,8 +61,8 @@ source(here::here("code", "00_setup.R"))
 #     permutation test in section 4 is the supplement check. The result
 #     depends on ambient tank 3 (see 07_supplement.R).
 #   Heat effects within each source patch (from emmeans, on Day 14) carry a
-#   Holm-adjusted p-value across the 6 patch x wound comparisons of each
-#   measure.
+#   Hochberg-adjusted p-value across the 6 patch x wound comparisons of each
+#   measure (Hochberg since 2026-11-15; Holm before).
 #
 # Terms used:
 #   Random effects: the tank and fragment terms above. Each tank (or fragment)
@@ -78,8 +78,11 @@ source(here::here("code", "00_setup.R"))
 #     including the interactions it is part of.
 #   emmeans: the model's average for each group (formally, estimated marginal
 #     means).
-#   Holm adjustment: makes p-values stricter when several comparisons are
-#     tested at once, so fewer differences turn up by chance.
+#   Hochberg adjustment: makes p-values stricter when several comparisons are
+#     tested at once, so fewer differences turn up by chance. It keeps the
+#     chance of any false positive at 5% when the tests are independent or
+#     positively related, as contrasts from one model usually are, and it is
+#     a little less strict than the Holm adjustment.
 
 ## 1a. Data and helpers ------------------------------------------------------
 # `thicket` is the source patch column (A, C, D).
@@ -104,11 +107,11 @@ record_anova <- function(model, name) {
   anova_rows[[name]] <<- av
 }
 record_patch_effect <- function(emm, name) {
-  # pairs() gives 28C minus 31C within each patch x wound group; the Holm
+  # pairs() gives 28C minus 31C within each patch x wound group; the Hochberg
   # adjustment covers those 6 comparisons.
   contr <- as_tibble(pairs(emm, by = c("thicket", "wound"), adjust = "none"))
   contr$response <- name
-  contr$p_holm <- p.adjust(contr$p.value, "holm")   # 6 patch x wound comparisons
+  contr$p_hochberg <- p.adjust(contr$p.value, "hochberg")   # 6 patch x wound comparisons
   patch_rows[[name]] <<- contr
 }
 
