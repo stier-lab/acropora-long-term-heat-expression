@@ -84,5 +84,13 @@ Commit code, raw-data and output changes together, with a message that says what
   - the multiple-test adjustment and adjusted p for patch C.
 
   "Similar" and "did not differ" now read "did not detectably differ". Items only Molly can answer are marked [VERIFY] and added to the "Methods details still to add" list. No reported numbers changed, apart from rounding growth to one decimal and showing two decimals for the near-zero growth F values.
+- **Summary: plain-language, biology-first pass (2026-11-15):**
+  - removed the "How much confidence to place in the results" section;
+  - the banner, sections 1–5 and the take-homes now lead with what the corals did, with the statistics after;
+  - the oxygen text no longer says "mostly because warm water holds less oxygen", since solubility explains only 0.29 of the 0.63 mg/L drop;
+  - stage 5 is described as "fewer, not later";
+  - per-patch Fv/Fm, color and symbiont losses are now given as numbers in the main text.
+
+  No reported numbers changed.
 - **Hochberg replaces Holm (2026-11-15, Adrian):** every multiple-test adjustment now uses the Hochberg method. This covers the six per-patch heat contrasts per measure (`03_physiology.R`, `12_genet_treatment_effects.csv`) and the per-cluster symbiont contrasts (`06_genetics.R`, `43_final_snp_symbiont_contrasts.csv`, `43_final_snp_leave_one_tank_out.csv`). The column `p_holm` is now `p_hochberg`. Hochberg is valid when the tests are independent or positively related, as contrasts from one model usually are, and is slightly less strict. Only adjusted p-values changed, and only slightly (the largest drop is 0.187 to 0.141 for growth, patch A and D unclipped); the patch C values quoted in the summary are unchanged, and no conclusion changed.
 - **Literature PDFs removed from git history (2026-11-14):** the 101 PDFs (moved to Drive on 2026-11-13) were stripped from every past commit with `git filter-repo`, so the public history no longer carries copyrighted papers. All commit IDs and the recovery tags changed; files at every commit are otherwise identical. The repo's history shrank from 571 MB to 97 MB. A full backup of the old history is at `~/repo-backups/acropora-lth-before-history-rewrite-2026-11-14.bundle` on Adrian's laptop. Anyone with an older clone should re-clone.
