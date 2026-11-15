@@ -1,7 +1,7 @@
 ---
-title: "Long-term heat (LTH): key results"
-subtitle: "Heat and wound repair in *Acropora pulchra*, Mo'orea 2025"
-date: "Updated 2026-11-13"
+title: "Heat and wound repair in *Acropora* cf. *pulchra*: key results"
+subtitle: "LTH experiment, Mo'orea 2025"
+date: "Updated 2026-11-14"
 output:
   html_document:
     self_contained: true
@@ -16,121 +16,99 @@ knitr::opts_chunk$set(echo = FALSE, out.width = "100%", fig.align = "center")
 fig  <- function(f) file.path("..", "..", "figures", f)   # code-generated figures
 img  <- function(f) file.path("img", f)                    # photos pulled from the deck
 table_file <- function(f) file.path("..", "..", "output", "tables", f)
+proc_file  <- function(f) file.path("..", "..", "data", "processed", f)
 
 cap_design <- paste(
-  "The experiment used eight tanks: four at 28 °C and four at 31 °C.",
-  "Each tank held coral fragments from three source patches, meaning the field",
-  "patches where the parent material came from: A, C, and D.",
-  "Some fragments were clipped at the growing tip and others were left unwounded.",
-  "Fragments were sampled on Days 1, 3, 10, and 15. Day 15 fragments were also",
-  "measured for photosynthesis score, color, and skeletal mass."
+  "We ran the main experiment in eight tanks, four at 28 °C and four at 31 °C.",
+  "Each tank held 24 fragments: one from each source patch (A, C and D) for each",
+  "clipping treatment (clipped or unclipped) and each sampling day (Days 1, 3, 10 and 15).",
+  "The Day 15 fragments also carry the Fv/Fm, color and skeletal-growth records."
 )
 
 cap_wound_day0 <- paste(
-  "Tip clipping created the wound.",
-  "This Day 0 photo shows a heated *Acropora pulchra* fragment immediately",
-  "after clipping. The pale center is the fresh cut surface. The surrounding",
-  "corallites, the small skeletal cups, are still intact."
+  "Clipping made the wound.",
+  "We photographed this heated fragment on Day 0, right after we clipped about 1 cm off its tip.",
+  "The pale center is the fresh cut. The corallites around it, the small",
+  "skeletal cups the polyps sit in, are intact."
 )
 
 cap_apex <- paste(
-  "The intended temperature difference held through the final sampling day.",
-  "Points are daily means of 144 readings per tank at ten-minute intervals.",
-  "Each line follows one tank: blue = 28 °C and orange = 31 °C, four tanks per treatment.",
-  "The x-axis runs from 28 May to 19 June 2025, relative to clipping on 4 June (Day 0).",
-  "Gray shading marks the period before clipping; dashed horizontal lines mark the targets.",
-  "All eight tanks have a complete daily record for Days 0–15.",
-  "Dates follow the displayed logger clock. These are measured temperatures, not model fits; no uncertainty bands are shown."
+  "The 3 °C difference held through the last sampling day.",
+  "Each point is a tank's daily mean of 144 readings, one every 10 minutes.",
+  "Each line follows one tank: blue = 28 °C and orange = 31 °C, four tanks per temperature.",
+  "The x-axis runs from 28 May to 19 June 2025; we clipped tips on 4 June (Day 0).",
+  "Gray shading marks the days before clipping: heated tanks rose over 28–31 May and held at 31 °C from 1 June.",
+  "Dashed lines mark the targets. All eight tanks have a complete daily record for Days 0–15.",
+  "Dates follow the logger clock. These are measured temperatures, so no uncertainty bands are shown."
 )
 
 cap_stage_cumulative <- paste(
-  "Heat reduced the percentage reaching the final regrowth step by Day 15.",
-  "Each panel shows the percentage first observed at a stage by each day after clipping.",
+  "Heat cut the share of fragments that formed new radial corallites by Day 15.",
+  "Each panel shows the percentage of clipped fragments first seen at a stage by each day after clipping.",
   "Blue solid lines and circles = 28 °C; orange dashed lines and triangles = 31 °C.",
-  "Each percentage uses all fragments in that panel, including those that had not reached the stage.",
-  "Living tissue covering the wound uses a separate microscope-photo experiment, with 8 wounded fragments per temperature.",
-  "The other five panels use 12 wounded fragments per temperature from the main experiment.",
-  "All 16 microscope fragments were recorded as covered on Day 1.",
-  "New skeletal cups are new radial corallites on the regrown tip.",
-  "Curves show observed attainment, not fitted probabilities or continued presence of a feature.",
-  "No uncertainty bands are shown, and the curves do not predict what happened after Day 15."
+  "Every percentage keeps all fragments in the denominator, including those that never reached the stage.",
+  "The healing panel comes from the separate microscope experiment, with 8 clipped fragments per temperature.",
+  "The five regeneration panels use the 12 clipped fragments per temperature in the main experiment.",
+  "The curves show when we first saw each stage. They are not fitted probabilities,",
+  "they carry no uncertainty bands, and they say nothing about what happened after Day 15."
 )
 
 cap_growth <- paste(
-  "Heated corals gained less skeletal mass.",
-  "The y-axis is percent mass change over 15 days. Each dot is one fragment.",
-  "Boxes show the middle half of the fragments and the median. Dot colors mark",
-  "source patch, not confirmed genetic individual: gold = A, green = C, blue = D. Box colors mark temperature:",
-  "blue = 28 °C and orange = 31 °C. Sample sizes are 12 in each of the four groups:",
-  "fragments for 28 °C-unwounded, 31 °C-unwounded, 28 °C-wounded, and",
-  "31 °C-wounded."
+  "Heated fragments gained less skeletal mass.",
+  "The y-axis is percent change in skeletal dry mass over 15 days, and each dot is one fragment.",
+  "Boxes show the median and the middle half of fragments. Dot colors mark",
+  "source patch, not host cluster: gold = A, green = C, dark blue = D. Box colors mark temperature:",
+  "blue = 28 °C and orange = 31 °C. Each temperature × clipping group has 12 fragments."
 )
 
 cap_symbiont <- paste(
-  "Heated corals lost algal symbionts, the algae living in coral tissue, over time.",
-  "The y-axis is millions of symbiont cells per square centimeter. Each gray dot",
-  "is one small tissue sample. Boxes show the middle half of the tissue samples and the median.",
-  "Blue boxes show 28 °C and orange boxes show 31 °C. Wounded and unwounded",
-  "fragments are combined here. Sample size = 24 tissue samples per temperature and day,",
-  "192 total."
+  "Heated fragments lost their algal symbionts over time.",
+  "The y-axis is millions of symbiont cells per square centimeter of sampled surface. Each gray dot",
+  "is one fragment, and boxes show the median and middle half of fragments.",
+  "Blue = 28 °C and orange = 31 °C. We pooled clipped and unclipped",
+  "fragments here: 24 per temperature and day, 192 in total."
 )
 
 cap_other_obs <- paste(
-  "Other daily notes in the main experiment. Lines show the percentage of fragments",
-  "with each observation. Blue denotes 28 °C and orange denotes 31 °C; dashed lines denote unwounded fragments and solid lines denote wounded fragments.",
-  "Polyps were retracted on every fragment on Day 4, the day all fragments were dipped",
-  "to treat Acropora-eating flatworms. Pigment over the wound was scored on Days 3, 4, 9, 12",
-  "and 15. Algae on the wound were never recorded. Flatworm signs were recorded on 15",
-  "fragment-days, all at 31 °C. Every fragment was alive at every check."
-)
-
-cap_morph_km <- paste(
-  "Heat mostly blocked the final regrowth step, not wound sealing.",
-  "Step lines show the percentage of wounded fragments that had reached each",
-  "healing or regrowth step by each day after clipping. Blue lines show 28 °C",
-  "and orange lines show 31 °C. Sample size = 12 wounded fragments per temperature.",
-  "No uncertainty bands are shown."
+  "Other daily notes from the main experiment. Lines show the percentage of fragments",
+  "with each observation. Blue = 28 °C and orange = 31 °C; dashed lines = unclipped and solid lines = clipped.",
+  "Every fragment had its polyps retracted on Day 4, the day we dipped all fragments",
+  "to treat Acropora-eating flatworms. We scored pigment over the wound only on Days 3, 4, 9, 12",
+  "and 15. We never saw algae on a wound. We recorded flatworm signs only in heated tanks",
+  "(numbers in section 3). Every fragment was alive at every check."
 )
 
 cap_molly_stage_timing <- paste(
-  "This plot of first observation days separates wound covering from later regrowth.",
-  "Healing means the coenosarc, the sheet of living tissue between coral polyps,",
-  "re-covered the wound surface. Regeneration means the later rebuilding steps.",
-  "Blue denotes 28 °C and orange denotes 31 °C. Each point is one wounded coral. The x-axis shows the first day a stage was seen.",
-  "Small stacks separate corals that reached the same stage on the same day.",
-  "An X in the gray band means the stage was not observed by the final scored day.",
-  "The early healing row uses the microscope-photo data set because coenosarc cover was scored there.",
-  "The regeneration rows use the main morphology data set.",
-  "Right-side labels show how many corals reached each stage out of the number scored.",
-  "The main pattern is that both temperatures reached early healing and most early rebuilding steps,",
-  "but only 4 of 12 heated corals budded new radial corallites by Day 15 compared with 12 of 12 at 28 °C."
+  "First-observation days separate healing from later regeneration.",
+  "Blue = 28 °C and orange = 31 °C. Each point is one clipped fragment, placed on the first day we saw the stage.",
+  "Small stacks separate fragments that reached a stage on the same day.",
+  "An X in the gray band marks a fragment that had not reached the stage by the last scored day.",
+  "The healing row comes from the microscope experiment; the regeneration rows come from the main experiment.",
+  "Right-side labels give the number of fragments that reached each stage out of the number scored."
 )
 
 cap_molly_stage_violin <- paste(
-  "Heat reduced how many corals reached the final regrowth stage.",
-  "The x-axis shows the healing and regeneration stages. The y-axis shows the",
-  "first day a stage was seen. The gray top band shows fragments that had not",
-  "reached a stage by Day 15. The shaded shapes summarize the first-day",
-  "distribution among corals that reached a stage. Width reflects both how",
-  "closely their first days cluster and how many corals reached the stage. Points are individual corals. X marks show",
-  "individual fragments that had not reached a stage by Day 15. Percent labels",
-  "in the gray band show the percentage not reached. Black box lines show the",
-  "median and the middle half of first days.",
-  "Boxes and white mean-day diamonds appear only for stages reached by every fragment at both temperatures.",
-  "Blue = 28 °C and orange = 31 °C. Stage 1 uses the microscope-photo data set",
-  "because coenosarc cover was scored there (8 wounded fragments per temperature). Stages 2-6 use the main",
-  "morphology data set (12 wounded fragments per temperature). Shapes for incomplete stages describe only the fragments that reached them.",
-  "The key pattern is that all 12 wounded 28 °C fragments budded new radial",
-  "corallites by Day 15, while only 4 of 12 wounded 31 °C fragments did."
+  "Heat cut how many fragments reached the last regeneration stage.",
+  "The x-axis lists healing and the five regeneration stages; the y-axis is the",
+  "first day we saw each stage. The gray top band holds fragments that had not",
+  "reached a stage by Day 15, with X marks for individual fragments and labels for the percentage not reached.",
+  "The shaded shapes show how first days spread among fragments that reached a stage;",
+  "their width reflects both how tightly those days cluster and how many fragments got there,",
+  "so shapes for unfinished stages describe only the fragments that reached them.",
+  "Points are individual fragments. Black box lines show the median and middle half of first days.",
+  "Boxes and white mean-day diamonds appear only for stages every fragment reached at both temperatures.",
+  "Blue = 28 °C and orange = 31 °C. Healing comes from the microscope experiment",
+  "(8 clipped fragments per temperature); the regeneration stages come from the main experiment",
+  "(12 clipped fragments per temperature)."
 )
 
 cap_timeline <- paste(
-  "The photos show wound sealing and later regrowth as separate steps.",
-  "Columns are days after clipping, from Day 0 to Day 15. Rows show 28 °C and 31 °C",
-  "fragments at whole-tip and close-up views. Both fragments seal the wound",
-  "and rebuild a tip. Only the 28 °C fragment buds new corallites by Day 15."
+  "Healing and later regeneration are separate steps.",
+  "Columns are days after clipping, Day 0 to Day 15. Rows show one 28 °C and one 31 °C",
+  "fragment, whole tip and close-up. Both fragments heal and grow a new axial corallite.",
+  "Only the 28 °C fragment forms new radial corallites by Day 15."
 )
-
+```
 
 ```{r stats-helpers, include=FALSE}
 # ---- Statistics boxes ------------------------------------------------------
@@ -199,31 +177,78 @@ p.caption, figcaption { font-size: 0.85em; color: #667; margin-top: 0.6em; }
 .docfooter code { font-size:0.95em; }
 ```
 
-<div class="banner">
-<strong>What we found:</strong> At 31 °C, coral fragments became paler, lost algae from their tissue, and gained less skeletal mass. Wounds still sealed, but only 4 of 12 heated fragments budded new corallites, the small skeletal cups on a regrown tip, by Day 15. All 12 fragments at 28 °C did so. Fragments from source patch C were less affected by heat than those from A and D.<br>
-<strong>November 11 update:</strong> Every statistic was re-checked. Coral-condition tests now use the eight tanks as the temperature replicates. The heat effects held, with smaller but still clear test statistics. Two results softened: tip extension no longer clearly differs in timing between temperatures, and growth depends on one ambient tank. Each "Statistics" drop-down gives draft methods and results text, read directly from the analysis output.<br>
-<strong>Genetic update:</strong> Final host-genotype groups are now available for the 144 early samples; the Day 15 fragments remain ungenotyped. A, C, and D still name the field source patches. Symbiont read typing remains rough.<br>
-<strong>Species name:</strong> Species identification remains provisional: <em>Acropora cf. pulchra</em>. The abbreviation <em>cf.</em> means “compare with” and indicates that the species identification is uncertain. We retain <em>A. pulchra</em> here to match the project’s existing labels.
-</div>
+```{r design-facts, include=FALSE}
+# Facts quoted in the text that are not in output/paper/. Each is computed
+# here from the processed data so the page cannot drift from the data.
+`%>%` <- dplyr::`%>%`
+and_list <- function(x) if (length(x) < 2) as.character(x) else
+  paste(paste(head(x, -1), collapse = ", "), "and", tail(x, 1))
 
-We kept coral fragments at <span class="t28">28 °C</span> or <span class="t31">31 °C</span> and clipped the growing tip on half of them. Over 15 days, we measured wound repair, skeletal growth, color, photosynthesis efficiency, and the algae living in coral tissue, called **algal symbionts**.
+# Heat ramp before Day 0 (heated tanks 4, 5, 10, 11; fixed plumbing).
+apex_d <- readRDS(proc_file("apex_temperature_daily.rds")) %>%
+  dplyr::mutate(tank = as.integer(sub("Temp", "", probe)))
+heated_on <- function(d) mean(apex_d$value_mean[apex_d$tank %in% c(4, 5, 10, 11) &
+                                                  apex_d$date == as.Date(d)])
+ramp_start <- sprintf("%.1f", heated_on("2025-05-28"))
+ramp_end   <- sprintf("%.1f", heated_on("2025-06-01"))
+
+# Ambient tank 3 against the other ambient tanks, Days 0-15.
+t_d015 <- apex_d %>% dplyr::filter(date >= as.Date("2025-06-04"), date <= as.Date("2025-06-19"))
+t3_temp <- sprintf("%.1f", mean(t_d015$value_mean[t_d015$tank == 3]))
+oth_temp <- sprintf("%.1f", range(tapply(t_d015$value_mean[t_d015$tank %in% c(6, 9, 12)],
+                                         t_d015$tank[t_d015$tank %in% c(6, 9, 12)], mean)))
+ysi_tank <- read.csv(table_file("09_ysi_tank_means.csv"))
+t3_do <- sprintf("%.2f", ysi_tank$mean[ysi_tank$variable == "do_mgl" & ysi_tank$tank == 3])
+oth_do <- sprintf("%.2f", range(ysi_tank$mean[ysi_tank$variable == "do_mgl" & ysi_tank$tank %in% c(6, 9, 12)]))
+
+# Flatworms: daily morphology record (Day 15 fragments) and the worm survey of all 192.
+physio <- readRDS(proc_file("physio_clean.rds"))
+aef <- physio %>% dplyr::filter(disease_status %in% "AEF")
+aef_ids <- unique(aef$id)
+aef_checks <- nrow(aef)
+aef_frags <- length(aef_ids)
+aef_amb <- sum(aef$treatment == "28C")
+aef_clipped <- dplyr::n_distinct(aef$id[aef$wound == "yes"])
+aef_days <- and_list(sort(unique(aef$day)))
+bud31 <- physio %>%
+  dplyr::filter(wound == "yes", treatment == "31C") %>%
+  dplyr::group_by(id) %>%
+  dplyr::summarise(budded = any(new_corallites_on_tip %in% 1), .groups = "drop") %>%
+  dplyr::mutate(aef = id %in% aef_ids)
+bud_noaef <- sum(bud31$budded & !bud31$aef); n_noaef <- sum(!bud31$aef)
+bud_aef   <- sum(bud31$budded & bud31$aef);  n_aef   <- sum(bud31$aef)
+worms <- readRDS(proc_file("worm_clean.rds"))
+w_pos <- tapply(worms$present, worms$treatment, sum, na.rm = TRUE)
+w_n   <- tapply(worms$present, worms$treatment, length)
+w_dates <- dplyr::n_distinct(worms$date)
+
+# Day 0 skeletal dry mass (plug removed), clipped vs unclipped.
+bw <- readRDS(proc_file("buoyant_weight_clean.rds"))
+bw0 <- tapply(bw$initial_dry, bw$wound, mean)
+bw0_clip <- sprintf("%.2f", bw0[["yes"]]); bw0_unclip <- sprintf("%.2f", bw0[["no"]])
+```
+
+<div class="banner">
+<strong>What we found:</strong> After 15 days at 31 °C, coral fragments were paler, held fewer algal symbionts and gained less skeletal mass than fragments at 28 °C. Clipped fragments healed at both temperatures. But only 4 of 12 clipped fragments at 31 °C formed new radial corallites, the small skeletal cups on a regrown tip, by Day 15, against 12 of 12 at 28 °C. Heat changed fragments from source patch C less than those from A and D.<br>
+<strong>How we tested it:</strong> We set temperature tank by tank, so the eight tanks, not the fragments, are the replicates for every temperature test. The heat effects on Fv/Fm, color and symbionts are clear on that basis. Two results are weaker: growth, which depends on one ambient tank, and the timing of axial corallite extension, which did not clearly differ. Each "Statistics" drop-down gives draft methods and results text.<br>
+<strong>Genetics:</strong> We have final host clusters for the 144 fragments sampled on Days 1, 3 and 10, but none for the Day 15 fragments. A, C and D name field source patches, not genotypes. Our symbiont typing is rough.
+</div>
 
 ## The experiment
 
-- 8 tanks: four held at <span class="t28">28 °C</span>, four at <span class="t31">31 °C</span>
-- Half the fragments had the growing tip clipped; half were left unwounded
-- 3 field source patches: A, C, D. A source patch is where the parent material came from; these patches are not yet confirmed genetic individuals.
-- Tissue samples collected on Days 1, 3, 10, and 15
-- The 48 fragments sampled on Day 15 were also followed for coral condition and regrowth; 24 were wounded
-- A separate experiment followed wound covering in 16 wounded fragments using microscope photos
+We held fragments of *Acropora* cf. *pulchra* at 28 °C (ambient) or 31 °C (heated) and clipped about 1 cm off the growing tip of half of them, the standard cut used to make coral microfragments. Over 15 days we tracked healing and regeneration, skeletal growth, color, photosynthetic efficiency and the density of **algal symbionts**, the algae living in the coral tissue. *cf.* ("compare with") marks the species name as provisional until the taxonomy is settled.
 
-**Figure key.** The figures carry no legends; this key applies throughout. Temperature: <span class="t28">blue = 28 °C</span>, <span class="t31">orange = 31 °C</span>; where line type or symbol shape also marks temperature, 28 °C is solid with circles and 31 °C is dashed with triangles. Wounding: open symbols, white boxes and dashed lines mean unwounded; filled symbols, gray boxes and solid lines mean wounded (in the color-score figure, gray = unwounded and black = wounded; in the host-cluster symbiont figure, circles = unwounded and triangles = clipped). Source patches: gold = A, green = C, dark blue = D. Symbiont read groups: green = A, pink = B, gold = C, dark blue = D. An X marks a fragment that had not reached a stage by Day 15.
+- **Fragments:** 192 unbranched fragments about 6 cm tall, collected on 18–19 May 2025 from three field **source patches** (A, C and D). A source patch is where a fragment's parent branch grew; it is not a confirmed genotype.
+- **Tanks:** eight tanks, four at each temperature. We raised the heated tanks from `r ramp_start` °C on 28 May to `r ramp_end` °C on 1 June and held them at 31 °C from then on, so heated fragments had three days at 31 °C before clipping.
+- **Clipping:** on Day 0 (4 June) we clipped half the fragments in every tank. The unclipped fragments were sham-handled but not cut.
+- **Sampling:** each tank held 24 fragments, one per source patch, clipping treatment and sampling day. We destructively sampled 48 fragments on each of Days 1, 3, 10 and 15 (192 in all). The 48 Day 15 fragments, 24 of them clipped, carry the repeated records: Fv/Fm, color, growth and daily regeneration scores.
+- **Microscope experiment:** we ran a separate 16-fragment experiment to photograph healing under a dissecting microscope (details in section 3).
+
+**Figure key.** Our figures carry no legends, so this key applies throughout. Temperature: <span class="t28">blue = 28 °C</span>, <span class="t31">orange = 31 °C</span>; where line type or symbol shape also marks temperature, 28 °C is solid with circles and 31 °C is dashed with triangles. Clipping: open symbols, white boxes and dashed lines = unclipped; filled symbols, gray boxes and solid lines = clipped (in the color-score figure, gray = unclipped and black = clipped; in the host-cluster symbiont figure, circles = unclipped and triangles = clipped). Source patches: gold = A, green = C, dark blue = D. Symbiont reference groups: green = S1, pink = S2, gold = S3, dark blue = S4. An X marks a fragment that had not reached a stage by Day 15.
 
 ```{r, fig.cap=cap_design}
 knitr::include_graphics(img("slide05_experimental_design.png"))
 ```
-
-We wounded each clipped fragment by removing the growing tip. The Day 0 photo below shows the fresh cut surface.
 
 ```{r, fig.cap=cap_wound_day0}
 knitr::include_graphics(img("slide14_morphology_heated_D0.png"))
@@ -231,19 +256,15 @@ knitr::include_graphics(img("slide14_morphology_heated_D0.png"))
 
 ## What we found
 
-### 1. The +3 °C temperature difference held
+### 1. The 3 °C difference held
 
-All eight tanks have 144 readings per day, one every ten minutes, from Day 0 through Day 15 (4–19 June 2025). Daily tank means averaged **27.78 °C** in the 28 °C treatment and **30.87 °C** in the 31 °C treatment, a **3.09 °C difference**. Each treatment had four tanks.
+Every tank logged 144 readings a day, one every 10 minutes, from Day 0 through Day 15 (4–19 June 2025). Daily tank means averaged **27.78 °C** in the ambient tanks and **30.87 °C** in the heated tanks, a **3.09 °C difference**.
 
 ```{r, fig.cap=cap_apex}
 knitr::include_graphics(fig("08_apex_temperature.png"))
 ```
 
-The temperature record is complete through Day 15. Treatment averages exclude later days, after the main experiment ended.
-
-**Water conditions during the experiment**
-
-Handheld meter readings cover all eight tanks on 14 dates within 4–19 June: 112 tank-date observations. There are no meter readings for 4 or 7 June; these gaps do not affect the separate, continuous temperature record above.
+**Water conditions.** We took handheld meter readings in all eight tanks on 14 dates between 4 and 19 June, 112 readings in all, with none on 4 or 7 June.
 
 ```{r ysi-summary, echo=FALSE}
 ysi_overall <- read.csv(here::here("output/tables/09_ysi_study_summary.csv"))
@@ -261,56 +282,45 @@ knitr::kable(data.frame(
   check.names=FALSE), row.names=FALSE)
 ```
 
-Values are means ± standard deviations, which describe variation across tanks and sampled dates. Each temperature includes four tanks and 56 readings. Repeated readings are not additional independent tanks. The sheet identifies dissolved oxygen as **milligrams per liter (mg/L)** and salinity as unitless; it does not specify the pH scale.
+Values are means ± standard deviations across readings; each temperature has four tanks and 56 readings, and repeat readings from a tank are not extra replicates. The meter did not record which pH scale it used.
 
-Salinity and pH varied little in these spot checks. Dissolved oxygen concentration was lower in the heated tanks, so these measurements do not establish that temperature was the only water condition that differed. Spot checks also cannot rule out changes between visits.
+Salinity and pH barely moved. Dissolved oxygen concentration was lower in heated tanks, mostly because warmer water holds less oxygen: saturation was similar (`r est("ysi_do_pct_heated", 0)`% heated vs `r est("ysi_do_pct_ambient", 0)`% ambient). Spot checks cannot rule out changes between visits.
 
-```{r, fig.cap="Water conditions measured with a handheld YSI meter during 4–19 June 2025. Each line follows one tank; blue denotes 28 °C and orange denotes 31 °C. Points are recorded readings, with four tanks per temperature. Panels have different vertical scales. Temperature is converted from the sheet’s Fahrenheit readings to Celsius; dissolved oxygen is in mg/L, and salinity and pH are unitless. All tanks were measured on 14 dates. No readings are available for 4 or 7 June; connecting lines do not represent measurements or filled values on missing dates."}
+```{r, fig.cap="Water conditions from a handheld YSI meter, 4–19 June 2025. Each line follows one tank; blue = 28 °C and orange = 31 °C, four tanks per temperature. Points are individual readings, and panels have different vertical scales. We converted temperature from Fahrenheit to Celsius; dissolved oxygen is in mg/L, and salinity and pH are unitless. We measured every tank on 14 dates and have no readings for 4 or 7 June; connecting lines do not stand for measurements on those dates."}
 knitr::include_graphics(fig("09_ysi_water_chem.png"))
 ```
 
 <details class="stats">
 <summary>Statistics: methods and results for tank temperature and water quality</summary>
 
-##### What was measured
-Water temperature in all eight tanks every 10 minutes, Day 0 (June 4, the day tips were clipped) to Day 15 (June 19). Salinity, dissolved oxygen and pH with a handheld meter, once per tank on `r round(pn("ysi_sal")$df1)` of those 16 days (none on June 4 or 7), for `r nn("ysi_sal")` readings.
+##### What we measured
+Water temperature in all eight tanks every 10 minutes from Day 0 (June 4) to Day 15 (June 19). Salinity, dissolved oxygen and pH with a handheld meter, once per tank on `r round(pn("ysi_sal")$df1)` of those 16 days (none on June 4 or 7), for `r nn("ysi_sal")` readings.
 
 ##### Methods text (draft)
-<div class="ms">An Apex controller (Neptune Systems) recorded water temperature in each tank every 10 min. We averaged the readings for each tank on each day, then averaged those daily values across the four tanks in each treatment for Days 0–15. Salinity, dissolved oxygen and pH were measured with a handheld YSI meter (ProQuatro) in all eight tanks on `r round(pn("ysi_sal")$df1)` days between June 4 and 19, 2025; no readings were taken on June 4 or 7.</div>
+<div class="ms">An Apex controller (Neptune Systems) recorded water temperature in each tank every 10 min. We raised the four heated tanks from 28 °C to 31 °C over four days (May 28–31, 2025) and held them at 31 °C from June 1; the four ambient tanks stayed at 28 °C. We averaged the readings for each tank on each day, then averaged those daily values across the four tanks in each treatment for Days 0–15. We measured salinity, dissolved oxygen and pH with a handheld YSI meter (ProQuatro) in all eight tanks on `r round(pn("ysi_sal")$df1)` days between June 4 and 19, 2025; we took no readings on June 4 or 7.</div>
 
 ##### Results text (draft)
-<div class="ms">Tanks averaged `r est("temp_mean_ambient")` °C in the ambient treatment and `r est("temp_mean_heated")` °C in the heated treatment, a difference of `r est("temp_difference")` °C. Daily tank averages stayed between `r sprintf("%.2f", pn("temp_mean_ambient")$ci_low)` and `r sprintf("%.2f", pn("temp_mean_ambient")$ci_high)` °C in ambient tanks and between `r sprintf("%.2f", pn("temp_mean_heated")$ci_low)` and `r sprintf("%.2f", pn("temp_mean_heated")$ci_high)` °C in heated tanks. Across all `r nn("ysi_sal")` meter readings (mean ± SD), salinity was `r sprintf("%.2f ± %.2f", pn("ysi_sal")$estimate, pn("ysi_sal")$statistic)`, dissolved oxygen `r sprintf("%.2f ± %.2f", pn("ysi_do_mgl")$estimate, pn("ysi_do_mgl")$statistic)` mg/L, and pH `r sprintf("%.2f ± %.2f", pn("ysi_ph")$estimate, pn("ysi_ph")$statistic)`. Dissolved oxygen was lower in heated tanks (`r sprintf("%.2f", pn("ysi_do_heated")$estimate)` vs `r sprintf("%.2f", pn("ysi_do_ambient")$estimate)` mg/L).</div>
-
-##### Where the numbers come from
-<p class="src">`output/paper/tanks_water_numbers.csv`, written by `code/02_tanks_water.R`.</p>
-
-<div class="dont">
-
-**Open question:** the pH scale (NBS or total) is not recorded in the YSI sheet. Molly has been asked.
-
-</div>
+<div class="ms">Ambient tanks averaged `r est("temp_mean_ambient")` °C and heated tanks `r est("temp_mean_heated")` °C, a difference of `r est("temp_difference")` °C. Daily tank means stayed between `r sprintf("%.2f", pn("temp_mean_ambient")$ci_low)` and `r sprintf("%.2f", pn("temp_mean_ambient")$ci_high)` °C in ambient tanks and between `r sprintf("%.2f", pn("temp_mean_heated")$ci_low)` and `r sprintf("%.2f", pn("temp_mean_heated")$ci_high)` °C in heated tanks. Across all `r nn("ysi_sal")` meter readings (mean ± SD), salinity was `r sprintf("%.2f ± %.2f", pn("ysi_sal")$estimate, pn("ysi_sal")$statistic)`, dissolved oxygen `r sprintf("%.2f ± %.2f", pn("ysi_do_mgl")$estimate, pn("ysi_do_mgl")$statistic)` mg/L, and pH `r sprintf("%.2f ± %.2f", pn("ysi_ph")$estimate, pn("ysi_ph")$statistic)`. Dissolved oxygen was lower in heated tanks (`r sprintf("%.2f", pn("ysi_do_heated")$estimate)` vs `r sprintf("%.2f", pn("ysi_do_ambient")$estimate)` mg/L), but saturation was similar (`r est("ysi_do_pct_heated", 0)`% vs `r est("ysi_do_pct_ambient", 0)`%).</div>
 
 </details>
 
-### 2. Heat reduced coral condition; average growth was also lower
+### 2. Heat lowered coral condition and growth
 
-At <span class="t31">31 °C</span>, fragments became paler, gained less skeletal mass, and lost algal symbionts. Their photosynthesis-efficiency score, **Fv/Fm**, also fell. This score measures how efficiently the algae’s photosynthetic system can use light.
+We use **coral condition** for three measures: photosynthetic efficiency (**Fv/Fm**, how efficiently the symbionts use light), tissue color, and symbiont density. At 31 °C all three fell over the two weeks, and heated fragments also gained less skeletal mass.
 
-These changes occurred in clipped and unwounded fragments. We found little evidence that tip clipping added to the decline caused by heat. This does not establish that clipping has no effect, or that a local wound response is absent. For symbionts, the clipping result depends on which tanks are included. Where there was a difference, heated clipped fragments kept *more* symbionts than heated unwounded ones.
-
-- Photosynthesis score and color declined through time under heat.
+- Fv/Fm and color declined over time in heated fragments.
 - Symbiont density dropped sharply over the two weeks.
-- Skeletal mass gain was **`r est("growth_pct_lower", 0)`% lower** at <span class="t31">31 °C</span> (`r est("growth_heated", 1)`% vs `r est("growth_ambient", 1)`% over 15 days). Because temperature was assigned to tanks, the test uses four tanks per treatment as the independent replicates (`r fp(pn("growth_temp")$p_value)`). A stricter tank permutation check gives `r fp(pn("growth_tank_permutation")$p_value)`, so treat this as moderate evidence. It leans on ambient tank 3, which grew about as little as the heated tanks: without tank 3 the test gives `r sens_p("growth", "without ambient tank 3")`, and leaving out tank 12 instead gives `r sens_p("growth", "leave one tank out: highest p")`.
+- Heated fragments gained **`r est("growth_pct_lower", 0)`% less** skeletal mass (`r est("growth_heated", 1)`% vs `r est("growth_ambient", 1)`% over 15 days; tank-level model test, `r fp(pn("growth_temp")$p_value)`). A permutation test that uses only the eight tank means and makes no assumption about their distribution gives `r fp(pn("growth_tank_permutation")$p_value)`. Because the two tests disagree about the 0.05 line, we call this moderate evidence. The result depends on ambient tank 3, which grew about as little as the heated tanks: without tank 3, `r sens_p("growth", "without ambient tank 3")`; without tank 12 instead, `r sens_p("growth", "leave one tank out: highest p")`. We don't know why tank 3 grew less. It held `r t3_temp` °C (other ambient tanks `r oth_temp[1]`–`r oth_temp[2]` °C) and had similar oxygen (`r t3_do` mg/L vs `r oth_do[1]`–`r oth_do[2]`).
 
-**Heat and wounding across three measures of coral condition**
+Clipping added little to the heat effect. Clipped and unclipped fragments declined at similar rates in Fv/Fm and color, and grew similarly. With 12 fragments per group, that does not show clipping has no effect. For symbionts, heated clipped fragments kept *more* symbionts than heated unclipped ones, not fewer, but that difference depends on which tanks we include.
 
-```{r, fig.cap="Candidate Figure 2. Heat and wounding across photosynthesis efficiency (A), algal symbiont density (B), and skeletal growth (C). Columns separate 28 °C (blue) and 31 °C (orange). Open symbols and white boxes indicate unwounded fragments; filled symbols and gray boxes indicate wounded fragments. A follows the same 48 fragments over seven visits. Points average four tank means per temperature and wound state; bars show one standard error among tank means. Tip and base readings are averaged within each fragment first. B compares different fragments sampled on Days 1, 3, 10, and 15, with 12 fragments per temperature-by-wound group on each day (192 total). C shows percent skeletal mass gain over 15 days in 48 fragments, with 12 per group. In B and C, dots are individual fragments; boxes show the median and middle half of values, with whiskers extending to the most extreme values within 1.5 box lengths. Boxes are side by side for comparison, not statistically paired samples or confidence intervals. Temperature inference uses four tanks per treatment, not individual dots as independent replicates. Source patches are combined in this display, not removed from the models. Day 0 marks clipping; Day −1 is not an unheated baseline. Missing values are not filled."}
+```{r, fig.cap="Figure 2. Heat and clipping across photosynthetic efficiency (A), algal symbiont density (B) and skeletal growth (C). Columns separate 28 °C (blue) and 31 °C (orange). Open symbols and white boxes = unclipped; filled symbols and gray boxes = clipped. A follows the same 48 fragments over seven visits. We averaged tip and base readings within each fragment, then averaged the four tank means per temperature and clipping group; bars show one standard error among tank means. B compares different fragments sampled on Days 1, 3, 10 and 15, 12 per temperature × clipping group per day (192 in total). C shows percent skeletal mass gain over 15 days in 48 fragments, 12 per group. In B and C, dots are fragments; boxes show the median and middle half, with whiskers to the most extreme values within 1.5 box lengths. Source patches are pooled for display but kept in the models. Day 0 marks clipping. Heated tanks reached 31 °C on 1 June, so Day −1 (3 June) is not an unheated baseline."}
 knitr::include_graphics(fig("45_physiology_figure2.png"))
 ```
 
-The corrected wound assignment is included throughout the physiology analyses. Each temperature now has 12 wounded and 12 unwounded Day 15 fragments. Photosynthesis follows the same fragments over time; symbiont density compares different fragments at each sampling day, so those measurements are shown as separate distributions rather than connected trajectories.
+We measured Fv/Fm and color on the same 48 fragments over time. Symbiont counts required destroying a fragment, so each sampling day used different fragments, and we show those as separate distributions rather than connected lines.
 
-```{r, fig.cap="Heated fragments became paler. Panels separate temperatures and lines distinguish wounded and unwounded fragments (yes/no). Lower color scores mean paler tissue; the axis is reversed, so lower scores appear higher on this plot. Points are observed means across fragments and shaded bands show one standard error on either side, not tank-adjusted confidence intervals. Day 0 marks clipping. Source patches are combined."}
+```{r, fig.cap="Heated fragments paled. Panels separate temperatures, and lines separate clipped and unclipped fragments. Lower color scores mean paler tissue; we reversed the axis, so paler fragments sit higher. Points are means across fragments and shaded bands show one standard error either side, not tank-level confidence intervals. Day 0 marks clipping. Source patches are pooled."}
 knitr::include_graphics(fig("03_color_trajectory.png"))
 ```
 
@@ -330,86 +340,82 @@ knitr::include_graphics(fig("06_symbiont_density_by_day.png"))
 <details class="stats">
 <summary>Statistics: methods and results for photosynthesis, color, symbionts and growth</summary>
 
-##### What was measured
-- **Photosynthetic efficiency (Fv/Fm):** how well the algae in the coral tissue use light, measured with a PAM fluorometer on dark-adapted fragments. Two readings per fragment (near the tip and near the base), averaged. Same 48 fragments on Days −1, 0, 3, 6, 9, 12 and 14.
+##### What we measured
+- **Fv/Fm:** measured with a pulse-amplitude-modulated (PAM) fluorometer on dark-adapted fragments. We took two readings per fragment (near the tip and near the base) and averaged them. Same 48 fragments on Days −1, 0, 3, 6, 9, 12 and 14.
 - **Color:** CoralWatch color-card score from 1 (palest) to 6 (darkest), same 48 fragments, Days −4 to 14.
-- **Symbiont density:** algal cells per cm² of coral surface. Each fragment could be sampled only once, so each sampling day (1, 3, 10, 15) used different fragments: 12 per temperature × wound combination per day, 192 in total.
-- **Growth:** percentage change in skeletal dry mass from Day 0 to Day 15, same 48 fragments. Dry mass comes from buoyant weight (Davies 1989), with seawater density measured with a glass reference object at each weighing, and the aragonite plug each fragment was glued to is subtracted.
-
-Temperature was set at the tank level, with four tanks per temperature. Each tank held fragments from all three source patches, wounded and unwounded.
+- **Symbiont density:** we cut a tissue biopsy from each fragment with a band saw, removed the tissue with an airbrush, counted symbionts on a hemocytometer and measured the biopsy's surface area by wax dipping. Density is therefore per cm² of the sampled piece, not of the whole fragment, so a shorter clipped fragment does not change it. 12 fragments per temperature × clipping group per day (Days 1, 3, 10, 15), 192 in total.
+- **Growth:** percent change in skeletal dry mass from Day 0 to Day 15, same 48 fragments. We calculated dry mass from buoyant weight (Davies 1989), measured seawater density with a glass reference object at each weighing, and subtracted the aragonite plug each fragment was glued to. Molly's Day 0 plan lists clipping before weighing, so growth runs from the clipped fragment. Day 0 dry mass was similar in clipped and unclipped fragments (`r bw0_clip` vs `r bw0_unclip` g), consistent with that order.
 
 ##### Methods text (draft)
-<div class="ms">We analysed Fv/Fm and color score with linear mixed models. Fixed effects were temperature, wound status, day and source patch, with all their interactions, and day entered as a linear trend. Because temperature was applied to whole tanks and fragments were measured repeatedly, each model included a random intercept and a random day slope for each tank, and a random intercept for each fragment. The tank slopes make the temperature × day test use tanks as the replicates. Symbiont density was log-transformed because it varied several-fold among fragments. It was analysed with the same fixed effects and a random intercept and day slope for each tank; each fragment was sampled once. Growth was analysed with temperature, wound status, source patch and their interactions, and a random intercept for tank. We fitted models with lme4 and lmerTest in R and used Satterthwaite degrees of freedom. Because temperature was applied to whole tanks, the temperature test for growth uses tanks as the replicates (4 per temperature). As a check, we also compared the four ambient and four heated tank means against all 70 possible ways of assigning four tanks to each treatment (an exact permutation test; reported in the supplement).</div>
+<div class="ms">We analysed Fv/Fm and color score with linear mixed models. Fixed effects were temperature, clipping, day and source patch, with all their interactions, and day entered as a linear trend. Because we applied temperature to whole tanks and measured fragments repeatedly, each model included a random intercept and a random day slope for each tank, and a random intercept for each fragment. Giving each tank its own slope means the test of temperature × day compares tanks, not fragments. We log-transformed symbiont density because it varied several-fold among fragments, and analysed it with the same fixed effects and a random intercept and day slope for each tank; we sampled each fragment once. We analysed growth with temperature, clipping, source patch and their interactions, and a random intercept for tank, so the temperature test for growth also compares tanks (4 per temperature). We fitted models with lme4 and lmerTest in R and used Satterthwaite degrees of freedom. As a check on growth, we compared the four ambient and four heated tank means against all 70 possible ways of assigning four tanks to each treatment (an exact permutation test; reported in the supplement).</div>
 
 ##### Results text (draft)
-<div class="ms">Fv/Fm declined over time in heated fragments but not in ambient fragments (temperature × day, `r fF("pam_temp_x_day")`). By Day 14, heated fragments averaged `r est("pam_day14_heated")` and ambient fragments `r est("pam_day14_ambient")`. Wounded and unwounded fragments declined at similar rates (temperature × wound × day, `r fF("pam_temp_x_wound_x_day")`).
+<div class="ms">Fv/Fm declined over time in heated fragments but not in ambient fragments (temperature × day, `r fF("pam_temp_x_day")`). By Day 14, heated fragments averaged `r est("pam_day14_heated")` and ambient fragments `r est("pam_day14_ambient")`. Clipped and unclipped fragments declined at similar rates (temperature × clipping × day, `r fF("pam_temp_x_wound_x_day")`).
 
-Heated fragments also became paler over time (temperature × day, `r fF("color_temp_x_day")`), ending at a mean color score of `r est("color_final_heated", 1)` compared with `r est("color_final_ambient", 1)` at ambient. The change in color again did not differ between wounded and unwounded fragments (temperature × wound × day, `r fF("color_temp_x_wound_x_day")`).
+Heated fragments also became paler over time (temperature × day, `r fF("color_temp_x_day")`), ending at a mean color score of `r est("color_final_heated", 1)` compared with `r est("color_final_ambient", 1)` in ambient fragments. The change in color again did not differ between clipped and unclipped fragments (temperature × clipping × day, `r fF("color_temp_x_wound_x_day")`).
 
-Symbiont density fell over time under heat (temperature × day, `r fF("zoox_temp_x_day")`). By Day 15, heated fragments held `r est("zoox_day15_heated")` million cells per cm², compared with `r est("zoox_day15_ambient")` million at ambient. Wounding did not clearly change this pattern (temperature × wound × day, `r fF("zoox_temp_x_wound_x_day")`), but this term depends on individual tanks and fragments: leaving out one tank gives *p* values from `r sub("\\*p\\* = ", "", sens_p("symbionts", "leave one tank out: lowest p"))` to `r sub("\\*p\\* = ", "", sens_p("symbionts", "leave one tank out: highest p"))`. Where there was a difference, heated wounded fragments kept more symbionts than heated unwounded ones, not fewer.
+Symbiont density fell over time in heated fragments (temperature × day, `r fF("zoox_temp_x_day")`). By Day 15, heated fragments held `r est("zoox_day15_heated")` million cells per cm², compared with `r est("zoox_day15_ambient")` million in ambient fragments. Clipping did not clearly change this decline (temperature × clipping × day, `r fF("zoox_temp_x_wound_x_day")`), and leaving out one tank at a time moves this *p* value from `r sub("\\*p\\* = ", "", sens_p("symbionts", "leave one tank out: lowest p"))` to `r sub("\\*p\\* = ", "", sens_p("symbionts", "leave one tank out: highest p"))`. Where there was a difference, heated clipped fragments kept more symbionts than heated unclipped ones.
 
-Heated fragments gained `r est("growth_pct_lower", 0)`% less skeletal mass over 15 days than ambient fragments (`r est("growth_heated")`% vs `r est("growth_ambient")`%; temperature, `r fF("growth_temp")`). Wounded and unwounded fragments grew similarly (wound, `r fF("growth_wound")`; temperature × wound, `r fF("growth_temp_x_wound")`).</div>
-
-##### Where the numbers come from
-<p class="src">`output/paper/physiology_numbers.csv`, written by `code/03_physiology.R` (models in section 1, Figure 2 means in section 5, the tank permutation in section 4).</p>
+Heated fragments gained `r est("growth_pct_lower", 0)`% less skeletal mass over 15 days than ambient fragments (`r est("growth_heated")`% vs `r est("growth_ambient")`%; temperature, `r fF("growth_temp")`). Clipped and unclipped fragments grew similarly (clipping, `r fF("growth_wound")`; temperature × clipping, `r fF("growth_temp_x_wound")`).</div>
 
 <div class="dont">
 
-**Growth test (decided Nov 10):** report the model test in the text. The tank permutation (`r fp(pn("growth_tank_permutation")$p_value)`) goes in the supplement as a check; it agrees in direction but sits above 0.05, so describe the growth effect as moderate evidence rather than a strong result.
+**Growth test:** we report the model test in the text and put the tank permutation (`r fp(pn("growth_tank_permutation")$p_value)`) in the supplement as a check. Both point the same way, but only the model test is below 0.05, so we call the growth effect moderate evidence.
 
-**Out of date (Nov 11):** *F* values for temperature × day from before Nov 11 (for example Fv/Fm *F* = 120 on 228 df) came from models without tank day slopes, which treated every measurement as independent evidence about the slope. They overstated the evidence; use the numbers above (about 6–7 denominator df).
-
-**Out of date (Nov 13):** growth numbers before November 13 (6.1% vs 4.0%, 34% lower; temperature *p* = 0.046; tank permutation *p* = 0.057; patch × temperature *p* = 0.011) included the aragonite plug in the starting mass and used freshwater density for seawater. Molly's calculation sheet and the metadata column subtract the plug; the code now does too.
-
-**Out of date:** earlier drafts gave wound *p* = 0.351 and temperature × wound *p* = 0.908 for growth. Those predate the correction of fragment 119 to wounded.
-
-**Wording:** "no difference between wounded and unwounded" means we found no evidence of one with 12 fragments per group. It does not show that wounding has no effect.
+**Wording:** "no difference between clipped and unclipped" means we found no evidence of one with 12 fragments per group. It does not show that clipping has no effect.
 
 </div>
 
 </details>
 
-### 3. Wounds re-covered, but fewer heated fragments budded new corallites
+### 3. Clipped fragments healed, but heat blocked the last regeneration stage
 
-Wounds re-covered with living tissue quickly at both temperatures. Only **4 of 12 heated fragments (33%)** had budded new corallites, the small skeletal cups on the rebuilt tip, by Day 15. All **12 of 12 fragments at 28 °C (100%)** had done so. A longer experiment might have allowed more heated fragments to reach this step; these data cannot tell us whether the delay was permanent.
+We split recovery from clipping into **healing** and **regeneration**:
 
-Here, **healing** means the coenosarc, the sheet of living tissue between coral polyps, re-covered the wound. **Regeneration** means the later rebuilding steps: the main polyp forms, the wound surface remodels, the tip returns, the tip extends, and new corallites bud.
+- **Healing:** the coenosarc, the sheet of living tissue between polyps, covers the wound.
+- **Regeneration**, five stages scored daily in the main experiment:
+  1. the axial polyp (the polyp at the branch tip) forms in the wound;
+  2. the wound surface remodels (smooths over);
+  3. the axial corallite, the new tip, forms;
+  4. the axial corallite extends;
+  5. new radial corallites, the side cups, form on the new tip.
 
-The healing panel uses a separate microscope-photo experiment with 16 wounded fragments, eight per temperature. The other panels use the 24 wounded fragments in the main experiment, 12 per temperature. All 16 microscope fragments were recorded as covered on Day 1. The microscope photos illustrate the stages in a separate group; they cannot verify individual scores in the main experiment.
+Tissue covered the wound within a day at both temperatures, and nearly every fragment reached regeneration stages 1–4. Stage 5 differed. By Day 15, **12 of 12 ambient** fragments had formed new radial corallites, against **4 of 12 heated** fragments. The split was the same in every tank: three of three clipped fragments in each ambient tank, one of three in each heated tank. Our 15-day experiment cannot tell whether the heated fragments would have reached stage 5 later.
+
+The separate microscope experiment repeated the result. There, `r cnt("micro_budding_day15_ambient")` of 8 ambient and `r cnt("micro_budding_day15_heated")` of 8 heated fragments formed new radial corallites by Day 15. This experiment used 16 other fragments from patches A and C, in four other tanks (two at each temperature, four fragments per tank), about a month later. We collected them on 17 June, raised two tanks to 31 °C over 27–29 June, clipped all 16 on 5 July and photographed them daily until 20 July. It is the only experiment that recorded when tissue first covered the wound.
 
 ```{r, fig.cap=cap_stage_cumulative}
 knitr::include_graphics(fig("39d_stage_cumulative_all_stages.png"))
 ```
 
-The manuscript's Figure 1B (`39b_stage_timing_cumulative_option`) shows four of these panels, the regeneration milestones 1, 3, 4 and 5, all from the main experiment.
+Figure 1B in the manuscript shows four of these panels: regeneration stages 1, 3, 4 and 5. Stage 2 goes in the supplement.
 
-The gap opened before Day 15. By Day 8, `r frac("tip_extension_pct_day8_ambient")` ambient fragments had an extending tip, compared with `r frac("tip_extension_pct_day8_heated")` heated fragments. By Day 12, `r frac("budding_pct_day12_ambient")` ambient fragments had budded new corallites, compared with `r frac("budding_pct_day12_heated")` heated fragments.
+The gap opened before Day 15. By Day 8, `r frac("tip_extension_pct_day8_ambient")` ambient fragments had an extending axial corallite (stage 4), against `r frac("tip_extension_pct_day8_heated")` heated fragments. By Day 12, `r frac("budding_pct_day12_ambient")` ambient fragments had new radial corallites, against `r frac("budding_pct_day12_heated")` heated fragments.
 
-The curves show the percentage first recorded at each stage by each day. Each percentage includes all fragments, including those that had not reached the stage. Once a fragment has a positive score, it remains counted, even if a later score marks the feature absent. A later absence may reflect a real change or a scoring inconsistency; these curves do not distinguish the two.
+**Flatworms do not explain the stage 5 result.** Acropora-eating flatworms appeared mostly in heated tanks. In the daily record of the 48 Day 15 fragments, we noted flatworm signs `r aef_checks` times, on `r aef_frags` heated fragments (`r aef_clipped` of them clipped), on Days `r aef_days`, around the Day 4 treatment dip. We noted none on ambient fragments. A separate survey of all 192 fragments on `r w_dates` dates found worms on `r w_pos[["31C"]]` heated and `r w_pos[["28C"]]` ambient fragment checks. Among heated clipped fragments with no flatworm record, `r bud_noaef` of `r n_noaef` formed new radial corallites, about the same as the `r bud_aef` of `r n_aef` with a record. Flatworms were therefore a second difference between the temperatures, but the heated fragments without them still fell far short of 12 of 12.
+
+**How we counted.** The curves and the table below count a fragment once we first saw it at a stage, and keep counting it even if a later score marks the feature absent. A later absence could be a real change or a scoring slip, and we do not try to separate the two. The stages also need not follow a fixed order: a fragment can form radial corallites in the wound area before its axial corallite visibly extends.
 
 ```{r}
 stage_summary_tbl <- readr::read_csv(
   file.path("..", "..", "output", "tables", "36_stage_timing_mean_iqr.csv"),
   show_col_types = FALSE
 )
-stage_names <- c("Living tissue covers wound", "Main polyp forms",
-                 "Wound surface remodels", "Tip forms", "Tip extends",
-                 "New skeletal cups bud")
+stage_names <- c("Healing: tissue covers wound", "1. Axial polyp forms",
+                 "2. Wound surface remodels", "3. Axial corallite forms",
+                 "4. Axial corallite extends", "5. Radial corallites form")
 attainment <- stage_summary_tbl |>
   dplyr::mutate(Stage = stage_names[stage_order],
                 value = sprintf("%d/%d (%.0f%%)", n_reached, n_scored, pct_reached)) |>
   dplyr::select(Stage, treatment, value) |>
   tidyr::pivot_wider(names_from = treatment, values_from = value)
 knitr::kable(attainment, caption = paste(
-  "Fragments observed at each stage at least once by Day 15.",
-  "Tissue cover uses the separate microscope-photo experiment; other rows use the main experiment."
+  "Clipped fragments we saw at each stage at least once by Day 15.",
+  "Healing comes from the microscope experiment; regeneration stages come from the main experiment."
 ))
 ```
 
-This differs from asking whether a feature was **present on Day 15 itself**. The table and curves show whether each fragment had reached a stage at least once by that day. They do not assume that every stage follows a fixed order or that a feature remains visible afterward.
-
-**Average time to each stage.** Average first-observation days are shown only for stages that every fragment reached at both temperatures. For stages some fragments never reached, an average describes only the fragments that finished, so it is not shown.
-
+**Average time to each stage.** We give average first-observation days only for stages every fragment reached at both temperatures. For the others, an average would describe only the fragments that got there.
 
 ```{r}
 complete_timing <- stage_summary_tbl |>
@@ -418,14 +424,11 @@ complete_timing <- stage_summary_tbl |>
                    `Mean first-observation day` = mean_day,
                    `Middle half of first days` = iqr_days)
 knitr::kable(complete_timing, digits = 2, caption = paste(
-  "Timing summaries for stages reached by all fragments at both temperatures.",
+  "Timing for stages every fragment reached at both temperatures.",
   "The middle-half range runs from the 25th to the 75th percentile.",
-  "These are first observation days, not exact biological onset times.",
-  "All 16 microscope fragments had tissue cover recorded on Day 1."
+  "These are the days we first saw each stage, not exact biological onset times."
 ))
 ```
-
-**Individual timing and unfinished stages.** The distributions below show when fragments reached each stage, with unfinished stages retained above the day axis.
 
 ```{r, fig.cap=cap_molly_stage_violin}
 knitr::include_graphics(fig("36b_stage_violin.png"))
@@ -440,10 +443,7 @@ knitr::include_graphics(fig("36_stage_timing.png"))
 
 </details>
 
-
-**What the scores tell us.** The reviewed records show tip formation in 11 of 12 fragments at each temperature, rather than all 12. Budding can occur in the wound area before visible tip extension, so these stages are not a strict sequence. The budding result remains 12/12 at 28 °C versus 4/12 at 31 °C.
-
-Pigment was assessed on Days 3, 4, 9, 12, and 15 in the main experiment. Other days remain unknown, not absent. Pigment is not one of the six stages above, and its sparse observations support a less precise timing comparison.
+We scored pigment over the wound only on Days 3, 4, 9, 12 and 15, so we don't know about the other days. Pigment is not one of the stages, and so few scores support only a rough timing comparison.
 
 <details>
 <summary>Other daily observations (polyps, pigment, algae, flatworms)</summary>
@@ -454,13 +454,9 @@ knitr::include_graphics(fig("47_other_daily_observations.png"))
 
 </details>
 
-**How the timing models handle unfinished stages.** A fragment that had not reached a stage by its final observation contributes “not yet reached” information. It is not dropped or assigned an invented completion day. For fragments that did reach a stage, the main timing model places onset between the last absent score and the first present score.
+**Timing.** A time-to-event model estimates that the time from clipping to new radial corallites was **`r est("new_corallites_on_tip_time_ratio")` times longer** at 31 °C. The model keeps fragments that never reached stage 5 as "not yet reached" rather than dropping them, so this is not the average of the four heated fragments that got there. Its uncertainty ignores that fragments shared tanks, so we use the tank counts above, not the model, for significance. The same models found no clear temperature difference in when the axial corallite extended.
 
-The timing model estimates a **`r est("new_corallites_on_tip_time_ratio")`-fold longer time** to new-corallite budding at 31 °C. This is a model estimate, not the average time of the four heated fragments that budded. It assumes a particular pattern of event times (a log-logistic distribution, chosen because it fitted these data best) and adjusts for source patch. Its uncertainty does not account for fragments sharing a tank. The observed 4/12 versus 12/12 result does not depend on that model, and it held in every tank: every ambient tank had 3 of 3 wounded fragments bud and every heated tank 1 of 3. The same models found no clear temperature difference in when the tip extended.
-
-A closed wound is not the same thing as a regenerated tip. If we scored only wound sealing, we would miss the main heat effect.
-
-The two fragments shown below both seal the wound and rebuild a tip. Only the fragment at 28 °C buds new corallites by Day 15.
+A healed wound is not a regenerated tip. Had we scored only healing, we would have missed the main heat effect.
 
 ```{r, fig.cap=cap_timeline}
 knitr::include_graphics(img("slide15_morphology_timeline.jpg"))
@@ -476,164 +472,151 @@ vid <- function(f, cap) sprintf(
    <figcaption>%s</figcaption></figure>',
   xfun::base64_encode(img(f)), cap)
 cat(vid("morphology_ambient_healing.mp4",
-        "28 °C time-lapse: the wound seals, the tip rebuilds, and new corallites bud by Day 15."),
+        "28 °C: the wound heals, a new axial corallite grows, and radial corallites form by Day 15."),
     vid("morphology_heated_healing.mp4",
-        "31 °C time-lapse: the wound seals and the tip rebuilds, but new corallites have not budded by Day 15."))
+        "31 °C: the wound heals and a new axial corallite grows, but no radial corallites by Day 15."))
 ```
 
 <details class="stats">
 <summary>Statistics: methods and results for healing and regeneration</summary>
 
-##### What was measured
-**Main experiment:** the 24 wounded fragments among the 48 followed to Day 15 (12 per temperature) were scored every day from Day 0 to Day 15. Each day we recorded whether each of five regeneration stages was present:
+##### What we measured
+**Main experiment:** we scored the 24 clipped fragments among the 48 followed to Day 15 (12 per temperature) every day from Day 0 to Day 15, recording whether each of the five regeneration stages was present.
 
-1. The main (axial) polyp forms in the cut surface.
-2. The cut surface smooths over.
-3. A new tip forms.
-4. The tip extends.
-5. New radial corallites (the small skeletal cups) bud on the tip.
-
-**Separate microscope experiment:** 16 other wounded fragments (8 per temperature), photographed daily under a dissecting microscope. Only this experiment recorded when living tissue first covered the cut. It used different tanks and only two source patches, so it is analysed separately.
+**Microscope experiment:** we photographed 16 other clipped fragments (8 per temperature, patches A and C, two tanks per temperature) daily under a dissecting microscope from July 5 to 20, 2025, and scored healing and the regeneration stages from the photos. Because it used different fragments, tanks and dates, we analysed it separately.
 
 ##### Methods text (draft)
-<div class="ms">For each fragment and stage, we recorded the first day the stage was seen. We compared the number of fragments that reached each stage by Day 15 between temperatures with Fisher's exact tests. To compare how long fragments took to reach a stage, we used time-to-event models. Because fragments were scored once a day, each stage began at some point between the last check without it and the first check with it. Interval-censored log-logistic models use that interval rather than assuming the stage began exactly on the day it was first seen. We chose the log-logistic distribution because it fitted best, or within 0.6 AIC of the best, for every stage among Weibull, lognormal, log-logistic and exponential. Fragments that had not reached a stage by Day 15 were kept in the analysis as "not yet reached", not dropped. Models included source patch, and we checked the results with Cox proportional-hazards models and log-rank tests on the first day each stage was seen (survival package in R). Because temperature was applied to whole tanks, we also report the outcome for each tank and an exact permutation test of the four ambient and four heated tanks.</div>
+<div class="ms">For each fragment and stage, we recorded the first day we saw the stage. We compared the number of fragments that reached each stage by Day 15 between temperatures with Fisher's exact tests. To compare how long fragments took to reach a stage, we used time-to-event models. Because we scored fragments once a day, each stage began at some point between the last check without it and the first check with it. Interval-censored log-logistic models use that interval rather than assuming the stage began exactly on the day we first saw it. We chose the log-logistic distribution because it fitted best, or within 0.6 AIC of the best, for every stage among Weibull, lognormal, log-logistic and exponential. We kept fragments that had not reached a stage by Day 15 in the analysis as "not yet reached" rather than dropping them. Models included source patch, and we checked the results with Cox proportional-hazards models and log-rank tests on the first day we saw each stage (survival package in R). Because we applied temperature to whole tanks, we also report the outcome for each tank and an exact permutation test of the four ambient and four heated tanks.</div>
 
 ##### Results text (draft)
-<div class="ms">In the microscope experiment, living tissue covered the cut by Day 1 in all `r cnt("tissue_cover_by_day1")` of `r nn("tissue_cover_by_day1")` fragments at both temperatures. In the main experiment, nearly every fragment at both temperatures formed an axial polyp (`r cnt("axial_polyp_formation_reached_by_day15")`/`r nn("axial_polyp_formation_reached_by_day15")` ambient, `r cnt("axial_polyp_formation_reached_by_day15", "statistic")`/`r nn("axial_polyp_formation_reached_by_day15")` heated), smoothed the cut surface (`r cnt("wound_smoothed_reached_by_day15")`/12, `r cnt("wound_smoothed_reached_by_day15", "statistic")`/12) and formed a new tip (`r cnt("tip_exist_reached_by_day15")`/12, `r cnt("tip_exist_reached_by_day15", "statistic")`/12). Heat mainly affected the last stage. By Day 15, `r cnt("new_corallites_on_tip_reached_by_day15")` of 12 ambient fragments had budded new radial corallites, compared with `r cnt("new_corallites_on_tip_reached_by_day15", "statistic")` of 12 heated fragments (Fisher's exact test, `r fp(pn("new_corallites_on_tip_present_day15")$p_value)`). The pattern held tank by tank: in `r tank_txt("ambient")` wounded fragments budded; in `r tank_txt("heated")` did (exact tank permutation, `r fp(pn("budding_tank_permutation")$p_value)`, the smallest value possible with four tanks per temperature). A time-to-event model estimated that budding took about `r est("new_corallites_on_tip_time_ratio", 1)` times as long under heat (time ratio `r fci("new_corallites_on_tip_time_ratio")`). On any given day, heated fragments were about one-fifth as likely to bud as ambient fragments (Cox hazard ratio `r fci("budding_hazard_ratio")`). Tip extension was reached by `r cnt("tip_extension_reached_by_day15")` of 12 ambient and `r cnt("tip_extension_reached_by_day15", "statistic")` of 12 heated fragments and its timing did not differ clearly between temperatures (time ratio `r fci("tip_extension_time_ratio")`).</div>
-
-##### Where the numbers come from
-<p class="src">`output/paper/regeneration_numbers.csv`, written by `code/04_regeneration.R` (stage counts and Fisher tests in section 1, timing models in section 2, reached-by-Day-15 counts in section 3, tank counts and tissue cover in section 5).</p>
+<div class="ms">In the microscope experiment, tissue covered the wound by Day 1 in all `r cnt("tissue_cover_by_day1")` of `r nn("tissue_cover_by_day1")` fragments at both temperatures. In the main experiment, nearly every fragment at both temperatures formed an axial polyp (`r cnt("axial_polyp_formation_reached_by_day15")`/`r nn("axial_polyp_formation_reached_by_day15")` ambient, `r cnt("axial_polyp_formation_reached_by_day15", "statistic")`/`r nn("axial_polyp_formation_reached_by_day15")` heated), remodelled the wound surface (`r cnt("wound_smoothed_reached_by_day15")`/12, `r cnt("wound_smoothed_reached_by_day15", "statistic")`/12) and formed a new axial corallite (`r cnt("tip_exist_reached_by_day15")`/12, `r cnt("tip_exist_reached_by_day15", "statistic")`/12). Heat mainly affected the last stage. By Day 15, `r cnt("new_corallites_on_tip_reached_by_day15")` of 12 ambient fragments had formed new radial corallites, compared with `r cnt("new_corallites_on_tip_reached_by_day15", "statistic")` of 12 heated fragments (Fisher's exact test, `r fp(pn("new_corallites_on_tip_present_day15")$p_value)`). The pattern held tank by tank: in `r tank_txt("ambient")` clipped fragments formed radial corallites; in `r tank_txt("heated")` did (exact tank permutation, `r fp(pn("budding_tank_permutation")$p_value)`, the smallest value possible with four tanks per temperature). A time-to-event model estimated that radial corallites took about `r est("new_corallites_on_tip_time_ratio", 1)` times as long to appear under heat (time ratio `r fci("new_corallites_on_tip_time_ratio")`). On any given day, heated fragments were about one-fifth as likely as ambient fragments to form them (Cox hazard ratio `r fci("budding_hazard_ratio")`). The axial corallite extended in `r cnt("tip_extension_reached_by_day15")` of 12 ambient and `r cnt("tip_extension_reached_by_day15", "statistic")` of 12 heated fragments, and the timing did not differ clearly between temperatures (time ratio `r fci("tip_extension_time_ratio")`). In the microscope experiment, `r cnt("micro_budding_day15_ambient")` of 8 ambient and `r cnt("micro_budding_day15_heated")` of 8 heated fragments formed new radial corallites by Day 15.</div>
 
 <div class="dont">
 
-**To confirm:** whether the daily scores were made by eye or from the color-card photos (asked of Molly, Nov 10). Color-card photos exist for only 7 of the 16 days.
+**Fragments 115 and 121:** 121 was scored with radial corallites on Day 15 but no axial corallite that day, and 115 formed radial corallites on Day 14, before its axial corallite extended on Day 15. Without both fragments the result is 11 of 11 ambient vs 3 of 11 heated, so it does not depend on them.
 
-**Counts differ by definition:** the Fisher counts use whether a stage was present on the last scored day, so tip extension there is `r cnt("tip_extension_present_day15")` vs `r cnt("tip_extension_present_day15", "statistic")`. The "reached by Day 15" counts above give `r cnt("tip_extension_reached_by_day15")` vs `r cnt("tip_extension_reached_by_day15", "statistic")`.
+**Two counts for stage 4:** the Fisher tests count a stage only if it was still visible on Day 15, which gives `r cnt("tip_extension_present_day15")` vs `r cnt("tip_extension_present_day15", "statistic")` fragments for an extending axial corallite. The table above counts any fragment seen at the stage by Day 15, which gives `r cnt("tip_extension_reached_by_day15")` vs `r cnt("tip_extension_reached_by_day15", "statistic")`. The difference is one heated fragment whose extension was scored and later not.
 
-**Tanks:** the timing models, the Cox model and the Fisher and log-rank tests treat each fragment as independent, but three wounded fragments shared each tank. Use the time ratio and hazard ratio as effect sizes; for significance, cite the per-tank counts and the tank permutation.
+**Tanks:** the timing models, the Cox model and the Fisher and log-rank tests treat each fragment as independent, but three clipped fragments shared each tank. We use the time ratio and hazard ratio as effect sizes, and cite the per-tank counts and the tank permutation for significance.
 
-**Out of date (Nov 11):** earlier drafts used Weibull timing models, which fitted these intervals worst and gave tip extension a time ratio of 1.36 (*p* = 0.023, "took somewhat longer under heat"). The log-logistic models do not show a clear difference for tip extension. Budding is unchanged in direction and size.
+**What we don't report:**
 
-**Don't report:**
+- *p*-values from daily yes/no models of each stage. Their results shifted with the computer and package versions.
+- the average day a stage was reached, for stages some fragments never reached. For stage 5 under heat, that average would describe only 4 of 12 fragments.
 
-- *p*-values from the daily yes/no models (`12_morph_*`, `12c_*`, and the "Morphology" rows of `20_master_results.csv`; deleted 2026-11-13, recoverable from the `pre-prune-2026-11-13` tag), including the planned tip-extension test. Their results change with the computer and package versions (2026-11-10 rerun check; see `code/README.md`).
-- the average day each stage was reached, for stages some fragments never reached. For budding under heat, that average describes only 4 of 12 fragments.
-
-**Source patches:** every ambient fragment budded, but under heat budding differed by source patch: `r cnt("budding_heated_patch_A")` of `r nn("budding_heated_patch_A")` from patch A, `r cnt("budding_heated_patch_C")` of `r nn("budding_heated_patch_C")` from C and `r cnt("budding_heated_patch_D")` of `r nn("budding_heated_patch_D")` from D. With four fragments per group, and no budding at all in heated patch A, the Cox source patch × temperature test cannot be estimated reliably, so report these counts rather than its *p*-value. Treat this as a pattern to follow up, not a result.
+**Source patches:** every ambient fragment formed radial corallites, but under heat the count differed by source patch: `r cnt("budding_heated_patch_A")` of `r nn("budding_heated_patch_A")` from patch A, `r cnt("budding_heated_patch_C")` of `r nn("budding_heated_patch_C")` from C and `r cnt("budding_heated_patch_D")` of `r nn("budding_heated_patch_D")` from D. With four fragments per group, and none at all from heated patch A, the Cox source patch × temperature test is unreliable, so we report these counts instead of its *p*-value. We treat this as a lead to follow up, not a result.
 
 </div>
 
 </details>
 
-### 4. Source patch C was hurt less by heat
+### 4. Heat changed source patch C less
 
-Fragments from **source patch C** retained more of their photosynthesis efficiency, color, and algal symbionts under heat than fragments from A and D. Growth also differed among patches, but not in the same way: patch C grew less than A and D at 28 °C, and all three grew about the same at 31 °C. Its smaller heat effect on growth reflects slower growth at ambient, not better growth under heat.
+Under heat, fragments from **source patch C** lost less Fv/Fm, color and symbiont density than fragments from A and D. Growth differed among patches in another way: patch C grew less than A and D at 28 °C, and all three grew about the same at 31 °C. So C's smaller heat effect on growth comes from slow growth at 28 °C, not better growth at 31 °C.
 
-We compare each patch at 31 °C with the same patch at 28 °C. That tells us how much heat changed its response, rather than which patch had the highest starting value.
+We compare each patch at 31 °C with the same patch at 28 °C. That measures how much heat changed each patch, not which patch started highest. All three condition measures show a smaller heat effect in C, but how much smaller depends on the measure and its scale.
 
-The condition measurements consistently point to smaller heat effects in C. The size of the difference depends on the response and its measurement scale; there is no single fold difference that describes C's heat tolerance.
-
-```{r, fig.cap="Heat lowered every measurement less in source patch C. Each panel shows the mean for fragments from patches A, C and D at the end of the experiment: Fv/Fm and color on Day 14, symbiont density on Day 15 (log scale), and growth over Days 0–15. Patches A, C and D are orange, green and blue, respectively. Bars show one standard error across fragments (8 per patch and temperature), not tank-level uncertainty. Lines that are not parallel mean the heat effect differs among patches. These are raw means; the formal tests are in the Statistics drop-down below."}
+```{r, fig.cap="Heat lowered every measure less in source patch C. Each panel shows end-of-experiment means for patches A, C and D: Fv/Fm and color on Day 14, symbiont density on Day 15 (log scale) and growth over Days 0–15. Patches A, C and D are gold, green and dark blue. Bars show one standard error across fragments (8 per patch and temperature), not tank-level uncertainty. Lines that are not parallel mean the heat effect differs among patches. These are raw means; the formal tests are in the Statistics drop-down below."}
 knitr::include_graphics(fig("13_genet_response_panel.png"))
 ```
 
 <details class="stats">
 <summary>Statistics: methods and results for source-patch differences</summary>
 
-##### What was measured
-The same physiology measurements as above, split by source patch. A source patch is the field patch (A, C or D) a fragment's parent branch came from. Each patch contributed 16 fragments to the 48 followed to Day 15, split evenly across temperatures and wound status.
+##### What we measured
+The same measures as above, split by source patch. Each patch contributed 16 of the 48 fragments followed to Day 15, split evenly across temperatures and clipping.
 
 ##### Methods text (draft)
-<div class="ms">To test whether the effect of heat differed among source patches, we refitted each physiology model without all terms involving source patch × temperature (including their interactions with wound status and day). We compared the full and reduced models with likelihood-ratio tests. We then estimated the ambient-minus-heated difference for each patch at Day 14 from the full model.</div>
+<div class="ms">To test whether the effect of heat differed among source patches, we refitted each model without every term containing source patch × temperature (including their interactions with clipping and day). We compared the full and reduced models with likelihood-ratio tests. We then estimated the ambient-minus-heated difference for each patch at Day 14 from the full model.</div>
 
 ##### Results text (draft)
-<div class="ms">The effect of heat differed among source patches for Fv/Fm (`r fchi("patch_x_temp_pam_fvfm")`), color (`r fchi("patch_x_temp_color_dscale")`) and symbiont density (`r fchi("patch_x_temp_log_zoox")`). Growth also differed among patches (`r fchi("patch_x_temp_growth_pct")`), because patch C grew less than A and D at 28 °C; at 31 °C the three patches grew similarly. Fragments from patch C were affected least. By Day 14, heat lowered Fv/Fm by `r est("heat_drop_pam_fvfm_patch_C", 3)` in patch C, compared with `r est("heat_drop_pam_fvfm_patch_A", 3)` in A and `r est("heat_drop_pam_fvfm_patch_D", 3)` in D (model estimates averaged over wound status). Color fell by `r est("heat_drop_color_dscale_patch_C", 1)` points in C, compared with `r est("heat_drop_color_dscale_patch_A", 1)` in A and `r est("heat_drop_color_dscale_patch_D", 1)` in D.</div>
-
-##### Where the numbers come from
-<p class="src">`output/paper/source_patches_numbers.csv`, written by `code/05_source_patches.R`, using per-patch heat effects from the `code/03_physiology.R` models.</p>
+<div class="ms">The effect of heat differed among source patches for Fv/Fm (`r fchi("patch_x_temp_pam_fvfm")`), color (`r fchi("patch_x_temp_color_dscale")`) and symbiont density (`r fchi("patch_x_temp_log_zoox")`). The temperature effect on growth also differed among patches (`r fchi("patch_x_temp_growth_pct")`), because patch C grew less than A and D at 28 °C; at 31 °C the three patches grew similarly. Heat affected fragments from patch C least. By Day 14, heat lowered Fv/Fm by `r est("heat_drop_pam_fvfm_patch_C", 3)` in patch C, compared with `r est("heat_drop_pam_fvfm_patch_A", 3)` in A and `r est("heat_drop_pam_fvfm_patch_D", 3)` in D (model estimates averaged over clipping). Color fell by `r est("heat_drop_color_dscale_patch_C", 1)` points in C, compared with `r est("heat_drop_color_dscale_patch_A", 1)` in A and `r est("heat_drop_color_dscale_patch_D", 1)` in D.</div>
 
 <div class="dont">
 
-**Source patches vs genotypes:** source patches are field labels, not confirmed genotypes. Rachael's final SNP clusters place all 48 sequenced patch C fragments in one cluster, while A and D each contain several.
+**Source patches vs genotypes:** source patches are field labels, not confirmed genotypes. Rachael's host clusters put all 48 sequenced patch C fragments in one cluster, while A and D each contain several.
 
-**Out of date (Nov 11):** earlier versions of this test compared 14 df (6 for growth) because they also dropped patch × wound and patch × day terms. The test now drops only the terms that contain source patch × temperature, as the methods text says (8 df; 4 for growth).
+**Per-patch heat effects:** we tested six contrasts per measure (three patches × two clipping groups) and adjusted the *p*-values for multiple tests (Holm method). The patch C estimates are the smallest and least certain.
 
-**Per-patch heat effects:** six contrasts per response (three patches × wound status). Holm-adjusted *p* values are in `output/tables/12_genet_treatment_effects.csv` (`p_holm`). The patch C estimates are the smallest and least certain.
-
-**What this can show:** with three patches, this describes differences among these patches. It does not estimate how much heat tolerance varies among genotypes in the population.
+**What this can show:** with three patches, we can describe differences among these patches. We cannot estimate how much heat tolerance varies among genotypes in the wider population.
 
 </div>
 
 </details>
 
-### 5. Final DNA-marker groups and the algae they host
+### 5. Host clusters and their symbionts
 
-The final DNA-marker results group fragments by genetic similarity. The markers are **single-nucleotide polymorphisms (SNPs)**, differences at individual DNA positions. They came from **RNA sequencing (RNA-seq)**, which measures gene activity and can also reveal some DNA differences.
+Rachael's lab grouped our fragments by genetic similarity using **single-nucleotide polymorphisms (SNPs)**, differences at single DNA positions, read from the RNA sequencing data. We call each group a **host cluster**. The fragments fall into eight host clusters. The assignments cover only the 144 sequenced fragments; they do not carry over automatically to other fragments from the same source patch.
 
-A group of genetically similar samples is called a **cluster**. The final set has eight host-genotype clusters. All 144 fragments retain their earlier cluster assignments; the final genetic-coordinate values replace the preliminary values. These assignments apply to the sequenced fragments, not automatically to other fragments collected from the same source patch.
-
-The file matches 144 tissue samples prepared for sequencing, called **libraries**, using each fragment’s identifying number:
-
-- All **48 samples from C** fall in cluster 1.
-- The 48 samples from A fall in clusters 4, 5, 6, and 7, mostly cluster 4.
-- The 48 samples from D fall in clusters 2, 3, 4, 5, and 8.
+- All **48 fragments from C** fall in cluster 1.
+- The 48 fragments from A fall in clusters 4, 5, 6 and 7, mostly cluster 4.
+- The 48 fragments from D fall in clusters 2, 3, 4, 5 and 8.
 - A and D share clusters 4 and 5.
 
-```{r, fig.cap="Final host-genotype clusters preserve the earlier group memberships. Left: each point is one of 144 sequenced fragments, positioned using the first two summaries of DNA-marker differences from the final SNP set. Source patches A, C and D are orange, green and blue, respectively. Right: counts in each genetic cluster, split by source patch; labels identify the larger segments. Cluster sizes are 48, 17, 16, 52, 7, 2, 1, and 1. Host clusters and source patches are different groupings."}
+```{r, fig.cap="The sequenced fragments fall into eight host clusters, and patch C forms one of them. Left: each point is one of 144 sequenced fragments, placed on the first two principal components of the SNP data. Source patches A, C and D are gold, green and dark blue. Right: the number of fragments in each cluster, split by source patch; labels mark the larger segments. Cluster sizes are 48, 17, 16, 52, 7, 2, 1 and 1. Host clusters and source patches are different groupings."}
 knitr::include_graphics(fig("43_final_snp_structure.png"))
 ```
 
-All sequenced fragments from source patch C belong to host cluster 1. A and D each contain several clusters and share clusters 4 and 5. We assigned treatments by source patch before these genetic results were available. Final assignments do not fix the resulting imbalance: some clusters have few samples or no samples in particular treatment combinations.
+We assigned treatments by source patch before we had genetic results, so the clusters are unevenly spread across treatments.
 
-```{r, fig.cap="Final clusters are unevenly represented across treatments. Each tile gives the number of sequenced fragments for a host cluster, temperature, sampling day, and clipping treatment. Zero means an empty combination, not a missing genetic assignment. Clusters 7 and 8 have only heated samples; cluster 6 has one fragment per temperature. These groups cannot support a well-replicated comparison of heat responses."}
+```{r, fig.cap="Host clusters are unevenly spread across treatments. Each tile gives the number of sequenced fragments for a host cluster, temperature, sampling day and clipping treatment. A zero means an empty combination, not a missing genetic assignment. Clusters 7 and 8 have only heated fragments, and cluster 6 has one fragment per temperature. These clusters are too small to compare heat responses."}
 knitr::include_graphics(fig("43_final_snp_design.png"))
 ```
 
-**Which responses can we link to DNA markers?** The current 144 sequenced fragments were sampled on Days 1, 3, and 10. Symbiont density is the only response measured on those same fragments that we can directly link to these markers.
+**Which measures can we link to host clusters?** We sampled the 144 sequenced fragments on Days 1, 3 and 10. Symbiont density is the only measure we took on those same fragments, so it is the only one we can link directly to host clusters. The 48 Day 15 fragments carry the fuller record (Fv/Fm, color, growth and regeneration), but they have not been sequenced. We plan to move ahead with the existing samples rather than hold the paper for new sequencing.
 
-The 48 fragments sampled on Day 15 have the broader response record: photosynthesis score and color through Day 14, growth and symbiont density at Day 15, and regrowth through Day 15. We do not yet have DNA-marker results for those fragments.
-
-The current plan is to move ahead with the existing samples rather than delay the paper for new sequencing. The final host assignments can inform expression analyses where treatment combinations overlap. They do not add Day 15 genetic assignments or gene-expression measurements.
-
-```{r, fig.cap="Measured symbiont density within final host clusters. Each point is one fragment; blue denotes 28 °C and orange denotes 31 °C; circles denote unwounded fragments and triangles denote clipped fragments. Sampling days remain separate rather than being pooled into a genetic effect. The vertical scale shows millions of algal cells per square centimeter, with equal spacing for equal fold changes. Small horizontal offsets separate overlapping points. These are observations, not adjusted treatment estimates, and fragments in a tank are not independent temperature replicates."}
+```{r, fig.cap="Symbiont density within host clusters. Each point is one fragment; blue = 28 °C and orange = 31 °C; circles = unclipped and triangles = clipped. Sampling days stay separate rather than pooled. The vertical axis is millions of algal cells per square centimeter on a log scale, so equal spacing means equal fold change. Small horizontal offsets separate overlapping points. These are raw observations, not adjusted treatment estimates."}
 knitr::include_graphics(fig("43_final_snp_symbiont_density.png"))
 ```
 
-The updated density analysis accounts for tank, sampling day, clipping, and host cluster. It retains a smaller estimated heat-related loss in cluster 1 than in clusters 2–4. This pattern remains when we leave out fragments dominated by other symbiont groups. It is a reanalysis of the same density data, not independent confirmation of genetic control. Small, uneven groups and imperfect model fit keep these comparisons exploratory; clusters 6–8 are shown but not included in the fitted cluster comparisons.
+Our density analysis accounts for tank, sampling day, clipping and host cluster. It shows a smaller heat-related loss in cluster 1 than in clusters 2–4, and the pattern holds when we leave out fragments dominated by symbionts other than S1. But it reanalyses the same density data, so it is not independent evidence of genetic control. Small, uneven clusters and imperfect model fit keep these comparisons exploratory; we show clusters 6–8 but leave them out of the fitted comparisons.
 
-**Which algae dominate?** The new file also compares sequence reads with four reference symbiont genomes. A read is a short piece of sequence; the relative share mapping to each reference provides a rough picture of the symbiont mixture. Group A, identified as *Symbiodinium*, dominates **138 of 144 fragments**. Five are dominated by group D and one by C. These symbiont letters are unrelated to our coral source-patch letters or host-cluster numbers.
+**Which symbionts dominate?** Rachael's lab also mapped sequence reads, short pieces of sequence, to four reference symbiont genomes. We call these **reference groups S1–S4** (Rachael's labels A–D, renamed here so they don't collide with our source-patch letters). The share of reads mapping to each reference gives a rough picture of each fragment's symbiont mix. S1, identified as *Symbiodinium*, dominates **138 of 144 fragments**. S4 dominates five and S3 one.
 
-```{r, fig.cap="Rough symbiont typing from sequence-read mapping. Each bar is a fragment; green, purple, orange and blue portions show the reported relative shares for reference groups A, B, C and D, respectively, which sum to one. Panels are final host clusters 1–8, with 48, 17, 16, 52, 7, 2, 1 and 1 fragments, respectively; bar widths therefore differ among panels. Fragments are ordered by their group-A share, not by time. These shares are not measured cell proportions or symbiont density, and a dominant group does not imply that no other group is present."}
+```{r, fig.cap="Rough symbiont typing from sequence-read mapping. Each bar is a fragment; green, pink, gold and dark blue portions show the shares of reads mapping to reference groups S1, S2, S3 and S4, which sum to one. Panels are host clusters 1–8, with 48, 17, 16, 52, 7, 2, 1 and 1 fragments, so bar widths differ among panels. Fragments are ordered by their S1 share, not by time. These shares are not cell proportions or symbiont density, and a dominant group does not mean no other group is present."}
 knitr::include_graphics(fig("43_final_snp_symbiont_typing.png"))
 ```
 
-All six non-A-dominated fragments were heated and clipped; five were sampled on Day 10 and one on Day 1. We cannot tell from these data whether heat changed their symbiont mixture or whether they differed beforehand. This makes the mixture worth checking in expression analyses, but it is not evidence that symbiont type caused the heat response. Host assignments are final; this symbiont typing remains rough, and updated expression results are still pending.
+All six fragments not dominated by S1 were heated and clipped; we sampled five on Day 10 and one on Day 1. We cannot tell whether heat shifted their symbiont mix or whether they differed from the start. That makes the mix worth checking in the expression analyses, but it is not evidence that symbiont type drove the heat response.
 
 ## Take-homes
 
-- **The +3 °C difference held.** All eight tanks have a complete temperature record through Day 15 (mean difference 3.09 °C). Dissolved oxygen was lower in the heated tanks, so temperature was not the only water condition that differed.
-- **Heat reduced coral condition.** Over two weeks at 31 °C, Fv/Fm, color and symbiont density all declined, and these effects are clear with the eight tanks as the replicates. Growth was `r est("growth_pct_lower", 0)`% lower, but that result is weaker: it depends on one ambient tank that grew little.
-- **Clipping added little to the heat effect.** Clipped and unwounded fragments declined at similar rates. For symbionts the result depends on which tanks are included, and where there was a difference, clipped heated fragments kept *more* symbionts, not fewer.
-- **Heat stalled the last step of regrowth, not wound repair.** Wounds re-covered within a day at both temperatures, and nearly every fragment formed a main polyp, smoothed the cut and grew a new tip. Budding of new corallites differed: 12 of 12 ambient versus 4 of 12 heated fragments by Day 15, and the pattern held in every tank. We cannot tell whether the heated fragments would have budded later.
-- **Source patch C was least affected.** Heat lowered Fv/Fm, color and symbiont density less in C than in A or D, and the formal patch × temperature tests agree. All 48 sequenced fragments from C belong to one host cluster, so patch and genotype can't be separated for C.
-- **Genetic and symbiont data are limited by the design.** Final host clusters are available only for the 144 fragments sampled on Days 1, 3 and 10, and are unevenly spread across treatments. Most fragments host mainly group-A symbionts; the six exceptions were all heated and clipped.
+- **The 3 °C difference held.** All eight tanks have a complete temperature record through Day 15 (mean difference 3.09 °C). Oxygen concentration was lower in heated tanks, mostly because warm water holds less oxygen.
+- **Heat lowered coral condition.** Over two weeks at 31 °C, Fv/Fm, color and symbiont density all fell, and these effects are clear with the eight tanks as replicates.
+- **Heated fragments grew `r est("growth_pct_lower", 0)`% less**, but that result is weaker because it depends on one ambient tank that grew little.
+- **Clipping added little to the heat effect.** Clipped and unclipped fragments declined at similar rates. For symbionts, where clipping made a difference, clipped heated fragments kept *more* symbionts, not fewer.
+- **Heat blocked the last regeneration stage, not healing.** Tissue covered the wound within a day at both temperatures, and nearly every fragment reached regeneration stages 1–4. New radial corallites formed in 12 of 12 ambient versus 4 of 12 heated fragments by Day 15, in every tank, and the microscope experiment repeated it (`r cnt("micro_budding_day15_ambient")` of 8 vs `r cnt("micro_budding_day15_heated")` of 8). Flatworms do not explain it.
+- **Heat changed source patch C least.** Heat lowered Fv/Fm, color and symbiont density less in C than in A or D. All 48 sequenced fragments from C belong to one host cluster, so we cannot separate patch from genotype for C.
+- **The design limits what the genetic and symbiont data can show.** We have host clusters only for the 144 fragments sampled on Days 1, 3 and 10, and they are unevenly spread across treatments. Most fragments carry mainly S1 symbionts; the six exceptions were all heated and clipped.
 
 ## Open questions
 
-What the current data can and cannot say about each question, as of November 13, 2026.
-
-- **Was budding delayed or blocked?** Partly answered, not resolved. At 28 °C, the `r nn("bud_lag_ambient")` fragments with both events recorded budded `r est("bud_lag_ambient", 0)` to `r cnt("bud_lag_ambient", "statistic")` days after their tip began to extend; the twelfth budded on Day 15 with no tip extension recorded. At 31 °C, `r cnt("bud_stalled_heated")` of 12 fragments had an extending tip for longer than that and still had not budded by Day 15. The last heated fragment to bud did so on Day `r cnt("budding_first_day_range_heated", "statistic")`. The separate microscope experiment showed the same pattern: `r cnt("micro_budding_day15_heated")` of 8 heated fragments had budded by Day 15, compared with `r cnt("micro_budding_day15_ambient")` of 8 at 28 °C. So heat slowed or stalled the step from tip extension to budding. These data cannot separate a long delay from a permanent block: whether those fragments would bud given more time, or after a return to 28 °C, needs a longer experiment.
-- **What makes patch C more tolerant?** Partly answered: patch C carried a second symbiont group alongside the usual one. In the 28 °C samples, `r cnt("sym_D_over5pct_28C_patch_C")` of 24 patch C samples had more than 5% of their symbiont reads in group D, compared with `r cnt("sym_D_over5pct_28C_patch_A")` of 24 from patch A and `r cnt("sym_D_over5pct_28C_patch_D")` of 24 from patch D. Patch C also budded more often under heat: `r cnt("budding_heated_patch_C")` of the 4 heated fragments that budded came from C. The genus of group D is not confirmed: the letters are Rachael's reference labels, and she has confirmed only that group A is *Symbiodinium*. If group D turned out to be *Durusdinium*, a genus often linked to heat tolerance, that would fit the pattern, but this is a question for Rachael, not a finding. The read shares are rough, and patch C is a single host cluster from one field patch. Host genotype, symbionts and field history therefore still travel together. Separating them would need patch C hosts with and without the group D symbionts, or more genotypes per patch.
-- **Which gene responses go with slower regrowth?** Not answerable yet. The expression counts have not been delivered; Rachael and Shreya are rerunning the processing. Two limits apply when they arrive. The expression samples come from Days 1, 3 and 10, before any fragment budded. They are also destructively sampled fragments, not the fragments scored for budding. Expression can therefore test group differences (heat, clipping, and whether patch C responds differently), but it cannot link one fragment's genes to that fragment's regrowth.
-- **Did lower oxygen in the heated tanks contribute?** We cannot separate oxygen effects from temperature effects in this experiment. Heated tanks averaged `r est("ysi_do_heated")` mg/L of dissolved oxygen, compared with `r est("ysi_do_ambient")` mg/L in ambient tanks. The meter also recorded oxygen saturation: the measured concentration as a percentage of the concentration expected at equilibrium with air. Saturation averaged `r est("ysi_do_pct_heated", 0)`% in heated tanks and `r est("ysi_do_pct_ambient", 0)`% in ambient tanks; the lowest heated-tank reading was `r sprintf("%.1f", pn("ysi_do_pct_heated")$ci_low)`%. These spot checks do not show sustained low oxygen at the sampled times. They do not establish that oxygen had no effect on the corals. We have not tested oxygen–physiology associations across tanks, and there are only four tanks per temperature. Night-time oxygen was not measured.
-- **Does clipping change symbiont loss under heat?** The direction is consistent, but its size is not settled. Under heat, clipped fragments kept somewhat more symbionts late in the experiment: `r est("zoox_heated_wound_ratio_day10")` times the unclipped mean on Day 10 and `r est("zoox_heated_wound_ratio_day15")` times on Day 15. Clipped fragments had more on both days in `r cnt("zoox_heated_tanks_wounded_higher")` of 4 heated tanks. Clipping did not speed symbiont loss; if anything, it slowed it. The model test (`r fF("zoox_temp_x_wound_x_day")`) shifts with which tank is left out, and each tank contributes only three fragments per group and day. A run with more tanks per temperature would settle it.
+- **Was stage 5 delayed or blocked?** Partly answered. At 28 °C, the `r nn("bud_lag_ambient")` fragments with both events recorded formed radial corallites `r est("bud_lag_ambient", 0)` to `r cnt("bud_lag_ambient", "statistic")` days after their axial corallite began to extend; the twelfth did so on Day 15 with no extension recorded. At 31 °C, `r cnt("bud_stalled_heated")` of 12 fragments had an extending axial corallite for longer than that and still had no radial corallites by Day 15. The last heated fragment to form them did so on Day `r cnt("budding_first_day_range_heated", "statistic")`. Heat therefore slowed or stalled the step from extension to radial corallites, but we cannot separate a long delay from a permanent block. Whether those fragments would recover with more time, or after a return to 28 °C, needs a longer experiment.
+- **What makes patch C more tolerant?** Not yet known. One lead: patch C carried a second symbiont group alongside S1. At 28 °C, `r cnt("sym_D_over5pct_28C_patch_C")` of 24 patch C fragments had more than 5% of their symbiont reads in S4, against `r cnt("sym_D_over5pct_28C_patch_A")` of 24 from patch A and `r cnt("sym_D_over5pct_28C_patch_D")` of 24 from patch D. We don't know what S4 is; Rachael has confirmed only that S1 is *Symbiodinium*. If S4 proves to be *Durusdinium*, a genus often linked to heat tolerance, that would fit, but for now it is a question for Rachael, not a finding. Patch C is a single host cluster from one field patch, so host genotype, symbionts and field history travel together. Separating them would take patch C hosts with and without S4, or more genotypes per patch.
+- **Which gene responses go with slower regeneration?** We can't answer this yet. The expression counts haven't arrived; Rachael and Shreya are rerunning the processing. We chose the expression days (1, 3 and 10) before the experiment, to catch the first-day wound response and the days after it. Radial corallites then formed on Days 12–15, after the last expression sample, and the sequenced fragments were destroyed when we sampled them. Expression can therefore test group differences (heat, clipping, and whether patch C responds differently), but it cannot link one fragment's genes to that fragment's regeneration.
+- **Did lower oxygen in the heated tanks contribute?** We cannot fully separate oxygen from temperature. Heated tanks averaged `r est("ysi_do_heated")` mg/L of dissolved oxygen, against `r est("ysi_do_ambient")` mg/L in ambient tanks. Saturation, the measured concentration as a percentage of what water at equilibrium with air would hold, averaged `r est("ysi_do_pct_heated", 0)`% in heated and `r est("ysi_do_pct_ambient", 0)`% in ambient tanks, and the lowest heated-tank reading was `r sprintf("%.1f", pn("ysi_do_pct_heated")$ci_low)`%. So the spot checks show no low oxygen at the times we sampled, but we did not measure at night, and with four tanks per temperature we cannot test oxygen against coral condition.
+- **Does clipping change symbiont loss under heat?** The direction is consistent, but the size isn't settled. Under heat, clipped fragments kept somewhat more symbionts late in the experiment: `r est("zoox_heated_wound_ratio_day10")` times the unclipped mean on Day 10 and `r est("zoox_heated_wound_ratio_day15")` times on Day 15, and more on both days in `r cnt("zoox_heated_tanks_wounded_higher")` of 4 heated tanks. But the model test (`r fF("zoox_temp_x_wound_x_day")`) shifts with which tank we leave out. Each tank holds only one clipped fragment per source patch and day, so tests of clipping × heat are weak. An experiment with more tanks per temperature would settle it.
 
 ## How much confidence to place in the results
 
-The observed wound-cover and budding counts do not depend on a fitted timing model. Temperature was assigned to tanks, so the four tanks per treatment, not the individual fragments, are the independent temperature replicates. Since November 11 the coral-condition models allow each tank its own trend over time, so their temperature tests rest on the tanks. Heat effects remained clear, and they held without the flagged fragments and tank. Growth and budding also have tank-by-tank permutation tests. Each model and test was checked for fit, influence and alternative structures; the audit is in `docs/diagnostics/MODEL_DIAGNOSTICS_2026-11-11.md`.
+The healing and stage 5 counts are direct observations; they don't depend on a fitted timing model. We assigned temperature to tanks, so the four tanks per temperature, not the individual fragments, are the independent replicates. Our condition models give each tank its own trend over time, so their temperature tests rest on the tanks. The heat effects on Fv/Fm and color stayed clear when we dropped two fragments that behaved oddly (116 and 121) and ambient tank 3. Growth and stage 5 also have tank-by-tank permutation tests. We checked each model for fit, for the influence of single tanks and fragments, and against alternative structures.
 
-Some daily yes/no morphology models have unstable estimates because nearly every fragment shares the same score at some stages. We do not use their very small reported *p*-values as evidence. Repair-timing *p*-values treat fragments as independent, and the tip-extension timing result depended on the chosen distribution, so we do not report a timing difference there. With only three source patches, patch differences describe these patches, not variation across the population. The genetic-cluster comparisons are uneven and remain exploratory.
+We did not use daily yes/no models of each regeneration stage. On some days nearly every fragment shared the same score, which made those estimates unstable. Our timing *p*-values treat fragments as independent, and the timing result for axial corallite extension depended on the chosen distribution, so we report no timing difference for that stage. With only three source patches, our patch differences describe these patches, not variation across the population. The host-cluster comparisons are uneven and remain exploratory.
+
+## Methods details still to add
+
+We need these before the methods are complete. Items marked (Molly) are questions for the field team.
+
+- pH scale of the YSI meter, NBS or total (Molly; asked).
+- Whether the daily regeneration scores came from looking at live fragments or from the color-card photos, which exist for only 7 of the 16 days (Molly; asked).
+- The observation behind fragment 121's Day 15 radial corallites (Molly).
+- Confirmation that we weighed fragments after clipping on Day 0, and what handling the unclipped fragments received on Day 0 (Molly).
+- Where on each fragment we cut the symbiont biopsy, relative to the wound (Molly).
+- Dark-adaptation time before Fv/Fm readings, and the order of measurements on days with several (Molly).
+- Tank volume, light level, flow and feeding; collection site (Molly).
+- Why we ran the microscope experiment as a separate set of fragments (Molly).
+- Why we chose 31 °C and a 15-day run (for us to write).
 
  <div class="docfooter">
-Numbers are read from `output/paper/` when this page is built (`code/run_all.R`, then render this file); see `code/README.md`. Coral photos and experimental design: LTH field team (M. Brzezinski). Final host-genotype assignments and rough symbiont typing: Rachael Bay and collaborators.
+Coral photos and experimental design: the LTH field team (M. Brzezinski). Host clusters and symbiont typing: Rachael Bay and collaborators.
 </div>

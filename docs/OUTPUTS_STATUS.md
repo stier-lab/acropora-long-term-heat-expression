@@ -56,4 +56,22 @@ Commit code, raw-data and output changes together, with a message that says what
 - **Growth calculation corrected (2026-11-13):** `01_clean_data.R` now follows Molly's buoyant-weight sheet: seawater density from the glass reference object at each weighing, and the aragonite plug subtracted from Day 0 and Day 15 dry mass. Earlier code used the freshwater density curve as seawater density and kept the plug (~60% of starting mass), which shrank % growth about 2.6-fold. Growth is now 16.0% (28 °C) vs 10.2% (31 °C), 36% lower under heat; the code checks every fragment against the metadata column `percent_growth_bw`. Only growth outputs changed.
 - **Final cleanup (2026-11-14):** deleted the rest of `extras/`, the Nov 11 audit scripts (`docs/diagnostics/scripts/`; they no longer match the current models), `manuscript/references.bib` (unused; the manuscript is Molly's Google Doc) and `.Renviron`. The 1.8 MB Apex duplicate list was replaced by `08_apex_duplicate_summary.csv`. All recoverable from tag `pre-cleanup-2026-11-14`.
 - **Accessibility pass (2026-11-14):** added `docs/GLOSSARY.md`, `docs/HOW_TO_CHANGE.md` and `CITATION.cff`; the README now shows Figures 1B and 2 with plain-language captions and screen-reader descriptions; the results summary is served as a web page through GitHub Pages (from `docs/`). Deleted 49 stale local plots in `figures/diagnostics/` (untracked; written by the removed audit scripts). No code or outputs changed.
+- **Results summary revised after a Craig-style pre-review (2026-11-14):** written in "we", with provenance removed. Terms are now consistent throughout:
+  - "clipped / unclipped" for the wounding treatment;
+  - healing, then regeneration stages 1–5, using the stage names in figures 39b and 39d;
+  - "host cluster" for the genetic groups;
+  - symbiont reference groups renamed S1–S4 (Rachael's A–D), so they don't collide with the patch letters.
+
+  Facts added from the data and Molly's methods notes:
+  - the heat ramp, 28–31 May, from the tank sheet and the Apex logs;
+  - fragment size and how much was clipped;
+  - symbiont biopsy and surface-area methods;
+  - details of the microscope experiment and its 8/8 vs 2/8 result;
+  - a flatworm cross-tab: among heated clipped fragments with no flatworm record, 3 of 9 formed radial corallites;
+  - the Day 0 weighing order;
+  - tank 3 water conditions.
+
+  A "Methods details still to add" list holds what only Molly can supply. No reported numbers changed.
+
+  Follow-up: `code/07_supplement.R` calls tank 3 "slow to reach temperature", but the Apex record from 28 May shows it at 28.1 °C throughout. Also, figures 36 and 36b label the healing stage "Coenosarc barrier re-established", while figures 39b and 39d call it "coenosarc covers wound".
 - **Literature PDFs removed from git history (2026-11-14):** the 101 PDFs (moved to Drive on 2026-11-13) were stripped from every past commit with `git filter-repo`, so the public history no longer carries copyrighted papers. All commit IDs and the recovery tags changed; files at every commit are otherwise identical. The repo's history shrank from 571 MB to 97 MB. A full backup of the old history is at `~/repo-backups/acropora-lth-before-history-rewrite-2026-11-14.bundle` on Adrian's laptop. Anyone with an older clone should re-clone.
