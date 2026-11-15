@@ -99,6 +99,7 @@ Commit code, raw-data and output changes together, with a message that says what
   - the SNP map, symbionts within host clusters and symbiont mix.
 
   They are built in the summary's `interactive-figures` chunk from the same data, colours and theme. The static files in `figures/` stay the manuscript versions. Figures 1B, 2 and the photo panels stay static. The page grew from 7.4 to 9.4 MB.
+- **README and website front page (2026-11-15, Adrian):** rewrote `README.md` around the question, findings and design, using clipped/unclipped throughout. Added `docs/index.html` as the website's front page, in the summary's style, linking to the summary, the code, the glossary and the how-to. The summary's "Methods details still to add" list is now in plainer language, split into questions for Molly and items for us to write.
 - **Larger text on the summary's figures (2026-11-15, Adrian):**
   - `save_fig()` now also writes a web copy of every figure to `figures/web/`. It's the same plot drawn at 75% of the print size with the same point sizes, so the text is about a third larger once the page shrinks it to the text column. Figure 2 uses 85% and the patch panel 90%, so their labels and titles fit.
   - The summary uses these copies; the print files in `figures/` stay the manuscript versions.

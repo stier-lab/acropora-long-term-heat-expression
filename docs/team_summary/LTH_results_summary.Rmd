@@ -972,17 +972,22 @@ All six fragments not dominated by S1 were heated and clipped; we sampled five o
 
 ## Methods details still to add
 
-We need these before the methods are complete. Items marked (Molly) are questions for the field team.
+A few things to pin down before the Methods are done. Most are quick questions for Molly.
 
-- pH scale of the YSI meter, NBS or total (Molly; asked).
-- Whether the daily regeneration scores came from looking at live fragments or from the color-card photos, which exist for only 7 of the 16 days (Molly; asked).
-- The observation behind fragment 121's Day 15 radial corallites (Molly).
-- Confirmation that we weighed fragments after clipping on Day 0, and what handling the unclipped fragments received on Day 0 (Molly).
-- Where on clipped fragments we cut the symbiont biopsy. Molly's draft puts the 1 cm disk between the "tip" and "middle" disks, but clipped fragments have no tip disk (Molly).
-- Dark-adaptation time before Fv/Fm readings, and the order of measurements on days with several (Molly).
-- Tank volume and feeding (Molly). Light (~200 µmol photons m⁻² s⁻¹, 12:12), flow (0.4 L/min) and the collection site (Hauru public beach) are in Molly's draft.
-- Whether the daily regeneration scorer knew each fragment's temperature (Molly).
-- How the Apex temperature probes were checked, and the time of day of the YSI readings (Molly).
-- Whether we planned the source-patch test before seeing the data (for us to write).
-- Why we ran the microscope experiment as a separate set of fragments (Molly).
-- Why we chose 31 °C and a 15-day run (for us to write).
+**For Molly**
+
+- Which pH scale does the YSI meter use, NBS or total? (asked)
+- Did you score regeneration on the live fragments or from the color-card photos? The photos only cover 7 of the 16 days. (asked)
+- What did you see on fragment 121 on Day 15 that counted as radial corallites?
+- Did we weigh fragments after clipping on Day 0? And what happened to the unclipped fragments that day: were they handled the same way?
+- Where did the symbiont biopsy come from on clipped fragments? Your draft puts the 1 cm disk between the "tip" and "middle" disks, but clipped fragments don't have a tip disk.
+- How long were fragments dark-adapted before Fv/Fm readings, and what order did the measurements go in on days with several?
+- Tank volume and feeding. Light (~200 µmol photons m⁻² s⁻¹, 12:12), flow (0.4 L/min) and the collection site (Hauru public beach) are already in your draft.
+- Did whoever scored regeneration know which temperature each fragment was in?
+- How were the Apex temperature probes checked, and what time of day were the YSI readings taken?
+- Why did we run the microscope experiment on a separate set of fragments?
+
+**For us to write**
+
+- Whether we planned the source-patch comparison before seeing the data.
+- Why 31 °C, and why 15 days.
