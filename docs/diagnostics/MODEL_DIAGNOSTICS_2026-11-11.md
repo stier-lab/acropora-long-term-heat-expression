@@ -1,6 +1,6 @@
 # Model diagnostics audit: LTH core analyses
 
-2026-11-11. Run with the `stats-diagnostics` skill on every statistical result in `code/01`–`08`. Full table: `model_diagnostics_2026-11-11.csv` (18 analysis families). Call scan: `stats_call_scan_2026-11-11.csv`. The audit scripts (`scripts/diag_*.R`) were removed on 2026-11-14 because the models have changed since; recover them from tag `pre-cleanup-2026-11-14`.
+2026-11-11. Run with the `stats-diagnostics` skill on every statistical result in `code/01`–`08`. Full table: `model_diagnostics_2026-11-11.csv` (18 analysis families). The call scan (`stats_call_scan_2026-11-11.csv`) was archived on 2026-11-15 because it listed the code as of Nov 11; it is in tag `pre-cleanup-2026-11-15`. The audit scripts (`scripts/diag_*.R`) were removed on 2026-11-14 because the models have changed since; recover them from tag `pre-cleanup-2026-11-14`.
 
 **Update 2026-11-15:** the per-patch heat contrasts (`03_physiology.R`) and the per-cluster symbiont contrasts (`06_genetics.R`) now use the Hochberg adjustment instead of Holm (column `p_hochberg`). Hochberg is valid when the tests are independent or positively related, as contrasts from one model usually are, and is slightly less strict. Mentions of Holm below describe the code as it was on 2026-11-11.
 

@@ -1,6 +1,6 @@
 # Raw Data Provenance
 
-Last audited: 2026-09-03
+Last audited: 2026-09-03 · Updated 2026-11-15
 
 Canonical Drive project folder:
 `17. LTH_expression_by_temperature_2025`
@@ -37,21 +37,30 @@ folder has a matching codebook in `data/metadata/*_codebook.csv`.
 
 ## Provenance-Only Imports
 
-- `daily_health_log`: Drive sheet imported for completeness. It is mostly a
-  filled design/template sheet and is not used by the current analysis pipeline.
 - `shipping`: sample handling, box, and preservation metadata. Imported and
   codebooked for RNA-seq handoff provenance; the current pipeline does not read
   these sheets directly.
-- `printable_data_sheets`: printable YSI, PAM, color-card, and daily-health
-  templates. These are blank or page-formatted collection sheets, not tidy
-  analysis inputs.
-- `wax_dipping_standard_curve`: standalone copy of the wax standard-curve sheet.
-  The pipeline currently uses the standard-curve tab in `wax_dipping/Wax_dip.xlsx`;
-  this separate sheet is retained as source provenance.
-- `chlorophyll`: example chlorophyll calculation workbook. The chl-a assay was
-  planned but not populated in the project analysis data.
-- `buoyant_weight_archive`: duplicate/working buoyant-weight calculation
-  workbook retained for traceability.
+
+## Archived 2026-11-15
+
+These were in the repo but nothing used them. They are still on Drive and in git
+tag `pre-cleanup-2026-11-15`:
+
+- `daily_health_log/`: a Drive sheet whose observation columns (date, health,
+  polyps, algae, tip, notes) were never filled in.
+- `wax_dipping_standard_curve/`: a second copy of the standard curve. The code
+  reads `wax_dipping/Standard_curve.csv`, which has the same numbers plus Molly's
+  note on which fit to use.
+- `printable_data_sheets/`: blank printable YSI, PAM, color-card and daily-health
+  field sheets.
+- `chlorophyll/`: an example chlorophyll calculation workbook. The chl-a assay was
+  planned but never run for this project.
+- `buoyant_weight_archive/`: an older working copy of the buoyant-weight
+  calculations. The growth calculation now uses `buoyant_weight/Buoyant_Weight_-_complete.xlsx`.
+- `buoyant_weight/calcuations.csv` and `water_temp_table.csv`: CSV copies of two
+  tabs of that workbook. The code reads the workbook itself.
+- `symbiont_counts/Copy_of_calculations.csv` and `Ordered_averages.csv`:
+  spreadsheet intermediates. The code recomputes density from `Raw_counts.csv`.
 
 ## Important Conventions
 

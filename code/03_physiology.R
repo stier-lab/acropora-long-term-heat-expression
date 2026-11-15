@@ -218,7 +218,8 @@ p_color <- ggplot(traj, aes(day, mean_color,
   geom_line(linewidth = 0.7) +
   geom_point(size = 1.8) +
   geom_vline(xintercept = 0, linetype = "dotted", colour = "grey50") +
-  facet_wrap(~ treatment, ncol = 2) +
+  facet_wrap(~ treatment, axes = "all", axis.labels = "margins", ncol = 2,
+             labeller = as_labeller(c(`28C` = "28 \u00b0C", `31C` = "31 \u00b0C"))) +
   # Reversed axis: darker = higher D-scale score (the colour card's 1-6 scale),
   # so score 1 (palest) plots on top.
   scale_y_reverse(breaks = 1:6, limits = c(6.2, 0.8)) +
@@ -226,8 +227,8 @@ p_color <- ggplot(traj, aes(day, mean_color,
                       name = "Wound") +
   scale_fill_manual(values   = PAL_WOUND,
                     guide = "none") +
-  labs(x = "Day relative to wounding (D0)",
-       y = "Color score (Siebeck D-scale; lower = paler)") +
+  labs(x = "Day relative to clipping (Day 0)",
+       y = "Color score (D-scale; lower = paler)") +
   theme_pub(10)
 save_fig(p_color, "03_color_trajectory", width = 170, height = 90)
 
@@ -250,11 +251,15 @@ write_csv(summary_tbl, file.path(TBL_DIR, "06_symbiont_chl_summary.csv"))
 p_zoox <- ggplot(sym, aes(factor(biopsy_day), cells_per_cm2 / 1e6,
                             fill = treatment)) +
   geom_boxplot(width = 0.6, outlier.shape = NA, alpha = 0.65) +
-  geom_point(position = position_jitter(width = 0.15, height = 0, seed = 42),
+  # Points are dodged with their box (28 °C left, 31 °C right) so each dot
+  # sits over its own temperature's box.
+  geom_point(aes(group = treatment),
+             position = position_jitterdodge(jitter.width = 0.15, jitter.height = 0,
+                                             dodge.width = 0.6, seed = 42),
              alpha = 0.4, size = 0.8) +
   scale_fill_manual(values = c(`28C` = "#56B4E9", `31C` = "#D55E00"),
                     name = "Temperature") +
-  labs(x = "Biopsy day",
+  labs(x = "Sampling day",
        y = expression(Symbionts~(10^6~cells~cm^{-2}))) +
   theme_pub(10)
 # The small random sideways spread of points (jitter) is drawn when the plot is
@@ -314,8 +319,12 @@ p_bw <- ggplot(bw_a, aes(interaction(treatment, wound, sep = " · "),
   scale_fill_manual(values  = c(`28C` = "#56B4E9", `31C` = "#D55E00"),
                     name = "Temperature") +
   scale_colour_manual(values = PAL_GENO, name = "Source patch") +
+  scale_x_discrete(labels = c(`28C · no` = "28 \u00b0C\nunclipped",
+                              `31C · no` = "31 \u00b0C\nunclipped",
+                              `28C · yes` = "28 \u00b0C\nclipped",
+                              `31C · yes` = "31 \u00b0C\nclipped")) +
   labs(x = NULL,
-       y = "Growth (% skeletal mass change over 15 d)") +
+       y = "Growth (% skeletal mass change over 15 days)") +
   theme_pub(10) +
   theme(axis.text.x = element_text(angle = 0))
 set.seed(42)   # see above
@@ -366,13 +375,13 @@ write_csv(means, file.path(TBL_DIR, "45_figure2_summary.csv"))
 # panels share facets, colours, shapes and theme. lines = FALSE skips the
 # line-type scale for the box-plot panels.
 common <- function(lines = TRUE) list(
-  facet_wrap(~ treatment, ncol = 2,
+  facet_wrap(~ treatment, axes = "all", axis.labels = "margins", ncol = 2,
              labeller = as_labeller(c(`28C` = "28 \u00b0C", `31C` = "31 \u00b0C"))),
   scale_colour_manual(values = PAL_TEMP, guide = "none"),
   scale_shape_manual(values = c(no = 1, yes = 16), name = NULL,
-                     labels = c(no = "Unwounded", yes = "Wounded")),
+                     labels = c(no = "Unclipped", yes = "Clipped")),
   if (lines) scale_linetype_manual(values = c(no = "dashed", yes = "solid"), name = NULL,
-                                  labels = c(no = "Unwounded", yes = "Wounded")),
+                                  labels = c(no = "Unclipped", yes = "Clipped")),
   theme_pub(11),
   theme(panel.grid.minor = element_blank(), strip.text = element_text(face = "bold")))
 
@@ -392,14 +401,16 @@ trajectory <- function(response_name, ylab, breaks) {
     labs(x = "Day relative to clipping (Day 0)", y = ylab) +
     common()
 }
+# Day -1 (the pre-clipping reading) is plotted but not labelled: its label
+# ran into the Day 0 label one day away. The dotted line marks Day 0.
 a <- trajectory("PAM", expression(F[v]/F[m]),
-                c(-1, 0, 3, 6, 9, 12, 14))
+                c(0, 3, 6, 9, 12, 14))
 
 # Panels B and C: box plots of fragment values (fill = wound status), with the
 # raw points on top. The jitter seeds keep point positions the same every run.
 box_style <- list(
   scale_fill_manual(values = c(no = "white", yes = "grey65"), name = NULL,
-                    labels = c(no = "Unwounded", yes = "Wounded")),
+                    labels = c(no = "Unclipped", yes = "Clipped")),
   common(lines = FALSE))
 b <- ggplot(sym_f2, aes(factor(day), value, colour = treatment,
                      fill = wound, group = interaction(day, wound))) +
@@ -415,7 +426,7 @@ c <- ggplot(growth, aes(wound, value, colour = treatment, fill = wound)) +
   geom_boxplot(width = 0.55, outlier.shape = NA, linewidth = 0.5) +
   geom_point(aes(shape = wound), colour = "grey35", size = 1.7,
              position = position_jitter(width = 0.12, height = 0, seed = 42)) +
-  scale_x_discrete(labels = c(no = "Unwounded", yes = "Wounded")) +
+  scale_x_discrete(labels = c(no = "Unclipped", yes = "Clipped")) +
   labs(x = NULL, y = "Skeletal mass gain (%)") +
   box_style
 
@@ -430,7 +441,7 @@ figure2 <- patch_margins(
     plot_annotation(tag_levels = "A") &
     theme(legend.position = "none")
 )
-save_fig(figure2, "45_physiology_figure2", width = 185, height = 235)
+save_fig(figure2, "45_physiology_figure2", width = 185, height = 235, web_scale = 0.85)
 save_fig(a, "45a_photosynthesis", width = 185, height = 85)
 save_fig(b, "45b_symbiont_boxplots", width = 185, height = 85)
 save_fig(c, "45c_growth_boxplots", width = 185, height = 85)

@@ -88,8 +88,8 @@ p_micro <- ggplot(prop_df, aes(day, prop, colour = treatment,
   scale_x_continuous(breaks = seq(0, 15, by = 3), limits = c(0, 15)) +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1),
                      limits = c(0, 1)) +
-  facet_wrap(~ label, ncol = 3, labeller = label_wrap_gen(width = 22)) +
-  labs(x = "Days after wounding", y = "Fragments showing the stage (%)") +
+  facet_wrap(~ label, axes = "all", axis.labels = "margins", ncol = 3, labeller = label_wrap_gen(width = 22)) +
+  labs(x = "Days after clipping", y = "Fragments showing the stage (%)") +
   theme_pub(9)
 save_fig(p_micro, "11_microscope_trait_trajectories",
          width = 190, height = 130)
@@ -103,8 +103,8 @@ save_fig(p_micro, "11_microscope_trait_trajectories",
 # On Day 4 every fragment was dipped in the AEF chemical treatment and all
 # polyps were retracted (0/48); that dip is a handling effect, not heat.
 ph_obs <- readRDS(file.path(DATA_PROC, "physio_clean.rds"))
-obs_panels <- c("Polyps extended", "Pigment over wound (wounded only)",
-                "Algae on wound (wounded only)", "Flatworm (AEF) signs recorded")
+obs_panels <- c("Polyps extended", "Pigment over wound (clipped only)",
+                "Algae on wound (clipped only)", "Flatworm (AEF) signs recorded")
 
 # For each observation: k of n fragments scored "yes" per day x temperature x
 # wound, stacked into one table with a panel label. AEF has no NA filter
@@ -133,14 +133,14 @@ p_obs <- ggplot(daily_obs, aes(day, pct, colour = treatment, linetype = wound,
                                group = interaction(treatment, wound))) +
   geom_line(linewidth = 0.6) +
   geom_point(size = 1.4) +
-  facet_wrap(~ panel, ncol = 2) +
+  facet_wrap(~ panel, axes = "all", axis.labels = "margins", ncol = 2) +
   scale_colour_manual(values = PAL_TEMP, name = "Temperature",
                       labels = c(`28C` = "28 \u00b0C", `31C` = "31 \u00b0C")) +
-  scale_linetype_manual(values = c(no = "dashed", yes = "solid"), name = "Wounded",
+  scale_linetype_manual(values = c(no = "dashed", yes = "solid"), name = "Clipped",
                         labels = c(no = "No", yes = "Yes")) +
   scale_x_continuous(breaks = seq(0, 15, by = 3), limits = c(0, 15)) +
   scale_y_continuous(limits = c(0, 100)) +
-  labs(x = "Days after wounding", y = "Fragments (%)") +
+  labs(x = "Days after clipping", y = "Fragments (%)") +
   theme_pub(9)
 save_fig(p_obs, "47_other_daily_observations", width = 180, height = 130)
 

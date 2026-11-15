@@ -372,7 +372,7 @@ write_csv(tank_summary, file.path(TBL_DIR, "09_ysi_tank_mean_uncertainty.csv"))
 
 ## 2e. Figure: daily readings of each tank, one panel per variable -----------
 # Percent oxygen saturation is left out of the figure (not in `labels`).
-labels <- c(temp_c = "Temperature (degrees C)", do_mgl = "Dissolved oxygen (mg/L)",
+labels <- c(temp_c = "Temperature (\u00b0C)", do_mgl = "Dissolved oxygen (mg/L)",
             sal = "Salinity (unitless)", ph = "pH")
 plot_data <- long |>
   filter(variable %in% names(labels)) |>
@@ -382,7 +382,7 @@ p <- ggplot(plot_data, aes(date, value, colour = treatment, group = tank)) +
   geom_line(linewidth = 0.35, alpha = 0.7) +
   geom_point(size = 1.2) +
   scale_colour_manual(values = PAL_TEMP, name = "Temperature treatment") +
-  facet_wrap(~ variable, scales = "free_y", ncol = 2) +
+  facet_wrap(~ variable, axes = "all", axis.labels = "margins", scales = "free_y", ncol = 2) +
   scale_x_date(limits = as.Date(c("2025-06-04", "2025-06-19")), date_breaks = "5 days",
                date_labels = "%b %d") +
   labs(x = NULL, y = NULL) +

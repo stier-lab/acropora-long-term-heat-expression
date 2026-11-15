@@ -347,7 +347,8 @@ bp <- balance |>
 p3 <- ggplot(bp, aes(cell, host_cluster, fill = n)) +
   geom_tile(colour = "white") +
   geom_text(aes(label = n), size = 3) +
-  facet_wrap(~ treatment) +
+  facet_wrap(~ treatment, axes = "all", axis.labels = "margins",
+             labeller = as_labeller(c(`28C` = "28 \u00b0C", `31C` = "31 \u00b0C"))) +
   scale_fill_gradient(low = "white", high = "#66B2A3") +
   labs(x = "Sampling day / clipped (no or yes)", y = "Final host cluster") +
   theme_pub(10) +
@@ -366,7 +367,7 @@ typ <- j |>
 cluster_labels <- setNames(paste0("Cluster ", cluster_summary$host_cluster), cluster_summary$host_cluster)
 p4 <- ggplot(typ, aes(sample_order, fraction, fill = type)) +
   geom_col(width = 1) +
-  facet_wrap(~ host_cluster, scales = "free_x", ncol = 4,
+  facet_wrap(~ host_cluster, axes = "all", axis.labels = "margins", scales = "free_x", ncol = 4,
              labeller = as_labeller(cluster_labels)) +
   scale_fill_manual(values = c(A = "#009E73", B = "#CC79A7",
                                C = "#E69F00", D = "#0072B2"),
@@ -385,10 +386,11 @@ p5 <- ggplot(j, aes(factor(day), symbiont_cells_per_cm2 / 1e6, colour = treatmen
   geom_point(position = position_jitterdodge(jitter.width = .12, dodge.width = .5,
                                              seed = 42),
              alpha = .75, size = 1.6) +
-  facet_wrap(~ host_cluster, ncol = 4) +
+  facet_wrap(~ host_cluster, axes = "all", axis.labels = "margins", ncol = 4,
+             labeller = as_labeller(\(x) paste("Cluster", x))) +
   scale_colour_manual(values = PAL_TEMP) +
   scale_y_log10() +
-  labs(x = "Sampling day", y = "Symbionts (million cells per sq. cm; log scale)",
+  labs(x = "Sampling day", y = "Symbionts (million cells per cm\u00b2; log scale)",
        shape = "Clipped", colour = "Temperature") +
   theme_pub(10)
 save_fig(p5, "43_final_snp_symbiont_density", width = 190, height = 130)

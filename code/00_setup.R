@@ -146,19 +146,41 @@ tank_treatment <- function(tank) {
 # and shape keys, sample sizes and findings go in the separate caption text
 # (figures/FIGURE_INDEX.md, Key section; manuscript legends). The legend.*
 # text settings below only matter if a script turns a legend back on.
-# `%+replace%` replaces each listed theme_bw() setting outright instead of
-# blending the new values into the old ones.
+# Look (2026-11-15, "Information is Beautiful" style): white canvas, deep
+# navy text instead of pure black, light warm gridlines, no tick marks and
+# no panel box, so the data carry the ink. Panel labels sit at the left.
+# Helvetica Neue is set for text and for text drawn inside panels
+# (geom_text, annotate), so PDF and PNG match.
+# `%+replace%` replaces each listed theme_minimal() setting outright instead
+# of blending the new values into the old ones.
+FIG_FONT   <- "Helvetica Neue"
+FIG_INK    <- "#1A2238"   # titles, strip labels, in-panel text
+FIG_SUBINK <- "#5A6484"   # tick labels
+FIG_GRID   <- "#E7E4DC"   # gridlines
+
 theme_pub <- function(base_size = 10, margin_mm = 10) {
-  theme_bw(base_size = base_size, base_family = "") %+replace%
+  theme_minimal(base_size = base_size, base_family = FIG_FONT) %+replace%
     theme(
+      text              = element_text(family = FIG_FONT, colour = FIG_INK,
+                                       size = base_size, face = "plain",
+                                       hjust = 0.5, vjust = 0.5, angle = 0,
+                                       lineheight = 0.9, margin = margin(),
+                                       debug = FALSE),
+      geom              = element_geom(family = FIG_FONT, ink = FIG_INK),
+      plot.background   = element_rect(fill = "white", colour = NA),
+      panel.background  = element_rect(fill = "white", colour = NA),
       panel.grid.minor  = element_blank(),
-      panel.grid.major  = element_line(linewidth = 0.25, colour = "grey88"),
-      panel.border      = element_rect(fill = NA, colour = "black", linewidth = 0.4),
+      panel.grid.major  = element_line(linewidth = 0.3, colour = FIG_GRID),
+      panel.border      = element_blank(),
       strip.background  = element_blank(),
-      strip.text        = element_text(size = base_size - 1, face = "bold"),
-      axis.text         = element_text(size = base_size - 2, colour = "black"),
-      axis.title        = element_text(size = base_size, face = "plain"),
-      axis.ticks        = element_line(colour = "black", linewidth = 0.3),
+      strip.text        = element_text(size = base_size - 1, face = "bold",
+                                       colour = FIG_INK, hjust = 0,
+                                       margin = margin(2, 0, 3, 0, "pt")),
+      axis.text         = element_text(size = base_size - 2, colour = FIG_SUBINK),
+      axis.title        = element_text(size = base_size, face = "plain", colour = FIG_INK),
+      axis.ticks        = element_blank(),
+      # Black x and y axis lines on every panel (requested 2026-11-15).
+      axis.line         = element_line(colour = "black", linewidth = 0.4),
       plot.title        = element_blank(),
       plot.subtitle     = element_blank(),
       plot.tag          = element_text(size = base_size + 1, face = "bold"),
@@ -193,7 +215,7 @@ patch_margins <- function(patch, panel_mm = 3, outer_mm = 10) {
 # both files. cairo_pdf stores the fonts inside the PDF and keeps symbols
 # such as ° and × intact.
 save_fig <- function(plot, name, width = 170, height = 110, units = "mm",
-                     dpi = 300, dir = FIG_DIR) {
+                     dpi = 300, dir = FIG_DIR, web_scale = 0.75) {
   dir.create(dir, recursive = TRUE, showWarnings = FALSE)
   for (ext in c("pdf", "png")) {
     ggsave(
@@ -206,6 +228,21 @@ save_fig <- function(plot, name, width = 170, height = 110, units = "mm",
       device   = if (ext == "pdf") cairo_pdf else "png"
     )
   }
+  # Web copy for the results summary (figures/web/): the same plot drawn on a
+  # smaller page (web_scale x the print size) with the same point sizes, so
+  # text is about a third larger relative to the figure when the page shrinks
+  # it to the text column. The print files above are the manuscript versions.
+  web_dir <- file.path(dir, "web")
+  dir.create(web_dir, showWarnings = FALSE)
+  ggsave(
+    filename = file.path(web_dir, paste0(name, ".png")),
+    plot     = plot,
+    width    = width * web_scale,
+    height   = height * web_scale,
+    units    = units,
+    dpi      = 280,
+    device   = "png"
+  )
   invisible(plot)
 }
 

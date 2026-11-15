@@ -11,7 +11,7 @@ Updated 2026-11-15. Use this page to tell current results from historical files 
 | Manuscript figure map | `manuscript/MAIN_FIGURE_PLAN.md` | Each figure in Molly's working draft and supplement, with the file and script that make it. |
 | Figure 1B | `figures/39b_stage_timing_cumulative_option.*` | The four regeneration milestones, main experiment. All six stages: `39d_stage_cumulative_all_stages`. |
 | Figure 2 | `figures/45_physiology_figure2.*` | Legend: `manuscript/FIGURE_2_LEGEND.md`. |
-| Figure artwork | `figures/*` | Rebuilt 2026-11-12 with no embedded titles, subtitles, captions or legends; the colour/shape key is in `figures/FIGURE_INDEX.md`. All outputs regenerated the same day under the package versions pinned in `renv.lock`; this moved test statistics by under 0.05% and changed the simulation-based DHARMa checks (see the diagnostics audit). |
+| Figure artwork | `figures/*` | Restyled 2026-11-15 ("Information is Beautiful" look; see `figures/FIGURE_INDEX.md`). Since 2026-11-12, no embedded titles, subtitles, captions or legends; the colour/shape key is in `figures/FIGURE_INDEX.md`. All outputs regenerated the same day under the package versions pinned in `renv.lock`; this moved test statistics by under 0.05% and changed the simulation-based DHARMa checks (see the diagnostics audit). |
 | Genetics | `figures/43_final_snp_*`, `output/tables/43_final_snp_*` | Final host clusters from Rachael (2026-10-13). Symbiont read shares are rough. Since 2026-11-12 the RNA-seq covariate tables (`31_*`, `43_final_snp_rnaseq_covariates`) no longer carry the retired source-resilience scores. |
 | Morphology scores | `data/raw/physio_morphology/data.csv`, `data/raw/microscope_physio/data.csv` | October 16 corrected exports. |
 | Model checks | `docs/diagnostics/MODEL_DIAGNOSTICS_2026-11-11.md` | Model structure decisions and diagnostics for every reported model. |
@@ -21,7 +21,7 @@ Updated 2026-11-15. Use this page to tell current results from historical files 
 
 | What | Superseded by |
 |---|---|
-| Old scripts, figures, tables, the master results table and the daily yes/no models (deleted with `extras/` on 2026-11-13/14; tags `pre-prune-2026-11-13`, `pre-cleanup-2026-11-14`) | The 10 core scripts in `code/` (merged 2026-11-11) |
+| Old scripts, figures, tables, the master results table and the daily yes/no models (deleted with `extras/` on 2026-11-13/14; tags `pre-prune-2026-11-13`, `pre-cleanup-2026-11-14`). Unused raw-data copies and templates (archived 2026-11-15; tag `pre-cleanup-2026-11-15`) | The 10 core scripts in `code/` (merged 2026-11-11) |
 | Old stage-timing displays `39a`, `39c`, `40`, `41` (deleted 2026-11-13) | `39b` (Figure 1B) and `39d`. The older options can misrepresent the 12/12 vs 4/12 budding result (commit 0da201d). |
 | `data/raw/*/data_before_2026-10-16.csv` | The October 16 corrected `data.csv` in the same folder |
 
@@ -73,7 +73,7 @@ Commit code, raw-data and output changes together, with a message that says what
 
   A "Methods details still to add" list holds what only Molly can supply. No reported numbers changed.
 
-  Follow-up: `code/07_supplement.R` calls tank 3 "slow to reach temperature", but the Apex record from 28 May shows it at 28.1 °C throughout. Also, figures 36 and 36b label the healing stage "Coenosarc barrier re-established", while figures 39b and 39d call it "coenosarc covers wound".
+  Follow-up: `code/07_supplement.R` calls tank 3 "slow to reach temperature", but the Apex record from 28 May shows it at 28.1 °C throughout. (The figure 36/36b stage-label mismatch was fixed on 2026-11-15.)
 - **Draft Methods and Results text revised after a second Craig-style pre-review (2026-11-15):** the eight draft boxes in the summary's Statistics drop-downs now give:
   - the modelled days (Days 0–14 for Fv/Fm and color);
   - the reasons for the main model choices, and R and package versions;
@@ -92,5 +92,36 @@ Commit code, raw-data and output changes together, with a message that says what
   - per-patch Fv/Fm, color and symbiont losses are now given as numbers in the main text.
 
   No reported numbers changed.
+- **Interactive figures in the summary (2026-11-15, Adrian):** nine summary figures are now interactive (plotly; hover shows the tank or fragment, its patch and the exact value; drag to zoom):
+  - tank temperature and water conditions;
+  - growth and symbiont density by group;
+  - the six stage curves and each fragment's first day per stage;
+  - the SNP map, symbionts within host clusters and symbiont mix.
+
+  They are built in the summary's `interactive-figures` chunk from the same data, colours and theme. The static files in `figures/` stay the manuscript versions. Figures 1B, 2 and the photo panels stay static. The page grew from 7.4 to 9.4 MB.
+- **Larger text on the summary's figures (2026-11-15, Adrian):**
+  - `save_fig()` now also writes a web copy of every figure to `figures/web/`. It's the same plot drawn at 75% of the print size with the same point sizes, so the text is about a third larger once the page shrinks it to the text column. Figure 2 uses 85% and the patch panel 90%, so their labels and titles fit.
+  - The summary uses these copies; the print files in `figures/` stay the manuscript versions.
+  - The interactive plots' base text size went from 9–10 to 13.
+  - Figure 2 panel A no longer labels Day −1, because its label ran into Day 0. The Day −1 points are still plotted.
+
+  No data or statistics changed.
+- **Summary page redesigned (2026-11-15, Adrian):**
+  - the opening is now a lead paragraph plus a 28 °C vs 31 °C table of six key measures, all read from `output/paper/`;
+  - type is Literata for text and Instrument Sans for headings, captions and navigation, with text kept to about 68 characters per line;
+  - the only accent colours are the figures' two temperature colours;
+  - figures lose their card frames, and the Statistics drop-downs are quieter;
+  - the figure key is a list, and the layout works on phones.
+
+  No text or numbers changed apart from the figure key's layout.
+- **Figures restyled (2026-11-15, Adrian):** every figure now uses an "Information is Beautiful" look, set in `theme_pub()`, with black x and y axis lines on every panel. Labels are unified across figures:
+  - 28 °C / 31 °C;
+  - clipped / unclipped;
+  - "Days after clipping" and "Sampling day";
+  - stage names matching `39b` and `39d`;
+  - "Cluster N" panel labels.
+
+  In figure 06, the dots now sit over their own temperature's box. No data or statistics changed; only figures and the panel names in `47_other_daily_observations.csv` changed. Manuscript Figures 1B and 2 now say "clipped" rather than "wounded"; if the manuscript keeps "wounded", that is a one-line label change in `03_physiology.R` and `04_regeneration.R`.
 - **Hochberg replaces Holm (2026-11-15, Adrian):** every multiple-test adjustment now uses the Hochberg method. This covers the six per-patch heat contrasts per measure (`03_physiology.R`, `12_genet_treatment_effects.csv`) and the per-cluster symbiont contrasts (`06_genetics.R`, `43_final_snp_symbiont_contrasts.csv`, `43_final_snp_leave_one_tank_out.csv`). The column `p_holm` is now `p_hochberg`. Hochberg is valid when the tests are independent or positively related, as contrasts from one model usually are, and is slightly less strict. Only adjusted p-values changed, and only slightly (the largest drop is 0.187 to 0.141 for growth, patch A and D unclipped); the patch C values quoted in the summary are unchanged, and no conclusion changed.
+- **Unused files archived (2026-11-15, Adrian):** removed files nothing reads: the blank printable field sheets, the example chlorophyll workbook, the old buoyant-weight working copy, two CSV copies of buoyant-weight workbook tabs, two symbiont-count spreadsheet intermediates, the Nov 11 stats call scan, the never-filled daily health log, a duplicate wax standard curve and the out-of-date `data/DATA_DICTIONARY.docx` (June 12; the codebooks in `data/metadata/` and `docs/GLOSSARY.md` replace it). Their codebooks and `source_inventory.csv` rows were updated (inventory rows marked `archived`). The originals stay on Drive; everything is in tag `pre-cleanup-2026-11-15`. No code or outputs changed.
 - **Literature PDFs removed from git history (2026-11-14):** the 101 PDFs (moved to Drive on 2026-11-13) were stripped from every past commit with `git filter-repo`, so the public history no longer carries copyrighted papers. All commit IDs and the recovery tags changed; files at every commit are otherwise identical. The repo's history shrank from 571 MB to 97 MB. A full backup of the old history is at `~/repo-backups/acropora-lth-before-history-rewrite-2026-11-14.bundle` on Adrian's laptop. Anyone with an older clone should re-clone.

@@ -622,12 +622,12 @@ km_curves <- events |>
 p_km <- ggplot(km_curves, aes(day, cum_event,
                               colour = treatment, group = treatment)) +
   geom_step(linewidth = 0.7) +
-  facet_wrap(~ trait, ncol = 4) +
+  facet_wrap(~ trait, axes = "all", axis.labels = "margins", ncol = 4) +
   scale_colour_manual(values = c(`28C` = "#56B4E9", `31C` = "#D55E00"),
                       name = "Temperature") +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1),
                      limits = c(0, 1)) +
-  labs(x = "Days after wounding",
+  labs(x = "Days after clipping",
        y = "Cumulative % of fragments that reached the stage") +
   theme_pub(9)
 
@@ -797,6 +797,12 @@ label_data <- stage_summary |>
   )
 
 stage_levels <- levels(stage_events$stage_label)
+# Labels shown on the figure: the same names as figure 39 and the summary
+# (healing, then regeneration stages 1-5). Levels run bottom to top, so the
+# display labels are reversed to match.
+STAGE_DISPLAY <- c("Healing: coenosarc covers wound", "1. Axial polyp forms",
+                   "2. Wound surface remodels", "3. Axial corallite forms",
+                   "4. Axial corallite extends", "5. Radial corallites form")
 
 # Fragments with the same stage, temperature and day would overlap, so stack
 # them in a small grid (up to 4 per row) around the true position.
@@ -883,7 +889,7 @@ p_stage <- ggplot() +
   ) +
   scale_y_continuous(
     breaks = seq_along(stage_levels),
-    labels = stage_levels,
+    labels = rev(STAGE_DISPLAY),
     limits = c(0.5, length(stage_levels) + 0.5),
     expand = expansion(mult = c(0.02, 0.02))
   ) +
@@ -894,7 +900,7 @@ p_stage <- ggplot() +
   coord_cartesian(clip = "off") +   # clip = "off" lets the n labels sit outside
   theme_pub(8) +
   theme(
-    panel.grid.major.y = element_line(colour = "grey90", linewidth = 0.25),
+    panel.grid.major.y = element_line(colour = FIG_GRID, linewidth = 0.3),
     panel.grid.minor = element_blank(),
     # Extra room on the right for the reached/total labels drawn outside
     # the panel (clip = "off").
@@ -910,12 +916,12 @@ save_fig(p_stage, "36_stage_timing", width = 190, height = 110)
 # the % not reached printed above.
 stage_axis_levels <- paste0("Stage ", seq_len(nrow(stage_map)))
 stage_axis_labels <- c(
-  "1\nCoenosarc\ncover",
-  "2\nMain polyp\nforms",
-  "3\nWound surface\nremodels",
-  "4\nTip\nforms",
-  "5\nTip\nextends",
-  "6\nNew corallites\nbud"
+  "Healing\ncoenosarc\ncovers wound",
+  "1. Axial\npolyp\nforms",
+  "2. Wound\nsurface\nremodels",
+  "3. Axial\ncorallite\nforms",
+  "4. Axial\ncorallite\nextends",
+  "5. Radial\ncorallites\nform"
 )
 dodge_width <- 0.72   # side-by-side spacing of the two temperatures
 
@@ -1135,7 +1141,7 @@ plot_cumulative <- function(dat, ncol) {
                   linetype = treatment, shape = treatment)) +
     geom_step(linewidth = 0.75, direction = "hv") +
     geom_point(size = 1.5) +
-    facet_wrap(~ stage_short, ncol = ncol) +
+    facet_wrap(~ stage_short, axes = "all", axis.labels = "margins", ncol = ncol) +
     scale_colour_manual(values = PAL_TEMP, name = "Temperature",
                         labels = c(`28C` = "28 °C", `31C` = "31 °C")) +
     scale_linetype_manual(values = c(`28C` = "solid", `31C` = "dashed"),
@@ -1149,7 +1155,7 @@ plot_cumulative <- function(dat, ncol) {
     scale_y_continuous(labels = \(x) paste0(x, "%"),
                        limits = c(0, 100),
                        breaks = c(0, 25, 50, 75, 100)) +
-    labs(x = "Days after wounding", y = "Fragments that had reached the stage (%)") +
+    labs(x = "Days after clipping", y = "Fragments that had reached the stage (%)") +
     theme_pub(10)
 }
 

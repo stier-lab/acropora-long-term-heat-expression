@@ -1,8 +1,20 @@
 # Figure Index
 
-Updated 2026-11-14. Every figure in this folder is rebuilt by `code/run_all.R` (each as `.pdf` and `.png`). Older and exploratory figures were deleted on 2026-11-13 and 2026-11-14; recover them from the tags `pre-prune-2026-11-13` and `pre-cleanup-2026-11-14`. Reader-facing text says **source patch** for A, C and D; some file names still say `genet`.
+Updated 2026-11-15. Every figure in this folder is rebuilt by `code/run_all.R` (each as `.pdf` and `.png`). Older and exploratory figures were deleted on 2026-11-13 and 2026-11-14; recover them from the tags `pre-prune-2026-11-13` and `pre-cleanup-2026-11-14`. Reader-facing text says **source patch** for A, C and D; some file names still say `genet`.
 
 Screen-reader descriptions of Figures 1B and 2 are in the repo `README.md` (image alt text). Terms are defined in `docs/GLOSSARY.md`.
+
+## Style
+
+Since 2026-11-15 every figure uses an "Information is Beautiful" look, set once in `theme_pub()` (`code/00_setup.R`):
+- white background;
+- deep navy text (`FIG_INK`) instead of black, with gray-blue tick labels;
+- light warm gridlines;
+- black x and y axis lines on every panel (facets included), no tick marks and no panel box;
+- left-aligned bold panel labels;
+- Helvetica Neue throughout, including text drawn inside panels.
+
+Figure labels use the summary's terms: "28 °C / 31 °C", "clipped / unclipped", "Days after clipping", and healing followed by regeneration stages 1–5 with the names used in `39b` and `39d`. The data files keep their original codes (`28C`, `wound = yes/no`).
 
 ## Key (no figure carries an embedded legend)
 
@@ -46,5 +58,7 @@ Supplementary figures 1 (phases schematic) and the subsampling schematic are dra
 | `05_buoyant_weight_growth`, `06_symbiont_density_by_day` | Single-response displays used in the team summary's supporting section. | `03_physiology.R` |
 | `36_stage_timing`, `36b_stage_violin` | First day each fragment reached each stage, with X marks for fragments that never did. Supporting displays; don't use averages for stages some fragments never reached. | `04_regeneration.R` |
 | `43_final_snp_diagnostics` | Residual checks for the cluster model. | `06_genetics.R` |
+
+`figures/web/` holds web copies of every PNG for the results summary: the same plot on a smaller page with the same point sizes, so text reads larger on screen (see `save_fig()` in `code/00_setup.R`). Use the files in `figures/` for the manuscript.
 
 Residual and proportional-hazards plots from `08_checks.R` go to `figures/diagnostics/`, which is not tracked in git.

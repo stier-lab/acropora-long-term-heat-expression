@@ -172,14 +172,14 @@ p_react <- ggplot(emm_long, aes(treatment, mean, colour = thicket, group = thick
   geom_line(linewidth = 0.6) +
   geom_linerange(aes(ymin = mean - se, ymax = mean + se), linewidth = 0.5) +
   geom_point(size = 2) +
-  facet_wrap(~ response, scales = "free_y", ncol = 4,
+  facet_wrap(~ response, axes = "all", axis.labels = "margins", scales = "free_y", ncol = 4,
              labeller = label_wrap_gen(width = 24)) +
   scale_x_discrete(labels = c("28C" = "28 \u00b0C", "31C" = "31 \u00b0C")) +
   scale_colour_manual(values = PAL_GENO, name = "Source patch",
                       labels = c("A", "C", "D")) +
   labs(x = NULL, y = "Mean at end of experiment (\u00b1 1 SE)") +
   theme_pub(9)
-save_fig(p_react, "13_genet_response_panel", width = 200, height = 90)
+save_fig(p_react, "13_genet_response_panel", width = 200, height = 90, web_scale = 0.9)
 
 
 # ---- 3. Numbers for the results text ---------------------------------------

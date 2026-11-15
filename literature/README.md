@@ -1,6 +1,6 @@
 # literature/
 
-*Created: 2026-11-13*
+*Created: 2026-11-13 · Last updated: 2026-11-15*
 
 The reference PDFs are kept on Google Drive, not in this repo, because the
 repo is public and many of the PDFs are publishers' copyrighted copies.
@@ -12,4 +12,5 @@ repo is public and many of the PDFs are publishers' copyrighted copies.
   byte for byte (SHA-256) before they were removed from the repo.
 
 `literature/pdfs/` is in `.gitignore`, so PDFs put there locally are not
-committed. Earlier commits still contain the PDFs in the git history.
+committed. The PDFs were also stripped from every past commit on 2026-11-14,
+so the public git history no longer contains them.
