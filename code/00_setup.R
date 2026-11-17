@@ -110,6 +110,12 @@ PAL_WOUND <- c(no = "#9E9E9E", yes = "#000000")
 PAL_GENO <- c(a = "#E69F00", c = "#009E73", d = "#0072B2")
 SHP_GENO <- c(a = 16, c = 17, d = 15)
 
+# Legend labels shared by every figure (2026-11-17), so keys read the same
+# everywhere: "28 °C / 31 °C", "Unwounded / Wounded", source patches A, C, D.
+LAB_TEMP  <- c(`28C` = "28 \u00b0C", `31C` = "31 \u00b0C")
+LAB_WOUND <- c(no = "Unwounded", yes = "Wounded")
+LAB_GENO  <- c(a = "A", c = "C", d = "D")
+
 
 # ---- 5. Tank to treatment map ----------------------------------------------
 # Temperature was piped to tanks in a fixed layout: tanks 3/6/9/12 ran
@@ -141,11 +147,12 @@ tank_treatment <- function(tank) {
 #   panel narrower than 50 mm -> base_size = 8
 #   panel 50-80 mm            -> base_size = 9
 #   panel 80 mm or wider      -> base_size = 10
-# Artwork rule (2026-11-12): no embedded titles, subtitles, captions or
-# legends, so those elements are blanked and legend.position = "none". Colour
-# and shape keys, sample sizes and findings go in the separate caption text
-# (figures/FIGURE_INDEX.md, Key section; manuscript legends). The legend.*
-# text settings below only matter if a script turns a legend back on.
+# Artwork rule: no embedded titles, subtitles or captions (2026-11-12), but
+# every figure carries its own legend at the bottom explaining colours, point
+# shapes and line types (Adrian, 2026-11-17; replaces the 2026-11-12
+# no-legend rule). Sample sizes and findings stay in the caption text
+# (figures/FIGURE_INDEX.md; manuscript legends). Use LAB_TEMP, LAB_WOUND and
+# LAB_GENO for legend labels.
 # Look (2026-11-15, "Information is Beautiful" style): white canvas, deep
 # navy text instead of pure black, light warm gridlines, no tick marks and
 # no panel box, so the data carry the ink. Panel labels sit at the left.
@@ -185,7 +192,9 @@ theme_pub <- function(base_size = 10, margin_mm = 10) {
       plot.subtitle     = element_blank(),
       plot.tag          = element_text(size = base_size + 1, face = "bold"),
       plot.caption      = element_blank(),
-      legend.position   = "none",
+      legend.position   = "bottom",
+      legend.box        = "horizontal",
+      legend.margin     = margin(2, 0, 0, 0, "pt"),
       legend.title      = element_text(size = base_size - 1),
       legend.text       = element_text(size = base_size - 2),
       legend.key        = element_blank(),

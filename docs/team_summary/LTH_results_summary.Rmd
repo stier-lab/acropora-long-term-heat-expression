@@ -411,7 +411,7 @@ p_apex_ia <- ggplot(apex_ia, aes(day, value_mean, colour = treatment, group = ta
   suppressWarnings(geom_point(aes(text = sprintf(
     "Tank %d (%s)<br>%s (Day %d)<br>Daily mean %.2f °C",
     tank, TEMP_LAB(treatment), format(date, "%d %B"), day, value_mean)), size = 1.3)) +
-  scale_colour_manual(values = PAL_TEMP) +
+  scale_colour_manual(values = PAL_TEMP, labels = LAB_TEMP, name = "Temperature") +
   scale_x_continuous(breaks = c(-7, -3, 0, 5, 10, 15)) +
   labs(x = "Day relative to wounding (Day 0 = 4 June 2025)",
        y = "Daily mean tank temperature (°C)") +
@@ -432,7 +432,7 @@ p_ysi_ia <- ggplot(ysi_ia, aes(date, value, colour = treatment, group = tank)) +
   geom_line(linewidth = 0.35, alpha = 0.7) +
   suppressWarnings(geom_point(aes(text = sprintf("Tank %d (%s)<br>%s<br>%s: %s",
     tank, TEMP_LAB(treatment), format(date, "%d %B"), variable, signif(value, 4))), size = 1.2)) +
-  scale_colour_manual(values = PAL_TEMP) +
+  scale_colour_manual(values = PAL_TEMP, labels = LAB_TEMP, name = "Temperature") +
   facet_wrap(~ variable, scales = "free_y", ncol = 2) +
   scale_x_date(date_breaks = "5 days", date_labels = "%b %d") +
   labs(x = NULL, y = NULL) +
@@ -442,16 +442,16 @@ p_ysi_ia <- ggplot(ysi_ia, aes(date, value, colour = treatment, group = tank)) +
 bw_ia <- readRDS(proc_file("buoyant_weight_clean.rds")) |>
   dplyr::mutate(pct = 100 * (final_dry - initial_dry) / initial_dry,
                 group = factor(paste(TEMP_LAB(treatment), WOUND_LAB(wound), sep = "\n"),
-                               levels = c("28 °C\nunclipped", "31 °C\nunclipped",
-                                          "28 °C\nclipped", "31 °C\nclipped")))
+                               levels = c("28 °C\nunwounded", "31 °C\nunwounded",
+                                          "28 °C\nwounded", "31 °C\nwounded")))
 p_growth_ia <- ggplot(bw_ia, aes(group, pct)) +
   geom_boxplot(aes(fill = treatment), width = 0.55, outlier.shape = NA, alpha = 0.7) +
   suppressWarnings(geom_point(aes(colour = thicket, text = sprintf(
     "Fragment %s, tank %d, patch %s<br>%s, %s<br>Growth %.1f%%",
     id, tank, toupper(thicket), TEMP_LAB(treatment), WOUND_LAB(wound), pct)),
     position = position_jitter(width = 0.18, height = 0, seed = 42), size = 1.8, alpha = 0.85)) +
-  scale_fill_manual(values = PAL_TEMP) +
-  scale_colour_manual(values = PAL_GENO) +
+  scale_fill_manual(values = PAL_TEMP, labels = LAB_TEMP, name = "Temperature") +
+  scale_colour_manual(values = PAL_GENO, labels = LAB_GENO, name = "Source patch") +
   labs(x = NULL, y = "Growth (% skeletal mass change over 15 days)") +
   theme_pub(13, margin_mm = 2)
 
@@ -470,7 +470,7 @@ p_sym_ia <- ggplot(sym_ia, aes(pos, cells_per_cm2 / 1e6, fill = treatment, group
     cells_per_cm2 / 1e6)),
     position = position_jitter(width = 0.06, height = 0, seed = 42),
     alpha = 0.45, size = 1)) +
-  scale_fill_manual(values = PAL_TEMP) +
+  scale_fill_manual(values = PAL_TEMP, labels = LAB_TEMP, name = "Temperature") +
   scale_x_continuous(breaks = 1:4, labels = c(1, 3, 10, 15)) +
   labs(x = "Sampling day", y = "Symbionts (million cells per cm²)") +
   theme_pub(13, margin_mm = 2)
@@ -489,9 +489,11 @@ p_cum_ia <- ggplot(cum_ia, aes(day, pct_reached, colour = treatment, linetype = 
     "%s<br>%s, Day %d<br>%d of %d fragments (%.0f%%)",
     stage, TEMP_LAB(treatment), day, n_reached, n_scored, pct_reached)), size = 1.4)) +
   facet_wrap(~ stage, ncol = 3) +
-  scale_colour_manual(values = PAL_TEMP) +
-  scale_linetype_manual(values = c(`28C` = "solid", `31C` = "dashed")) +
-  scale_shape_manual(values = c(`28C` = 16, `31C` = 17)) +
+  scale_colour_manual(values = PAL_TEMP, labels = LAB_TEMP, name = "Temperature") +
+  scale_linetype_manual(values = c(`28C` = "solid", `31C` = "dashed"),
+                        labels = LAB_TEMP, name = "Temperature") +
+  scale_shape_manual(values = c(`28C` = 16, `31C` = 17),
+                     labels = LAB_TEMP, name = "Temperature") +
   scale_x_continuous(breaks = c(0, 5, 10, 15)) +
   scale_y_continuous(labels = \(x) paste0(x, "%"), limits = c(0, 100)) +
   labs(x = "Days after wounding", y = "Fragments that had reached the stage") +
@@ -510,8 +512,10 @@ p_timing_ia <- ggplot(timing_ia, aes(x, y, colour = treatment)) +
     "Fragment %s, tank %d, patch %s (%s)<br>%s: %s",
     id, tank, toupper(thicket), TEMP_LAB(treatment), stage, status)),
     position = position_jitter(width = 0.2, height = 0.06, seed = 42), size = 1.8)) +
-  scale_colour_manual(values = PAL_TEMP) +
-  scale_shape_manual(values = c(`TRUE` = 16, `FALSE` = 4)) +
+  scale_colour_manual(values = PAL_TEMP, labels = LAB_TEMP, name = "Temperature") +
+  scale_shape_manual(values = c(`TRUE` = 16, `FALSE` = 4),
+                     labels = c(`TRUE` = "Reached", `FALSE` = "Not reached by Day 15"),
+                     name = NULL) +
   scale_x_continuous(breaks = c(0, 1, 3, 5, 10, 15, 17),
                      labels = c("0", "1", "3", "5", "10", "15", "not seen")) +
   scale_y_continuous(breaks = seq_along(levels(timing_ia$stage)),
@@ -530,7 +534,7 @@ gen_ia <- readr::read_csv(table_file("43_final_snp_rnaseq_covariates.csv"),
                               WOUND_LAB(wound), day, host_cluster))
 p_pca_ia <- ggplot(gen_ia, aes(snp_pc1, snp_pc2, colour = source_patch)) +
   suppressWarnings(geom_point(aes(text = who), size = 2, alpha = 0.8)) +
-  scale_colour_manual(values = PAL_GENO) +
+  scale_colour_manual(values = PAL_GENO, labels = LAB_GENO, name = "Source patch") +
   labs(x = "DNA-marker axis 1", y = "DNA-marker axis 2") +
   theme_pub(13, margin_mm = 2)
 p_dens_ia <- ggplot(gen_ia, aes(factor(day), symbiont_cells_per_cm2 / 1e6,
@@ -541,8 +545,8 @@ p_dens_ia <- ggplot(gen_ia, aes(factor(day), symbiont_cells_per_cm2 / 1e6,
     position = position_jitterdodge(jitter.width = 0.12, dodge.width = 0.5, seed = 42),
     alpha = 0.75, size = 1.6)) +
   facet_wrap(~ cluster, ncol = 4, labeller = as_labeller(\(x) paste("Cluster", x))) +
-  scale_colour_manual(values = PAL_TEMP) +
-  scale_shape_manual(values = c(no = 16, yes = 17)) +
+  scale_colour_manual(values = PAL_TEMP, labels = LAB_TEMP, name = "Temperature") +
+  scale_shape_manual(values = c(no = 16, yes = 17), labels = LAB_WOUND, name = NULL) +
   scale_y_log10() +
   labs(x = "Sampling day", y = "Symbionts (million cells per cm², log scale)") +
   theme_pub(13, margin_mm = 2)
@@ -559,7 +563,7 @@ p_typing_ia <- ggplot(typing_ia, aes(order, share, fill = group)) +
                                               who, group, 100 * share)), width = 1)) +
   facet_wrap(~ cluster, ncol = 4, scales = "free_x",
              labeller = as_labeller(\(x) paste("Cluster", x))) +
-  scale_fill_manual(values = SYM_COL) +
+  scale_fill_manual(values = SYM_COL, name = "Symbiont group") +
   scale_y_continuous(labels = \(x) paste0(100 * x, "%")) +
   labs(x = "Fragment", y = "Share of mapped reads") +
   theme_pub(13, margin_mm = 2) +
@@ -596,7 +600,7 @@ We held fragments of *Acropora* cf. *pulchra* at 28 °C (ambient) or 31 °C (hea
 - **Sampling:** each tank held 24 fragments, one per source patch, wounding treatment and sampling day. We destructively sampled 48 fragments on each of Days 1, 3, 10 and 15 (192 in all). The 48 Day 15 fragments, 24 of them wounded, carry the repeated records: Fv/Fm, color, growth and daily regeneration scores.
 - **Microscope experiment:** we ran a separate 16-fragment experiment to photograph healing under a dissecting microscope (details in section 3).
 
-**Figure key.** Our figures carry no legends, so this key applies throughout.
+**Figure key.** Each figure has its own legend; this key summarizes the colours and symbols used throughout.
 
 - **Temperature:** <span class="t28">blue = 28 °C</span>, <span class="t31">orange = 31 °C</span>. Where line type or symbol shape also marks temperature, 28 °C is solid with circles and 31 °C is dashed with triangles.
 - **Wounding:** open symbols, white boxes and dashed lines = unwounded; filled symbols, gray boxes and solid lines = wounded. Exceptions: in the color-score figure, gray = unwounded and black = wounded; in the host-cluster symbiont figure, circles = unwounded and triangles = wounded.

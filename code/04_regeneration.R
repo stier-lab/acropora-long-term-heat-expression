@@ -624,7 +624,7 @@ p_km <- ggplot(km_curves, aes(day, cum_event,
   geom_step(linewidth = 0.7) +
   facet_wrap(~ trait, axes = "all", axis.labels = "margins", ncol = 4) +
   scale_colour_manual(values = c(`28C` = "#56B4E9", `31C` = "#D55E00"),
-                      name = "Temperature") +
+                      labels = LAB_TEMP, name = "Temperature") +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1),
                      limits = c(0, 1)) +
   labs(x = "Days after wounding",
@@ -866,7 +866,7 @@ p_stage <- ggplot() +
     hjust = 0,
     show.legend = FALSE
   ) +
-  scale_fill_manual(values = PAL_TEMP, name = NULL) +
+  scale_fill_manual(values = PAL_TEMP, labels = LAB_TEMP, name = "Temperature") +
   scale_colour_manual(values = PAL_TEMP, guide = "none") +
   scale_shape_manual(values = c(`Reached` = 21,
                                 `Not reached by final day` = 4),

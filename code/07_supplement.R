@@ -136,8 +136,8 @@ p_obs <- ggplot(daily_obs, aes(day, pct, colour = treatment, linetype = wound,
   facet_wrap(~ panel, axes = "all", axis.labels = "margins", ncol = 2) +
   scale_colour_manual(values = PAL_TEMP, name = "Temperature",
                       labels = c(`28C` = "28 \u00b0C", `31C` = "31 \u00b0C")) +
-  scale_linetype_manual(values = c(no = "dashed", yes = "solid"), name = "Wounded",
-                        labels = c(no = "No", yes = "Yes")) +
+  scale_linetype_manual(values = c(no = "dashed", yes = "solid"),
+                        labels = LAB_WOUND, name = NULL) +
   scale_x_continuous(breaks = seq(0, 15, by = 3), limits = c(0, 15)) +
   scale_y_continuous(limits = c(0, 100)) +
   labs(x = "Days after wounding", y = "Fragments (%)") +

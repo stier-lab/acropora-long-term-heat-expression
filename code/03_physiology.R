@@ -223,10 +223,8 @@ p_color <- ggplot(traj, aes(day, mean_color,
   # Reversed axis: darker = higher D-scale score (the colour card's 1-6 scale),
   # so score 1 (palest) plots on top.
   scale_y_reverse(breaks = 1:6, limits = c(6.2, 0.8)) +
-  scale_colour_manual(values = PAL_WOUND,
-                      name = "Wound") +
-  scale_fill_manual(values   = PAL_WOUND,
-                    guide = "none") +
+  scale_colour_manual(values = PAL_WOUND, labels = LAB_WOUND, name = NULL) +
+  scale_fill_manual(values = PAL_WOUND, labels = LAB_WOUND, name = NULL) +
   labs(x = "Day relative to wounding (Day 0)",
        y = "Color score (D-scale; lower = paler)") +
   theme_pub(10)
@@ -258,7 +256,7 @@ p_zoox <- ggplot(sym, aes(factor(biopsy_day), cells_per_cm2 / 1e6,
                                              dodge.width = 0.6, seed = 42),
              alpha = 0.4, size = 0.8) +
   scale_fill_manual(values = c(`28C` = "#56B4E9", `31C` = "#D55E00"),
-                    name = "Temperature") +
+                    labels = LAB_TEMP, name = "Temperature") +
   labs(x = "Sampling day",
        y = expression(Symbionts~(10^6~cells~cm^{-2}))) +
   theme_pub(10)
@@ -317,8 +315,8 @@ p_bw <- ggplot(bw_a, aes(interaction(treatment, wound, sep = " · "),
              position = position_jitter(width = 0.18, height = 0, seed = 42),
              size = 1.6, alpha = 0.85) +
   scale_fill_manual(values  = c(`28C` = "#56B4E9", `31C` = "#D55E00"),
-                    name = "Temperature") +
-  scale_colour_manual(values = PAL_GENO, name = "Source patch") +
+                    labels = LAB_TEMP, name = "Temperature") +
+  scale_colour_manual(values = PAL_GENO, labels = LAB_GENO, name = "Source patch") +
   scale_x_discrete(labels = c(`28C · no` = "28 \u00b0C\nunwounded",
                               `31C · no` = "31 \u00b0C\nunwounded",
                               `28C · yes` = "28 \u00b0C\nwounded",
@@ -377,7 +375,7 @@ write_csv(means, file.path(TBL_DIR, "45_figure2_summary.csv"))
 common <- function(lines = TRUE) list(
   facet_wrap(~ treatment, axes = "all", axis.labels = "margins", ncol = 2,
              labeller = as_labeller(c(`28C` = "28 \u00b0C", `31C` = "31 \u00b0C"))),
-  scale_colour_manual(values = PAL_TEMP, guide = "none"),
+  scale_colour_manual(values = PAL_TEMP, labels = LAB_TEMP, name = NULL),
   scale_shape_manual(values = c(no = 1, yes = 16), name = NULL,
                      labels = c(no = "Unwounded", yes = "Wounded")),
   if (lines) scale_linetype_manual(values = c(no = "dashed", yes = "solid"), name = NULL,
@@ -431,17 +429,18 @@ c <- ggplot(growth, aes(wound, value, colour = treatment, fill = wound)) +
   box_style
 
 ## 5c. Assemble and save -----------------------------------------------------
-# Panel letters as tags; the key (colour, symbols, line types) is in
-# manuscript/FIGURE_2_LEGEND.md, not in the artwork. In patchwork, `/` stacks
-# panels and `&` applies the theme to every panel.
+# Panel letters as tags. guides = "collect" gathers the panels' legends
+# (temperature colour; wound symbols, line types and box fills) into one key
+# at the bottom of the figure. In patchwork, `/` stacks panels and `&`
+# applies the theme to every panel.
 # patch_margins() (00_setup.R) gives 3 mm between panels and 10 mm outside.
 figure2 <- patch_margins(
   (a / b / c) +
-    plot_layout(heights = c(1, 1, 0.95)) +
+    plot_layout(heights = c(1, 1, 0.95), guides = "collect") +
     plot_annotation(tag_levels = "A") &
-    theme(legend.position = "none")
+    theme(legend.position = "bottom")
 )
-save_fig(figure2, "45_physiology_figure2", width = 185, height = 235, web_scale = 0.85)
+save_fig(figure2, "45_physiology_figure2", width = 185, height = 250, web_scale = 0.85)
 save_fig(a, "45a_photosynthesis", width = 185, height = 85)
 save_fig(b, "45b_symbiont_boxplots", width = 185, height = 85)
 save_fig(c, "45c_growth_boxplots", width = 185, height = 85)

@@ -304,7 +304,7 @@ write_csv(res |>
 q <- ggplot(res, aes(fitted, residual, colour = treatment)) +
   geom_point() +
   geom_hline(yintercept = 0) +
-  scale_colour_manual(values = PAL_TEMP) +
+  scale_colour_manual(values = PAL_TEMP, labels = LAB_TEMP, name = "Temperature") +
   theme_pub(10)
 qq <- ggplot(res, aes(sample = residual)) +
   stat_qq() +
@@ -349,7 +349,7 @@ p3 <- ggplot(bp, aes(cell, host_cluster, fill = n)) +
   geom_text(aes(label = n), size = 3) +
   facet_wrap(~ treatment, axes = "all", axis.labels = "margins",
              labeller = as_labeller(c(`28C` = "28 \u00b0C", `31C` = "31 \u00b0C"))) +
-  scale_fill_gradient(low = "white", high = "#66B2A3") +
+  scale_fill_gradient(low = "white", high = "#66B2A3", name = "Fragments") +
   labs(x = "Sampling day / wounded (no or yes)", y = "Final host cluster") +
   theme_pub(10) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
@@ -388,10 +388,10 @@ p5 <- ggplot(j, aes(factor(day), symbiont_cells_per_cm2 / 1e6, colour = treatmen
              alpha = .75, size = 1.6) +
   facet_wrap(~ host_cluster, axes = "all", axis.labels = "margins", ncol = 4,
              labeller = as_labeller(\(x) paste("Cluster", x))) +
-  scale_colour_manual(values = PAL_TEMP) +
+  scale_colour_manual(values = PAL_TEMP, labels = LAB_TEMP, name = "Temperature") +
+  scale_shape_manual(values = c(no = 16, yes = 17), labels = LAB_WOUND, name = NULL) +
   scale_y_log10() +
-  labs(x = "Sampling day", y = "Symbionts (million cells per cm\u00b2; log scale)",
-       shape = "Wounded", colour = "Temperature") +
+  labs(x = "Sampling day", y = "Symbionts (million cells per cm\u00b2; log scale)") +
   theme_pub(10)
 save_fig(p5, "43_final_snp_symbiont_density", width = 190, height = 130)
 

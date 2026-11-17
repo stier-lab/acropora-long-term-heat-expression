@@ -247,7 +247,7 @@ p_apex <- ggplot(temp_daily, aes(day, value_mean, group = tank, colour = treatme
   geom_line(linewidth = 0.45, alpha = 0.85) +
   geom_point(size = 1.1) +
   scale_colour_manual(values = c('28C' = "#56B4E9", '31C' = "#D55E00"),
-                      labels = c('28C' = "28 °C", '31C' = "31 °C"), name = "Treatment") +
+                      labels = c('28C' = "28 °C", '31C' = "31 °C"), name = "Temperature") +
   scale_x_continuous(breaks = c(-7, -3, 0, 5, 10, 15)) +
   labs(x = "Day relative to wounding (Day 0 = 4 June 2025)",
        y = "Daily mean tank temperature (°C)") +
@@ -381,7 +381,7 @@ plot_data <- long |>
 p <- ggplot(plot_data, aes(date, value, colour = treatment, group = tank)) +
   geom_line(linewidth = 0.35, alpha = 0.7) +
   geom_point(size = 1.2) +
-  scale_colour_manual(values = PAL_TEMP, name = "Temperature treatment") +
+  scale_colour_manual(values = PAL_TEMP, labels = LAB_TEMP, name = "Temperature") +
   facet_wrap(~ variable, axes = "all", axis.labels = "margins", scales = "free_y", ncol = 2) +
   scale_x_date(limits = as.Date(c("2025-06-04", "2025-06-19")), date_breaks = "5 days",
                date_labels = "%b %d") +

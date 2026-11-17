@@ -16,9 +16,9 @@ Since 2026-11-15 every figure uses an "Information is Beautiful" look, set once 
 
 Figure labels use the summary's terms: "28 °C / 31 °C", "wounded / unwounded", "Days after wounding", and healing followed by regeneration stages 1–5 with the names used in `39b` and `39d`. The data files keep their original codes (`28C`, `wound = yes/no`).
 
-## Key (no figure carries an embedded legend)
+## Key
 
-Since 2026-11-12 the artwork has no titles, subtitles, captions or legends; keys and sample sizes belong in the caption text. Mapping used by every script (`code/00_setup.R` palettes):
+Since 2026-11-17 every figure carries its own legend (at the bottom) for colour, point shape and line type; this replaces the 2026-11-12 no-legend rule. The artwork still has no titles, subtitles or captions; sample sizes and findings belong in the caption text. Legend labels come from `LAB_TEMP`, `LAB_WOUND` and `LAB_GENO` in `code/00_setup.R`. Mapping used by every script (`code/00_setup.R` palettes):
 
 - **Temperature:** blue `#56B4E9` = 28 °C, orange `#D55E00` = 31 °C. In Figure 1B and `39d`, 28 °C is also solid with circles and 31 °C dashed with triangles.
 - **Wounding:** Figure 2 and its panels: open symbols, white boxes, dashed lines = unwounded; filled symbols, gray boxes, solid lines = wounded. `47`: dashed = unwounded, solid = wounded. `03_color_trajectory`: gray = unwounded, black = wounded. `43_final_snp_symbiont_density`: circles = unwounded, triangles = wounded.
