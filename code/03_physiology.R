@@ -435,12 +435,16 @@ c <- ggplot(growth, aes(wound, value, colour = treatment, fill = wound)) +
 # applies the theme to every panel.
 # patch_margins() (00_setup.R) gives 3 mm between panels and 10 mm outside.
 figure2 <- patch_margins(
-  (a / b / c) +
+  (a /
+     (b + guides(colour = "none")) /
+     (c + guides(colour = "none", fill = "none", shape = "none"))) +
     plot_layout(heights = c(1, 1, 0.95), guides = "collect") +
     plot_annotation(tag_levels = "A") &
-    theme(legend.position = "bottom")
+    theme(legend.position = "bottom", legend.box = "vertical")
 )
-save_fig(figure2, "45_physiology_figure2", width = 185, height = 250, web_scale = 0.85)
+# One key, stacked: temperature colour; wound lines and symbols (panel A);
+# wound box fills (panels B and C).
+save_fig(figure2, "45_physiology_figure2", width = 185, height = 260, web_scale = 0.85)
 save_fig(a, "45a_photosynthesis", width = 185, height = 85)
 save_fig(b, "45b_symbiont_boxplots", width = 185, height = 85)
 save_fig(c, "45c_growth_boxplots", width = 185, height = 85)

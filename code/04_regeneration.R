@@ -870,7 +870,7 @@ p_stage <- ggplot() +
   scale_colour_manual(values = PAL_TEMP, guide = "none") +
   scale_shape_manual(values = c(`Reached` = 21,
                                 `Not reached by final day` = 4),
-                     name = NULL) +
+                     name = "Stage") +
   guides(
     fill = guide_legend(
       order = 1,
