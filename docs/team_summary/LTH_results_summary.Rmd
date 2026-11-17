@@ -1,7 +1,7 @@
 ---
 title: "Heat and wound repair in *Acropora* cf. *pulchra*: key results"
 subtitle: "LTH experiment, Mo'orea 2025"
-date: "Updated 2026-11-15"
+date: "Updated 2026-11-17"
 output:
   html_document:
     self_contained: true
@@ -379,13 +379,47 @@ TEMP_LAB <- function(x) unname(c(`28C` = "28 °C", `31C` = "31 °C")[x])
 WOUND_LAB <- function(x) unname(c(no = "unwounded", yes = "wounded")[x])
 SYM_COL  <- c(S1 = "#009E73", S2 = "#CC79A7", S3 = "#E69F00", S4 = "#0072B2")
 
-# ggplot -> plotly with the page's hover style and a trimmed toolbar.
+# Legend entries. ggplotly ignores the scales' `labels`, so traces arrive
+# named with raw codes ("28C", "(a,1)", "(28C,FALSE)", the number being a
+# facet panel). Map each code to the label the static figures use, drop panel
+# numbers, order entries as in IA_LAB, and show each label once so one click toggles it in every panel.
+IA_LAB <- c(`28C` = "28 °C", `31C` = "31 °C", a = "Patch A", c = "Patch C",
+            d = "Patch D", no = "Unwounded", yes = "Wounded",
+            `TRUE` = "Reached", `FALSE` = "Not reached by Day 15",
+            S1 = "S1", S2 = "S2", S3 = "S3", S4 = "S4")
+ia_legend <- function(w) {
+  seen <- character(0)
+  w$x$data <- lapply(w$x$data, function(tr) {
+    if (is.null(tr$name) || !isTRUE(tr$showlegend %||% TRUE)) return(tr)
+    parts <- strsplit(gsub("^\\(|\\)$", "", tr$name), ",")[[1]]
+    parts <- parts[!grepl("^[0-9]+$", parts)]
+    lab <- paste(ifelse(parts %in% names(IA_LAB), IA_LAB[parts], parts), collapse = ", ")
+    if (!nzchar(lab)) return(tr)
+    tr$name <- lab
+    tr$legendgroup <- lab
+    tr$legendrank <- sum(match(parts, names(IA_LAB), nomatch = 0) *
+                           100^rev(seq_along(parts) - 1))
+    tr$showlegend <- !(lab %in% seen)
+    seen <<- c(seen, lab)
+    tr
+  })
+  w
+}
+
+# ggplot -> plotly with the page's hover style, a readable legend below the
+# plot, and a trimmed toolbar.
 ia <- function(p, height = 420) {
   w <- suppressWarnings(plotly::ggplotly(p, tooltip = "text", height = height))
+  w <- ia_legend(plotly::plotly_build(w))
   w |>
     plotly::layout(hoverlabel = list(font = list(family = FIG_FONT, size = 14),
                                      bgcolor = "white"),
-                   font = list(family = FIG_FONT)) |>
+                   font = list(family = FIG_FONT),
+                   legend = list(orientation = "h", xanchor = "center", x = 0.5,
+                                 yref = "container", yanchor = "bottom", y = 0,
+                                 title = list(text = ""), itemclick = "toggle",
+                                 itemdoubleclick = "toggleothers"),
+                   margin = list(b = 95)) |>
     plotly::config(displaylogo = FALSE,
                    modeBarButtonsToRemove = c("lasso2d", "select2d", "autoScale2d",
                                               "toggleSpikelines", "hoverCompareCartesian",

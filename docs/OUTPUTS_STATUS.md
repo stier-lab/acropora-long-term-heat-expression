@@ -7,7 +7,7 @@ Updated 2026-11-15. Use this page to tell current results from historical files 
 | What | Where | Notes |
 |---|---|---|
 | Every reported number | `output/paper/*_numbers.csv` | Single source of truth, written by the core scripts. The team summary reads its numbers from here. |
-| Plain-language results | `docs/team_summary/LTH_results_summary.html` | Rebuilt 2026-11-14. |
+| Plain-language results | `docs/team_summary/LTH_results_summary.html` | Rebuilt 2026-11-17 (interactive figures now show readable legends). |
 | Manuscript figure map | `manuscript/MAIN_FIGURE_PLAN.md` | Each figure in Molly's working draft and supplement, with the file and script that make it. |
 | Figure 1B | `figures/39b_stage_timing_cumulative_option.*` | The four regeneration milestones, main experiment. All six stages: `39d_stage_cumulative_all_stages`. |
 | Figure 2 | `figures/45_physiology_figure2.*` | Legend: `manuscript/FIGURE_2_LEGEND.md`. |
