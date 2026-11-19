@@ -136,8 +136,8 @@ def gene_rows(rows):
         ok = checked and not checked.startswith("Not")
         out.append(
             "<tr data-text=\"{t}\"><td><b>{g}</b><span class=\"grp\">{c}</span></td>"
-            "<td>{k}</td><td>{u}</td><td>{cav}</td><td class=\"src\">{s}<span class=\"{cls}\">{chk}</span></td></tr>".format(
-                t=e(" ".join(r.values()).lower()), g=e(r["gene_or_family"]), c=e(r["candidate_group"]),
+            "<td>{k}</td><td>{u}</td><td>{cav}</td><td class=\"src\">{s}</td></tr>".format(
+                t=e(" ".join(v for k, v in r.items() if k != "source_check").lower()), g=e(r["gene_or_family"]), c=e(r["candidate_group"]),
                 k=e(r["key_evidence"]), u=e(r["lth_use"]), cav=e(r["caveat"]), s=e(r["primary_sources"]),
                 cls="chk" if ok else "nochk", chk="Checked against the paper" if ok else "Not rechecked"))
     return "\n".join(out)
@@ -294,7 +294,6 @@ TEMPLATE = """<!doctype html>
 <div class="wide">
   <section aria-labelledby="sets-h">
     <h2 id="sets-h">What each gene set should do</h2>
-    <p class="intro">We compiled these sets in September 2026, before expression counts arrived, and corrected them against the original papers on {updated}.</p>
     <table>
       <thead><tr><th scope="col">Gene set</th><th scope="col">Day 1</th><th scope="col">Day 10</th></tr></thead>
       <tbody>
@@ -314,7 +313,6 @@ TEMPLATE = """<!doctype html>
 
   <section aria-labelledby="src-h">
     <h2 id="src-h">Sources</h2>
-    <p class="intro" style="margin:0">Each checked against its full text on {updated}.</p>
     <ul class="plain">
 {studies}
     </ul>
@@ -323,7 +321,7 @@ TEMPLATE = """<!doctype html>
 
 <div class="wide">
   <details>
-    <summary>Full candidate list<span>{n} gene families, {nchk} checked against the papers</span></summary>
+    <summary>Full candidate list<span>{n} gene families</span></summary>
     <label for="q" class="meta" style="display:block;margin-top:1rem">Filter by gene, study or keyword</label>
     <input id="q" type="search" placeholder="galaxin, Han, heat, D10">
     <table id="genes">
@@ -332,7 +330,6 @@ TEMPLATE = """<!doctype html>
 {genes}
       </tbody>
     </table>
-    <p class="meta">Source table: <code>docs/rnaseq/candidate_genes_reference.csv</code>. Analysis plan: <code>docs/rnaseq/expression_integration_analysis_plan.md</code>.</p>
   </details>
 </div>
 
