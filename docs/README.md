@@ -7,6 +7,7 @@ This folder is also the project website (`index.html` is its front page): <https
 | Document | What it is |
 |---|---|
 | [Results summary](https://stier-lab.github.io/acropora-long-term-heat-expression/team_summary/LTH_results_summary.html) | Plain-language results with interactive figures and draft Methods and Results text; source `team_summary/LTH_results_summary.Rmd` |
+| [Candidate genes](https://stier-lab.github.io/acropora-long-term-heat-expression/team_summary/LTH_candidate_genes.html) | What earlier Acropora studies predict for the RNA-seq, with sources checked 2026-11-19; built from `rnaseq/candidate_genes_reference.csv` by `rnaseq/build_candidate_genes_page.py` |
 | [Glossary](GLOSSARY.md) | What the coral, measurement and statistics terms mean |
 | [How to change something](HOW_TO_CHANGE.md) | Walkthrough for rerunning and editing the analysis |
 | [Which outputs are current](OUTPUTS_STATUS.md) | Current vs historical files, and dated reporting decisions |

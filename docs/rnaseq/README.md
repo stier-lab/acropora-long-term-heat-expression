@@ -6,6 +6,7 @@
 |---|---|
 | Analysis plan, written before seeing the counts | `expression_integration_analysis_plan.md` |
 | Candidate genes from the literature | `candidate_genes_reference.csv` |
+| Candidate-gene web page (built from the CSV) | [`LTH_candidate_genes.html`](https://stier-lab.github.io/acropora-long-term-heat-expression/team_summary/LTH_candidate_genes.html); rebuild with `python3 docs/rnaseq/build_candidate_genes_page.py` |
 | Per-library covariates: treatment, tank, day, symbiont density, host cluster, symbiont read shares | `output/tables/43_final_snp_rnaseq_covariates.csv` |
 | Notes on the genetic and symbiont data | `docs/DATA_NOTES.md` |
 
